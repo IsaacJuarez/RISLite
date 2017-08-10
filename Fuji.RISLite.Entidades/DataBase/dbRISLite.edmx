@@ -1,0 +1,251 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="RISLiteModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="tbl_CAT_TipoMensaje">
+          <Key>
+            <PropertyRef Name="intTipoMensaje" />
+          </Key>
+          <Property Name="intTipoMensaje" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vchTipoMensaje" Type="varchar" MaxLength="100" />
+          <Property Name="bitActivo" Type="bit" />
+          <Property Name="datFecha" Type="datetime" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="tbl_CAT_TipoUsuario">
+          <Key>
+            <PropertyRef Name="intTipoUsuario" />
+          </Key>
+          <Property Name="intTipoUsuario" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vchTipoUsuario" Type="varchar" MaxLength="200" />
+          <Property Name="bitActivo" Type="bit" />
+          <Property Name="datFecha" Type="datetime" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="tbl_CAT_Usuario">
+          <Key>
+            <PropertyRef Name="intUsuarioID" />
+          </Key>
+          <Property Name="intUsuarioID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="intTipoUsuario" Type="int" />
+          <Property Name="vchUsuario" Type="varchar" MaxLength="100" />
+          <Property Name="vchNombre" Type="varchar" MaxLength="100" />
+          <Property Name="bitActivo" Type="bit" />
+          <Property Name="datFecha" Type="datetime" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="tbl_MST_Bitacora">
+          <Key>
+            <PropertyRef Name="intBitacoraID" />
+          </Key>
+          <Property Name="intBitacoraID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="intTipoMensaje" Type="int" />
+          <Property Name="datFecha" Type="datetime" />
+          <Property Name="vchMensaje" Type="varchar(max)" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <Association Name="FK_CAT_Usuario_CAT_TipoUsuario">
+          <End Role="tbl_CAT_TipoUsuario" Type="Self.tbl_CAT_TipoUsuario" Multiplicity="0..1" />
+          <End Role="tbl_CAT_Usuario" Type="Self.tbl_CAT_Usuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_TipoUsuario">
+              <PropertyRef Name="intTipoUsuario" />
+            </Principal>
+            <Dependent Role="tbl_CAT_Usuario">
+              <PropertyRef Name="intTipoUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MST_Bitacora_CAT_TipoMensaje">
+          <End Role="tbl_CAT_TipoMensaje" Type="Self.tbl_CAT_TipoMensaje" Multiplicity="0..1" />
+          <End Role="tbl_MST_Bitacora" Type="Self.tbl_MST_Bitacora" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_TipoMensaje">
+              <PropertyRef Name="intTipoMensaje" />
+            </Principal>
+            <Dependent Role="tbl_MST_Bitacora">
+              <PropertyRef Name="intTipoMensaje" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="RISLiteModelStoreContainer">
+          <EntitySet Name="tbl_CAT_TipoMensaje" EntityType="Self.tbl_CAT_TipoMensaje" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_CAT_TipoUsuario" EntityType="Self.tbl_CAT_TipoUsuario" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_CAT_Usuario" EntityType="Self.tbl_CAT_Usuario" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_MST_Bitacora" EntityType="Self.tbl_MST_Bitacora" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_CAT_Usuario_CAT_TipoUsuario" Association="Self.FK_CAT_Usuario_CAT_TipoUsuario">
+            <End Role="tbl_CAT_TipoUsuario" EntitySet="tbl_CAT_TipoUsuario" />
+            <End Role="tbl_CAT_Usuario" EntitySet="tbl_CAT_Usuario" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MST_Bitacora_CAT_TipoMensaje" Association="Self.FK_MST_Bitacora_CAT_TipoMensaje">
+            <End Role="tbl_CAT_TipoMensaje" EntitySet="tbl_CAT_TipoMensaje" />
+            <End Role="tbl_MST_Bitacora" EntitySet="tbl_MST_Bitacora" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="RISLiteModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="RISLiteEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="tbl_CAT_TipoMensaje" EntityType="RISLiteModel.tbl_CAT_TipoMensaje" />
+          <EntitySet Name="tbl_MST_Bitacora" EntityType="RISLiteModel.tbl_MST_Bitacora" />
+          <AssociationSet Name="FK_MST_Bitacora_CAT_TipoMensaje" Association="RISLiteModel.FK_MST_Bitacora_CAT_TipoMensaje">
+            <End Role="tbl_CAT_TipoMensaje" EntitySet="tbl_CAT_TipoMensaje" />
+            <End Role="tbl_MST_Bitacora" EntitySet="tbl_MST_Bitacora" />
+          </AssociationSet>
+          <EntitySet Name="tbl_CAT_TipoUsuario" EntityType="RISLiteModel.tbl_CAT_TipoUsuario" />
+          <EntitySet Name="tbl_CAT_Usuario" EntityType="RISLiteModel.tbl_CAT_Usuario" />
+          <AssociationSet Name="FK_CAT_Usuario_CAT_TipoUsuario" Association="RISLiteModel.FK_CAT_Usuario_CAT_TipoUsuario">
+            <End Role="tbl_CAT_TipoUsuario" EntitySet="tbl_CAT_TipoUsuario" />
+            <End Role="tbl_CAT_Usuario" EntitySet="tbl_CAT_Usuario" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="tbl_CAT_TipoMensaje">
+          <Key>
+            <PropertyRef Name="intTipoMensaje" />
+          </Key>
+          <Property Name="intTipoMensaje" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vchTipoMensaje" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_MST_Bitacora" Relationship="RISLiteModel.FK_MST_Bitacora_CAT_TipoMensaje" FromRole="tbl_CAT_TipoMensaje" ToRole="tbl_MST_Bitacora" />
+        </EntityType>
+        <EntityType Name="tbl_MST_Bitacora">
+          <Key>
+            <PropertyRef Name="intBitacoraID" />
+          </Key>
+          <Property Name="intBitacoraID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="intTipoMensaje" Type="Int32" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchMensaje" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_CAT_TipoMensaje" Relationship="RISLiteModel.FK_MST_Bitacora_CAT_TipoMensaje" FromRole="tbl_MST_Bitacora" ToRole="tbl_CAT_TipoMensaje" />
+        </EntityType>
+        <Association Name="FK_MST_Bitacora_CAT_TipoMensaje">
+          <End Type="RISLiteModel.tbl_CAT_TipoMensaje" Role="tbl_CAT_TipoMensaje" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_MST_Bitacora" Role="tbl_MST_Bitacora" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_TipoMensaje">
+              <PropertyRef Name="intTipoMensaje" />
+            </Principal>
+            <Dependent Role="tbl_MST_Bitacora">
+              <PropertyRef Name="intTipoMensaje" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tbl_CAT_TipoUsuario">
+          <Key>
+            <PropertyRef Name="intTipoUsuario" />
+          </Key>
+          <Property Name="intTipoUsuario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vchTipoUsuario" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_CAT_Usuario" Relationship="RISLiteModel.FK_CAT_Usuario_CAT_TipoUsuario" FromRole="tbl_CAT_TipoUsuario" ToRole="tbl_CAT_Usuario" />
+        </EntityType>
+        <EntityType Name="tbl_CAT_Usuario">
+          <Key>
+            <PropertyRef Name="intUsuarioID" />
+          </Key>
+          <Property Name="intUsuarioID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="intTipoUsuario" Type="Int32" />
+          <Property Name="vchUsuario" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="vchNombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_CAT_TipoUsuario" Relationship="RISLiteModel.FK_CAT_Usuario_CAT_TipoUsuario" FromRole="tbl_CAT_Usuario" ToRole="tbl_CAT_TipoUsuario" />
+        </EntityType>
+        <Association Name="FK_CAT_Usuario_CAT_TipoUsuario">
+          <End Type="RISLiteModel.tbl_CAT_TipoUsuario" Role="tbl_CAT_TipoUsuario" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_CAT_Usuario" Role="tbl_CAT_Usuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_TipoUsuario">
+              <PropertyRef Name="intTipoUsuario" />
+            </Principal>
+            <Dependent Role="tbl_CAT_Usuario">
+              <PropertyRef Name="intTipoUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="RISLiteModelStoreContainer" CdmEntityContainer="RISLiteEntities">
+          <EntitySetMapping Name="tbl_CAT_TipoMensaje">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_TipoMensaje">
+              <MappingFragment StoreEntitySet="tbl_CAT_TipoMensaje">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="vchTipoMensaje" ColumnName="vchTipoMensaje" />
+                <ScalarProperty Name="intTipoMensaje" ColumnName="intTipoMensaje" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_MST_Bitacora">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_MST_Bitacora">
+              <MappingFragment StoreEntitySet="tbl_MST_Bitacora">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="vchMensaje" ColumnName="vchMensaje" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="intTipoMensaje" ColumnName="intTipoMensaje" />
+                <ScalarProperty Name="intBitacoraID" ColumnName="intBitacoraID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_CAT_TipoUsuario">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_TipoUsuario">
+              <MappingFragment StoreEntitySet="tbl_CAT_TipoUsuario">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="vchTipoUsuario" ColumnName="vchTipoUsuario" />
+                <ScalarProperty Name="intTipoUsuario" ColumnName="intTipoUsuario" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_CAT_Usuario">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_Usuario">
+              <MappingFragment StoreEntitySet="tbl_CAT_Usuario">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="vchNombre" ColumnName="vchNombre" />
+                <ScalarProperty Name="vchUsuario" ColumnName="vchUsuario" />
+                <ScalarProperty Name="intTipoUsuario" ColumnName="intTipoUsuario" />
+                <ScalarProperty Name="intUsuarioID" ColumnName="intUsuarioID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
