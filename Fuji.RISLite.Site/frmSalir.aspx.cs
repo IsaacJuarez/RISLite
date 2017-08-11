@@ -29,6 +29,9 @@ namespace Fuji.RISLite.Site
                                 lblMensaje.Text = "Se cerró correctamente la sesión.";
                                 lblMensaje.ForeColor = System.Drawing.Color.DarkGreen;
                                 break;
+                            case "4":
+
+                                break;
                         }
                     }
                 }

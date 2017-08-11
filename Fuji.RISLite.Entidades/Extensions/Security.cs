@@ -80,7 +80,7 @@ namespace Fuji.RISLite.Entidades.Extensions
         /// </summary>
         /// <param name="Token"></param>
         /// <returns></returns>
-        public static bool ValidateToken(String _Token, String intUsuarioID, String vchUsuario, String vchPassword)
+        public static bool ValidateToken(String _Token, String intUsuarioID, String vchUsuario)
         {
             bool Valid = false;
             try
@@ -89,8 +89,8 @@ namespace Fuji.RISLite.Entidades.Extensions
                 if (validacion != "")
                 {
                     Log.EscribeLog("Validar: " + validacion, 3, "");
-                    var _val = validacion.Split('|');
-                    if (_val[0].ToString() == intUsuarioID && _val[1].ToString() == vchUsuario && _val[2].ToString() == vchPassword)
+                    var _val = validacion.Split('-');
+                    if (_val[0].ToString() == intUsuarioID && _val[1].ToString() == vchUsuario)
                     {
                         Valid = true;
                     }

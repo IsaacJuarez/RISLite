@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Fuji.RISLite.AccesoDatos
+namespace Fuji.RISLite.Entities
 {
     public class clsUsuario
     {

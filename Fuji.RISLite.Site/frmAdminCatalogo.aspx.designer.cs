@@ -11,5 +11,23 @@ namespace Fuji.RISLite.Site {
     
     
     public partial class frmAdminCatalogo {
+        
+        /// <summary>
+        /// Control ddlListCatalogo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlListCatalogo;
+        
+        /// <summary>
+        /// Control grvCatalogo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView grvCatalogo;
     }
 }

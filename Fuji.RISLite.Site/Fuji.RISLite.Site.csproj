@@ -71,7 +71,11 @@
     <Content Include="assets\css\Site.css" />
     <Content Include="assets\css\style.css" />
     <Content Include="frmAdminCatalogo.aspx" />
+    <Content Include="frmAdminUser.aspx" />
     <Content Include="frmAgenda.aspx" />
+    <Content Include="frmConfigAgenda.aspx" />
+    <Content Include="frmConfiguraciones.aspx" />
+    <Content Include="frmEstadisticasTec.aspx" />
     <Content Include="frmListaTrabajo.aspx" />
     <Content Include="frmRepEstadisticas.aspx" />
     <Content Include="frmSalir.aspx" />
@@ -358,12 +362,40 @@
     <Compile Include="frmAdminCatalogo.aspx.designer.cs">
       <DependentUpon>frmAdminCatalogo.aspx</DependentUpon>
     </Compile>
+    <Compile Include="frmAdminUser.aspx.cs">
+      <DependentUpon>frmAdminUser.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="frmAdminUser.aspx.designer.cs">
+      <DependentUpon>frmAdminUser.aspx</DependentUpon>
+    </Compile>
     <Compile Include="frmAgenda.aspx.cs">
       <DependentUpon>frmAgenda.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="frmAgenda.aspx.designer.cs">
       <DependentUpon>frmAgenda.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="frmConfigAgenda.aspx.cs">
+      <DependentUpon>frmConfigAgenda.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="frmConfigAgenda.aspx.designer.cs">
+      <DependentUpon>frmConfigAgenda.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="frmConfiguraciones.aspx.cs">
+      <DependentUpon>frmConfiguraciones.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="frmConfiguraciones.aspx.designer.cs">
+      <DependentUpon>frmConfiguraciones.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="frmEstadisticasTec.aspx.cs">
+      <DependentUpon>frmEstadisticasTec.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="frmEstadisticasTec.aspx.designer.cs">
+      <DependentUpon>frmEstadisticasTec.aspx</DependentUpon>
     </Compile>
     <Compile Include="frmListaTrabajo.aspx.cs">
       <DependentUpon>frmListaTrabajo.aspx</DependentUpon>
@@ -390,6 +422,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\DataContract\CatalogoRequest.cs" />
     <Compile Include="Services\DataContract\ValidaUserRequest.cs" />
     <Compile Include="Services\DataContract\ValidaUserResponse.cs" />
     <Compile Include="Services\ServiceContract\IRisLiteService.cs" />

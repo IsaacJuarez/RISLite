@@ -1,10 +1,11 @@
-﻿using Fuji.RISLite.AccesoDatos;
-using Fuji.RISLite.Entidades.DataBase;
+﻿using Fuji.RISLite.Entidades.DataBase;
 using Fuji.RISLite.Entidades.Extensions;
+using Fuji.RISLite.Entities;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace Fuji.RISLite.Entidades
+namespace Fuji.RISLite.DataAccess
 {
 
 
@@ -48,7 +49,7 @@ namespace Fuji.RISLite.Entidades
                                 Usuario.bitActivo = (bool)query.bitActivo;
                                 Usuario.datFecha = (DateTime)query.datFecha;
                                 Usuario.vchUserAdmin = query.vchUserAdmin;
-                                Usuario.Token = Security.Encrypt(query.intTipoUsuario + "-" + query.vchUsuario);
+                                Usuario.Token = Security.Encrypt(query.intUsuarioID + "-" + query.vchUsuario);
                             }
                         }
                     }
@@ -60,5 +61,36 @@ namespace Fuji.RISLite.Entidades
             }
             return Success;
         }
+
+        #region catalogos
+
+        public List<tbl_CAT_Catalogo> getListCatalogos(string user)
+        {
+            List<tbl_CAT_Catalogo> lst = new List<tbl_CAT_Catalogo>();
+            try
+            {
+                using(dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Catalogo.Any())
+                    {
+                        var query = dbRisDA.tbl_CAT_Catalogo.ToList();
+                        if(query != null)
+                        {
+                            if(query.Count > 0)
+                            {
+                                lst = query;
+                            }
+                        }
+                    }
+                }
+            }
+           catch(Exception egLC)
+            {
+                Log.EscribeLog("Existe un error en getListCatalogos: " + egLC.Message, 3, user);
+            }
+            return lst;
+        }
+        #endregion catalogos
+        
     }
 }

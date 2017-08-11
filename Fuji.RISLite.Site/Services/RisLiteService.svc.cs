@@ -1,8 +1,10 @@
-﻿using Fuji.RISLite.AccesoDatos;
-using Fuji.RISLite.Entidades;
+﻿using Fuji.RISLite.DataAccess;
+using Fuji.RISLite.Entidades.DataBase;
 using Fuji.RISLite.Entidades.Extensions;
+using Fuji.RISLite.Entities;
 using Fuji.RISLite.Site.Services.DataContract;
 using System;
+using System.Collections.Generic;
 
 namespace Fuji.RISLite.Site.Services
 {
@@ -30,5 +32,25 @@ namespace Fuji.RISLite.Site.Services
             }
             return response;
         }
+
+        #region catalogo
+        public List<tbl_CAT_Catalogo> getListCatalogos(CatalogoRequest request)
+        {
+            List<tbl_CAT_Catalogo> response = new List<tbl_CAT_Catalogo>();
+            try
+            {
+                if(Security.ValidateToken(request.mdlUser.Token,request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListCatalogos(request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getUser: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+        #endregion catalogo
     }
 }

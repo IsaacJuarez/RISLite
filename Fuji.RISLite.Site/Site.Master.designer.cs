@@ -67,6 +67,15 @@ namespace Fuji.RISLite.Site {
         protected global::System.Web.UI.HtmlControls.HtmlAnchor btnShort1;
         
         /// <summary>
+        /// Control btn1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl btn1;
+        
+        /// <summary>
         /// Control btnShort2.
         /// </summary>
         /// <remarks>
@@ -74,6 +83,15 @@ namespace Fuji.RISLite.Site {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlAnchor btnShort2;
+        
+        /// <summary>
+        /// Control btn2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl btn2;
         
         /// <summary>
         /// Control btnShort3.
@@ -85,6 +103,15 @@ namespace Fuji.RISLite.Site {
         protected global::System.Web.UI.HtmlControls.HtmlAnchor btnShort3;
         
         /// <summary>
+        /// Control btn3.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl btn3;
+        
+        /// <summary>
         /// Control btnShort4.
         /// </summary>
         /// <remarks>
@@ -92,6 +119,15 @@ namespace Fuji.RISLite.Site {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlAnchor btnShort4;
+        
+        /// <summary>
+        /// Control btn4.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl btn4;
         
         /// <summary>
         /// Control ContentPlaceHolder1.

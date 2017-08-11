@@ -1,4 +1,4 @@
-﻿using Fuji.RISLite.AccesoDatos;
+﻿using Fuji.RISLite.Entities;
 
 namespace Fuji.RISLite.Site.Services.DataContract
 {

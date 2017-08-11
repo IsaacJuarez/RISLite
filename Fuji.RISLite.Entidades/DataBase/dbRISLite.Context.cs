@@ -29,5 +29,6 @@ namespace Fuji.RISLite.Entidades.DataBase
         public DbSet<tbl_MST_Bitacora> tbl_MST_Bitacora { get; set; }
         public DbSet<tbl_CAT_TipoUsuario> tbl_CAT_TipoUsuario { get; set; }
         public DbSet<tbl_CAT_Usuario> tbl_CAT_Usuario { get; set; }
+        public DbSet<tbl_CAT_Catalogo> tbl_CAT_Catalogo { get; set; }
     }
 }

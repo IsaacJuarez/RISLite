@@ -5,6 +5,19 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="RISLiteModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="tbl_CAT_Catalogo">
+          <Key>
+            <PropertyRef Name="intCatalogoID" />
+          </Key>
+          <Property Name="intCatalogoID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vchNombreCat" Type="varchar" MaxLength="100" />
+          <Property Name="vchTabla" Type="varchar" MaxLength="100" />
+          <Property Name="vchDescripcion" Type="varchar" MaxLength="200" />
+          <Property Name="vchIdentityTabla" Type="varchar" MaxLength="100" />
+          <Property Name="datFecha" Type="datetime" />
+          <Property Name="bitActivo" Type="bit" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+        </EntityType>
         <EntityType Name="tbl_CAT_TipoMensaje">
           <Key>
             <PropertyRef Name="intTipoMensaje" />
@@ -72,6 +85,7 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="RISLiteModelStoreContainer">
+          <EntitySet Name="tbl_CAT_Catalogo" EntityType="Self.tbl_CAT_Catalogo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_TipoMensaje" EntityType="Self.tbl_CAT_TipoMensaje" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_TipoUsuario" EntityType="Self.tbl_CAT_TipoUsuario" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_Usuario" EntityType="Self.tbl_CAT_Usuario" Schema="dbo" store:Type="Tables" />
@@ -102,6 +116,7 @@
             <End Role="tbl_CAT_TipoUsuario" EntitySet="tbl_CAT_TipoUsuario" />
             <End Role="tbl_CAT_Usuario" EntitySet="tbl_CAT_Usuario" />
           </AssociationSet>
+          <EntitySet Name="tbl_CAT_Catalogo" EntityType="RISLiteModel.tbl_CAT_Catalogo" />
         </EntityContainer>
         <EntityType Name="tbl_CAT_TipoMensaje">
           <Key>
@@ -173,6 +188,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="tbl_CAT_Catalogo">
+          <Key>
+            <PropertyRef Name="intCatalogoID" />
+          </Key>
+          <Property Name="intCatalogoID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vchNombreCat" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="vchTabla" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="vchDescripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="vchIdentityTabla" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -222,6 +250,20 @@
                 <ScalarProperty Name="vchUsuario" ColumnName="vchUsuario" />
                 <ScalarProperty Name="intTipoUsuario" ColumnName="intTipoUsuario" />
                 <ScalarProperty Name="intUsuarioID" ColumnName="intUsuarioID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_CAT_Catalogo">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_Catalogo">
+              <MappingFragment StoreEntitySet="tbl_CAT_Catalogo">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="vchIdentityTabla" ColumnName="vchIdentityTabla" />
+                <ScalarProperty Name="vchDescripcion" ColumnName="vchDescripcion" />
+                <ScalarProperty Name="vchTabla" ColumnName="vchTabla" />
+                <ScalarProperty Name="vchNombreCat" ColumnName="vchNombreCat" />
+                <ScalarProperty Name="intCatalogoID" ColumnName="intCatalogoID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

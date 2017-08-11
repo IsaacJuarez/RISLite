@@ -1,4 +1,6 @@
-﻿using Fuji.RISLite.Site.Services.DataContract;
+﻿using Fuji.RISLite.Entidades.DataBase;
+using Fuji.RISLite.Site.Services.DataContract;
+using System.Collections.Generic;
 using System.ServiceModel;
 
 namespace Fuji.RISLite.Site.Services
@@ -12,5 +14,9 @@ namespace Fuji.RISLite.Site.Services
 
         [OperationContract]
         ValidaUserResponse getUser(ValidaUserRequest request);
+
+        #region catalogo
+        List<tbl_CAT_Catalogo> getListCatalogos(CatalogoRequest request);
+        #endregion catalogo
     }
 }

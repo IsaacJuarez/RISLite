@@ -371,20 +371,20 @@
 
 			<div class="sidebar-shortcuts" id="sidebar-shortcuts">
 				<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
-					<a class="btn btn-success" title="Parametrización Agenda" runat="server" id="btnShort1">
-						<i class="ace-icon fa fa-cogs" id="btn1" ></i>
+					<a class="btn btn-success" title="" runat="server" id="btnShort1">
+						<i class="" id="btn1" runat="server" ></i>
 					</a>
 
-					<a class="btn btn-info" title="Configuración"  runat="server" id="btnShort2">
-						<i class="ace-icon fa fa-pencil"  id="btn2"></i>
+					<a class="btn btn-info" title=""  runat="server" id="btnShort2">
+						<i class=""  id="btn2" runat="server"></i>
 					</a>
 
-					<a class="btn btn-warning" title="Equipos y Tecnicos"  runat="server" id="btnShort3">
-						<i class="ace-icon fa fa-users"  id="btn3" ></i>
+					<a class="btn btn-warning" title=""  runat="server" id="btnShort3">
+						<i class=""  id="btn3" runat="server"></i>
 					</a>
 
-					<a runat="server" onclick="return cerrarpagina();" class="btn btn-danger" title="Catálogos" id="btnShort4">
-						<i  class="ace-icon fa fa-cogs"onclick="return cerrarpagina();"  id="btn4"></i>
+					<a runat="server" onclick="return cerrarpagina();" class="btn btn-danger" title="" id="btnShort4">
+						<i  class="" onclick="return cerrarpagina();" runat="server"  id="btn4"></i>
 					</a>
 				</div>
 

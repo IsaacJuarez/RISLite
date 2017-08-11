@@ -48,6 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataBase\tbl_CAT_Catalogo.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
     <Compile Include="Extensions\Security.cs" />
     <Compile Include="RISLiteDataAccess.cs" />
     <Compile Include="DataBase\dbRISLite.Context.cs">
