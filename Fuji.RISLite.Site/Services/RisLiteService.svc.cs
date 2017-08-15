@@ -51,6 +51,78 @@ namespace Fuji.RISLite.Site.Services
             }
             return response;
         }
+
+        public List<stp_getListCatalogo_Result> getListCatalogo(CatalogoRequest request)
+        {
+            List<stp_getListCatalogo_Result> response = new List<stp_getListCatalogo_Result>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListCatalogo(request.mdlCat.intCatalogoID, request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getUser: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public stp_updateCatEstatus_Result updateCatalogoEstatus(CatalogoRequest request)
+        {
+            stp_updateCatEstatus_Result response = new stp_updateCatEstatus_Result();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.updateCatalogoEstatus(request.mdlCat.intCatalogoID, request.mdlCat.bitActivo,request.mdlCat.intPrimaryKey, request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getUser: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public stp_updateCatalogo_Result updateCatalogo(CatalogoRequest request)
+        {
+            stp_updateCatalogo_Result response = new stp_updateCatalogo_Result();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.updateCatalogo(request.mdlCat.intCatalogoID, request.mdlCat.intPrimaryKey, request.mdlCat.vchValor, request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getUser: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public stp_setItemCatalogo_Result setItemCatalogo(CatalogoRequest request)
+        {
+            stp_setItemCatalogo_Result response = new stp_setItemCatalogo_Result();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.setItemCatalogo(request.mdlCat.intCatalogoID, request.mdlCat.vchValor, request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getUser: " + egU.Message, 3, "");
+            }
+            return response;
+        }
         #endregion catalogo
     }
 }

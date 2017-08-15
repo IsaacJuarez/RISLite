@@ -14,6 +14,7 @@
           <Property Name="vchTabla" Type="varchar" MaxLength="100" />
           <Property Name="vchDescripcion" Type="varchar" MaxLength="200" />
           <Property Name="vchIdentityTabla" Type="varchar" MaxLength="100" />
+          <Property Name="vchValorItemTabla" Type="varchar" MaxLength="100" />
           <Property Name="datFecha" Type="datetime" />
           <Property Name="bitActivo" Type="bit" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
@@ -84,6 +85,24 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="stp_getListCatalogo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intCatalogoID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="stp_setItemCatalogo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intCatalogoID" Type="int" Mode="In" />
+          <Parameter Name="vchValor" Type="varchar" Mode="In" />
+          <Parameter Name="vchUserAdmin" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="stp_updateCatalogo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intCatalogoID" Type="int" Mode="In" />
+          <Parameter Name="intPrimaryKey" Type="int" Mode="In" />
+          <Parameter Name="vchValor" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="stp_updateCatEstatus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intCatalogoID" Type="int" Mode="In" />
+          <Parameter Name="bitActivo" Type="bit" Mode="In" />
+          <Parameter Name="intPrimaryKey" Type="int" Mode="In" />
+        </Function>
         <EntityContainer Name="RISLiteModelStoreContainer">
           <EntitySet Name="tbl_CAT_Catalogo" EntityType="Self.tbl_CAT_Catalogo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_TipoMensaje" EntityType="Self.tbl_CAT_TipoMensaje" Schema="dbo" store:Type="Tables" />
@@ -117,6 +136,24 @@
             <End Role="tbl_CAT_Usuario" EntitySet="tbl_CAT_Usuario" />
           </AssociationSet>
           <EntitySet Name="tbl_CAT_Catalogo" EntityType="RISLiteModel.tbl_CAT_Catalogo" />
+          <FunctionImport Name="stp_getListCatalogo" ReturnType="Collection(RISLiteModel.stp_getListCatalogo_Result)">
+          <Parameter Name="intCatalogoID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="stp_updateCatEstatus" ReturnType="Collection(RISLiteModel.stp_updateCatEstatus_Result)">
+            <Parameter Name="intCatalogoID" Mode="In" Type="Int32" />
+            <Parameter Name="bitActivo" Mode="In" Type="Boolean" />
+            <Parameter Name="intPrimaryKey" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="stp_setItemCatalogo" ReturnType="Collection(RISLiteModel.stp_setItemCatalogo_Result)">
+            <Parameter Name="intCatalogoID" Mode="In" Type="Int32" />
+            <Parameter Name="vchValor" Mode="In" Type="String" />
+            <Parameter Name="vchUserAdmin" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="stp_updateCatalogo" ReturnType="Collection(RISLiteModel.stp_updateCatalogo_Result)">
+            <Parameter Name="intCatalogoID" Mode="In" Type="Int32" />
+            <Parameter Name="intPrimaryKey" Mode="In" Type="Int32" />
+            <Parameter Name="vchValor" Mode="In" Type="String" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="tbl_CAT_TipoMensaje">
           <Key>
@@ -197,10 +234,28 @@
           <Property Name="vchTabla" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="vchDescripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="vchIdentityTabla" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="vchValorItemTabla" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="datFecha" Type="DateTime" Precision="3" />
           <Property Name="bitActivo" Type="Boolean" />
           <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
+        <ComplexType Name="stp_getListCatalogo_Result">
+          <Property Type="String" Name="vchCatalogoID" Nullable="true" />
+          <Property Type="String" Name="vchCatalogo" Nullable="true" />
+          <Property Type="Boolean" Name="bitActivo" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="stp_updateCatEstatus_Result">
+          <Property Type="String" Name="vchMensaje" Nullable="true" />
+          <Property Type="String" Name="vchDescripcion" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="stp_setItemCatalogo_Result">
+          <Property Type="String" Name="vchMensaje" Nullable="true" />
+          <Property Type="String" Name="vchDescripcion" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="stp_updateCatalogo_Result">
+          <Property Type="String" Name="vchMensaje" Nullable="true" />
+          <Property Type="String" Name="vchDescripcion" Nullable="true" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -259,6 +314,7 @@
                 <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
                 <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
                 <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="vchValorItemTabla" ColumnName="vchValorItemTabla" />
                 <ScalarProperty Name="vchIdentityTabla" ColumnName="vchIdentityTabla" />
                 <ScalarProperty Name="vchDescripcion" ColumnName="vchDescripcion" />
                 <ScalarProperty Name="vchTabla" ColumnName="vchTabla" />
@@ -267,6 +323,39 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="stp_getListCatalogo" FunctionName="RISLiteModel.Store.stp_getListCatalogo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RISLiteModel.stp_getListCatalogo_Result">
+                <ScalarProperty Name="vchCatalogoID" ColumnName="vchCatalogoID" />
+                <ScalarProperty Name="vchCatalogo" ColumnName="vchCatalogo" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="stp_updateCatEstatus" FunctionName="RISLiteModel.Store.stp_updateCatEstatus">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RISLiteModel.stp_updateCatEstatus_Result">
+                <ScalarProperty Name="vchMensaje" ColumnName="vchMensaje" />
+                <ScalarProperty Name="vchDescripcion" ColumnName="vchDescripcion" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="stp_setItemCatalogo" FunctionName="RISLiteModel.Store.stp_setItemCatalogo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RISLiteModel.stp_setItemCatalogo_Result">
+                <ScalarProperty Name="vchMensaje" ColumnName="vchMensaje" />
+                <ScalarProperty Name="vchDescripcion" ColumnName="vchDescripcion" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="stp_updateCatalogo" FunctionName="RISLiteModel.Store.stp_updateCatalogo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RISLiteModel.stp_updateCatalogo_Result">
+                <ScalarProperty Name="vchMensaje" ColumnName="vchMensaje" />
+                <ScalarProperty Name="vchDescripcion" ColumnName="vchDescripcion" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

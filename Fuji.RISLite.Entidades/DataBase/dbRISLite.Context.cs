@@ -12,6 +12,9 @@ namespace Fuji.RISLite.Entidades.DataBase
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Objects;
+    using System.Data.Objects.DataClasses;
+    using System.Linq;
     
     public partial class RISLiteEntities : DbContext
     {
@@ -30,5 +33,65 @@ namespace Fuji.RISLite.Entidades.DataBase
         public DbSet<tbl_CAT_TipoUsuario> tbl_CAT_TipoUsuario { get; set; }
         public DbSet<tbl_CAT_Usuario> tbl_CAT_Usuario { get; set; }
         public DbSet<tbl_CAT_Catalogo> tbl_CAT_Catalogo { get; set; }
+    
+        public virtual ObjectResult<stp_getListCatalogo_Result> stp_getListCatalogo(Nullable<int> intCatalogoID)
+        {
+            var intCatalogoIDParameter = intCatalogoID.HasValue ?
+                new ObjectParameter("intCatalogoID", intCatalogoID) :
+                new ObjectParameter("intCatalogoID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getListCatalogo_Result>("stp_getListCatalogo", intCatalogoIDParameter);
+        }
+    
+        public virtual ObjectResult<stp_updateCatEstatus_Result> stp_updateCatEstatus(Nullable<int> intCatalogoID, Nullable<bool> bitActivo, Nullable<int> intPrimaryKey)
+        {
+            var intCatalogoIDParameter = intCatalogoID.HasValue ?
+                new ObjectParameter("intCatalogoID", intCatalogoID) :
+                new ObjectParameter("intCatalogoID", typeof(int));
+    
+            var bitActivoParameter = bitActivo.HasValue ?
+                new ObjectParameter("bitActivo", bitActivo) :
+                new ObjectParameter("bitActivo", typeof(bool));
+    
+            var intPrimaryKeyParameter = intPrimaryKey.HasValue ?
+                new ObjectParameter("intPrimaryKey", intPrimaryKey) :
+                new ObjectParameter("intPrimaryKey", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_updateCatEstatus_Result>("stp_updateCatEstatus", intCatalogoIDParameter, bitActivoParameter, intPrimaryKeyParameter);
+        }
+    
+        public virtual ObjectResult<stp_setItemCatalogo_Result> stp_setItemCatalogo(Nullable<int> intCatalogoID, string vchValor, string vchUserAdmin)
+        {
+            var intCatalogoIDParameter = intCatalogoID.HasValue ?
+                new ObjectParameter("intCatalogoID", intCatalogoID) :
+                new ObjectParameter("intCatalogoID", typeof(int));
+    
+            var vchValorParameter = vchValor != null ?
+                new ObjectParameter("vchValor", vchValor) :
+                new ObjectParameter("vchValor", typeof(string));
+    
+            var vchUserAdminParameter = vchUserAdmin != null ?
+                new ObjectParameter("vchUserAdmin", vchUserAdmin) :
+                new ObjectParameter("vchUserAdmin", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_setItemCatalogo_Result>("stp_setItemCatalogo", intCatalogoIDParameter, vchValorParameter, vchUserAdminParameter);
+        }
+    
+        public virtual ObjectResult<stp_updateCatalogo_Result> stp_updateCatalogo(Nullable<int> intCatalogoID, Nullable<int> intPrimaryKey, string vchValor)
+        {
+            var intCatalogoIDParameter = intCatalogoID.HasValue ?
+                new ObjectParameter("intCatalogoID", intCatalogoID) :
+                new ObjectParameter("intCatalogoID", typeof(int));
+    
+            var intPrimaryKeyParameter = intPrimaryKey.HasValue ?
+                new ObjectParameter("intPrimaryKey", intPrimaryKey) :
+                new ObjectParameter("intPrimaryKey", typeof(int));
+    
+            var vchValorParameter = vchValor != null ?
+                new ObjectParameter("vchValor", vchValor) :
+                new ObjectParameter("vchValor", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_updateCatalogo_Result>("stp_updateCatalogo", intCatalogoIDParameter, intPrimaryKeyParameter, vchValorParameter);
+        }
     }
 }

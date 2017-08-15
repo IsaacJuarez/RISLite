@@ -79,6 +79,11 @@
     <Content Include="frmListaTrabajo.aspx" />
     <Content Include="frmRepEstadisticas.aspx" />
     <Content Include="frmSalir.aspx" />
+    <Content Include="Images\ic_action_calendar_month.png" />
+    <Content Include="Images\ic_action_cancel.png" />
+    <Content Include="Images\ic_action_edit.png" />
+    <Content Include="Images\ic_action_foursquare.png" />
+    <Content Include="Images\ic_action_tick.png" />
     <Content Include="Images\next.gif" />
     <Content Include="Images\overlay.png" />
     <Content Include="Images\previous.gif" />
