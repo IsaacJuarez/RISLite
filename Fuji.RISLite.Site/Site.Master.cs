@@ -1,4 +1,5 @@
 ﻿using Fuji.RISLite.Entidades.Extensions;
+using Fuji.RISLite.Entities;
 using Fuji.RISLite.Site.Services;
 using Fuji.RISLite.Site.Services.DataContract;
 using System;
@@ -18,6 +19,7 @@ namespace Fuji.RISLite.Site
             }
         }
         RisLiteService RisService = new RisLiteService();
+        private static clsUsuario usuario = new clsUsuario();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -46,6 +48,7 @@ namespace Fuji.RISLite.Site
                             {
                                 lblUser.Text = response.mdlUser.vchNombre;
                                 Session["User"] = response.mdlUser;
+                                usuario = response.mdlUser;
                                 configUser(response.mdlUser.intTipoUsuario);
                             }
                             else
@@ -105,8 +108,8 @@ namespace Fuji.RISLite.Site
                         btn2.Attributes.Remove("class");
                         btn2.Attributes.Add("class", "ace-icon fa fa-cog");
                         btnShort3.Attributes.Remove("href");
-                        btnShort3.Attributes.Add("href", "frmAdminUser.aspx");
-                        btnShort3.Title = "Usuarios";
+                        btnShort3.Attributes.Add("href", "frmAdminEquipoUsuario.aspx");
+                        btnShort3.Title = "Usuarios y Equipos";
                         btn3.Attributes.Remove("class");
                         btn3.Attributes.Add("class", "ace-icon fa fa-users");
                         btnShort4.Attributes.Remove("href");
@@ -153,7 +156,21 @@ namespace Fuji.RISLite.Site
             }
             catch(Exception eab)
             {
-                Log.EscribeLog("Existe un error en btnAdminCatalogo_Click: " + eab.Message, 3, "");
+                Log.EscribeLog("Existe un error en btnAdminCatalogo_Click: " + eab.Message, 3, usuario.vchUsuario);
+            }
+        }
+
+        protected void txtBusquedaPaciente_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                string busqueda = "";
+                busqueda = Security.Encrypt(txtBusquedaPaciente.Text);
+                Response.Redirect(URL + "/frmPaciente.aspx?var=" + busqueda, false);
+            }
+            catch (Exception etxBP)
+            {
+                Log.EscribeLog("Existe un error en txtBusquedaPaciente_TextChanged: " + etxBP.Message, 3, usuario.vchUsuario);
             }
         }
     }

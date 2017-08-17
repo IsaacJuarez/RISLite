@@ -1,14 +1,14 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="frmConfiguraciones.aspx.cs" Inherits="Fuji.RISLite.Site.frmConfiguraciones" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="frmAdminEquipoUsuario.aspx.cs" Inherits="Fuji.RISLite.Site.frmAdminEquipoUsuario" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="page-content">
         <div class="page-header">
 		    <h1>
-			    Configuración 
+			    Administración
 			    <small>
 				    <i class="ace-icon fa fa-angle-double-right"></i>
-				    General
+				    Técnicos y Equipos
 			    </small>
 		    </h1>
 	    </div><!-- /.page-header -->
@@ -18,7 +18,7 @@
                     <div class="widget-header widget-header-flat widget-header-small">
 						<h5 class="widget-title">
 							<i class="ace-icon fa fa-user-md"></i>
-							Sistema
+							Técnicos
 						</h5>
                     </div>
                     <div class="widget-body">
@@ -32,7 +32,7 @@
                     <div class="widget-header widget-header-flat widget-header-small">
 						<h5 class="widget-title">
 							<i class="ace-icon fa fa-medkit"></i>
-							Agenda
+							Equipos
 						</h5>
                     </div>
                     <div class="widget-body">

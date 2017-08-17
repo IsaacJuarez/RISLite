@@ -2,16 +2,11 @@
 using Fuji.RISLite.Entities;
 using Fuji.RISLite.Site.Services;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace Fuji.RISLite.Site
 {
-    public partial class frmAdminUser : System.Web.UI.Page
+    public partial class frmAddDate : System.Web.UI.Page
     {
         public string URL
         {
@@ -52,7 +47,7 @@ namespace Fuji.RISLite.Site
             }
             catch (Exception ePL)
             {
-                Log.EscribeLog("Existe un error en Page_Load de frmAdminUser: " + ePL.Message, 3, "");
+                Log.EscribeLog("Existe un error en Page_Load de frmAddDate: " + ePL.Message, 3, "");
             }
         }
     }

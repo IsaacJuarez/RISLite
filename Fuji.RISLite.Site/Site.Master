@@ -6,7 +6,7 @@
 <head runat="server">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>RIS Lite</title>
-
+    <link rel="icon" href="Images/favicon.ico" type="image/ico" />
     
     <!-- bootstrap & fontawesome -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
@@ -348,7 +348,7 @@
 							<li class="divider"></li>
 
 							<li>
-								<a href="#">
+								<a href="frmSalir.aspx?var=4f55354337364b2f79534d3d">
 									<i class="ace-icon fa fa-power-off"></i>
 									Salir
 								</a>
@@ -408,12 +408,33 @@
 					<b class="arrow"></b>
 				</li>
 
-                <li class="" id="li2">
-					<a href="frmAgenda.aspx" onclick="changeClass('li2')">
+                <li class="active open" id="li2">
+					<a href="#" class="dropdown-toggle">
 						<i class="menu-icon fa fa-calendar"></i>
 						<span class="menu-text"> Agenda </span>
+                        <b class="arrow fa fa-angle-down"></b>
 					</a>
 					<b class="arrow"></b>
+                    
+                    <ul class="submenu">
+                        <li class="">
+							<a href="frmAgenda.aspx">
+								<i class="menu-icon fa fa-calendar"></i>
+								Agenda
+							</a>
+
+							<b class="arrow"></b>
+						</li>
+
+                        <li class="">
+							<a href="frmAddDate.aspx">
+								<i class="menu-icon fa fa-calendar-plus-o"></i>
+								Nueva Cita
+							</a>
+
+							<b class="arrow"></b>
+						</li>
+                    </ul>
 				</li>
 
                 <li class="" id="li3">
@@ -452,7 +473,8 @@
 					<div class="nav-search" id="nav-search">
 						<div class="form-search">
 							<span class="input-icon">
-								<input type="text" placeholder="Buscar ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+								<%--<input type="text" placeholder="Buscar ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />--%>
+                                <asp:TextBox ID="txtBusquedaPaciente" runat="server" CssClass="nav-search-input" AutoPostBack="true" Text="" placeholder="Buscar paciente..." OnTextChanged="txtBusquedaPaciente_TextChanged"></asp:TextBox>
 								<i class="ace-icon fa fa-search nav-search-icon"></i>
 							</span>
 						</div>

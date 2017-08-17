@@ -264,6 +264,7 @@ namespace Fuji.RISLite.Site
         {
             try
             {
+                Message = Message.Replace("'", " ");
                 ScriptManager.RegisterStartupScript(this, this.GetType(), System.Guid.NewGuid().ToString(), "ShowMessage('" + Message + "','" + type + "','" + container + "');", true);
             }
             catch (Exception eSM)
@@ -346,54 +347,62 @@ namespace Fuji.RISLite.Site
                 CatalogoRequest request = new CatalogoRequest();
                 clsUsuario user = new clsUsuario();
                 clsCatalogo cat = new clsCatalogo();
-                if (bitEdicion)//Editar
-                { 
-                    user = Usuario;
-                    cat.vchUserAdmin = user.vchUsuario;
-                    cat.intCatalogoID = Convert.ToInt32(ddlListCatalogo.SelectedValue.ToString());
-                    cat.intPrimaryKey = Convert.ToInt32(lblPrimary.Text.Trim());
-                    cat.vchValor = txtValorCatalogo.Text;
-                    request.mdlCat = cat;
-                    request.mdlUser = user;
-                    stp_updateCatalogo_Result response = new stp_updateCatalogo_Result();
-                    response = RisService.updateCatalogo(request);
-                    if(response != null)
+                if (ddlListCatalogo.SelectedItem.Value != "" && ddlListCatalogo.SelectedItem.Value != "0")
+                {
+                    if (bitEdicion)//Editar
                     {
-                        if (response.vchMensaje == "OK")
+                        user = Usuario;
+                        cat.vchUserAdmin = user.vchUsuario;
+                        cat.intCatalogoID = Convert.ToInt32(ddlListCatalogo.SelectedValue.ToString());
+                        cat.intPrimaryKey = Convert.ToInt32(lblPrimary.Text.Replace("ID =", "").Trim());
+                        cat.vchValor = txtValorCatalogo.Text;
+                        request.mdlCat = cat;
+                        request.mdlUser = user;
+                        stp_updateCatalogo_Result response = new stp_updateCatalogo_Result();
+                        response = RisService.updateCatalogo(request);
+                        if (response != null)
                         {
-                            limpiarControlAdd();
-                            cargaCatalgo();
-                            ShowMessage("Cambios correctos.", MessageType.Correcto, "alert_container");
+                            if (response.vchMensaje == "OK")
+                            {
+                                limpiarControlAdd();
+                                cargaCatalgo();
+                                ShowMessage("Cambios correctos.", MessageType.Correcto, "alert_container");
+                            }
+                            else
+                            {
+                                ShowMessage("Existe un error al guardar: " + response.vchDescripcion, MessageType.Error, "alert_container");
+                            }
                         }
-                        else
+                    }
+                    else//Agregar
+                    {
+                        user = Usuario;
+                        cat.vchUserAdmin = user.vchUsuario;
+                        cat.intCatalogoID = Convert.ToInt32(ddlListCatalogo.SelectedValue.ToString());
+                        //cat.intPrimaryKey = Convert.ToInt32(lblPrimary.Text.Replace("ID =", "").Trim());
+                        cat.vchValor = txtValorCatalogo.Text;
+                        request.mdlCat = cat;
+                        request.mdlUser = user;
+                        stp_setItemCatalogo_Result response = new stp_setItemCatalogo_Result();
+                        response = RisService.setItemCatalogo(request);
+                        if (response != null)
                         {
-                            ShowMessage("Existe un error al guardar: " + response.vchDescripcion, MessageType.Error, "alert_container");
+                            if (response.vchMensaje == "OK")
+                            {
+                                limpiarControlAdd();
+                                cargaCatalgo();
+                                ShowMessage("Cambios correctos.", MessageType.Correcto, "alert_container");
+                            }
+                            else
+                            {
+                                ShowMessage("Existe un error al guardar: " + response.vchDescripcion, MessageType.Error, "alert_container");
+                            }
                         }
                     }
                 }
-                else//Agregar
+                else
                 {
-                    user = Usuario;
-                    cat.vchUserAdmin = user.vchUsuario;
-                    cat.intCatalogoID = Convert.ToInt32(ddlListCatalogo.SelectedValue.ToString());
-                    cat.intPrimaryKey = Convert.ToInt32(lblPrimary.Text.Trim());
-                    cat.vchValor = txtValorCatalogo.Text;
-                    request.mdlCat = cat;
-                    request.mdlUser = user;
-                    stp_setItemCatalogo_Result response = new stp_setItemCatalogo_Result();
-                    if (response != null)
-                    {
-                        if(response.vchMensaje == "OK")
-                        {
-                            limpiarControlAdd();
-                            cargaCatalgo();
-                            ShowMessage("Cambios correctos.", MessageType.Correcto, "alert_container");
-                        }
-                        else
-                        {
-                            ShowMessage("Existe un error al guardar: " + response.vchDescripcion, MessageType.Error, "alert_container");
-                        }
-                    }
+                    ShowMessage("Seleccionar el tipo de catálogo.", MessageType.Error, "alert_container");
                 }
             }
             catch (Exception ebAI)

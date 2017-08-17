@@ -44,6 +44,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AjaxControlToolkit, Version=17.1.1.0, Culture=neutral, PublicKeyToken=28f01b0e84b6d53e, processorArchitecture=MSIL">
+      <HintPath>..\packages\AjaxControlToolkit.17.1.1.0\lib\net40\AjaxControlToolkit.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
@@ -68,15 +71,20 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="assets\css\bootstrap-tagsinput.css" />
     <Content Include="assets\css\Site.css" />
     <Content Include="assets\css\style.css" />
+    <Content Include="assets\js\bootstrap-tagsinput.js" />
+    <Content Include="frmAddDate.aspx" />
     <Content Include="frmAdminCatalogo.aspx" />
+    <Content Include="frmAdminEquipoUsuario.aspx" />
     <Content Include="frmAdminUser.aspx" />
     <Content Include="frmAgenda.aspx" />
     <Content Include="frmConfigAgenda.aspx" />
     <Content Include="frmConfiguraciones.aspx" />
     <Content Include="frmEstadisticasTec.aspx" />
     <Content Include="frmListaTrabajo.aspx" />
+    <Content Include="frmPaciente.aspx" />
     <Content Include="frmRepEstadisticas.aspx" />
     <Content Include="frmSalir.aspx" />
     <Content Include="Images\ic_action_calendar_month.png" />
@@ -360,12 +368,26 @@
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
+    <Compile Include="frmAddDate.aspx.cs">
+      <DependentUpon>frmAddDate.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="frmAddDate.aspx.designer.cs">
+      <DependentUpon>frmAddDate.aspx</DependentUpon>
+    </Compile>
     <Compile Include="frmAdminCatalogo.aspx.cs">
       <DependentUpon>frmAdminCatalogo.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="frmAdminCatalogo.aspx.designer.cs">
       <DependentUpon>frmAdminCatalogo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="frmAdminEquipoUsuario.aspx.cs">
+      <DependentUpon>frmAdminEquipoUsuario.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="frmAdminEquipoUsuario.aspx.designer.cs">
+      <DependentUpon>frmAdminEquipoUsuario.aspx</DependentUpon>
     </Compile>
     <Compile Include="frmAdminUser.aspx.cs">
       <DependentUpon>frmAdminUser.aspx</DependentUpon>
@@ -408,6 +430,13 @@
     </Compile>
     <Compile Include="frmListaTrabajo.aspx.designer.cs">
       <DependentUpon>frmListaTrabajo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="frmPaciente.aspx.cs">
+      <DependentUpon>frmPaciente.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="frmPaciente.aspx.designer.cs">
+      <DependentUpon>frmPaciente.aspx</DependentUpon>
     </Compile>
     <Compile Include="frmRepEstadisticas.aspx.cs">
       <DependentUpon>frmRepEstadisticas.aspx</DependentUpon>

@@ -37,50 +37,50 @@
                                         <ContentTemplate>
                                             <asp:Panel runat="server">
                                                 <asp:GridView ID="grvCatalogo" runat="server" AllowPaging="true" CssClass="table table-striped table-bordered"
-                                                PageSize="10" AutoGenerateColumns="false" OnRowDataBound="grvCatalogo_RowDataBound" Font-Size="10px"
-                                                OnPageIndexChanging="grvCatalogo_PageIndexChanging" DataKeyNames="vchCatalogoID"
-                                                OnRowCommand="grvCatalogo_RowCommand"
-                                                EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
-                                                <Columns>
-                                                    <asp:BoundField DataField="vchCatalogoID" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
-                                                    <asp:BoundField DataField="vchCatalogo"  HeaderText="Nombre" ReadOnly="true" />
-                                                    <asp:TemplateField HeaderText="Editar">
-                                                        <ItemTemplate>      
-                                                            <asp:LinkButton ID="btnVisualizar" CausesValidation="false" CommandName="viewEditar" CommandArgument='<%# Bind("vchCatalogoID") %>' runat="server">
-                                                                <asp:Image ID="ImageVisializa" runat="server" ImageUrl="~/images/ic_action_edit.png" Height="25px" Width="25px" ToolTip="Editar"/>
-                                                            </asp:LinkButton>
-                                                        </ItemTemplate>
-                                                    </asp:TemplateField>
-                                                    <asp:TemplateField HeaderText="Estatus" ItemStyle-HorizontalAlign="Center">
-                                                        <ItemTemplate>
-                                                            <asp:ImageButton ID="imbEstatus" runat="server" BackColor="Transparent"  Height="25px" Width="25px" 
-                                                                CommandArgument='<%#Eval("vchCatalogoID") %>' CommandName="Estatus" ToolTip="Cambia el estatus del Sitio" />
-                                                        </ItemTemplate>
-                                                    </asp:TemplateField>
-                                                </Columns>
-                                                <PagerTemplate>
-                                                    <asp:Label ID="lblTemplate" runat="server" Text="Muestra Filas: " CssClass="Label" />
-                                                    <asp:DropDownList ID="ddlBandeja" runat="server" AutoPostBack="true" CausesValidation="false"
-                                                        Enabled="true" OnSelectedIndexChanged="ddlBandeja_SelectedIndexChanged">
-                                                            <asp:ListItem Value="10" />
-                                                            <asp:ListItem Value="15" />
-                                                            <asp:ListItem Value="20" />
-                                                    </asp:DropDownList>
-                                                    &nbsp;Página
-                                                    <asp:TextBox ID="txtBandeja" runat="server" AutoPostBack="true" OnTextChanged="txtBandeja_TextChanged"
-                                                        Width="40" MaxLength="10" />
-                                                    de
-                                                    <asp:Label ID="lblBandejaTotal" runat="server" />
-                                                    &nbsp;
-                                                    <asp:Button ID="btnBandeja_I" runat="server" CommandName="Page" CausesValidation="false"
-                                                        ToolTip="Página Anterior" CommandArgument="Prev" CssClass="previous" />
-                                                    <asp:Button ID="btnBandeja_II" runat="server" CommandName="Page" CausesValidation="false"
-                                                        ToolTip="Página Siguiente" CommandArgument="Next" CssClass="next" />
-                                                </PagerTemplate>
-                                                <HeaderStyle CssClass="headerstyle" />
-                                                <FooterStyle CssClass="text-center" />
-                                                <PagerStyle CssClass="text-center" />
-                                            </asp:GridView>
+                                                    PageSize="10" AutoGenerateColumns="false" OnRowDataBound="grvCatalogo_RowDataBound" Font-Size="10px"
+                                                    OnPageIndexChanging="grvCatalogo_PageIndexChanging" DataKeyNames="vchCatalogoID"
+                                                    OnRowCommand="grvCatalogo_RowCommand"
+                                                    EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
+                                                    <Columns>
+                                                        <asp:BoundField DataField="vchCatalogoID" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
+                                                        <asp:BoundField DataField="vchCatalogo"  HeaderText="Nombre" ReadOnly="true" />
+                                                        <asp:TemplateField HeaderText="Editar">
+                                                            <ItemTemplate>      
+                                                                <asp:LinkButton ID="btnVisualizar" CausesValidation="false" CommandName="viewEditar" CommandArgument='<%# Bind("vchCatalogoID") %>' runat="server">
+                                                                    <asp:Image ID="ImageVisializa" runat="server" ImageUrl="~/images/ic_action_edit.png" Height="25px" Width="25px" ToolTip="Editar"/>
+                                                                </asp:LinkButton>
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
+                                                        <asp:TemplateField HeaderText="Estatus" ItemStyle-HorizontalAlign="Center">
+                                                            <ItemTemplate>
+                                                                <asp:ImageButton ID="imbEstatus" runat="server" BackColor="Transparent"  Height="25px" Width="25px" 
+                                                                    CommandArgument='<%#Eval("vchCatalogoID") %>' CommandName="Estatus" ToolTip="Cambia el estatus del Sitio" />
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
+                                                    </Columns>
+                                                    <PagerTemplate>
+                                                        <asp:Label ID="lblTemplate" runat="server" Text="Muestra Filas: " CssClass="Label" />
+                                                        <asp:DropDownList ID="ddlBandeja" runat="server" AutoPostBack="true" CausesValidation="false"
+                                                            Enabled="true" OnSelectedIndexChanged="ddlBandeja_SelectedIndexChanged">
+                                                                <asp:ListItem Value="10" />
+                                                                <asp:ListItem Value="15" />
+                                                                <asp:ListItem Value="20" />
+                                                        </asp:DropDownList>
+                                                        &nbsp;Página
+                                                        <asp:TextBox ID="txtBandeja" runat="server" AutoPostBack="true" OnTextChanged="txtBandeja_TextChanged"
+                                                            Width="40" MaxLength="10" />
+                                                        de
+                                                        <asp:Label ID="lblBandejaTotal" runat="server" />
+                                                        &nbsp;
+                                                        <asp:Button ID="btnBandeja_I" runat="server" CommandName="Page" CausesValidation="false"
+                                                            ToolTip="Página Anterior" CommandArgument="Prev" CssClass="previous" />
+                                                        <asp:Button ID="btnBandeja_II" runat="server" CommandName="Page" CausesValidation="false"
+                                                            ToolTip="Página Siguiente" CommandArgument="Next" CssClass="next" />
+                                                    </PagerTemplate>
+                                                    <HeaderStyle CssClass="headerstyle" />
+                                                    <FooterStyle CssClass="text-center" />
+                                                    <PagerStyle CssClass="text-center" />
+                                                </asp:GridView>
                                             </asp:Panel>
                                         </ContentTemplate>
                                     </asp:UpdatePanel>
