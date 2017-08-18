@@ -124,5 +124,47 @@ namespace Fuji.RISLite.Site.Services
             return response;
         }
         #endregion catalogo
+
+        #region equipo
+        public List<clsEquipo> getListaEquipos(EquipoRequest request)
+        {
+            List<clsEquipo> response = new List<clsEquipo>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListaEquipos(request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getUser: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        #endregion equipo
+
+        #region tecnico
+        public List<clsUsuario> getListTecnico(TecnicoRequest request)
+        {
+            List<clsUsuario> response = new List<clsUsuario>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListTecnico(request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getUser: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+        
+        #endregion tecnico
     }
 }

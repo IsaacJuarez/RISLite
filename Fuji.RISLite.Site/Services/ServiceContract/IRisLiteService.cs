@@ -1,4 +1,5 @@
 ﻿using Fuji.RISLite.Entidades.DataBase;
+using Fuji.RISLite.Entities;
 using Fuji.RISLite.Site.Services.DataContract;
 using System.Collections.Generic;
 using System.ServiceModel;
@@ -33,5 +34,13 @@ namespace Fuji.RISLite.Site.Services
 
 
         #endregion catalogo
+
+        #region equipo
+        List<clsEquipo> getListaEquipos(EquipoRequest request);
+        #endregion equipo
+
+        #region Tecnico
+        List<clsUsuario> getListTecnico(TecnicoRequest request);
+        #endregion Tecnico
     }
 }

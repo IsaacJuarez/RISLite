@@ -33,6 +33,8 @@ namespace Fuji.RISLite.Entidades.DataBase
         public DbSet<tbl_CAT_TipoUsuario> tbl_CAT_TipoUsuario { get; set; }
         public DbSet<tbl_CAT_Usuario> tbl_CAT_Usuario { get; set; }
         public DbSet<tbl_CAT_Catalogo> tbl_CAT_Catalogo { get; set; }
+        public DbSet<tbl_CAT_Equipo> tbl_CAT_Equipo { get; set; }
+        public DbSet<tbl_CAT_Modalidad> tbl_CAT_Modalidad { get; set; }
     
         public virtual ObjectResult<stp_getListCatalogo_Result> stp_getListCatalogo(Nullable<int> intCatalogoID)
         {

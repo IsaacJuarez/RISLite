@@ -182,5 +182,104 @@ namespace Fuji.RISLite.DataAccess
         }
         #endregion catalogos
 
+
+        #region equipo
+        public List<clsEquipo> getListaEquipos(string user)
+        {
+            List<clsEquipo> lst = new List<clsEquipo>();
+            try
+            {
+                using(dbRisDA =  new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Equipo.Any())
+                    {
+
+
+                        var query = from equipo in dbRisDA.tbl_CAT_Equipo
+                                    join mod in dbRisDA.tbl_CAT_Modalidad on equipo.intModalidadID equals mod.intModalidadID
+                                    select new
+                                    {
+                                        intEquipo = equipo.intEquipoID,
+                                        intModalidadID = equipo.intModalidadID,
+                                        vchModalidad = mod.vchModalidad,
+                                        vchNombreEquipo = equipo.vchNombreEquipo,
+                                        vchCodigoEquipo = equipo.vchCodigoEquipo,
+                                        bitActivo = equipo.bitActivo,
+                                        datFecha = equipo.datFecha,
+                                        vchUserAdmin = equipo.vchUserAdmin
+                                    };
+                        if(query!= null)
+                        {
+                            if(query.Count() >0)
+                            {
+                                foreach(var item in query)
+                                {
+                                    clsEquipo mdl = new clsEquipo();
+                                    mdl.intEquipoID = item.intEquipo;
+                                    mdl.intModalidadID = (int)item.intModalidadID;
+                                    mdl.vchModalidad = item.vchModalidad;
+                                    mdl.vchNombreEquipo = item.vchNombreEquipo;
+                                    mdl.vchCodigoEquipo = item.vchCodigoEquipo;
+                                    mdl.bitActivo = (bool)item.bitActivo;
+                                    mdl.datFecha = (DateTime)item.datFecha;
+                                    mdl.vchUserAdmin = item.vchUserAdmin;
+                                    lst.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                                
+                }
+            }
+            catch(Exception gLE)
+            {
+                Log.EscribeLog("Existe un error en getListaEquipos: " + gLE.Message, 3, user);
+            }
+            return lst;
+        }
+
+        #endregion equipo
+
+
+        #region tecnicos
+        public List<clsUsuario> getListTecnico(string user)
+        {
+            List<clsUsuario> lst = new List<clsUsuario>();
+            try
+            {
+                using(dbRisDA = new RISLiteEntities())
+                {
+                    if(dbRisDA.tbl_CAT_Usuario.Any(x=> x.intTipoUsuario == 3))
+                    {
+                        var query = dbRisDA.tbl_CAT_Usuario.Where(x => x.intTipoUsuario == 3).ToList();
+                        if(query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsUsuario mdl = new clsUsuario();
+                                    mdl.intTipoUsuario = (int)item.intTipoUsuario;
+                                    mdl.intUsuarioID = item.intUsuarioID;
+                                    mdl.bitActivo = (bool)item.bitActivo;
+                                    mdl.datFecha = (DateTime)item.datFecha;
+                                    mdl.vchNombre = item.vchNombre;
+                                    mdl.vchUserAdmin = item.vchUserAdmin;
+                                    mdl.vchUsuario = item.vchUsuario;
+                                    lst.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch(Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getListTecnico: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }
+        #endregion tecnicos
+
     }
 }
