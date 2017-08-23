@@ -17,6 +17,7 @@ namespace Fuji.RISLite.Entidades.DataBase
         public tbl_CAT_TipoUsuario()
         {
             this.tbl_CAT_Usuario = new HashSet<tbl_CAT_Usuario>();
+            this.tbl_REL_TipoUsuarioBoton = new HashSet<tbl_REL_TipoUsuarioBoton>();
         }
     
         public int intTipoUsuario { get; set; }
@@ -26,5 +27,6 @@ namespace Fuji.RISLite.Entidades.DataBase
         public string vchUserAdmin { get; set; }
     
         public virtual ICollection<tbl_CAT_Usuario> tbl_CAT_Usuario { get; set; }
+        public virtual ICollection<tbl_REL_TipoUsuarioBoton> tbl_REL_TipoUsuarioBoton { get; set; }
     }
 }

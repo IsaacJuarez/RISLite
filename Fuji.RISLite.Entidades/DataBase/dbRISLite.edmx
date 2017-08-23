@@ -5,6 +5,18 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="RISLiteModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="tbl_CAT_Botones">
+          <Key>
+            <PropertyRef Name="intBotonID" />
+          </Key>
+          <Property Name="intBotonID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vchNombreBoton" Type="varchar" MaxLength="100" />
+          <Property Name="vchIdentificador" Type="varchar" MaxLength="100" />
+          <Property Name="vchbtnImagenID" Type="varchar" MaxLength="100" />
+          <Property Name="bitActivo" Type="bit" />
+          <Property Name="datFecha" Type="datetime" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+        </EntityType>
         <EntityType Name="tbl_CAT_Catalogo">
           <Key>
             <PropertyRef Name="intCatalogoID" />
@@ -31,6 +43,46 @@
           <Property Name="datFecha" Type="datetime" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
         </EntityType>
+        <EntityType Name="tbl_CAT_EstatusCita">
+          <Key>
+            <PropertyRef Name="intEstatusCita" />
+          </Key>
+          <Property Name="intEstatusCita" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vchEstatus" Type="varchar" MaxLength="200" />
+          <Property Name="bitActivo" Type="bit" />
+          <Property Name="datFecha" Type="datetime" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="tbl_CAT_EstatusEstudio">
+          <Key>
+            <PropertyRef Name="intEstatusEstudio" />
+          </Key>
+          <Property Name="intEstatusEstudio" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vchEstatus" Type="varchar" MaxLength="200" />
+          <Property Name="bitActivo" Type="bit" />
+          <Property Name="datFecha" Type="datetime" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="tbl_CAT_Genero">
+          <Key>
+            <PropertyRef Name="intGeneroID" />
+          </Key>
+          <Property Name="intGeneroID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vchGenero" Type="varchar" MaxLength="200" />
+          <Property Name="bitActivo" Type="bit" />
+          <Property Name="datFecha" Type="datetime" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="tbl_CAT_InstitucionProcedencia">
+          <Key>
+            <PropertyRef Name="intInstitucionID" />
+          </Key>
+          <Property Name="intInstitucionID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vchNombreIns" Type="varchar" MaxLength="200" />
+          <Property Name="bitActivo" Type="bit" />
+          <Property Name="datFecha" Type="datetime" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="200" />
+        </EntityType>
         <EntityType Name="tbl_CAT_Modalidad">
           <Key>
             <PropertyRef Name="intModalidadID" />
@@ -50,6 +102,16 @@
           <Property Name="vchTipoMensaje" Type="varchar" MaxLength="100" />
           <Property Name="bitActivo" Type="bit" />
           <Property Name="datFecha" Type="datetime" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="tbl_CAT_TipoMovimiento">
+          <Key>
+            <PropertyRef Name="intTipoMov" />
+          </Key>
+          <Property Name="intTipoMov" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vchTipoMov" Type="varchar" MaxLength="100" />
+          <Property Name="datFecha" Type="datetime" />
+          <Property Name="bitActivo" Type="bit" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="tbl_CAT_TipoUsuario">
@@ -74,6 +136,18 @@
           <Property Name="datFecha" Type="datetime" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
         </EntityType>
+        <EntityType Name="tbl_CAT_Vistas">
+          <Key>
+            <PropertyRef Name="intVistaID" />
+          </Key>
+          <Property Name="intVistaID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vchNombreVista" Type="varchar" MaxLength="100" />
+          <Property Name="vchVistaIdentificador" Type="varchar" MaxLength="100" />
+          <Property Name="vchIconFontAwesome" Type="varchar" MaxLength="100" />
+          <Property Name="bitActivo" Type="bit" />
+          <Property Name="datFecha" Type="datetime" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+        </EntityType>
         <EntityType Name="tbl_MST_Bitacora">
           <Key>
             <PropertyRef Name="intBitacoraID" />
@@ -82,6 +156,28 @@
           <Property Name="intTipoMensaje" Type="int" />
           <Property Name="datFecha" Type="datetime" />
           <Property Name="vchMensaje" Type="varchar(max)" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="tbl_REL_BotonVista">
+          <Key>
+            <PropertyRef Name="intRELBotonVista" />
+          </Key>
+          <Property Name="intRELBotonVista" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="intRELUsuarioBotonID" Type="int" />
+          <Property Name="intVistaID" Type="int" />
+          <Property Name="bitActivo" Type="bit" />
+          <Property Name="datFecha" Type="datetime" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="tbl_REL_TipoUsuarioBoton">
+          <Key>
+            <PropertyRef Name="intRELUsuarioBotonID" />
+          </Key>
+          <Property Name="intRELUsuarioBotonID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="intTipoUsuario" Type="int" Nullable="false" />
+          <Property Name="intBotonID" Type="int" />
+          <Property Name="bitActivo" Type="bit" />
+          <Property Name="datFecha" Type="datetime" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
         </EntityType>
         <Association Name="FK_CAT_Equipo_CAT_Modalidad">
@@ -120,6 +216,57 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_REL_BotonVista_CAT_Vistas">
+          <End Role="tbl_CAT_Vistas" Type="Self.tbl_CAT_Vistas" Multiplicity="0..1" />
+          <End Role="tbl_REL_BotonVista" Type="Self.tbl_REL_BotonVista" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_Vistas">
+              <PropertyRef Name="intVistaID" />
+            </Principal>
+            <Dependent Role="tbl_REL_BotonVista">
+              <PropertyRef Name="intVistaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_REL_BotonVista_REL_UsuarioBoton">
+          <End Role="tbl_REL_TipoUsuarioBoton" Type="Self.tbl_REL_TipoUsuarioBoton" Multiplicity="0..1" />
+          <End Role="tbl_REL_BotonVista" Type="Self.tbl_REL_BotonVista" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_REL_TipoUsuarioBoton">
+              <PropertyRef Name="intRELUsuarioBotonID" />
+            </Principal>
+            <Dependent Role="tbl_REL_BotonVista">
+              <PropertyRef Name="intRELUsuarioBotonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_REL_TipoUsuarioBoton_CAT_Botones">
+          <End Role="tbl_CAT_Botones" Type="Self.tbl_CAT_Botones" Multiplicity="0..1" />
+          <End Role="tbl_REL_TipoUsuarioBoton" Type="Self.tbl_REL_TipoUsuarioBoton" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_Botones">
+              <PropertyRef Name="intBotonID" />
+            </Principal>
+            <Dependent Role="tbl_REL_TipoUsuarioBoton">
+              <PropertyRef Name="intBotonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_REL_TipoUsuarioBoton_CAT_TipoUsuario">
+          <End Role="tbl_CAT_TipoUsuario" Type="Self.tbl_CAT_TipoUsuario" Multiplicity="1" />
+          <End Role="tbl_REL_TipoUsuarioBoton" Type="Self.tbl_REL_TipoUsuarioBoton" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_TipoUsuario">
+              <PropertyRef Name="intTipoUsuario" />
+            </Principal>
+            <Dependent Role="tbl_REL_TipoUsuarioBoton">
+              <PropertyRef Name="intTipoUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="stp_getListaPaginas" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intTipoUsuarioID" Type="int" Mode="In" />
+        </Function>
         <Function Name="stp_getListCatalogo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="intCatalogoID" Type="int" Mode="In" />
         </Function>
@@ -139,13 +286,22 @@
           <Parameter Name="intPrimaryKey" Type="int" Mode="In" />
         </Function>
         <EntityContainer Name="RISLiteModelStoreContainer">
+          <EntitySet Name="tbl_CAT_Botones" EntityType="Self.tbl_CAT_Botones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_Catalogo" EntityType="Self.tbl_CAT_Catalogo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_Equipo" EntityType="Self.tbl_CAT_Equipo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_CAT_EstatusCita" EntityType="Self.tbl_CAT_EstatusCita" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_CAT_EstatusEstudio" EntityType="Self.tbl_CAT_EstatusEstudio" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_CAT_Genero" EntityType="Self.tbl_CAT_Genero" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_CAT_InstitucionProcedencia" EntityType="Self.tbl_CAT_InstitucionProcedencia" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_Modalidad" EntityType="Self.tbl_CAT_Modalidad" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_TipoMensaje" EntityType="Self.tbl_CAT_TipoMensaje" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_CAT_TipoMovimiento" EntityType="Self.tbl_CAT_TipoMovimiento" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_TipoUsuario" EntityType="Self.tbl_CAT_TipoUsuario" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_Usuario" EntityType="Self.tbl_CAT_Usuario" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_CAT_Vistas" EntityType="Self.tbl_CAT_Vistas" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_MST_Bitacora" EntityType="Self.tbl_MST_Bitacora" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_REL_BotonVista" EntityType="Self.tbl_REL_BotonVista" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_REL_TipoUsuarioBoton" EntityType="Self.tbl_REL_TipoUsuarioBoton" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_CAT_Equipo_CAT_Modalidad" Association="Self.FK_CAT_Equipo_CAT_Modalidad">
             <End Role="tbl_CAT_Modalidad" EntitySet="tbl_CAT_Modalidad" />
             <End Role="tbl_CAT_Equipo" EntitySet="tbl_CAT_Equipo" />
@@ -157,6 +313,22 @@
           <AssociationSet Name="FK_MST_Bitacora_CAT_TipoMensaje" Association="Self.FK_MST_Bitacora_CAT_TipoMensaje">
             <End Role="tbl_CAT_TipoMensaje" EntitySet="tbl_CAT_TipoMensaje" />
             <End Role="tbl_MST_Bitacora" EntitySet="tbl_MST_Bitacora" />
+          </AssociationSet>
+          <AssociationSet Name="FK_REL_BotonVista_CAT_Vistas" Association="Self.FK_REL_BotonVista_CAT_Vistas">
+            <End Role="tbl_CAT_Vistas" EntitySet="tbl_CAT_Vistas" />
+            <End Role="tbl_REL_BotonVista" EntitySet="tbl_REL_BotonVista" />
+          </AssociationSet>
+          <AssociationSet Name="FK_REL_BotonVista_REL_UsuarioBoton" Association="Self.FK_REL_BotonVista_REL_UsuarioBoton">
+            <End Role="tbl_REL_TipoUsuarioBoton" EntitySet="tbl_REL_TipoUsuarioBoton" />
+            <End Role="tbl_REL_BotonVista" EntitySet="tbl_REL_BotonVista" />
+          </AssociationSet>
+          <AssociationSet Name="FK_REL_TipoUsuarioBoton_CAT_Botones" Association="Self.FK_REL_TipoUsuarioBoton_CAT_Botones">
+            <End Role="tbl_CAT_Botones" EntitySet="tbl_CAT_Botones" />
+            <End Role="tbl_REL_TipoUsuarioBoton" EntitySet="tbl_REL_TipoUsuarioBoton" />
+          </AssociationSet>
+          <AssociationSet Name="FK_REL_TipoUsuarioBoton_CAT_TipoUsuario" Association="Self.FK_REL_TipoUsuarioBoton_CAT_TipoUsuario">
+            <End Role="tbl_CAT_TipoUsuario" EntitySet="tbl_CAT_TipoUsuario" />
+            <End Role="tbl_REL_TipoUsuarioBoton" EntitySet="tbl_REL_TipoUsuarioBoton" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -201,7 +373,35 @@
             <End Role="tbl_CAT_Modalidad" EntitySet="tbl_CAT_Modalidad" />
             <End Role="tbl_CAT_Equipo" EntitySet="tbl_CAT_Equipo" />
           </AssociationSet>
-        </EntityContainer>
+          <EntitySet Name="tbl_CAT_EstatusCita" EntityType="RISLiteModel.tbl_CAT_EstatusCita" />
+          <EntitySet Name="tbl_CAT_EstatusEstudio" EntityType="RISLiteModel.tbl_CAT_EstatusEstudio" />
+          <EntitySet Name="tbl_CAT_Genero" EntityType="RISLiteModel.tbl_CAT_Genero" />
+          <EntitySet Name="tbl_CAT_InstitucionProcedencia" EntityType="RISLiteModel.tbl_CAT_InstitucionProcedencia" />
+          <EntitySet Name="tbl_CAT_TipoMovimiento" EntityType="RISLiteModel.tbl_CAT_TipoMovimiento" />
+          <EntitySet Name="tbl_CAT_Botones" EntityType="RISLiteModel.tbl_CAT_Botones" />
+          <EntitySet Name="tbl_CAT_Vistas" EntityType="RISLiteModel.tbl_CAT_Vistas" />
+          <EntitySet Name="tbl_REL_BotonVista" EntityType="RISLiteModel.tbl_REL_BotonVista" />
+          <EntitySet Name="tbl_REL_TipoUsuarioBoton" EntityType="RISLiteModel.tbl_REL_TipoUsuarioBoton" />
+          <AssociationSet Name="FK_REL_TipoUsuarioBoton_CAT_Botones" Association="RISLiteModel.FK_REL_TipoUsuarioBoton_CAT_Botones">
+            <End Role="tbl_CAT_Botones" EntitySet="tbl_CAT_Botones" />
+            <End Role="tbl_REL_TipoUsuarioBoton" EntitySet="tbl_REL_TipoUsuarioBoton" />
+          </AssociationSet>
+          <AssociationSet Name="FK_REL_TipoUsuarioBoton_CAT_TipoUsuario" Association="RISLiteModel.FK_REL_TipoUsuarioBoton_CAT_TipoUsuario">
+            <End Role="tbl_CAT_TipoUsuario" EntitySet="tbl_CAT_TipoUsuario" />
+            <End Role="tbl_REL_TipoUsuarioBoton" EntitySet="tbl_REL_TipoUsuarioBoton" />
+          </AssociationSet>
+          <AssociationSet Name="FK_REL_BotonVista_CAT_Vistas" Association="RISLiteModel.FK_REL_BotonVista_CAT_Vistas">
+            <End Role="tbl_CAT_Vistas" EntitySet="tbl_CAT_Vistas" />
+            <End Role="tbl_REL_BotonVista" EntitySet="tbl_REL_BotonVista" />
+          </AssociationSet>
+          <AssociationSet Name="FK_REL_BotonVista_REL_UsuarioBoton" Association="RISLiteModel.FK_REL_BotonVista_REL_UsuarioBoton">
+            <End Role="tbl_REL_TipoUsuarioBoton" EntitySet="tbl_REL_TipoUsuarioBoton" />
+            <End Role="tbl_REL_BotonVista" EntitySet="tbl_REL_BotonVista" />
+          </AssociationSet>
+          <FunctionImport Name="stp_getListaPaginas" ReturnType="Collection(RISLiteModel.stp_getListaPaginas_Result)">
+            <Parameter Name="intTipoUsuarioID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          </EntityContainer>
         <EntityType Name="tbl_CAT_TipoMensaje">
           <Key>
             <PropertyRef Name="intTipoMensaje" />
@@ -246,6 +446,7 @@
           <Property Name="datFecha" Type="DateTime" Precision="3" />
           <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="tbl_CAT_Usuario" Relationship="RISLiteModel.FK_CAT_Usuario_CAT_TipoUsuario" FromRole="tbl_CAT_TipoUsuario" ToRole="tbl_CAT_Usuario" />
+          <NavigationProperty Name="tbl_REL_TipoUsuarioBoton" Relationship="RISLiteModel.FK_REL_TipoUsuarioBoton_CAT_TipoUsuario" FromRole="tbl_CAT_TipoUsuario" ToRole="tbl_REL_TipoUsuarioBoton" />
         </EntityType>
         <EntityType Name="tbl_CAT_Usuario">
           <Key>
@@ -340,7 +541,172 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
+        <EntityType Name="tbl_CAT_EstatusCita">
+          <Key>
+            <PropertyRef Name="intEstatusCita" />
+          </Key>
+          <Property Name="intEstatusCita" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vchEstatus" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tbl_CAT_EstatusEstudio">
+          <Key>
+            <PropertyRef Name="intEstatusEstudio" />
+          </Key>
+          <Property Name="intEstatusEstudio" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vchEstatus" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tbl_CAT_Genero">
+          <Key>
+            <PropertyRef Name="intGeneroID" />
+          </Key>
+          <Property Name="intGeneroID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vchGenero" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tbl_CAT_InstitucionProcedencia">
+          <Key>
+            <PropertyRef Name="intInstitucionID" />
+          </Key>
+          <Property Name="intInstitucionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vchNombreIns" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tbl_CAT_TipoMovimiento">
+          <Key>
+            <PropertyRef Name="intTipoMov" />
+          </Key>
+          <Property Name="intTipoMov" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vchTipoMov" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tbl_CAT_Botones">
+          <Key>
+            <PropertyRef Name="intBotonID" />
+          </Key>
+          <Property Name="intBotonID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vchNombreBoton" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="vchIdentificador" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="vchbtnImagenID" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_REL_TipoUsuarioBoton" Relationship="RISLiteModel.FK_REL_TipoUsuarioBoton_CAT_Botones" FromRole="tbl_CAT_Botones" ToRole="tbl_REL_TipoUsuarioBoton" />
+        </EntityType>
+        <EntityType Name="tbl_CAT_Vistas">
+          <Key>
+            <PropertyRef Name="intVistaID" />
+          </Key>
+          <Property Name="intVistaID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vchNombreVista" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="vchVistaIdentificador" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="vchIconFontAwesome" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_REL_BotonVista" Relationship="RISLiteModel.FK_REL_BotonVista_CAT_Vistas" FromRole="tbl_CAT_Vistas" ToRole="tbl_REL_BotonVista" />
+        </EntityType>
+        <EntityType Name="tbl_REL_BotonVista">
+          <Key>
+            <PropertyRef Name="intRELBotonVista" />
+          </Key>
+          <Property Name="intRELBotonVista" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="intRELUsuarioBotonID" Type="Int32" />
+          <Property Name="intVistaID" Type="Int32" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_CAT_Vistas" Relationship="RISLiteModel.FK_REL_BotonVista_CAT_Vistas" FromRole="tbl_REL_BotonVista" ToRole="tbl_CAT_Vistas" />
+          <NavigationProperty Name="tbl_REL_TipoUsuarioBoton" Relationship="RISLiteModel.FK_REL_BotonVista_REL_UsuarioBoton" FromRole="tbl_REL_BotonVista" ToRole="tbl_REL_TipoUsuarioBoton" />
+        </EntityType>
+        <EntityType Name="tbl_REL_TipoUsuarioBoton">
+          <Key>
+            <PropertyRef Name="intRELUsuarioBotonID" />
+          </Key>
+          <Property Name="intRELUsuarioBotonID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="intTipoUsuario" Type="Int32" Nullable="false" />
+          <Property Name="intBotonID" Type="Int32" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_CAT_Botones" Relationship="RISLiteModel.FK_REL_TipoUsuarioBoton_CAT_Botones" FromRole="tbl_REL_TipoUsuarioBoton" ToRole="tbl_CAT_Botones" />
+          <NavigationProperty Name="tbl_CAT_TipoUsuario" Relationship="RISLiteModel.FK_REL_TipoUsuarioBoton_CAT_TipoUsuario" FromRole="tbl_REL_TipoUsuarioBoton" ToRole="tbl_CAT_TipoUsuario" />
+          <NavigationProperty Name="tbl_REL_BotonVista" Relationship="RISLiteModel.FK_REL_BotonVista_REL_UsuarioBoton" FromRole="tbl_REL_TipoUsuarioBoton" ToRole="tbl_REL_BotonVista" />
+        </EntityType>
+        <Association Name="FK_REL_TipoUsuarioBoton_CAT_Botones">
+          <End Type="RISLiteModel.tbl_CAT_Botones" Role="tbl_CAT_Botones" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_REL_TipoUsuarioBoton" Role="tbl_REL_TipoUsuarioBoton" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_Botones">
+              <PropertyRef Name="intBotonID" />
+            </Principal>
+            <Dependent Role="tbl_REL_TipoUsuarioBoton">
+              <PropertyRef Name="intBotonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_REL_TipoUsuarioBoton_CAT_TipoUsuario">
+          <End Type="RISLiteModel.tbl_CAT_TipoUsuario" Role="tbl_CAT_TipoUsuario" Multiplicity="1" />
+          <End Type="RISLiteModel.tbl_REL_TipoUsuarioBoton" Role="tbl_REL_TipoUsuarioBoton" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_TipoUsuario">
+              <PropertyRef Name="intTipoUsuario" />
+            </Principal>
+            <Dependent Role="tbl_REL_TipoUsuarioBoton">
+              <PropertyRef Name="intTipoUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_REL_BotonVista_CAT_Vistas">
+          <End Type="RISLiteModel.tbl_CAT_Vistas" Role="tbl_CAT_Vistas" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_REL_BotonVista" Role="tbl_REL_BotonVista" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_Vistas">
+              <PropertyRef Name="intVistaID" />
+            </Principal>
+            <Dependent Role="tbl_REL_BotonVista">
+              <PropertyRef Name="intVistaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_REL_BotonVista_REL_UsuarioBoton">
+          <End Type="RISLiteModel.tbl_REL_TipoUsuarioBoton" Role="tbl_REL_TipoUsuarioBoton" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_REL_BotonVista" Role="tbl_REL_BotonVista" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_REL_TipoUsuarioBoton">
+              <PropertyRef Name="intRELUsuarioBotonID" />
+            </Principal>
+            <Dependent Role="tbl_REL_BotonVista">
+              <PropertyRef Name="intRELUsuarioBotonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="stp_getListaPaginas_Result">
+          <Property Type="Int32" Name="intRELUsuarioBotonID" Nullable="false" />
+          <Property Type="Int32" Name="intTipoUsuario" Nullable="false" />
+          <Property Type="String" Name="vchTipoUsuario" Nullable="true" MaxLength="200" />
+          <Property Type="Int32" Name="intBotonID" Nullable="true" />
+          <Property Type="String" Name="vchNombreBoton" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="vchIdentificador" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="vchbtnImagenID" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="intVistaID" Nullable="false" />
+          <Property Type="String" Name="vchNombreVista" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="vchVistaIdentificador" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="vchIconFontAwesome" Nullable="true" MaxLength="100" />
+          <Property Type="Boolean" Name="bitActivo" Nullable="true" />
+        </ComplexType>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -465,7 +831,130 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-        </EntityContainerMapping>
+          <EntitySetMapping Name="tbl_CAT_EstatusCita">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_EstatusCita">
+              <MappingFragment StoreEntitySet="tbl_CAT_EstatusCita">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="vchEstatus" ColumnName="vchEstatus" />
+                <ScalarProperty Name="intEstatusCita" ColumnName="intEstatusCita" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_CAT_EstatusEstudio">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_EstatusEstudio">
+              <MappingFragment StoreEntitySet="tbl_CAT_EstatusEstudio">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="vchEstatus" ColumnName="vchEstatus" />
+                <ScalarProperty Name="intEstatusEstudio" ColumnName="intEstatusEstudio" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_CAT_Genero">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_Genero">
+              <MappingFragment StoreEntitySet="tbl_CAT_Genero">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="vchGenero" ColumnName="vchGenero" />
+                <ScalarProperty Name="intGeneroID" ColumnName="intGeneroID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_CAT_InstitucionProcedencia">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_InstitucionProcedencia">
+              <MappingFragment StoreEntitySet="tbl_CAT_InstitucionProcedencia">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="vchNombreIns" ColumnName="vchNombreIns" />
+                <ScalarProperty Name="intInstitucionID" ColumnName="intInstitucionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_CAT_TipoMovimiento">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_TipoMovimiento">
+              <MappingFragment StoreEntitySet="tbl_CAT_TipoMovimiento">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="vchTipoMov" ColumnName="vchTipoMov" />
+                <ScalarProperty Name="intTipoMov" ColumnName="intTipoMov" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_CAT_Botones">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_Botones">
+              <MappingFragment StoreEntitySet="tbl_CAT_Botones">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="vchbtnImagenID" ColumnName="vchbtnImagenID" />
+                <ScalarProperty Name="vchIdentificador" ColumnName="vchIdentificador" />
+                <ScalarProperty Name="vchNombreBoton" ColumnName="vchNombreBoton" />
+                <ScalarProperty Name="intBotonID" ColumnName="intBotonID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_CAT_Vistas">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_Vistas">
+              <MappingFragment StoreEntitySet="tbl_CAT_Vistas">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="vchIconFontAwesome" ColumnName="vchIconFontAwesome" />
+                <ScalarProperty Name="vchVistaIdentificador" ColumnName="vchVistaIdentificador" />
+                <ScalarProperty Name="vchNombreVista" ColumnName="vchNombreVista" />
+                <ScalarProperty Name="intVistaID" ColumnName="intVistaID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_REL_BotonVista">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_REL_BotonVista">
+              <MappingFragment StoreEntitySet="tbl_REL_BotonVista">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="intVistaID" ColumnName="intVistaID" />
+                <ScalarProperty Name="intRELUsuarioBotonID" ColumnName="intRELUsuarioBotonID" />
+                <ScalarProperty Name="intRELBotonVista" ColumnName="intRELBotonVista" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_REL_TipoUsuarioBoton">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_REL_TipoUsuarioBoton">
+              <MappingFragment StoreEntitySet="tbl_REL_TipoUsuarioBoton">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="intBotonID" ColumnName="intBotonID" />
+                <ScalarProperty Name="intTipoUsuario" ColumnName="intTipoUsuario" />
+                <ScalarProperty Name="intRELUsuarioBotonID" ColumnName="intRELUsuarioBotonID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="stp_getListaPaginas" FunctionName="RISLiteModel.Store.stp_getListaPaginas">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RISLiteModel.stp_getListaPaginas_Result">
+                <ScalarProperty Name="intRELUsuarioBotonID" ColumnName="intRELUsuarioBotonID" />
+                <ScalarProperty Name="intTipoUsuario" ColumnName="intTipoUsuario" />
+                <ScalarProperty Name="vchTipoUsuario" ColumnName="vchTipoUsuario" />
+                <ScalarProperty Name="intBotonID" ColumnName="intBotonID" />
+                <ScalarProperty Name="vchNombreBoton" ColumnName="vchNombreBoton" />
+                <ScalarProperty Name="vchIdentificador" ColumnName="vchIdentificador" />
+                <ScalarProperty Name="vchbtnImagenID" ColumnName="vchbtnImagenID" />
+                <ScalarProperty Name="intVistaID" ColumnName="intVistaID" />
+                <ScalarProperty Name="vchNombreVista" ColumnName="vchNombreVista" />
+                <ScalarProperty Name="vchVistaIdentificador" ColumnName="vchVistaIdentificador" />
+                <ScalarProperty Name="vchIconFontAwesome" ColumnName="vchIconFontAwesome" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>

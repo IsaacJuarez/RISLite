@@ -34,6 +34,7 @@ namespace Fuji.RISLite.Site
                         if (Usuario != null)
                         {
                             createTableEquipo();
+                            createTableTecnico();
                         }
                         else
                         {
@@ -51,6 +52,50 @@ namespace Fuji.RISLite.Site
             catch (Exception ePL)
             {
                 Log.EscribeLog("Existe un error en Page_Load de frmAdminEquipoUsuario: " + ePL.Message, 3, "");
+            }
+        }
+
+        private void createTableTecnico()
+        {
+            try
+            {
+                List<clsUsuario> lstTec = new List<clsUsuario>();
+                TecnicoRequest request = new TecnicoRequest();
+                request.mdlUser = Usuario;
+                lstTec = RisService.getListTecnico(request);
+                if (lstTec != null)
+                {
+                    if (lstTec.Count > 0)
+                    {
+                        construirTablaTecnico(lstTec);
+                    }
+                }
+            }
+            catch(Exception ecTT)
+            {
+                Log.EscribeLog("Existe un error en createTableTecnico: " + ecTT.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void construirTablaTecnico(List<clsUsuario> lstTec)
+        {
+            try
+            {
+                string htmlTable = "";
+                htmlTable = "<table id='dynamic-table1' class='table table-striped table-bordered table-hover'>";
+                htmlTable += "<thead><tr><th>Nombre</th><th>Usuario</th><th>Estatus</th><th><i class='ace-icon fa fa-pencil-square-o bigger-110'></i>Editar</th></tr></thead>";
+                htmlTable += "<tbody>";
+                foreach (clsUsuario item in lstTec)
+                {
+                    htmlTable += "<tr><td>" + item.vchNombre + "</td><td>" + item.vchUsuario + "</td><td>" + item.bitActivo.ToString() + "</td><td><a class='green' href='#'><i class='ace-icon fa fa-pencil bigger-130'></i></a></td></tr>";
+                }
+                htmlTable += "</tbody>";
+                htmlTable += "</table>";
+                tableTecnico.Controls.Add(new System.Web.UI.LiteralControl(htmlTable));
+            }
+            catch(Exception eccT)
+            {
+                Log.EscribeLog("Existe un error en construirTablaTecnico: " + eccT.Message, 3, Usuario.vchUsuario);
             }
         }
 

@@ -22,9 +22,11 @@ namespace Fuji.RISLite.Site.Services
             try
             {
                 clsUsuario mdlUser = new clsUsuario();
+                List<clsVistasUsuarios> lstVistas = new List<clsVistasUsuarios>();
                 RISLiteDataAccess controller = new RISLiteDataAccess();
-                response.Success = controller.getUser(request.user, ref mdlUser);
+                response.Success = controller.getUser(request.user, ref mdlUser, ref lstVistas);
                 response.mdlUser = mdlUser;
+                response.lstVistas = lstVistas;
             }
             catch(Exception egU)
             {
@@ -123,6 +125,96 @@ namespace Fuji.RISLite.Site.Services
             }
             return response;
         }
+
+        public List<clsCatalogo> getTipoUsuario(CatalogoRequest request)
+        {
+            List<clsCatalogo> response = new List<clsCatalogo>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getTipoUsuario(request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egtU)
+            {
+                Log.EscribeLog("Existe un error en getTipoUsuario: " + egtU.Message, 3, request.mdlUser.vchUsuario);
+            }
+            return response;
+        }
+
+        public List<clsCatalogo> getListaBoton(CatalogoRequest request)
+        {
+            List<clsCatalogo> response = new List<clsCatalogo>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListaBoton(request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egtU)
+            {
+                Log.EscribeLog("Existe un error en getListaBoton: " + egtU.Message, 3, request.mdlUser.vchUsuario);
+            }
+            return response;
+        }
+
+        public List<clsCatalogo> getListaVista(CatalogoRequest request)
+        {
+            List<clsCatalogo> response = new List<clsCatalogo>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListaVista(request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egtU)
+            {
+                Log.EscribeLog("Existe un error en getListaVista: " + egtU.Message, 3, request.mdlUser.vchUsuario);
+            }
+            return response;
+        }
+
+        public List<stp_getListaPaginas_Result> getListVistas(CatalogoRequest request)
+        {
+            List<stp_getListaPaginas_Result> response = new List<stp_getListaPaginas_Result>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListVistas(request.mdlUser.intTipoUsuario,request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egtU)
+            {
+                Log.EscribeLog("Existe un error en getTipoUsuario: " + egtU.Message, 3, request.mdlUser.vchUsuario);
+            }
+            return response;
+        }
+
+        public List<clsUsuario> getListaUsuarios(TecnicoRequest request)
+        {
+            List<clsUsuario> response = new List<clsUsuario>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListaUsuarios(request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getListaUsuarios: " + egU.Message, 3, "");
+            }
+            return response;
+        }
         #endregion catalogo
 
         #region equipo
@@ -160,7 +252,7 @@ namespace Fuji.RISLite.Site.Services
             }
             catch (Exception egU)
             {
-                Log.EscribeLog("Existe un error en getUser: " + egU.Message, 3, "");
+                Log.EscribeLog("Existe un error en getListTecnico: " + egU.Message, 3, "");
             }
             return response;
         }

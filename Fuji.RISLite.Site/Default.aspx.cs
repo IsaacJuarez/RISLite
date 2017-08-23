@@ -14,7 +14,7 @@ namespace Fuji.RISLite.Site
                 if (!IsPostBack)
                 {
                    string strName = HttpContext.Current.User.Identity.Name.Substring(HttpContext.Current.User.Identity.Name.IndexOf(@"\") + 1);
-                   lblUser.Text = strName;
+                   //lblUser.Text = strName;
                 }
                 else
                 {

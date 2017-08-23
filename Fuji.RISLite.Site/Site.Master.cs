@@ -3,6 +3,7 @@ using Fuji.RISLite.Entities;
 using Fuji.RISLite.Site.Services;
 using Fuji.RISLite.Site.Services.DataContract;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Web;
 
@@ -20,6 +21,7 @@ namespace Fuji.RISLite.Site
         }
         RisLiteService RisService = new RisLiteService();
         private static clsUsuario usuario = new clsUsuario();
+        private static List<clsVistasUsuarios> lstVistas = new List<clsVistasUsuarios>();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -33,7 +35,7 @@ namespace Fuji.RISLite.Site
                     if (user == "")
                     {
                         var = Security.Encrypt("1");
-                        Response.Redirect(URL + "/frmSalir.aspx?var="+ var);
+                        Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
                     }
                     else
                     {
@@ -42,14 +44,16 @@ namespace Fuji.RISLite.Site
                         ValidaUserRequest request = new ValidaUserRequest();
                         request.user = user;
                         response = RisService.getUser(request);
-                        if(response != null)
+                        if (response != null)
                         {
                             if (response.Success)
                             {
                                 lblUser.Text = response.mdlUser.vchNombre;
                                 Session["User"] = response.mdlUser;
+                                Session["lstVistas"] = response.lstVistas;
                                 usuario = response.mdlUser;
-                                configUser(response.mdlUser.intTipoUsuario);
+                                lstVistas = response.lstVistas;
+                                configUser(response.mdlUser.intTipoUsuario, lstVistas);
                             }
                             else
                             {
@@ -62,87 +66,129 @@ namespace Fuji.RISLite.Site
             }
             catch (Exception ePL)
             {
-                Log.EscribeLog("Existe un error en PageLoad de SiteMaster: " + ePL.Message,3,"");
+                Log.EscribeLog("Existe un error en PageLoad de SiteMaster: " + ePL.Message, 3, "");
             }
         }
 
-        private void configUser(int intTipoUsuario)
+        private void configUser(int intTipoUsuario, List<clsVistasUsuarios> lstView)
         {
             try
             {
-                switch(intTipoUsuario)
-                {
-                    case 1://Administrador 
-                        btnShort1.Attributes.Remove("href");
-                        btnShort1.Attributes.Add("href", "frmConfigAgenda.aspx");
-                        btnShort1.Title = "Parámetros Agenda";
-                        btn1.Attributes.Remove("class");
-                        btn1.Attributes.Add("class", "ace-icon fa fa-cogs");
-                        btnShort2.Attributes.Remove("href");
-                        btnShort2.Attributes.Add("href", "frmConfiguraciones.aspx");
-                        btnShort2.Title = "Configuración general";
-                        btn2.Attributes.Remove("class");
-                        btn2.Attributes.Add("class", "ace-icon fa fa-cog");
-                        btnShort3.Attributes.Remove("href");
-                        btnShort3.Attributes.Add("href", "frmAdminUser.aspx");
-                        btnShort3.Title = "Usuarios";
-                        btn3.Attributes.Remove("class");
-                        btn3.Attributes.Add("class", "ace-icon fa fa-users");
-                        btnShort4.Attributes.Remove("href");
-                        btnShort4.Attributes.Add("href", "frmAdminCatalogo.aspx");
-                        btnShort4.Title = "Catálogos";
-                        btn4.Attributes.Remove("class");
-                        btn4.Attributes.Add("class", "ace-icon fa fa-tags");
+                btnShort1.Attributes.Remove("href");
+                btnShort2.Attributes.Remove("href");
+                btnShort3.Attributes.Remove("href");
+                btnShort4.Attributes.Remove("href");
+                btnShort1.Disabled = true;
+                btnShort2.Disabled = true;
+                btnShort3.Disabled = true;
+                btnShort4.Disabled = true;
+                Menu1.Attributes.Remove("href");
+                Menu2.Attributes.Remove("href");
+                Menu3.Attributes.Remove("href");
+                Menu4.Attributes.Remove("href");
+                Menu1.Visible = false;
+                Menu2.Visible = false;
+                Menu3.Visible = false;
+                Menu4.Visible = false;
+                lblMenu1.Text = "";
+                lblMenu2.Text = "";
+                lblMenu3.Text = "";
+                lblMenu4.Text = "";
 
-                        //AgregarExtras
-                        break;
-                    case 2://Agenda
-                        btnShort1.Attributes.Remove("href");
-                        btnShort1.Attributes.Add("href", "frmConfigAgenda.aspx");
-                        btnShort1.Title = "Parámetros Agenda";
-                        btn1.Attributes.Remove("class");
-                        btn1.Attributes.Add("class", "ace-icon fa fa-cogs");
-                        btnShort2.Attributes.Remove("href");
-                        btnShort2.Attributes.Add("href", "frmConfiguraciones.aspx");
-                        btnShort2.Title = "Configuración general";
-                        btn2.Attributes.Remove("class");
-                        btn2.Attributes.Add("class", "ace-icon fa fa-cog");
-                        btnShort3.Attributes.Remove("href");
-                        btnShort3.Attributes.Add("href", "frmAdminEquipoUsuario.aspx");
-                        btnShort3.Title = "Usuarios y Equipos";
-                        btn3.Attributes.Remove("class");
-                        btn3.Attributes.Add("class", "ace-icon fa fa-users");
-                        btnShort4.Attributes.Remove("href");
-                        btnShort4.Attributes.Add("href", "frmAdminCatalogo.aspx");
-                        btnShort4.Title = "Catálogos";
-                        btn4.Attributes.Remove("class");
-                        btn4.Attributes.Add("class", "ace-icon fa fa-tags");
-                        break;
-                    case 3://Tecnico
-                        btnShort1.Attributes.Remove("href");
-                        btnShort1.Attributes.Add("href", "frmEstadisticasTec.aspx");
-                        btnShort1.Title = "Estadística";
-                        btn1.Attributes.Remove("class");
-                        btn1.Attributes.Add("class", "ace-icon fa fa-pie-chart");
-                        btnShort2.Attributes.Remove("href");
-                        btnShort2.Attributes.Add("href", "frmConfiguraciones.aspx");
-                        btnShort2.Title = "Configuración general";
-                        btn2.Attributes.Remove("class");
-                        btn2.Attributes.Add("class", "ace-icon fa fa-cog");
-                        btnShort3.Attributes.Remove("href");
-                        btnShort3.Attributes.Add("href", "frmAdminUser.aspx");
-                        btnShort3.Title = "Usuarios";
-                        btn3.Attributes.Remove("class");
-                        btn3.Attributes.Add("class", "ace-icon fa fa-users");
-                        btnShort4.Attributes.Remove("href");
-                        btnShort4.Attributes.Add("href", "frmAdminCatalogo.aspx");
-                        btnShort4.Title = "Catálogos";
-                        btn4.Attributes.Remove("class");
-                        btn4.Attributes.Add("class", "ace-icon fa fa-tags");
-                        break;
+
+                clsVistasUsuarios vista = new clsVistasUsuarios();
+                if (lstView.Exists(x => x.vchIdentificador == "btnShort1"))
+                {
+                    vista = lstView.Find(x => x.vchIdentificador == "btnShort1");
+                    btnShort1.Attributes.Add("href", vista.vchVistaIdentificador);
+                    btnShort1.Disabled = false;
+                    btnShort1.Title = vista.vchNombreVista;
+                    btn1.Attributes.Remove("class");
+                    btn1.Attributes.Add("class", "ace-icon " + vista.vchIconFontAwesome);
+                }
+
+                vista = new clsVistasUsuarios();
+                if (lstView.Exists(x => x.vchIdentificador == "btnShort2"))
+                {
+                    vista = lstView.Find(x => x.vchIdentificador == "btnShort2");
+                    btnShort2.Attributes.Add("href", vista.vchVistaIdentificador);
+                    btnShort2.Disabled = false;
+                    btnShort2.Title = vista.vchNombreVista;
+                    btn2.Attributes.Remove("class");
+                    btn2.Attributes.Add("class", "ace-icon " + vista.vchIconFontAwesome);
+                    lblMenu2.Text = vista.vchNombreVista;
+                }
+
+                vista = new clsVistasUsuarios();
+                if (lstView.Exists(x => x.vchIdentificador == "btnShort3"))
+                {
+                    vista = lstView.Find(x => x.vchIdentificador == "btnShort3");
+                    btnShort3.Attributes.Add("href", vista.vchVistaIdentificador);
+                    btnShort3.Disabled = false;
+                    btnShort3.Title = vista.vchNombreVista;
+                    btn3.Attributes.Remove("class");
+                    btn3.Attributes.Add("class", "ace-icon " + vista.vchIconFontAwesome);
+                    lblMenu3.Text = vista.vchNombreVista;
+                }
+
+                vista = new clsVistasUsuarios();
+                if (lstView.Exists(x => x.vchIdentificador == "btnShort4"))
+                {
+                    vista = lstView.Find(x => x.vchIdentificador == "btnShort4");
+                    btnShort4.Attributes.Add("href", vista.vchVistaIdentificador);
+                    btnShort4.Disabled = false;
+                    btnShort4.Title = vista.vchNombreVista;
+                    btn4.Attributes.Remove("class");
+                    btn4.Attributes.Add("class", "ace-icon " + vista.vchIconFontAwesome);
+                    lblMenu4.Text = vista.vchNombreVista;
+                }
+
+                vista = new clsVistasUsuarios();
+                if (lstView.Exists(x => x.vchIdentificador == "Menu1"))
+                {
+                    vista = lstView.Find(x => x.vchIdentificador == "Menu1");
+                    Menu1.Visible = true;
+                    Menu1.Title = vista.vchNombreVista;
+                    Menu1.Attributes.Add("href", vista.vchVistaIdentificador);
+                    imgMenu1.Attributes.Remove("class");
+                    imgMenu1.Attributes.Add("class", "menu-icon " + vista.vchIconFontAwesome);
+                    lblMenu1.Text = vista.vchNombreVista;
+                }
+                vista = new clsVistasUsuarios();
+                if (lstView.Exists(x => x.vchIdentificador == "Menu2"))
+                {
+                    vista = lstView.Find(x => x.vchIdentificador == "Menu2");
+                    Menu2.Visible = true;
+                    Menu2.Title = vista.vchNombreVista;
+                    Menu2.Attributes.Add("href", vista.vchVistaIdentificador);
+                    imgMenu2.Attributes.Remove("class");
+                    imgMenu2.Attributes.Add("class", "menu-icon " + vista.vchIconFontAwesome);
+                    lblMenu2.Text = vista.vchNombreVista;
+                }
+                vista = new clsVistasUsuarios();
+                if (lstView.Exists(x => x.vchIdentificador == "Menu3"))
+                {
+                    vista = lstView.Find(x => x.vchIdentificador == "Menu3");
+                    Menu3.Visible = true;
+                    Menu3.Title = vista.vchNombreVista;
+                    Menu3.Attributes.Add("href", vista.vchVistaIdentificador);
+                    imgMenu3.Attributes.Remove("class");
+                    imgMenu3.Attributes.Add("class", "menu-icon " + vista.vchIconFontAwesome);
+                    lblMenu3.Text = vista.vchNombreVista;
+                }
+                vista = new clsVistasUsuarios();
+                if (lstView.Exists(x => x.vchIdentificador == "Menu4"))
+                {
+                    vista = lstView.Find(x => x.vchIdentificador == "Menu4");
+                    Menu4.Visible = true;
+                    Menu4.Title = vista.vchNombreVista;
+                    Menu4.Attributes.Add("href", vista.vchVistaIdentificador);
+                    imgMenu4.Attributes.Remove("class");
+                    imgMenu4.Attributes.Add("class", "menu-icon " + vista.vchIconFontAwesome);
+                    lblMenu4.Text = vista.vchNombreVista;
                 }
             }
-            catch(Exception ecU)
+            catch (Exception ecU)
             {
                 Log.EscribeLog("Existe un error en configUser: " + ecU.Message, 3, "");
             }

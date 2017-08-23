@@ -32,6 +32,20 @@ namespace Fuji.RISLite.Site.Services
         [OperationContract]
         stp_setItemCatalogo_Result setItemCatalogo(CatalogoRequest request);
 
+        [OperationContract]
+        List<clsCatalogo> getTipoUsuario(CatalogoRequest request);
+
+        [OperationContract]
+        List<clsCatalogo> getListaBoton(CatalogoRequest request);
+
+        [OperationContract]
+        List<clsCatalogo> getListaVista(CatalogoRequest request);
+
+        [OperationContract]
+        List<stp_getListaPaginas_Result> getListVistas(CatalogoRequest request);
+
+        [OperationContract]
+        List<clsUsuario> getListaUsuarios(TecnicoRequest request);
 
         #endregion catalogo
 

@@ -35,6 +35,15 @@ namespace Fuji.RISLite.Entidades.DataBase
         public DbSet<tbl_CAT_Catalogo> tbl_CAT_Catalogo { get; set; }
         public DbSet<tbl_CAT_Equipo> tbl_CAT_Equipo { get; set; }
         public DbSet<tbl_CAT_Modalidad> tbl_CAT_Modalidad { get; set; }
+        public DbSet<tbl_CAT_EstatusCita> tbl_CAT_EstatusCita { get; set; }
+        public DbSet<tbl_CAT_EstatusEstudio> tbl_CAT_EstatusEstudio { get; set; }
+        public DbSet<tbl_CAT_Genero> tbl_CAT_Genero { get; set; }
+        public DbSet<tbl_CAT_InstitucionProcedencia> tbl_CAT_InstitucionProcedencia { get; set; }
+        public DbSet<tbl_CAT_TipoMovimiento> tbl_CAT_TipoMovimiento { get; set; }
+        public DbSet<tbl_CAT_Botones> tbl_CAT_Botones { get; set; }
+        public DbSet<tbl_CAT_Vistas> tbl_CAT_Vistas { get; set; }
+        public DbSet<tbl_REL_BotonVista> tbl_REL_BotonVista { get; set; }
+        public DbSet<tbl_REL_TipoUsuarioBoton> tbl_REL_TipoUsuarioBoton { get; set; }
     
         public virtual ObjectResult<stp_getListCatalogo_Result> stp_getListCatalogo(Nullable<int> intCatalogoID)
         {
@@ -94,6 +103,15 @@ namespace Fuji.RISLite.Entidades.DataBase
                 new ObjectParameter("vchValor", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_updateCatalogo_Result>("stp_updateCatalogo", intCatalogoIDParameter, intPrimaryKeyParameter, vchValorParameter);
+        }
+    
+        public virtual ObjectResult<stp_getListaPaginas_Result> stp_getListaPaginas(Nullable<int> intTipoUsuarioID)
+        {
+            var intTipoUsuarioIDParameter = intTipoUsuarioID.HasValue ?
+                new ObjectParameter("intTipoUsuarioID", intTipoUsuarioID) :
+                new ObjectParameter("intTipoUsuarioID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getListaPaginas_Result>("stp_getListaPaginas", intTipoUsuarioIDParameter);
         }
     }
 }

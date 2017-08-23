@@ -43,6 +43,7 @@
     <Compile Include="clsCatalogo.cs" />
     <Compile Include="clsEquipo.cs" />
     <Compile Include="clsUsuario.cs" />
+    <Compile Include="clsVistasUsuarios.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

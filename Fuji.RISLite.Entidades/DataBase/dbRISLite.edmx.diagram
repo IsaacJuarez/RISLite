@@ -15,6 +15,19 @@
         <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Equipo" Width="1.5" PointX="7.625" PointY="5" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Modalidad" Width="1.5" PointX="5.375" PointY="5" />
         <AssociationConnector Association="RISLiteModel.FK_CAT_Equipo_CAT_Modalidad" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_EstatusCita" Width="1.5" PointX="7.75" PointY="0.75" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_EstatusEstudio" Width="1.5" PointX="5.75" PointY="8.75" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Genero" Width="1.5" PointX="7.75" PointY="8.75" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_InstitucionProcedencia" Width="1.5" PointX="9.75" PointY="0.75" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_TipoMovimiento" Width="1.5" PointX="9.75" PointY="8.75" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Botones" Width="1.5" PointX="0.75" PointY="8.75" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Vistas" Width="1.5" PointX="3" PointY="12.75" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_REL_BotonVista" Width="1.5" PointX="5.25" PointY="11.75" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_REL_TipoUsuarioBoton" Width="1.5" PointX="3" PointY="8.625" />
+        <AssociationConnector Association="RISLiteModel.FK_REL_TipoUsuarioBoton_CAT_Botones" />
+        <AssociationConnector Association="RISLiteModel.FK_REL_TipoUsuarioBoton_CAT_TipoUsuario" />
+        <AssociationConnector Association="RISLiteModel.FK_REL_BotonVista_CAT_Vistas" />
+        <AssociationConnector Association="RISLiteModel.FK_REL_BotonVista_REL_UsuarioBoton" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

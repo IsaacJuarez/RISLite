@@ -2,6 +2,7 @@
 using Fuji.RISLite.Entities;
 using Fuji.RISLite.Site.Services;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 
 namespace Fuji.RISLite.Site
@@ -49,6 +50,48 @@ namespace Fuji.RISLite.Site
             {
                 Log.EscribeLog("Existe un error en Page_Load de frmAddDate: " + ePL.Message, 3, "");
             }
+        }
+
+        [System.Web.Script.Services.ScriptMethod()]
+        [System.Web.Services.WebMethod]
+        public static List<string> obtenerPacienteBusqueda()
+        {
+            List<string> lstPaciente = new List<string>();
+            try
+            {
+                string paciente1 = "Paciente 1 || NSS : 11111";
+                lstPaciente.Add(paciente1);
+                string paciente2 = "Paciente 2 || NSS : 22222";
+                lstPaciente.Add(paciente2);
+                string paciente3 = "Paciente 3 || NSS : 33333";
+                lstPaciente.Add(paciente3);
+            }
+            catch (Exception eOP)
+            {
+                Log.EscribeLog("Existe un error obtenerPacienteBusqueda:" + eOP.Message, 3, "");
+            }
+            return lstPaciente;
+        }
+
+        [System.Web.Script.Services.ScriptMethod()]
+        [System.Web.Services.WebMethod]
+        public static List<string> obtenerEstudioBusqueda()
+        {
+            List<string> lstPaciente = new List<string>();
+            try
+            {
+                string paciente1 = "Estudio 1 || Tipo :  US";
+                lstPaciente.Add(paciente1);
+                string paciente2 = "Estudio 2 || Tipo : RX";
+                lstPaciente.Add(paciente2);
+                string paciente3 = "Estudio 3 || Tipo : CT";
+                lstPaciente.Add(paciente3);
+            }
+            catch (Exception eOP)
+            {
+                Log.EscribeLog("Existe un error obtenerEstudioBusqueda:" + eOP.Message, 3, "");
+            }
+            return lstPaciente;
         }
     }
 }

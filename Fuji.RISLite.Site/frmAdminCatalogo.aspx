@@ -44,7 +44,7 @@
                                                     <Columns>
                                                         <asp:BoundField DataField="vchCatalogoID" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
                                                         <asp:BoundField DataField="vchCatalogo"  HeaderText="Nombre" ReadOnly="true" />
-                                                        <asp:TemplateField HeaderText="Editar">
+                                                        <asp:TemplateField HeaderText="Editar" ItemStyle-HorizontalAlign="Center">
                                                             <ItemTemplate>      
                                                                 <asp:LinkButton ID="btnVisualizar" CausesValidation="false" CommandName="viewEditar" CommandArgument='<%# Bind("vchCatalogoID") %>' runat="server">
                                                                     <asp:Image ID="ImageVisializa" runat="server" ImageUrl="~/images/ic_action_edit.png" Height="25px" Width="25px" ToolTip="Editar"/>

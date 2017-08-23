@@ -13,7 +13,7 @@ namespace Fuji.RISLite.DataAccess
     {
         RISLiteEntities dbRisDA;
 
-        public bool getUser(string user, ref clsUsuario Usuario)
+        public bool getUser(string user, ref clsUsuario Usuario, ref List<clsVistasUsuarios> lstVistas)
         {
             bool Success = false;
             try
@@ -50,6 +50,7 @@ namespace Fuji.RISLite.DataAccess
                                 Usuario.datFecha = (DateTime)query.datFecha;
                                 Usuario.vchUserAdmin = query.vchUserAdmin;
                                 Usuario.Token = Security.Encrypt(query.intUsuarioID + "-" + query.vchUsuario);
+                                lstVistas = getListVistas(Usuario.intTipoUsuario);
                             }
                         }
                     }
@@ -61,6 +62,50 @@ namespace Fuji.RISLite.DataAccess
             }
             return Success;
         }
+
+        public List<clsVistasUsuarios> getListVistas(int intTipoUsuario)
+        {
+            List<clsVistasUsuarios> lstReturn = new List<clsVistasUsuarios>();
+            try
+            {
+                using(dbRisDA = new RISLiteEntities())
+                {
+                    if(dbRisDA.tbl_REL_TipoUsuarioBoton.Any(x=>x.intTipoUsuario == intTipoUsuario && (bool)x.bitActivo))
+                    {
+                        var query = dbRisDA.stp_getListaPaginas(intTipoUsuario).ToList();
+                        if(query!= null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach(var item in query)
+                                {
+                                    clsVistasUsuarios mdl = new clsVistasUsuarios();
+                                    mdl.bitActivo = (bool)item.bitActivo;
+                                    mdl.intBotonID = (int)item.intBotonID;
+                                    mdl.intTipoUsuario = (int)item.intTipoUsuario;
+                                    mdl.intVistaID = (int)item.intVistaID;
+                                    mdl.vchbtnImagenID = item.vchbtnImagenID;
+                                    mdl.vchIconFontAwesome = item.vchIconFontAwesome;
+                                    mdl.vchIdentificador = item.vchIdentificador;
+                                    mdl.vchNombreBoton = item.vchNombreBoton;
+                                    mdl.vchNombreVista = item.vchNombreVista;
+                                    mdl.vchTipoUsuario = item.vchTipoUsuario;
+                                    mdl.vchVistaIdentificador = item.vchVistaIdentificador;
+                                    lstReturn.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch(Exception egLV)
+            {
+                Log.EscribeLog("Existe un error en : " + egLV.Message, 3, "");
+            }
+            return lstReturn;
+        }
+
+
 
         #region catalogos
 
@@ -179,6 +224,181 @@ namespace Fuji.RISLite.DataAccess
                 Log.EscribeLog("Existe un error en setItemCatalogo: " + eUC.Message, 3, user);
             }
             return response;
+        }
+
+        public List<clsCatalogo> getTipoUsuario(string user)
+        {
+            List<clsCatalogo> lstResponse = new List<clsCatalogo>();
+            try
+            {
+                using(dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_TipoUsuario.Any(x=>(bool)x.bitActivo))
+                    {
+                        var query = dbRisDA.tbl_CAT_TipoUsuario.Where(x => (bool)x.bitActivo).ToList();
+                        if(query!= null)
+                        {
+                            if(query.Count>0)
+                            {
+                                foreach(var item in query)
+                                {
+                                    clsCatalogo mdl = new clsCatalogo();
+                                    mdl.intCatalogoID = item.intTipoUsuario;
+                                    mdl.vchNombre = item.vchTipoUsuario;
+                                    lstResponse.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch(Exception egC)
+            {
+                Log.EscribeLog("Existe un error en getTipoUsuario: " + egC.Message, 2, user);
+            }
+            return lstResponse;
+        }
+
+        public List<clsCatalogo> getListaBoton(string user)
+        {
+            List<clsCatalogo> lstResponse = new List<clsCatalogo>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Botones.Any(x => (bool)x.bitActivo))
+                    {
+                        var query = dbRisDA.tbl_CAT_Botones.Where(x => (bool)x.bitActivo).ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsCatalogo mdl = new clsCatalogo();
+                                    mdl.intCatalogoID = item.intBotonID;
+                                    mdl.vchNombre = item.vchNombreBoton;
+                                    lstResponse.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception egC)
+            {
+                Log.EscribeLog("Existe un error en getListaBoton: " + egC.Message, 2, user);
+            }
+            return lstResponse;
+        }
+
+        public List<clsCatalogo> getListaVista(string user)
+        {
+            List<clsCatalogo> lstResponse = new List<clsCatalogo>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Vistas.Any(x => (bool)x.bitActivo))
+                    {
+                        var query = dbRisDA.tbl_CAT_Vistas.Where(x => (bool)x.bitActivo).ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsCatalogo mdl = new clsCatalogo();
+                                    mdl.intCatalogoID = item.intVistaID;
+                                    mdl.vchNombre = item.vchNombreVista;
+                                    lstResponse.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception egC)
+            {
+                Log.EscribeLog("Existe un error en getListaVista: " + egC.Message, 2, user);
+            }
+            return lstResponse;
+        }
+
+        public List<stp_getListaPaginas_Result> getListVistas(int intTipoUsuarioID,string user)
+        {
+            List<stp_getListaPaginas_Result> result = new List<stp_getListaPaginas_Result>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    var query = dbRisDA.stp_getListaPaginas(intTipoUsuarioID).ToList();
+                    if(query!= null)
+                    {
+                        if (query.Count > 0)
+                        {
+                            result.AddRange(query);
+                        }
+                    }
+                }
+            }
+            catch(Exception egLV)
+            {
+                Log.EscribeLog("Existe un error en getListVistas: " + egLV.Message, 3, user);
+            }
+            return result;
+        }
+
+        public List<clsUsuario> getListaUsuarios(string user)
+        {
+            List<clsUsuario> lst = new List<clsUsuario>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Usuario.Any(x => (bool)x.bitActivo))
+                    {
+                        var query = (from _user in dbRisDA.tbl_CAT_Usuario
+                                     join cat in dbRisDA.tbl_CAT_TipoUsuario on _user.intTipoUsuario equals cat.intTipoUsuario
+                                     where (bool)_user.bitActivo
+                                     select new
+                                     {
+                                         intTipoUsuario = _user.intTipoUsuario,
+                                         intUsuarioID = _user.intUsuarioID,
+                                         bitActivo = _user.bitActivo,
+                                         datFecha = _user.datFecha,
+                                         vchNombre = _user.vchNombre,
+                                         vchUserAdmin = _user.vchUserAdmin,
+                                         vchUsuario = _user.vchUsuario,
+                                         vchTipoUsuario = cat.vchTipoUsuario
+                                     }).ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsUsuario mdl = new clsUsuario();
+                                    mdl.intTipoUsuario = (int)item.intTipoUsuario;
+                                    mdl.intUsuarioID = item.intUsuarioID;
+                                    mdl.bitActivo = (bool)item.bitActivo;
+                                    mdl.datFecha = (DateTime)item.datFecha;
+                                    mdl.vchNombre = item.vchNombre;
+                                    mdl.vchUserAdmin = item.vchUserAdmin;
+                                    mdl.vchUsuario = item.vchUsuario;
+                                    mdl.vchTipoUsuario = item.vchTipoUsuario;
+                                    lst.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getListaUsuarios: " + eLT.Message, 3, user);
+            }
+            return lst;
         }
         #endregion catalogos
 

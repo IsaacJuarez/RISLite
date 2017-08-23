@@ -54,7 +54,7 @@
 			</button>
 
 			<div class="navbar-header pull-left">
-				<a href="index.html" class="navbar-brand">
+				<a href="Default.aspx" class="navbar-brand">
 					<small>
 						<i class="fa fa-leaf"></i>
 						RIS Lite
@@ -64,7 +64,7 @@
 
 			<div class="navbar-buttons navbar-header pull-right" role="navigation">
 				<ul class="nav ace-nav">
-					<li class="grey dropdown-modal">
+					<%--<li class="grey dropdown-modal">
 						<a data-toggle="dropdown" class="dropdown-toggle" href="#">
 							<i class="ace-icon fa fa-tasks"></i>
 							<span class="badge badge-grey">4</span>
@@ -139,9 +139,9 @@
 								</a>
 							</li>
 						</ul>
-					</li>
+					</li>--%>
 
-					<li class="purple dropdown-modal">
+					<%--<li class="purple dropdown-modal">
 						<a data-toggle="dropdown" class="dropdown-toggle" href="#">
 							<i class="ace-icon fa fa-bell icon-animated-bell"></i>
 							<span class="badge badge-important">8</span>
@@ -207,9 +207,9 @@
 								</a>
 							</li>
 						</ul>
-					</li>
+					</li>--%>
 
-					<li class="green dropdown-modal">
+					<%--<li class="green dropdown-modal">
 						<a data-toggle="dropdown" class="dropdown-toggle" href="#">
 							<i class="ace-icon fa fa-envelope icon-animated-vertical"></i>
 							<span class="badge badge-success">5</span>
@@ -317,11 +317,11 @@
 								</a>
 							</li>
 						</ul>
-					</li>
+					</li>--%>
 
 					<li class="light-blue dropdown-modal">
 						<a data-toggle="dropdown" href="#" class="dropdown-toggle">
-							<img class="nav-user-photo" src="assets/images/avatars/user.jpg" alt="Jason's Photo" />
+							<img class="nav-user-photo" src="Images/isaac 1.JPG" alt="Isaac Juarez" />
 							<span class="user-info">
 								<small>Bienvenido,</small>
 								<asp:label runat="server" ID="lblUser" Text=""></asp:label>
@@ -333,13 +333,6 @@
 						<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
 							<li>
 								<a href="#">
-									<i class="ace-icon fa fa-cog"></i>
-									Configuruaciones
-								</a>
-							</li>
-
-							<li>
-								<a href="profile.html">
 									<i class="ace-icon fa fa-user"></i>
 									Perfil
 								</a>
@@ -348,8 +341,8 @@
 							<li class="divider"></li>
 
 							<li>
-								<a href="frmSalir.aspx?var=4f55354337364b2f79534d3d">
-									<i class="ace-icon fa fa-power-off"></i>
+								<a id="btnSalir" runat="server" href="frmSalir.aspx?var=4f55354337364b2f79534d3d">
+									<i id="imgSalir" runat="server" class="ace-icon fa fa-power-off"></i>
 									Salir
 								</a>
 							</li>
@@ -371,20 +364,20 @@
 
 			<div class="sidebar-shortcuts" id="sidebar-shortcuts">
 				<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
-					<a class="btn btn-success" title="" runat="server" id="btnShort1">
+					<a class="btn btn-success" title="" runat="server" id="btnShort1" disabled="true">
 						<i class="" id="btn1" runat="server" ></i>
 					</a>
 
-					<a class="btn btn-info" title=""  runat="server" id="btnShort2">
+					<a class="btn btn-info" title=""  runat="server" id="btnShort2" disabled="true">
 						<i class=""  id="btn2" runat="server"></i>
 					</a>
 
-					<a class="btn btn-warning" title=""  runat="server" id="btnShort3">
+					<a class="btn btn-warning" title=""  runat="server" id="btnShort3" disabled="true">
 						<i class=""  id="btn3" runat="server"></i>
 					</a>
 
-					<a runat="server" onclick="return cerrarpagina();" class="btn btn-danger" title="" id="btnShort4">
-						<i  class="" onclick="return cerrarpagina();" runat="server"  id="btn4"></i>
+					<a runat="server" class="btn btn-danger" title="" id="btnShort4" disabled="true">
+						<i  class=""  runat="server"  id="btn4"></i>
 					</a>
 				</div>
 
@@ -400,55 +393,34 @@
 			</div><!-- /.sidebar-shortcuts -->
 
             <ul class="nav nav-list">
-                <li class="active" id="li1">
-					<a href="Default.aspx" onclick="changeClass('li1')">
-						<i class="menu-icon fa fa-tachometer"></i>
-						<span class="menu-text"> Dashboard </span>
+                <li class="" id="li1" style="">
+					<a runat="server" id="Menu1" href="#" visible="false" >
+						<i class="menu-icon fa fa-tachometer" runat="server" id="imgMenu1"></i>
+						<span class="menu-text"> <asp:Label runat="server" Text="" ID="lblMenu1"></asp:Label> </span>
 					</a>
 					<b class="arrow"></b>
 				</li>
 
-                <li class="active open" id="li2">
-					<a href="#" class="dropdown-toggle">
-						<i class="menu-icon fa fa-calendar"></i>
-						<span class="menu-text"> Agenda </span>
-                        <b class="arrow fa fa-angle-down"></b>
+                <li class="" id="li2">
+					<a runat="server" id="Menu2" href="#"  visible="false">
+						<i class="menu-icon fa fa-calendar"  runat="server" id="imgMenu2"></i>
+						<span class="menu-text"> <asp:Label runat="server" Text="" ID="lblMenu2"></asp:Label> </span>
 					</a>
 					<b class="arrow"></b>
-                    
-                    <ul class="submenu">
-                        <li class="">
-							<a href="frmAgenda.aspx">
-								<i class="menu-icon fa fa-calendar"></i>
-								Agenda
-							</a>
-
-							<b class="arrow"></b>
-						</li>
-
-                        <li class="">
-							<a href="frmAddDate.aspx">
-								<i class="menu-icon fa fa-calendar-plus-o"></i>
-								Nueva Cita
-							</a>
-
-							<b class="arrow"></b>
-						</li>
-                    </ul>
 				</li>
 
                 <li class="" id="li3">
-					<a href="frmListaTrabajo.aspx" onclick="changeClass('li3')">
-						<i class="menu-icon fa fa-sort-amount-asc"></i>
-						<span class="menu-text"> Lista de Trabajo </span>
+					<a runat="server" id="Menu3"  href="#"  visible="false">
+						<i class="menu-icon fa fa-sort-amount-asc"  runat="server" id="imgMenu3"></i>
+						<span class="menu-text"> <asp:Label runat="server" Text="" ID="lblMenu3"></asp:Label> </span>
 					</a>
 					<b class="arrow"></b>
 				</li>
 
                 <li class="" id="li4">
-					<a href="frmRepEstadisticas.aspx" onclick="changeClass('li4')">
-						<i class="menu-icon fa fa-signal"></i>
-						<span class="menu-text"> Rep. y Estadísticas </span>
+					<a runat="server" id="Menu4" href="#" visible="false">
+						<i class="menu-icon fa fa-signal"  runat="server" id="imgMenu4"></i>
+						<span class="menu-text"> <asp:Label runat="server" Text="" ID="lblMenu4"></asp:Label> </span>
 					</a>
 					<b class="arrow"></b>
 				</li>
@@ -462,20 +434,20 @@
         <div class="main-content">
 			<div class="main-content-inner">
 				<div class="breadcrumbs ace-save-state" id="breadcrumbs">
-					<ul class="breadcrumb">
+					<%--<ul class="breadcrumb">
 						<li>
 							<i class="ace-icon fa fa-home home-icon"></i>
 							<a href="#">Inicio</a>
 						</li>
 						<li class="active">Dashboard</li>
-					</ul><!-- /.breadcrumb -->
+					</ul><!-- /.breadcrumb -->--%>
 
 					<div class="nav-search" id="nav-search">
 						<div class="form-search">
 							<span class="input-icon">
 								<%--<input type="text" placeholder="Buscar ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />--%>
                                 <asp:TextBox ID="txtBusquedaPaciente" runat="server" CssClass="nav-search-input" AutoPostBack="true" Text="" placeholder="Buscar paciente..." OnTextChanged="txtBusquedaPaciente_TextChanged"></asp:TextBox>
-								<i class="ace-icon fa fa-search nav-search-icon"></i>
+								<i runat="server" id="imgSearch" class="ace-icon fa fa-search nav-search-icon"></i>
 							</span>
 						</div>
 					</div><!-- /.nav-search -->
@@ -502,15 +474,15 @@
 
 					&nbsp; &nbsp;
 					<span class="action-buttons">
-						<a href="#">
+						<a href="https://twitter.com/FujifilmMX" target="_blank">
 							<i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
 						</a>
 
-						<a href="#">
+						<a href="https://www.facebook.com/FujifilmMX" target="_blank">
 							<i class="ace-icon fa fa-facebook-square text-primary bigger-150"></i>
 						</a>
 
-						<a href="#">
+						<a href="https://www.instagram.com/fujifilmmx/" target="_blank">
 							<i class="ace-icon fa fa-rss-square orange bigger-150"></i>
 						</a>
 					</span>
