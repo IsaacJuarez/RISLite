@@ -165,7 +165,7 @@
                                         <div class="row form-group ">
                                             <div class="col-lg-5 col-md-12 col-sm-12 col-xs-12">
                                                <asp:Label runat="server" Text="Host de Correo" AssociatedControlID="txtHost"></asp:Label>
-                                                <asp:RequiredFieldValidator ID="rfvHost" runat="server"Text="* Capturar Host." ForeColor="Red"  ControlToValidate="txtHost" ValidationGroup="vgEmailSistema"></asp:RequiredFieldValidator>
+                                                <asp:RequiredFieldValidator ID="rfvHost" runat="server" Text="* Capturar Host." ForeColor="Red"  ControlToValidate="txtHost" ValidationGroup="vgEmailSistema"></asp:RequiredFieldValidator>
                                             </div>
                                             <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12">
                                                 <asp:TextBox runat="server" Text="" ID="txtHost" CssClass="form-control"></asp:TextBox>

@@ -145,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />
+    <None Include="BaseDatos\RISLite.bak" />
     <None Include="DataBase\dbRISLite.edmx.diagram">
       <DependentUpon>dbRISLite.edmx</DependentUpon>
     </None>
