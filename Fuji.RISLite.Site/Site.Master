@@ -424,6 +424,14 @@
 					</a>
 					<b class="arrow"></b>
 				</li>
+
+                <li class="" id="li5">
+					<a runat="server" id="A1" href="frmConfiguracion.aspx">
+						<i class="menu-icon fa fa-wrench"  runat="server" id="i1"></i>
+						<span class="menu-text"> <asp:Label runat="server" Text="Nueva Configuración" ID="Label1"></asp:Label> </span>
+					</a>
+					<b class="arrow"></b>
+				</li>
             </ul><!-- /.nav-list -->
 
             <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">

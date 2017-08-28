@@ -81,6 +81,7 @@
     <Content Include="frmAdminUser.aspx" />
     <Content Include="frmAgenda.aspx" />
     <Content Include="frmConfigAgenda.aspx" />
+    <Content Include="frmConfiguracion.aspx" />
     <Content Include="frmConfiguraciones.aspx" />
     <Content Include="frmEstadisticasTec.aspx" />
     <Content Include="frmListaTrabajo.aspx" />
@@ -1262,6 +1263,13 @@
     </Compile>
     <Compile Include="frmConfigAgenda.aspx.designer.cs">
       <DependentUpon>frmConfigAgenda.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="frmConfiguracion.aspx.cs">
+      <DependentUpon>frmConfiguracion.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="frmConfiguracion.aspx.designer.cs">
+      <DependentUpon>frmConfiguracion.aspx</DependentUpon>
     </Compile>
     <Compile Include="frmConfiguraciones.aspx.cs">
       <DependentUpon>frmConfiguraciones.aspx</DependentUpon>
