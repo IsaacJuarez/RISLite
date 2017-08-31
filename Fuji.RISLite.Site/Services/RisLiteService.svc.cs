@@ -256,7 +256,215 @@ namespace Fuji.RISLite.Site.Services
             }
             return response;
         }
-        
+
         #endregion tecnico
+
+        #region ConfigSitio
+        public ConfigSitioResponse getConfigSitio(ConfigSitioRequest request)
+        {
+            ConfigSitioResponse response = new ConfigSitioResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    tbl_MST_ConfiguracionSistema mdl = new tbl_MST_ConfiguracionSistema();
+                    string mensaje = "";
+                    response.Success = controller.getConfigSitio(request.mdlUser.vchUsuario,ref mdl,ref mensaje);
+                    response.mdlConfig = mdl;
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getConfigSitio: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public ConfigSitioResponse setConfigSitio(ConfigSitioRequest request)
+        {
+            ConfigSitioResponse response = new ConfigSitioResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setConfigSitio(request.mdlConfig, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setConfigSitio: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public ConfigSitioResponse setActualizarConfigSitio(ConfigSitioRequest request)
+        {
+            ConfigSitioResponse response = new ConfigSitioResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setActualizarConfigSitio(request.mdlConfig, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setActualizarConfigSitio: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+        #endregion ConfigSitio
+
+        #region ConfigEmail
+        public ConfigEmailResponse getConfigEmail(ConfigEmailRequest request)
+        {
+            ConfigEmailResponse response = new ConfigEmailResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    tbl_Conf_CorreoSitio mdl = new tbl_Conf_CorreoSitio();
+                    string mensaje = "";
+                    response.Success = controller.getConfigEmail(request.mdlUser.vchUsuario, ref mdl, ref mensaje);
+                    response.mldConfigEmail = mdl;
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getConfigEmail: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public ConfigEmailResponse setConfigEmail(ConfigEmailRequest request)
+        {
+            ConfigEmailResponse response = new ConfigEmailResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setConfigEmail(request.mdlEmail, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setConfigEmail: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public ConfigEmailResponse setActualizarConfigEmail(ConfigEmailRequest request)
+        {
+            ConfigEmailResponse response = new ConfigEmailResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setActualizarConfigEmail(request.mdlEmail, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setActualizarConfigEmail: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+        #endregion ConfigEmail
+
+        #region varAdicionales
+        public List<clsVarAcicionales> getVariablesAdicionalPaciente(VarAdicionalRequest request)
+        {
+            List<clsVarAcicionales> response = new List<clsVarAcicionales>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getVariablesAdicionalPaciente(request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getVariablesAdicionalPaciente: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public VarAdicionalResponse setAgregarVariable(VarAdicionalRequest request)
+        {
+            VarAdicionalResponse response = new VarAdicionalResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setAgregarVariable(request.intTipoVariable,request.mdlVariable.vchNombreVarAdi,request.mdlUser.vchUsuario,ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setAgregarVariable: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public VarAdicionalResponse setActualizarVariable(VarAdicionalRequest request)
+        {
+            VarAdicionalResponse response = new VarAdicionalResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setActualizarVariable(request.intTipoVariable,request.mdlVariable.intVariableAdiID,request.mdlVariable.vchNombreVarAdi,request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setActualizarVariable: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public VarAdicionalResponse setEstatusVariable(VarAdicionalRequest request)
+        {
+            VarAdicionalResponse response = new VarAdicionalResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setEstatusVariable(request.intTipoVariable, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setEstatusVariable: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+        #endregion varAdicionales
     }
 }

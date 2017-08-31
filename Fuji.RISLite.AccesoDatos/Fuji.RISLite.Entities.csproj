@@ -43,6 +43,7 @@
     <Compile Include="clsCatalogo.cs" />
     <Compile Include="clsEquipo.cs" />
     <Compile Include="clsUsuario.cs" />
+    <Compile Include="clsVarAcicionales.cs" />
     <Compile Include="clsVistasUsuarios.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

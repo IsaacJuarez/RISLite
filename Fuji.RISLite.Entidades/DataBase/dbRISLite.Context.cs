@@ -44,6 +44,11 @@ namespace Fuji.RISLite.Entidades.DataBase
         public DbSet<tbl_CAT_Vistas> tbl_CAT_Vistas { get; set; }
         public DbSet<tbl_REL_BotonVista> tbl_REL_BotonVista { get; set; }
         public DbSet<tbl_REL_TipoUsuarioBoton> tbl_REL_TipoUsuarioBoton { get; set; }
+        public DbSet<tbl_MST_Paciente> tbl_MST_Paciente { get; set; }
+        public DbSet<tbl_CONFIG_VariablesAdiPaciente> tbl_CONFIG_VariablesAdiPaciente { get; set; }
+        public DbSet<tbl_DET_PacienteDinamico> tbl_DET_PacienteDinamico { get; set; }
+        public DbSet<tbl_MST_ConfiguracionSistema> tbl_MST_ConfiguracionSistema { get; set; }
+        public DbSet<tbl_Conf_CorreoSitio> tbl_Conf_CorreoSitio { get; set; }
     
         public virtual ObjectResult<stp_getListCatalogo_Result> stp_getListCatalogo(Nullable<int> intCatalogoID)
         {

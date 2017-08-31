@@ -501,5 +501,350 @@ namespace Fuji.RISLite.DataAccess
         }
         #endregion tecnicos
 
+
+        #region configSitio
+        public bool getConfigSitio(string user, ref tbl_MST_ConfiguracionSistema mdl, ref string mensaje)
+        {
+            bool valido = false;
+            tbl_MST_ConfiguracionSistema mdlConfig = new tbl_MST_ConfiguracionSistema();
+            try
+            {
+                using(dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_MST_ConfiguracionSistema.Any())
+                    {
+                        mdl = dbRisDA.tbl_MST_ConfiguracionSistema.First();
+                        valido = true;
+                    }
+                    else
+                    {
+                        valido = false;
+                        mensaje = "No existe una configuración para el sitio.";
+                    }
+                }
+            }
+            catch(Exception egCS)
+            {
+                valido = false;
+                Log.EscribeLog("Existe un error en getConfigSitio: " + egCS.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public bool setConfigSitio(tbl_MST_ConfiguracionSistema mdlConfigSistem, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (!dbRisDA.tbl_MST_ConfiguracionSistema.Any())
+                    {
+                        dbRisDA.tbl_MST_ConfiguracionSistema.Add(mdlConfigSistem);
+                        dbRisDA.SaveChanges();
+                        valido = true;
+                    }
+                }
+            }
+            catch (Exception esAC)
+            {
+                valido = false;
+                mensaje = esAC.Message;
+                Log.EscribeLog("Existe un error en setActualizarConfigSitio: " + esAC.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public bool setActualizarConfigSitio(tbl_MST_ConfiguracionSistema mdlConfigSistem, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_MST_ConfiguracionSistema.Any(x => x.intConfigID == mdlConfigSistem.intConfigID))
+                    {
+                        tbl_MST_ConfiguracionSistema mdl = new tbl_MST_ConfiguracionSistema();
+                        mdl = dbRisDA.tbl_MST_ConfiguracionSistema.First(x => x.intConfigID == mdlConfigSistem.intConfigID);
+                        if (mdl != null)
+                        {
+                            mdl.datFecha = DateTime.Now;
+                            mdl.vbLogoSitio = mdlConfigSistem.vbLogoSitio;
+                            mdl.vchDominio = mdlConfigSistem.vchDominio;
+                            mdl.vchNombreSitio = mdlConfigSistem.vchNombreSitio;
+                            mdl.vchPrefijo = mdlConfigSistem.vchPrefijo;
+                            mdl.vchUserAdmin = user;
+                            mdl.vchVersion = mdlConfigSistem.vchVersion;
+                            dbRisDA.SaveChanges();
+                            valido = true;
+                        }
+                    }
+                }
+            }
+            catch (Exception esAC)
+            {
+                valido = false;
+                mensaje = esAC.Message;
+                Log.EscribeLog("Existe un error en setActualizarConfigSitio: " + esAC.Message, 3, user);
+            }
+            return valido;
+        }
+        #endregion configSitio
+
+
+        #region ConfigEmail
+        public bool getConfigEmail(string user, ref tbl_Conf_CorreoSitio mdl, ref string mensaje)
+        {
+            bool valido = false;
+            tbl_Conf_CorreoSitio mdlConfig = new tbl_Conf_CorreoSitio();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_Conf_CorreoSitio.Any())
+                    {
+                        mdl = dbRisDA.tbl_Conf_CorreoSitio.First();
+                        valido = true;
+                    }
+                    else
+                    {
+                        valido = false;
+                        mensaje = "No existe una configuración para el correo del sitio.";
+                    }
+                }
+            }
+            catch (Exception egCS)
+            {
+                valido = false;
+                Log.EscribeLog("Existe un error en getConfigEmail: " + egCS.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public bool setConfigEmail(tbl_Conf_CorreoSitio mdlConfigSistem, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (!dbRisDA.tbl_Conf_CorreoSitio.Any())
+                    {
+                        dbRisDA.tbl_Conf_CorreoSitio.Add(mdlConfigSistem);
+                        dbRisDA.SaveChanges();
+                        valido = true;
+                    }
+                }
+            }
+            catch (Exception esAC)
+            {
+                valido = false;
+                mensaje = esAC.Message;
+                Log.EscribeLog("Existe un error en setConfigEmail: " + esAC.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public bool setActualizarConfigEmail(tbl_Conf_CorreoSitio mdlConfigSistem, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_Conf_CorreoSitio.Any(x => x.intConfigCorreoID == mdlConfigSistem.intConfigCorreoID))
+                    {
+                        tbl_Conf_CorreoSitio mdl = new tbl_Conf_CorreoSitio();
+                        mdl = dbRisDA.tbl_Conf_CorreoSitio.First(x => x.intConfigCorreoID == mdlConfigSistem.intConfigCorreoID);
+                        if (mdl != null)
+                        {
+                            mdl.bitActivo = mdlConfigSistem.bitActivo;
+                            mdl.BitEnableSsl = mdlConfigSistem.BitEnableSsl;
+                            mdl.datFecha = mdlConfigSistem.datFecha;
+                            mdl.intPort = mdlConfigSistem.intPort;
+                            mdl.vchCorreo = mdlConfigSistem.vchCorreo;
+                            mdl.vchHost = mdlConfigSistem.vchHost;
+                            mdl.vchPassword = mdlConfigSistem.vchPassword;
+                            mdl.vchUserAdmin = mdlConfigSistem.vchUserAdmin;
+                            mdl.vchUsuarioCorreo = mdlConfigSistem.vchUsuarioCorreo;
+                            dbRisDA.SaveChanges();
+                            valido = true;
+                        }
+                    }
+                }
+            }
+            catch (Exception esAC)
+            {
+                valido = false;
+                mensaje = esAC.Message;
+                Log.EscribeLog("Existe un error en setActualizarConfigEmail: " + esAC.Message, 3, user);
+            }
+            return valido;
+        }
+        #endregion ConfigEmail
+
+        #region varadicionales
+        public List<clsVarAcicionales> getVariablesAdicionalPaciente(string user)
+        {
+            List<clsVarAcicionales> lstreturn = new List<clsVarAcicionales>();
+            try
+            {
+                using(dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CONFIG_VariablesAdiPaciente.Any())
+                    {
+                        var query = dbRisDA.tbl_CONFIG_VariablesAdiPaciente.ToList();
+                        if(query != null)
+                        {
+                            if(query.Count > 0)
+                            {
+                                foreach(var item in query)
+                                {
+                                    clsVarAcicionales mdl = new clsVarAcicionales();
+                                    mdl.bitActivo = (bool)item.bitActivo;
+                                    mdl.datFecha = (DateTime)item.datFecha;
+                                    mdl.intVariableAdiID = item.intVarAdiPacienteID;
+                                    mdl.vchNombreVarAdi = item.vchNombreVariable;
+                                    mdl.vchUserAdmin = item.vchUserAdmin;
+                                    lstreturn.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch(Exception egV)
+            {
+                Log.EscribeLog("Existe un error en getVariablesAdicionalPaciente: " + egV.Message, 3, user);
+            }
+            return lstreturn;
+        }
+
+
+        public bool setAgregarVariable(int iTipoVariable, string vchVarible, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                switch (iTipoVariable)
+                {
+                    case 1: //Variable adicional Paciente
+                        using(dbRisDA = new RISLiteEntities())
+                        {
+                            if(!dbRisDA.tbl_CONFIG_VariablesAdiPaciente.Any(x=> x.vchNombreVariable.ToUpper() == vchVarible))
+                            {
+                                tbl_CONFIG_VariablesAdiPaciente mdl = new tbl_CONFIG_VariablesAdiPaciente();
+                                mdl.vchNombreVariable = vchVarible;
+                                mdl.datFecha = DateTime.Now;
+                                mdl.bitActivo = true;
+                                mdl.vchUserAdmin = user;
+                                dbRisDA.tbl_CONFIG_VariablesAdiPaciente.Add(mdl);
+                                dbRisDA.SaveChanges();
+                                valido = true;
+                            }
+                            else
+                            {
+                                mensaje = "La variable ya existe. Favor de verificar.";
+                            }
+                        }
+                        break;
+                    case 2: //Variable adicional Cita
+                        break;
+                    case 3: //Variable adicional Estudio
+                        break;
+                }
+            }
+            catch(Exception esAV)
+            {
+                valido = false;
+                mensaje = esAV.Message;
+                Log.EscribeLog("Existe un error en setAgregarVariable: " + esAV.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public bool setActualizarVariable(int iTipoVariable, int intVarAdiID, string vchVarible, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                switch (iTipoVariable)
+                {
+                    case 1: //Variable adicional Paciente
+                        using (dbRisDA = new RISLiteEntities())
+                        {
+                            if (dbRisDA.tbl_CONFIG_VariablesAdiPaciente.Any(x => x.intVarAdiPacienteID == intVarAdiID))
+                            {
+                                tbl_CONFIG_VariablesAdiPaciente mdl = new tbl_CONFIG_VariablesAdiPaciente();
+                                mdl = dbRisDA.tbl_CONFIG_VariablesAdiPaciente.First(x => x.intVarAdiPacienteID == intVarAdiID);
+                                mdl.vchNombreVariable = vchVarible;
+                                mdl.vchUserAdmin = user;
+                                mdl.datFecha = DateTime.Now;
+                                dbRisDA.SaveChanges();
+                                valido = true;
+                            }
+                            else
+                            {
+                                mensaje = "No existe la variable para actualizar.";
+                            }
+                        }
+                        break;
+                    case 2: //Variable adicional Cita
+                        break;
+                    case 3: //Variable adicional Estudio
+                        break;
+                }
+            }
+            catch (Exception esAV)
+            {
+                valido = false;
+                mensaje = esAV.Message;
+                Log.EscribeLog("Existe un error en setAgregarVariable: " + esAV.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public bool setEstatusVariable(int intTipoVariable, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                switch (intTipoVariable)
+                {
+                    case 1: //Variable adicional Paciente
+                        using (dbRisDA = new RISLiteEntities())
+                        {
+                            if (dbRisDA.tbl_CONFIG_VariablesAdiPaciente.Any(x => x.intVarAdiPacienteID == intTipoVariable))
+                            {
+                                tbl_CONFIG_VariablesAdiPaciente mdl = new tbl_CONFIG_VariablesAdiPaciente();
+                                mdl = dbRisDA.tbl_CONFIG_VariablesAdiPaciente.First(x => x.intVarAdiPacienteID == intTipoVariable);
+                                mdl.bitActivo = !mdl.bitActivo;
+                                mdl.vchUserAdmin = user;
+                                mdl.datFecha = DateTime.Now;
+                                dbRisDA.SaveChanges();
+                                valido = true;
+                            }
+                            else
+                            {
+                                mensaje = "No existe la variable para actualizar.";
+                            }
+                        }
+                        break;
+                    case 2: //Variable adicional Cita
+                        break;
+                    case 3: //Variable adicional Estudio
+                        break;
+                }
+            }
+            catch (Exception esAV)
+            {
+                valido = false;
+                mensaje = esAV.Message;
+                Log.EscribeLog("Existe un error en setAgregarVariable: " + esAV.Message, 3, user);
+            }
+            return valido;
+        }
+        #endregion varadicionales
+
     }
 }

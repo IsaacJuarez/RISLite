@@ -56,5 +56,41 @@ namespace Fuji.RISLite.Site.Services
         #region Tecnico
         List<clsUsuario> getListTecnico(TecnicoRequest request);
         #endregion Tecnico
+
+        #region ConfigEmail
+        [OperationContract]
+        ConfigEmailResponse getConfigEmail(ConfigEmailRequest request);
+
+        [OperationContract]
+        ConfigEmailResponse setConfigEmail(ConfigEmailRequest request);
+
+        [OperationContract]
+        ConfigEmailResponse setActualizarConfigEmail(ConfigEmailRequest request);
+        #endregion ConfigEmail
+
+        #region ConfigSitio
+        [OperationContract]
+        ConfigSitioResponse getConfigSitio(ConfigSitioRequest request);
+        [OperationContract]
+        ConfigSitioResponse setConfigSitio(ConfigSitioRequest request);
+        [OperationContract]
+        ConfigSitioResponse setActualizarConfigSitio(ConfigSitioRequest request);
+
+        #endregion ConfigSitio
+
+        #region varAdicionales
+        [OperationContract]
+        List<clsVarAcicionales> getVariablesAdicionalPaciente(VarAdicionalRequest request);
+
+        [OperationContract]
+        VarAdicionalResponse setAgregarVariable(VarAdicionalRequest request);
+
+        [OperationContract]
+        VarAdicionalResponse setActualizarVariable(VarAdicionalRequest request);
+
+        [OperationContract]
+        VarAdicionalResponse setEstatusVariable(VarAdicionalRequest request);
+        #endregion varAdicionales
+
     }
 }

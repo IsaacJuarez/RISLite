@@ -12,19 +12,16 @@ namespace Fuji.RISLite.Entidades.DataBase
     using System;
     using System.Collections.Generic;
     
-    public partial class tbl_CAT_Genero
+    public partial class tbl_MST_ConfiguracionSistema
     {
-        public tbl_CAT_Genero()
-        {
-            this.tbl_MST_Paciente = new HashSet<tbl_MST_Paciente>();
-        }
-    
-        public int intGeneroID { get; set; }
-        public string vchGenero { get; set; }
+        public int intConfigID { get; set; }
+        public string vchNombreSitio { get; set; }
+        public string vchDominio { get; set; }
+        public string vchPrefijo { get; set; }
+        public string vchVersion { get; set; }
+        public byte[] vbLogoSitio { get; set; }
         public Nullable<bool> bitActivo { get; set; }
         public Nullable<System.DateTime> datFecha { get; set; }
         public string vchUserAdmin { get; set; }
-    
-        public virtual ICollection<tbl_MST_Paciente> tbl_MST_Paciente { get; set; }
     }
 }

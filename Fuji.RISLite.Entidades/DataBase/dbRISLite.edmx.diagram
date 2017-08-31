@@ -28,7 +28,15 @@
         <AssociationConnector Association="RISLiteModel.FK_REL_TipoUsuarioBoton_CAT_TipoUsuario" />
         <AssociationConnector Association="RISLiteModel.FK_REL_BotonVista_CAT_Vistas" />
         <AssociationConnector Association="RISLiteModel.FK_REL_BotonVista_REL_UsuarioBoton" />
-      </Diagram>
+        <EntityTypeShape EntityType="RISLiteModel.tbl_MST_Paciente" Width="1.5" PointX="10" PointY="12.375" />
+        <AssociationConnector Association="RISLiteModel.FK_MST_Paciente_CAT_Genero" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_CONFIG_VariablesAdiPaciente" Width="1.5" PointX="10" PointY="16.75" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_DET_PacienteDinamico" Width="1.5" PointX="12.25" PointY="12.375" />
+        <AssociationConnector Association="RISLiteModel.FK_DET_PacienteDinamico_CONFIG_VariableAdiPaciente" />
+        <AssociationConnector Association="RISLiteModel.FK_DET_PacienteDinamico_MST_Paciente" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_MST_ConfiguracionSistema" Width="1.5" PointX="10.375" PointY="3.75" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_Conf_CorreoSitio" Width="1.5" PointX="12.375" PointY="0.75" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

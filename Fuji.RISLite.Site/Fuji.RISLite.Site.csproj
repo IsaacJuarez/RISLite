@@ -1318,10 +1318,16 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DataContract\CatalogoRequest.cs" />
+    <Compile Include="Services\DataContract\ConfigEmailRequest.cs" />
+    <Compile Include="Services\DataContract\ConfigEmailResponse.cs" />
+    <Compile Include="Services\DataContract\ConfigSitioRequest.cs" />
+    <Compile Include="Services\DataContract\ConfigSitioResponse.cs" />
     <Compile Include="Services\DataContract\EquipoRequest.cs" />
     <Compile Include="Services\DataContract\TecnicoRequest.cs" />
     <Compile Include="Services\DataContract\ValidaUserRequest.cs" />
     <Compile Include="Services\DataContract\ValidaUserResponse.cs" />
+    <Compile Include="Services\DataContract\VarAdicionalRequest.cs" />
+    <Compile Include="Services\DataContract\VarAdicionalResponse.cs" />
     <Compile Include="Services\ServiceContract\IRisLiteService.cs" />
     <Compile Include="Services\RisLiteService.svc.cs">
       <DependentUpon>RisLiteService.svc</DependentUpon>
