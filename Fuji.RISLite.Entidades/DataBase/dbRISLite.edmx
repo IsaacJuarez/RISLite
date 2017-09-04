@@ -39,6 +39,8 @@
           <Property Name="intModalidadID" Type="int" />
           <Property Name="vchNombreEquipo" Type="varchar" MaxLength="200" />
           <Property Name="vchCodigoEquipo" Type="varchar" MaxLength="200" />
+          <Property Name="vchIPEquipo" Type="varchar" MaxLength="20" />
+          <Property Name="vchAETitle" Type="varchar" MaxLength="100" />
           <Property Name="bitActivo" Type="bit" />
           <Property Name="datFecha" Type="datetime" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
@@ -555,12 +557,7 @@
             <Parameter Name="intPrimaryKey" Mode="In" Type="Int32" />
             <Parameter Name="vchValor" Mode="In" Type="String" />
           </FunctionImport>
-          <EntitySet Name="tbl_CAT_Equipo" EntityType="RISLiteModel.tbl_CAT_Equipo" />
           <EntitySet Name="tbl_CAT_Modalidad" EntityType="RISLiteModel.tbl_CAT_Modalidad" />
-          <AssociationSet Name="FK_CAT_Equipo_CAT_Modalidad" Association="RISLiteModel.FK_CAT_Equipo_CAT_Modalidad">
-            <End Role="tbl_CAT_Modalidad" EntitySet="tbl_CAT_Modalidad" />
-            <End Role="tbl_CAT_Equipo" EntitySet="tbl_CAT_Equipo" />
-          </AssociationSet>
           <EntitySet Name="tbl_CAT_EstatusCita" EntityType="RISLiteModel.tbl_CAT_EstatusCita" />
           <EntitySet Name="tbl_CAT_EstatusEstudio" EntityType="RISLiteModel.tbl_CAT_EstatusEstudio" />
           <EntitySet Name="tbl_CAT_Genero" EntityType="RISLiteModel.tbl_CAT_Genero" />
@@ -618,8 +615,13 @@
             <End Role="tbl_REL_ModalidadPrestacion" EntitySet="tbl_REL_ModalidadPrestacion" />
           </AssociationSet>
           <FunctionImport Name="stp_getPrestacionModalidad" ReturnType="Collection(RISLiteModel.stp_getPrestacionModalidad_Result)">
-            <Parameter Name="intModalidadId" Mode="In" Type="Int32" />
+          <Parameter Name="intModalidadId" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="tbl_CAT_Equipo" EntityType="RISLiteModel.tbl_CAT_Equipo" />
+          <AssociationSet Name="FK_CAT_Equipo_CAT_Modalidad" Association="RISLiteModel.FK_CAT_Equipo_CAT_Modalidad">
+            <End Role="tbl_CAT_Modalidad" EntitySet="tbl_CAT_Modalidad" />
+            <End Role="tbl_CAT_Equipo" EntitySet="tbl_CAT_Equipo" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="tbl_CAT_TipoMensaje">
           <Key>
@@ -723,19 +725,6 @@
           <Property Type="String" Name="vchMensaje" Nullable="true" />
           <Property Type="String" Name="vchDescripcion" Nullable="true" />
         </ComplexType>
-        <EntityType Name="tbl_CAT_Equipo">
-          <Key>
-            <PropertyRef Name="intEquipoID" />
-          </Key>
-          <Property Name="intEquipoID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="intModalidadID" Type="Int32" />
-          <Property Name="vchNombreEquipo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="vchCodigoEquipo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="bitActivo" Type="Boolean" />
-          <Property Name="datFecha" Type="DateTime" Precision="3" />
-          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="tbl_CAT_Modalidad" Relationship="RISLiteModel.FK_CAT_Equipo_CAT_Modalidad" FromRole="tbl_CAT_Equipo" ToRole="tbl_CAT_Modalidad" />
-        </EntityType>
         <EntityType Name="tbl_CAT_Modalidad">
           <Key>
             <PropertyRef Name="intModalidadID" />
@@ -746,21 +735,9 @@
           <Property Name="bitActivo" Type="Boolean" />
           <Property Name="datFecha" Type="DateTime" Precision="3" />
           <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="tbl_CAT_Equipo" Relationship="RISLiteModel.FK_CAT_Equipo_CAT_Modalidad" FromRole="tbl_CAT_Modalidad" ToRole="tbl_CAT_Equipo" />
           <NavigationProperty Name="tbl_REL_ModalidadPrestacion" Relationship="RISLiteModel.FK_REL_ModalidadPrestacion_CAT_Modalidad" FromRole="tbl_CAT_Modalidad" ToRole="tbl_REL_ModalidadPrestacion" />
+          <NavigationProperty Name="tbl_CAT_Equipo" Relationship="RISLiteModel.FK_CAT_Equipo_CAT_Modalidad" FromRole="tbl_CAT_Modalidad" ToRole="tbl_CAT_Equipo" />
         </EntityType>
-        <Association Name="FK_CAT_Equipo_CAT_Modalidad">
-          <End Type="RISLiteModel.tbl_CAT_Modalidad" Role="tbl_CAT_Modalidad" Multiplicity="0..1" />
-          <End Type="RISLiteModel.tbl_CAT_Equipo" Role="tbl_CAT_Equipo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tbl_CAT_Modalidad">
-              <PropertyRef Name="intModalidadID" />
-            </Principal>
-            <Dependent Role="tbl_CAT_Equipo">
-              <PropertyRef Name="intModalidadID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="tbl_CAT_EstatusCita">
           <Key>
             <PropertyRef Name="intEstatusCita" />
@@ -1101,6 +1078,33 @@
           <Property Type="Int32" Name="intDuracionMin" Nullable="true" />
           <Property Type="Boolean" Name="bitActivo" Nullable="true" />
         </ComplexType>
+        <EntityType Name="tbl_CAT_Equipo">
+          <Key>
+            <PropertyRef Name="intEquipoID" />
+          </Key>
+          <Property Name="intEquipoID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="intModalidadID" Type="Int32" />
+          <Property Name="vchNombreEquipo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="vchCodigoEquipo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="vchIPEquipo" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="vchAETitle" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_CAT_Modalidad" Relationship="RISLiteModel.FK_CAT_Equipo_CAT_Modalidad" FromRole="tbl_CAT_Equipo" ToRole="tbl_CAT_Modalidad" />
+        </EntityType>
+        <Association Name="FK_CAT_Equipo_CAT_Modalidad">
+          <End Type="RISLiteModel.tbl_CAT_Modalidad" Role="tbl_CAT_Modalidad" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_CAT_Equipo" Role="tbl_CAT_Equipo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_Modalidad">
+              <PropertyRef Name="intModalidadID" />
+            </Principal>
+            <Dependent Role="tbl_CAT_Equipo">
+              <PropertyRef Name="intModalidadID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1201,19 +1205,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="tbl_CAT_Equipo">
-            <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_Equipo">
-              <MappingFragment StoreEntitySet="tbl_CAT_Equipo">
-                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
-                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
-                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
-                <ScalarProperty Name="vchCodigoEquipo" ColumnName="vchCodigoEquipo" />
-                <ScalarProperty Name="vchNombreEquipo" ColumnName="vchNombreEquipo" />
-                <ScalarProperty Name="intModalidadID" ColumnName="intModalidadID" />
-                <ScalarProperty Name="intEquipoID" ColumnName="intEquipoID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="tbl_CAT_Modalidad">
             <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_Modalidad">
               <MappingFragment StoreEntitySet="tbl_CAT_Modalidad">
@@ -1467,6 +1458,21 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="tbl_CAT_Equipo">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_Equipo">
+              <MappingFragment StoreEntitySet="tbl_CAT_Equipo">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="vchAETitle" ColumnName="vchAETitle" />
+                <ScalarProperty Name="vchIPEquipo" ColumnName="vchIPEquipo" />
+                <ScalarProperty Name="vchCodigoEquipo" ColumnName="vchCodigoEquipo" />
+                <ScalarProperty Name="vchNombreEquipo" ColumnName="vchNombreEquipo" />
+                <ScalarProperty Name="intModalidadID" ColumnName="intModalidadID" />
+                <ScalarProperty Name="intEquipoID" ColumnName="intEquipoID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

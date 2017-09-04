@@ -1239,6 +1239,150 @@ namespace Fuji.RISLite.DataAccess
 
         #endregion Prestacion
 
+        #region Equipo
+        public List<tbl_CAT_Equipo> getListEquipo(int intModalidadID, string user)
+        {
+            List<tbl_CAT_Equipo> list = new List<tbl_CAT_Equipo>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    var query = dbRisDA.tbl_CAT_Equipo.Where(x => x.intModalidadID == intModalidadID).ToList();
+                    if (query != null)
+                    {
+                        if (query.Count > 0)
+                        {
+                            list.AddRange(query);
+                        }
+                    }
+                }
+            }
+            catch (Exception egLC)
+            {
+                Log.EscribeLog("Existe un error en getListEquipo: " + egLC.Message, 3, user);
+            }
+            return list;
+        }
+
+        public bool setEquipo(tbl_CAT_Equipo equipo, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                tbl_CAT_Equipo mdlCat = new tbl_CAT_Equipo();
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    //Primero en cat
+                    if (!dbRisDA.tbl_CAT_Equipo.Any(x => x.vchNombreEquipo.ToUpper() == equipo.vchNombreEquipo.ToUpper()))
+                    {
+                        mdlCat.bitActivo = equipo.bitActivo;
+                        mdlCat.datFecha = DateTime.Now;
+                        mdlCat.intModalidadID = equipo.intModalidadID;
+                        mdlCat.vchAETitle = equipo.vchAETitle;
+                        mdlCat.vchCodigoEquipo = equipo.vchCodigoEquipo;
+                        mdlCat.vchIPEquipo = equipo.vchIPEquipo;
+                        mdlCat.vchNombreEquipo = equipo.vchNombreEquipo;
+                        mdlCat.vchUserAdmin = user;
+                        mdlCat.vchUserAdmin = user;
+                        dbRisDA.tbl_CAT_Equipo.Add(mdlCat);
+                        dbRisDA.SaveChanges();
+                        valido = true;
+                    }
+                    else
+                    {
+                        mensaje += " Ya existe la prestación.";
+                        valido = false;
+                    }
+                }
+            }
+            catch (Exception eSU)
+            {
+                valido = false;
+                mensaje += eSU.Message;
+                Log.EscribeLog("Existe un error en setEquipo: " + eSU.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public bool setActualizaEquipo(tbl_CAT_Equipo equipo, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Equipo.Any(x => x.intEquipoID == equipo.intEquipoID))
+                    {
+                        if (!dbRisDA.tbl_CAT_Equipo.Any(x => x.vchNombreEquipo == equipo.vchNombreEquipo))
+                        {
+                            tbl_CAT_Equipo mdlCat = new tbl_CAT_Equipo();
+                            mdlCat = dbRisDA.tbl_CAT_Equipo.First(x => x.intEquipoID == equipo.intEquipoID);
+                            mdlCat.bitActivo = equipo.bitActivo;
+                            mdlCat.datFecha = DateTime.Now;
+                            mdlCat.intModalidadID = equipo.intModalidadID;
+                            mdlCat.vchUserAdmin = user;
+                            mdlCat.vchAETitle = equipo.vchAETitle;
+                            mdlCat.vchCodigoEquipo = equipo.vchCodigoEquipo;
+                            mdlCat.vchIPEquipo = equipo.vchIPEquipo;
+                            mdlCat.vchNombreEquipo = equipo.vchNombreEquipo;
+                            dbRisDA.SaveChanges();
+                            valido = true;
+                        }
+                        else
+                        {
+                            mensaje = "El nombre de la prestación ya existe.";
+                            valido = false;
+                        }
+                    }
+                    else
+                    {
+                        mensaje = "No existe la prestación.";
+                        valido = false;
+                    }
+                }
+            }
+            catch (Exception eSU)
+            {
+                valido = false;
+                mensaje = eSU.Message;
+                Log.EscribeLog("Existe un error en setActualizaEquipo: " + eSU.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public bool setEstatusEquipo(int intEquipoID, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Equipo.Any(x => x.intEquipoID == intEquipoID))
+                    {
+                        tbl_CAT_Equipo mdlUser = new tbl_CAT_Equipo();
+                        mdlUser = dbRisDA.tbl_CAT_Equipo.First(x => x.intEquipoID == intEquipoID);
+                        mdlUser.bitActivo = !mdlUser.bitActivo;
+                        mdlUser.datFecha = DateTime.Today;
+                        mdlUser.vchUserAdmin = user;
+                        dbRisDA.SaveChanges();
+                        valido = true;
+                    }
+                    else
+                    {
+                        mensaje = "El equipo no existe.";
+                        valido = false;
+                    }
+                }
+            }
+            catch (Exception eSU)
+            {
+                valido = false;
+                mensaje = eSU.Message;
+                Log.EscribeLog("Existe un error en setEstatusEquipo: " + eSU.Message, 3, user);
+            }
+            return valido;
+        }
+        #endregion Equipo
 
     }
 }

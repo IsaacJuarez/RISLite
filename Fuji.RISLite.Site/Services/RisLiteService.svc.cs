@@ -648,5 +648,85 @@ namespace Fuji.RISLite.Site.Services
         }
 
         #endregion Prestacion
+
+        #region Equipo
+        public List<tbl_CAT_Equipo> getListEquipo(EquipoRequest request)
+        {
+            List<tbl_CAT_Equipo> response = new List<tbl_CAT_Equipo>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListEquipo(request.intModalidadID, request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getListEquipo: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public EquipoResponse setEquipo(EquipoRequest request)
+        {
+            EquipoResponse response = new EquipoResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setEquipo(request.mdlEquipo, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setEquipo: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public EquipoResponse setActualizaEquipo(EquipoRequest request)
+        {
+            EquipoResponse response = new EquipoResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setActualizaEquipo(request.mdlEquipo, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setActualizaEquipo: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public EquipoResponse setEstatusEquipo(EquipoRequest request)
+        {
+            EquipoResponse response = new EquipoResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setEstatusEquipo(request.intEquipoID, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setEstatusEquipo: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+        #endregion Equipo
     }
 }

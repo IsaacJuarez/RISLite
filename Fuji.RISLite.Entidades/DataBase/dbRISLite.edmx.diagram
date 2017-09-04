@@ -12,9 +12,7 @@
         <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Usuario" Width="1.5" PointX="3" PointY="4.625" />
         <AssociationConnector Association="RISLiteModel.FK_CAT_Usuario_CAT_TipoUsuario" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Catalogo" Width="1.5" PointX="5.375" PointY="0.75" />
-        <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Equipo" Width="1.5" PointX="7.625" PointY="5" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Modalidad" Width="1.5" PointX="5.375" PointY="5" />
-        <AssociationConnector Association="RISLiteModel.FK_CAT_Equipo_CAT_Modalidad" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_EstatusCita" Width="1.5" PointX="7.75" PointY="0.75" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_EstatusEstudio" Width="1.5" PointX="5.75" PointY="8.75" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Genero" Width="1.5" PointX="7.75" PointY="8.75" />
@@ -41,6 +39,8 @@
         <EntityTypeShape EntityType="RISLiteModel.tbl_REL_ModalidadPrestacion" Width="1.5" PointX="12.625" PointY="8" />
         <AssociationConnector Association="RISLiteModel.FK_REL_ModalidadPrestacion_CAT_Modalidad" />
         <AssociationConnector Association="RISLiteModel.FK_REL_ModalidadPrestacion_CAT_Prestacion" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Equipo" Width="1.5" PointX="7.625" PointY="4.75" />
+        <AssociationConnector Association="RISLiteModel.FK_CAT_Equipo_CAT_Modalidad" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

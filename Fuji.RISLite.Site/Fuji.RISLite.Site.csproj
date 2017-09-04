@@ -1325,6 +1325,7 @@
     <Compile Include="Services\DataContract\ConfigSitioRequest.cs" />
     <Compile Include="Services\DataContract\ConfigSitioResponse.cs" />
     <Compile Include="Services\DataContract\EquipoRequest.cs" />
+    <Compile Include="Services\DataContract\EquipoResponse.cs" />
     <Compile Include="Services\DataContract\PrestacionRequest.cs" />
     <Compile Include="Services\DataContract\PrestacionResponse.cs" />
     <Compile Include="Services\DataContract\TecnicoRequest.cs" />

@@ -18,6 +18,8 @@ namespace Fuji.RISLite.Entidades.DataBase
         public Nullable<int> intModalidadID { get; set; }
         public string vchNombreEquipo { get; set; }
         public string vchCodigoEquipo { get; set; }
+        public string vchIPEquipo { get; set; }
+        public string vchAETitle { get; set; }
         public Nullable<bool> bitActivo { get; set; }
         public Nullable<System.DateTime> datFecha { get; set; }
         public string vchUserAdmin { get; set; }

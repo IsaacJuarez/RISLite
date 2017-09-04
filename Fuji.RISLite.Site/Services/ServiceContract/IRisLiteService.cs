@@ -121,5 +121,19 @@ namespace Fuji.RISLite.Site.Services
         [OperationContract]
         PrestacionResponse setEstatusPrestacion(PrestacionRequest request);
         #endregion Prestacion;
+
+        #region Equipo
+        [OperationContract]
+        List<tbl_CAT_Equipo> getListEquipo(EquipoRequest request);
+
+        [OperationContract]
+        EquipoResponse setEquipo(EquipoRequest request);
+
+        [OperationContract]
+        EquipoResponse setActualizaEquipo(EquipoRequest request);
+
+        [OperationContract]
+        EquipoResponse setEstatusEquipo(EquipoRequest request);
+        #endregion Equipo
     }
 }

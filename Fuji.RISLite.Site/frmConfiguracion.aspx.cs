@@ -1440,6 +1440,7 @@ namespace Fuji.RISLite.Site
                 Log.EscribeLog("Existe un error ddlBandejaCita_SelectedIndexChanged de frmConfiguracion: " + eddS.Message, 3, Usuario.vchUsuario);
             }
         }
+
         #endregion varAdicionales
 
         public enum MessageType { Correcto, Error, Informacion, Advertencia };
@@ -1976,5 +1977,54 @@ namespace Fuji.RISLite.Site
         }
         #endregion Prestacion
 
+        protected void btnAddEquipo_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void ddlModalidadEquipo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void grvEquipo_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+
+        }
+
+        protected void grvEquipo_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+
+        }
+
+        protected void grvEquipo_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+
+        }
+
+        protected void grvEquipo_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+
+        }
+
+        protected void grvEquipo_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+
+        }
+
+        protected void grvEquipo_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+
+        }
+
+        protected void ddlBandejaEquipo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void txtBandejaEquipo_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

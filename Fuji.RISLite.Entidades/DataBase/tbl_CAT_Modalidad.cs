@@ -16,8 +16,8 @@ namespace Fuji.RISLite.Entidades.DataBase
     {
         public tbl_CAT_Modalidad()
         {
-            this.tbl_CAT_Equipo = new HashSet<tbl_CAT_Equipo>();
             this.tbl_REL_ModalidadPrestacion = new HashSet<tbl_REL_ModalidadPrestacion>();
+            this.tbl_CAT_Equipo = new HashSet<tbl_CAT_Equipo>();
         }
     
         public int intModalidadID { get; set; }
@@ -27,7 +27,7 @@ namespace Fuji.RISLite.Entidades.DataBase
         public Nullable<System.DateTime> datFecha { get; set; }
         public string vchUserAdmin { get; set; }
     
-        public virtual ICollection<tbl_CAT_Equipo> tbl_CAT_Equipo { get; set; }
         public virtual ICollection<tbl_REL_ModalidadPrestacion> tbl_REL_ModalidadPrestacion { get; set; }
+        public virtual ICollection<tbl_CAT_Equipo> tbl_CAT_Equipo { get; set; }
     }
 }
