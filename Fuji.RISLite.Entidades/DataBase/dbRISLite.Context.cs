@@ -49,6 +49,9 @@ namespace Fuji.RISLite.Entidades.DataBase
         public DbSet<tbl_DET_PacienteDinamico> tbl_DET_PacienteDinamico { get; set; }
         public DbSet<tbl_MST_ConfiguracionSistema> tbl_MST_ConfiguracionSistema { get; set; }
         public DbSet<tbl_Conf_CorreoSitio> tbl_Conf_CorreoSitio { get; set; }
+        public DbSet<tbl_CONFIG_VariablesAdiCita> tbl_CONFIG_VariablesAdiCita { get; set; }
+        public DbSet<tbl_CAT_Prestacion> tbl_CAT_Prestacion { get; set; }
+        public DbSet<tbl_REL_ModalidadPrestacion> tbl_REL_ModalidadPrestacion { get; set; }
     
         public virtual ObjectResult<stp_getListCatalogo_Result> stp_getListCatalogo(Nullable<int> intCatalogoID)
         {
@@ -117,6 +120,15 @@ namespace Fuji.RISLite.Entidades.DataBase
                 new ObjectParameter("intTipoUsuarioID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getListaPaginas_Result>("stp_getListaPaginas", intTipoUsuarioIDParameter);
+        }
+    
+        public virtual ObjectResult<stp_getPrestacionModalidad_Result> stp_getPrestacionModalidad(Nullable<int> intModalidadId)
+        {
+            var intModalidadIdParameter = intModalidadId.HasValue ?
+                new ObjectParameter("intModalidadId", intModalidadId) :
+                new ObjectParameter("intModalidadId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getPrestacionModalidad_Result>("stp_getPrestacionModalidad", intModalidadIdParameter);
         }
     }
 }

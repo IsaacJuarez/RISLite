@@ -43,10 +43,6 @@ namespace Fuji.RISLite.Site.Services
 
         [OperationContract]
         List<stp_getListaPaginas_Result> getListVistas(CatalogoRequest request);
-
-        [OperationContract]
-        List<clsUsuario> getListaUsuarios(TecnicoRequest request);
-
         #endregion catalogo
 
         #region equipo
@@ -83,6 +79,9 @@ namespace Fuji.RISLite.Site.Services
         List<clsVarAcicionales> getVariablesAdicionalPaciente(VarAdicionalRequest request);
 
         [OperationContract]
+        List<clsVarAcicionales> getVariablesAdicionalCita(VarAdicionalRequest request);
+
+        [OperationContract]
         VarAdicionalResponse setAgregarVariable(VarAdicionalRequest request);
 
         [OperationContract]
@@ -92,5 +91,35 @@ namespace Fuji.RISLite.Site.Services
         VarAdicionalResponse setEstatusVariable(VarAdicionalRequest request);
         #endregion varAdicionales
 
+        #region AdminUser
+        [OperationContract]
+        List<clsUsuario> getListaUsuarios(TecnicoRequest request);
+
+        [OperationContract]
+        AdminUserResponse setUsuario(AdminUserRequest request);
+
+        [OperationContract]
+        AdminUserResponse setActualizaUsuario(AdminUserRequest request);
+
+        [OperationContract]
+        AdminUserResponse setEstatusUsuario(AdminUserRequest request);
+        #endregion AdminUser
+
+        #region Prestacion
+        [OperationContract]
+        List<tbl_CAT_Modalidad> getListModalidades(CatalogoRequest request);
+
+        [OperationContract]
+        List<clsPrestacion> getListPrestacion(PrestacionRequest request);
+
+        [OperationContract]
+        PrestacionResponse setPrestacion(PrestacionRequest request);
+
+        [OperationContract]
+        PrestacionResponse setActualizaPrestacion(PrestacionRequest request);
+
+        [OperationContract]
+        PrestacionResponse setEstatusPrestacion(PrestacionRequest request);
+        #endregion Prestacion;
     }
 }

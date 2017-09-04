@@ -198,23 +198,7 @@ namespace Fuji.RISLite.Site.Services
             return response;
         }
 
-        public List<clsUsuario> getListaUsuarios(TecnicoRequest request)
-        {
-            List<clsUsuario> response = new List<clsUsuario>();
-            try
-            {
-                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
-                {
-                    RISLiteDataAccess controller = new RISLiteDataAccess();
-                    response = controller.getListaUsuarios(request.mdlUser.vchUsuario);
-                }
-            }
-            catch (Exception egU)
-            {
-                Log.EscribeLog("Existe un error en getListaUsuarios: " + egU.Message, 3, "");
-            }
-            return response;
-        }
+        
         #endregion catalogo
 
         #region equipo
@@ -406,6 +390,24 @@ namespace Fuji.RISLite.Site.Services
             return response;
         }
 
+        public List<clsVarAcicionales> getVariablesAdicionalCita(VarAdicionalRequest request)
+        {
+            List<clsVarAcicionales> response = new List<clsVarAcicionales>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getVariablesAdicionalCita(request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getVariablesAdicionalCita: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
         public VarAdicionalResponse setAgregarVariable(VarAdicionalRequest request)
         {
             VarAdicionalResponse response = new VarAdicionalResponse();
@@ -466,5 +468,185 @@ namespace Fuji.RISLite.Site.Services
             return response;
         }
         #endregion varAdicionales
+
+        #region AdminUsers
+        public List<clsUsuario> getListaUsuarios(TecnicoRequest request)
+        {
+            List<clsUsuario> response = new List<clsUsuario>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListaUsuarios(request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getListaUsuarios: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public AdminUserResponse setUsuario(AdminUserRequest request)
+        {
+            AdminUserResponse response = new AdminUserResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setUsuario(request.mdlAdminUser,request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setUsuario: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public AdminUserResponse setActualizaUsuario(AdminUserRequest request)
+        {
+            AdminUserResponse response = new AdminUserResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setActualizaUsuario(request.mdlAdminUser, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setActualizaUsuario: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public AdminUserResponse setEstatusUsuario(AdminUserRequest request)
+        {
+            AdminUserResponse response = new AdminUserResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setEstatusUsuario(request.mdlAdminUser.intUsuarioID, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setEstatusUsuario: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        #endregion AdminUsers
+
+        #region Prestacion
+        public List<tbl_CAT_Modalidad> getListModalidades(CatalogoRequest request)
+        {
+            List<tbl_CAT_Modalidad> response = new List<tbl_CAT_Modalidad>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListModalidades(request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getListModalidades: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public List<clsPrestacion> getListPrestacion(PrestacionRequest request)
+        {
+            List<clsPrestacion> response = new List<clsPrestacion>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListPrestacion(request.intModalidad,request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getListPrestacion: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public PrestacionResponse setPrestacion(PrestacionRequest request)
+        {
+            PrestacionResponse response = new PrestacionResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setPrestacion(request.mdlPres, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setPrestacion: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public PrestacionResponse setActualizaPrestacion(PrestacionRequest request)
+        {
+            PrestacionResponse response = new PrestacionResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setActualizaPrestacion(request.mdlPres, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setActualizaPrestacion: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public PrestacionResponse setEstatusPrestacion(PrestacionRequest request)
+        {
+            PrestacionResponse response = new PrestacionResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setEstatusPrestacion(request.intRELModPres, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setEstatusPrestacion: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        #endregion Prestacion
     }
 }

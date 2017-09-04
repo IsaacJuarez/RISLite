@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="clsCatalogo.cs" />
     <Compile Include="clsEquipo.cs" />
+    <Compile Include="clsPrestacion.cs" />
     <Compile Include="clsUsuario.cs" />
     <Compile Include="clsVarAcicionales.cs" />
     <Compile Include="clsVistasUsuarios.cs" />

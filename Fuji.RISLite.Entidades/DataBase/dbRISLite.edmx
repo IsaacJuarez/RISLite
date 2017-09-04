@@ -94,6 +94,17 @@
           <Property Name="datFecha" Type="datetime" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
         </EntityType>
+        <EntityType Name="tbl_CAT_Prestacion">
+          <Key>
+            <PropertyRef Name="intPrestacionID" />
+          </Key>
+          <Property Name="intPrestacionID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vchPrestacion" Type="varchar" MaxLength="200" />
+          <Property Name="intDuracionMin" Type="int" />
+          <Property Name="bitActivo" Type="bit" />
+          <Property Name="datFecha" Type="datetime" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+        </EntityType>
         <EntityType Name="tbl_CAT_TipoMensaje">
           <Key>
             <PropertyRef Name="intTipoMensaje" />
@@ -159,6 +170,16 @@
           <Property Name="vchHost" Type="varchar" MaxLength="100" />
           <Property Name="intPort" Type="int" />
           <Property Name="BitEnableSsl" Type="bit" />
+          <Property Name="bitActivo" Type="bit" />
+          <Property Name="datFecha" Type="datetime" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="tbl_CONFIG_VariablesAdiCita">
+          <Key>
+            <PropertyRef Name="intVarAdiCitaID" />
+          </Key>
+          <Property Name="intVarAdiCitaID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vchNombreVariable" Type="varchar" MaxLength="100" />
           <Property Name="bitActivo" Type="bit" />
           <Property Name="datFecha" Type="datetime" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
@@ -230,6 +251,17 @@
           <Property Name="intRELBotonVista" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="intRELUsuarioBotonID" Type="int" />
           <Property Name="intVistaID" Type="int" />
+          <Property Name="bitActivo" Type="bit" />
+          <Property Name="datFecha" Type="datetime" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="tbl_REL_ModalidadPrestacion">
+          <Key>
+            <PropertyRef Name="intRELModPres" />
+          </Key>
+          <Property Name="intRELModPres" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="intModalidadID" Type="int" />
+          <Property Name="intPrestacionID" Type="int" />
           <Property Name="bitActivo" Type="bit" />
           <Property Name="datFecha" Type="datetime" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
@@ -341,6 +373,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_REL_ModalidadPrestacion_CAT_Modalidad">
+          <End Role="tbl_CAT_Modalidad" Type="Self.tbl_CAT_Modalidad" Multiplicity="0..1" />
+          <End Role="tbl_REL_ModalidadPrestacion" Type="Self.tbl_REL_ModalidadPrestacion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_Modalidad">
+              <PropertyRef Name="intModalidadID" />
+            </Principal>
+            <Dependent Role="tbl_REL_ModalidadPrestacion">
+              <PropertyRef Name="intModalidadID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_REL_ModalidadPrestacion_CAT_Prestacion">
+          <End Role="tbl_CAT_Prestacion" Type="Self.tbl_CAT_Prestacion" Multiplicity="0..1" />
+          <End Role="tbl_REL_ModalidadPrestacion" Type="Self.tbl_REL_ModalidadPrestacion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_Prestacion">
+              <PropertyRef Name="intPrestacionID" />
+            </Principal>
+            <Dependent Role="tbl_REL_ModalidadPrestacion">
+              <PropertyRef Name="intPrestacionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_REL_TipoUsuarioBoton_CAT_Botones">
           <End Role="tbl_CAT_Botones" Type="Self.tbl_CAT_Botones" Multiplicity="0..1" />
           <End Role="tbl_REL_TipoUsuarioBoton" Type="Self.tbl_REL_TipoUsuarioBoton" Multiplicity="*" />
@@ -371,6 +427,9 @@
         <Function Name="stp_getListCatalogo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="intCatalogoID" Type="int" Mode="In" />
         </Function>
+        <Function Name="stp_getPrestacionModalidad" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intModalidadId" Type="int" Mode="In" />
+        </Function>
         <Function Name="stp_setItemCatalogo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="intCatalogoID" Type="int" Mode="In" />
           <Parameter Name="vchValor" Type="varchar" Mode="In" />
@@ -395,18 +454,21 @@
           <EntitySet Name="tbl_CAT_Genero" EntityType="Self.tbl_CAT_Genero" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_InstitucionProcedencia" EntityType="Self.tbl_CAT_InstitucionProcedencia" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_Modalidad" EntityType="Self.tbl_CAT_Modalidad" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_CAT_Prestacion" EntityType="Self.tbl_CAT_Prestacion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_TipoMensaje" EntityType="Self.tbl_CAT_TipoMensaje" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_TipoMovimiento" EntityType="Self.tbl_CAT_TipoMovimiento" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_TipoUsuario" EntityType="Self.tbl_CAT_TipoUsuario" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_Usuario" EntityType="Self.tbl_CAT_Usuario" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_Vistas" EntityType="Self.tbl_CAT_Vistas" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Conf_CorreoSitio" EntityType="Self.tbl_Conf_CorreoSitio" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_CONFIG_VariablesAdiCita" EntityType="Self.tbl_CONFIG_VariablesAdiCita" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CONFIG_VariablesAdiPaciente" EntityType="Self.tbl_CONFIG_VariablesAdiPaciente" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_DET_PacienteDinamico" EntityType="Self.tbl_DET_PacienteDinamico" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_MST_Bitacora" EntityType="Self.tbl_MST_Bitacora" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_MST_ConfiguracionSistema" EntityType="Self.tbl_MST_ConfiguracionSistema" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_MST_Paciente" EntityType="Self.tbl_MST_Paciente" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_REL_BotonVista" EntityType="Self.tbl_REL_BotonVista" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_REL_ModalidadPrestacion" EntityType="Self.tbl_REL_ModalidadPrestacion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_REL_TipoUsuarioBoton" EntityType="Self.tbl_REL_TipoUsuarioBoton" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_CAT_Equipo_CAT_Modalidad" Association="Self.FK_CAT_Equipo_CAT_Modalidad">
             <End Role="tbl_CAT_Modalidad" EntitySet="tbl_CAT_Modalidad" />
@@ -439,6 +501,14 @@
           <AssociationSet Name="FK_REL_BotonVista_REL_UsuarioBoton" Association="Self.FK_REL_BotonVista_REL_UsuarioBoton">
             <End Role="tbl_REL_TipoUsuarioBoton" EntitySet="tbl_REL_TipoUsuarioBoton" />
             <End Role="tbl_REL_BotonVista" EntitySet="tbl_REL_BotonVista" />
+          </AssociationSet>
+          <AssociationSet Name="FK_REL_ModalidadPrestacion_CAT_Modalidad" Association="Self.FK_REL_ModalidadPrestacion_CAT_Modalidad">
+            <End Role="tbl_CAT_Modalidad" EntitySet="tbl_CAT_Modalidad" />
+            <End Role="tbl_REL_ModalidadPrestacion" EntitySet="tbl_REL_ModalidadPrestacion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_REL_ModalidadPrestacion_CAT_Prestacion" Association="Self.FK_REL_ModalidadPrestacion_CAT_Prestacion">
+            <End Role="tbl_CAT_Prestacion" EntitySet="tbl_CAT_Prestacion" />
+            <End Role="tbl_REL_ModalidadPrestacion" EntitySet="tbl_REL_ModalidadPrestacion" />
           </AssociationSet>
           <AssociationSet Name="FK_REL_TipoUsuarioBoton_CAT_Botones" Association="Self.FK_REL_TipoUsuarioBoton_CAT_Botones">
             <End Role="tbl_CAT_Botones" EntitySet="tbl_CAT_Botones" />
@@ -536,6 +606,20 @@
           </AssociationSet>
           <EntitySet Name="tbl_MST_ConfiguracionSistema" EntityType="RISLiteModel.tbl_MST_ConfiguracionSistema" />
           <EntitySet Name="tbl_Conf_CorreoSitio" EntityType="RISLiteModel.tbl_Conf_CorreoSitio" />
+          <EntitySet Name="tbl_CONFIG_VariablesAdiCita" EntityType="RISLiteModel.tbl_CONFIG_VariablesAdiCita" />
+          <EntitySet Name="tbl_CAT_Prestacion" EntityType="RISLiteModel.tbl_CAT_Prestacion" />
+          <EntitySet Name="tbl_REL_ModalidadPrestacion" EntityType="RISLiteModel.tbl_REL_ModalidadPrestacion" />
+          <AssociationSet Name="FK_REL_ModalidadPrestacion_CAT_Modalidad" Association="RISLiteModel.FK_REL_ModalidadPrestacion_CAT_Modalidad">
+            <End Role="tbl_CAT_Modalidad" EntitySet="tbl_CAT_Modalidad" />
+            <End Role="tbl_REL_ModalidadPrestacion" EntitySet="tbl_REL_ModalidadPrestacion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_REL_ModalidadPrestacion_CAT_Prestacion" Association="RISLiteModel.FK_REL_ModalidadPrestacion_CAT_Prestacion">
+            <End Role="tbl_CAT_Prestacion" EntitySet="tbl_CAT_Prestacion" />
+            <End Role="tbl_REL_ModalidadPrestacion" EntitySet="tbl_REL_ModalidadPrestacion" />
+          </AssociationSet>
+          <FunctionImport Name="stp_getPrestacionModalidad" ReturnType="Collection(RISLiteModel.stp_getPrestacionModalidad_Result)">
+            <Parameter Name="intModalidadId" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <EntityType Name="tbl_CAT_TipoMensaje">
           <Key>
@@ -663,6 +747,7 @@
           <Property Name="datFecha" Type="DateTime" Precision="3" />
           <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="tbl_CAT_Equipo" Relationship="RISLiteModel.FK_CAT_Equipo_CAT_Modalidad" FromRole="tbl_CAT_Modalidad" ToRole="tbl_CAT_Equipo" />
+          <NavigationProperty Name="tbl_REL_ModalidadPrestacion" Relationship="RISLiteModel.FK_REL_ModalidadPrestacion_CAT_Modalidad" FromRole="tbl_CAT_Modalidad" ToRole="tbl_REL_ModalidadPrestacion" />
         </EntityType>
         <Association Name="FK_CAT_Equipo_CAT_Modalidad">
           <End Type="RISLiteModel.tbl_CAT_Modalidad" Role="tbl_CAT_Modalidad" Multiplicity="0..1" />
@@ -948,6 +1033,74 @@
           <Property Name="datFecha" Type="DateTime" Precision="3" />
           <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="tbl_CONFIG_VariablesAdiCita">
+          <Key>
+            <PropertyRef Name="intVarAdiCitaID" />
+          </Key>
+          <Property Name="intVarAdiCitaID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vchNombreVariable" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tbl_CAT_Prestacion">
+          <Key>
+            <PropertyRef Name="intPrestacionID" />
+          </Key>
+          <Property Name="intPrestacionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vchPrestacion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="intDuracionMin" Type="Int32" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_REL_ModalidadPrestacion" Relationship="RISLiteModel.FK_REL_ModalidadPrestacion_CAT_Prestacion" FromRole="tbl_CAT_Prestacion" ToRole="tbl_REL_ModalidadPrestacion" />
+        </EntityType>
+        <EntityType Name="tbl_REL_ModalidadPrestacion">
+          <Key>
+            <PropertyRef Name="intRELModPres" />
+          </Key>
+          <Property Name="intRELModPres" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="intModalidadID" Type="Int32" />
+          <Property Name="intPrestacionID" Type="Int32" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_CAT_Modalidad" Relationship="RISLiteModel.FK_REL_ModalidadPrestacion_CAT_Modalidad" FromRole="tbl_REL_ModalidadPrestacion" ToRole="tbl_CAT_Modalidad" />
+          <NavigationProperty Name="tbl_CAT_Prestacion" Relationship="RISLiteModel.FK_REL_ModalidadPrestacion_CAT_Prestacion" FromRole="tbl_REL_ModalidadPrestacion" ToRole="tbl_CAT_Prestacion" />
+        </EntityType>
+        <Association Name="FK_REL_ModalidadPrestacion_CAT_Modalidad">
+          <End Type="RISLiteModel.tbl_CAT_Modalidad" Role="tbl_CAT_Modalidad" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_REL_ModalidadPrestacion" Role="tbl_REL_ModalidadPrestacion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_Modalidad">
+              <PropertyRef Name="intModalidadID" />
+            </Principal>
+            <Dependent Role="tbl_REL_ModalidadPrestacion">
+              <PropertyRef Name="intModalidadID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_REL_ModalidadPrestacion_CAT_Prestacion">
+          <End Type="RISLiteModel.tbl_CAT_Prestacion" Role="tbl_CAT_Prestacion" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_REL_ModalidadPrestacion" Role="tbl_REL_ModalidadPrestacion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_Prestacion">
+              <PropertyRef Name="intPrestacionID" />
+            </Principal>
+            <Dependent Role="tbl_REL_ModalidadPrestacion">
+              <PropertyRef Name="intPrestacionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="stp_getPrestacionModalidad_Result">
+          <Property Type="Int32" Name="intRELModPres" Nullable="false" />
+          <Property Type="Int32" Name="intModalidadID" Nullable="true" />
+          <Property Type="String" Name="vchModalidad" Nullable="true" MaxLength="200" />
+          <Property Type="Int32" Name="intPrestacionID" Nullable="true" />
+          <Property Type="String" Name="vchPrestacion" Nullable="true" MaxLength="200" />
+          <Property Type="Int32" Name="intDuracionMin" Nullable="true" />
+          <Property Type="Boolean" Name="bitActivo" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1266,6 +1419,54 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="tbl_CONFIG_VariablesAdiCita">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_CONFIG_VariablesAdiCita">
+              <MappingFragment StoreEntitySet="tbl_CONFIG_VariablesAdiCita">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="vchNombreVariable" ColumnName="vchNombreVariable" />
+                <ScalarProperty Name="intVarAdiCitaID" ColumnName="intVarAdiCitaID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_CAT_Prestacion">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_Prestacion">
+              <MappingFragment StoreEntitySet="tbl_CAT_Prestacion">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="intDuracionMin" ColumnName="intDuracionMin" />
+                <ScalarProperty Name="vchPrestacion" ColumnName="vchPrestacion" />
+                <ScalarProperty Name="intPrestacionID" ColumnName="intPrestacionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_REL_ModalidadPrestacion">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_REL_ModalidadPrestacion">
+              <MappingFragment StoreEntitySet="tbl_REL_ModalidadPrestacion">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="intPrestacionID" ColumnName="intPrestacionID" />
+                <ScalarProperty Name="intModalidadID" ColumnName="intModalidadID" />
+                <ScalarProperty Name="intRELModPres" ColumnName="intRELModPres" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="stp_getPrestacionModalidad" FunctionName="RISLiteModel.Store.stp_getPrestacionModalidad">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RISLiteModel.stp_getPrestacionModalidad_Result">
+                <ScalarProperty Name="intRELModPres" ColumnName="intRELModPres" />
+                <ScalarProperty Name="intModalidadID" ColumnName="intModalidadID" />
+                <ScalarProperty Name="vchModalidad" ColumnName="vchModalidad" />
+                <ScalarProperty Name="intPrestacionID" ColumnName="intPrestacionID" />
+                <ScalarProperty Name="vchPrestacion" ColumnName="vchPrestacion" />
+                <ScalarProperty Name="intDuracionMin" ColumnName="intDuracionMin" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

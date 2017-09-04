@@ -348,60 +348,7 @@ namespace Fuji.RISLite.DataAccess
             }
             return result;
         }
-
-        public List<clsUsuario> getListaUsuarios(string user)
-        {
-            List<clsUsuario> lst = new List<clsUsuario>();
-            try
-            {
-                using (dbRisDA = new RISLiteEntities())
-                {
-                    if (dbRisDA.tbl_CAT_Usuario.Any(x => (bool)x.bitActivo))
-                    {
-                        var query = (from _user in dbRisDA.tbl_CAT_Usuario
-                                     join cat in dbRisDA.tbl_CAT_TipoUsuario on _user.intTipoUsuario equals cat.intTipoUsuario
-                                     where (bool)_user.bitActivo
-                                     select new
-                                     {
-                                         intTipoUsuario = _user.intTipoUsuario,
-                                         intUsuarioID = _user.intUsuarioID,
-                                         bitActivo = _user.bitActivo,
-                                         datFecha = _user.datFecha,
-                                         vchNombre = _user.vchNombre,
-                                         vchUserAdmin = _user.vchUserAdmin,
-                                         vchUsuario = _user.vchUsuario,
-                                         vchTipoUsuario = cat.vchTipoUsuario
-                                     }).ToList();
-                        if (query != null)
-                        {
-                            if (query.Count > 0)
-                            {
-                                foreach (var item in query)
-                                {
-                                    clsUsuario mdl = new clsUsuario();
-                                    mdl.intTipoUsuario = (int)item.intTipoUsuario;
-                                    mdl.intUsuarioID = item.intUsuarioID;
-                                    mdl.bitActivo = (bool)item.bitActivo;
-                                    mdl.datFecha = (DateTime)item.datFecha;
-                                    mdl.vchNombre = item.vchNombre;
-                                    mdl.vchUserAdmin = item.vchUserAdmin;
-                                    mdl.vchUsuario = item.vchUsuario;
-                                    mdl.vchTipoUsuario = item.vchTipoUsuario;
-                                    lst.Add(mdl);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception eLT)
-            {
-                Log.EscribeLog("Existe un error en getListaUsuarios: " + eLT.Message, 3, user);
-            }
-            return lst;
-        }
         #endregion catalogos
-
 
         #region equipo
         public List<clsEquipo> getListaEquipos(string user)
@@ -460,19 +407,18 @@ namespace Fuji.RISLite.DataAccess
 
         #endregion equipo
 
-
         #region tecnicos
         public List<clsUsuario> getListTecnico(string user)
         {
             List<clsUsuario> lst = new List<clsUsuario>();
             try
             {
-                using(dbRisDA = new RISLiteEntities())
+                using (dbRisDA = new RISLiteEntities())
                 {
-                    if(dbRisDA.tbl_CAT_Usuario.Any(x=> x.intTipoUsuario == 3))
+                    if (dbRisDA.tbl_CAT_Usuario.Any(x => x.intTipoUsuario == 3))
                     {
                         var query = dbRisDA.tbl_CAT_Usuario.Where(x => x.intTipoUsuario == 3).ToList();
-                        if(query != null)
+                        if (query != null)
                         {
                             if (query.Count > 0)
                             {
@@ -493,14 +439,13 @@ namespace Fuji.RISLite.DataAccess
                     }
                 }
             }
-            catch(Exception eLT)
+            catch (Exception eLT)
             {
                 Log.EscribeLog("Existe un error en getListTecnico: " + eLT.Message, 3, user);
             }
             return lst;
         }
         #endregion tecnicos
-
 
         #region configSitio
         public bool getConfigSitio(string user, ref tbl_MST_ConfiguracionSistema mdl, ref string mensaje)
@@ -590,7 +535,6 @@ namespace Fuji.RISLite.DataAccess
             return valido;
         }
         #endregion configSitio
-
 
         #region ConfigEmail
         public bool getConfigEmail(string user, ref tbl_Conf_CorreoSitio mdl, ref string mensaje)
@@ -683,6 +627,163 @@ namespace Fuji.RISLite.DataAccess
         }
         #endregion ConfigEmail
 
+        #region AdminUsers
+        public List<clsUsuario> getListaUsuarios(string user)
+        {
+            List<clsUsuario> lst = new List<clsUsuario>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Usuario.Any(x => (bool)x.bitActivo))
+                    {
+                        var query = (from _user in dbRisDA.tbl_CAT_Usuario
+                                     join cat in dbRisDA.tbl_CAT_TipoUsuario on _user.intTipoUsuario equals cat.intTipoUsuario
+                                     select new
+                                     {
+                                         intTipoUsuario = _user.intTipoUsuario,
+                                         intUsuarioID = _user.intUsuarioID,
+                                         bitActivo = _user.bitActivo,
+                                         datFecha = _user.datFecha,
+                                         vchNombre = _user.vchNombre,
+                                         vchUserAdmin = _user.vchUserAdmin,
+                                         vchUsuario = _user.vchUsuario,
+                                         vchTipoUsuario = cat.vchTipoUsuario
+                                     }).ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsUsuario mdl = new clsUsuario();
+                                    mdl.intTipoUsuario = (int)item.intTipoUsuario;
+                                    mdl.intUsuarioID = item.intUsuarioID;
+                                    mdl.bitActivo = (bool)item.bitActivo;
+                                    mdl.datFecha = (DateTime)item.datFecha;
+                                    mdl.vchNombre = item.vchNombre;
+                                    mdl.vchUserAdmin = item.vchUserAdmin;
+                                    mdl.vchUsuario = item.vchUsuario;
+                                    mdl.vchTipoUsuario = item.vchTipoUsuario;
+                                    lst.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getListaUsuarios: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }
+
+        public bool setUsuario(clsUsuario usuario, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (!dbRisDA.tbl_CAT_Usuario.Any(x => x.vchUsuario.ToUpper() == usuario.vchUsuario.ToUpper() && (bool)x.bitActivo))
+                    {
+                        tbl_CAT_Usuario mdlUser = new tbl_CAT_Usuario();
+                        mdlUser.bitActivo = usuario.bitActivo;
+                        mdlUser.datFecha = usuario.datFecha;
+                        mdlUser.intTipoUsuario = usuario.intTipoUsuario;
+                        mdlUser.vchNombre = usuario.vchNombre;
+                        mdlUser.vchUserAdmin = user;
+                        mdlUser.vchUsuario = usuario.vchUsuario;
+                        dbRisDA.tbl_CAT_Usuario.Add(mdlUser);
+                        dbRisDA.SaveChanges();
+                        valido = true;
+                    }
+                    else
+                    {
+                        mensaje = "El usuario ya existe.";
+                        valido = false;
+                    }
+                }
+            }
+            catch (Exception eSU)
+            {
+                valido = false;
+                mensaje = eSU.Message;
+                Log.EscribeLog("Existe un error en setUser: " + eSU.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public bool setActualizaUsuario(clsUsuario usuario, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Usuario.Any(x => x.intUsuarioID == usuario.intUsuarioID))
+                    {
+                        tbl_CAT_Usuario mdlUser = new tbl_CAT_Usuario();
+                        mdlUser = dbRisDA.tbl_CAT_Usuario.First(x => x.intUsuarioID == usuario.intUsuarioID);
+                        mdlUser.bitActivo = usuario.bitActivo;
+                        mdlUser.datFecha = usuario.datFecha;
+                        mdlUser.vchNombre = usuario.vchNombre;
+                        mdlUser.vchUserAdmin = user;
+                        mdlUser.vchUsuario = usuario.vchUsuario;
+                        dbRisDA.SaveChanges();
+                        valido = true;
+                    }
+                    else
+                    {
+                        mensaje = "El usuario no existe.";
+                        valido = false;
+                    }
+                }
+            }
+            catch (Exception eSU)
+            {
+                valido = false;
+                mensaje = eSU.Message;
+                Log.EscribeLog("Existe un error en setActualizaUsuario: " + eSU.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public bool setEstatusUsuario(int intUsuarioID, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Usuario.Any(x => x.intUsuarioID == intUsuarioID))
+                    {
+                        tbl_CAT_Usuario mdlUser = new tbl_CAT_Usuario();
+                        mdlUser = dbRisDA.tbl_CAT_Usuario.First(x => x.intUsuarioID == intUsuarioID);
+                        mdlUser.bitActivo = !mdlUser.bitActivo;
+                        mdlUser.datFecha = DateTime.Today;
+                        mdlUser.vchUserAdmin = user;
+                        dbRisDA.SaveChanges();
+                        valido = true;
+                    }
+                    else
+                    {
+                        mensaje = "El usuario no existe.";
+                        valido = false;
+                    }
+                }
+            }
+            catch (Exception eSU)
+            {
+                valido = false;
+                mensaje = eSU.Message;
+                Log.EscribeLog("Existe un error en setEstatusUsuario: " + eSU.Message, 3, user);
+            }
+            return valido;
+        }
+        #endregion AdminUsers
+
         #region varadicionales
         public List<clsVarAcicionales> getVariablesAdicionalPaciente(string user)
         {
@@ -720,6 +821,41 @@ namespace Fuji.RISLite.DataAccess
             return lstreturn;
         }
 
+        public List<clsVarAcicionales> getVariablesAdicionalCita(string user)
+        {
+            List<clsVarAcicionales> lstreturn = new List<clsVarAcicionales>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CONFIG_VariablesAdiCita.Any())
+                    {
+                        var query = dbRisDA.tbl_CONFIG_VariablesAdiCita.ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsVarAcicionales mdl = new clsVarAcicionales();
+                                    mdl.bitActivo = (bool)item.bitActivo;
+                                    mdl.datFecha = (DateTime)item.datFecha;
+                                    mdl.intVariableAdiID = item.intVarAdiCitaID;
+                                    mdl.vchNombreVarAdi = item.vchNombreVariable;
+                                    mdl.vchUserAdmin = item.vchUserAdmin;
+                                    lstreturn.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception egV)
+            {
+                Log.EscribeLog("Existe un error en getVariablesAdicionalCita: " + egV.Message, 3, user);
+            }
+            return lstreturn;
+        }
 
         public bool setAgregarVariable(int iTipoVariable, string vchVarible, string user, ref string mensaje)
         {
@@ -749,6 +885,24 @@ namespace Fuji.RISLite.DataAccess
                         }
                         break;
                     case 2: //Variable adicional Cita
+                        using (dbRisDA = new RISLiteEntities())
+                        {
+                            if (!dbRisDA.tbl_CONFIG_VariablesAdiCita.Any(x => x.vchNombreVariable.ToUpper() == vchVarible))
+                            {
+                                tbl_CONFIG_VariablesAdiCita mdl = new tbl_CONFIG_VariablesAdiCita();
+                                mdl.vchNombreVariable = vchVarible;
+                                mdl.datFecha = DateTime.Now;
+                                mdl.bitActivo = true;
+                                mdl.vchUserAdmin = user;
+                                dbRisDA.tbl_CONFIG_VariablesAdiCita.Add(mdl);
+                                dbRisDA.SaveChanges();
+                                valido = true;
+                            }
+                            else
+                            {
+                                mensaje = "La variable ya existe. Favor de verificar.";
+                            }
+                        }
                         break;
                     case 3: //Variable adicional Estudio
                         break;
@@ -790,6 +944,23 @@ namespace Fuji.RISLite.DataAccess
                         }
                         break;
                     case 2: //Variable adicional Cita
+                        using (dbRisDA = new RISLiteEntities())
+                        {
+                            if (dbRisDA.tbl_CONFIG_VariablesAdiCita.Any(x => x.intVarAdiCitaID == intVarAdiID))
+                            {
+                                tbl_CONFIG_VariablesAdiCita mdl = new tbl_CONFIG_VariablesAdiCita();
+                                mdl = dbRisDA.tbl_CONFIG_VariablesAdiCita.First(x => x.intVarAdiCitaID == intVarAdiID);
+                                mdl.vchNombreVariable = vchVarible;
+                                mdl.vchUserAdmin = user;
+                                mdl.datFecha = DateTime.Now;
+                                dbRisDA.SaveChanges();
+                                valido = true;
+                            }
+                            else
+                            {
+                                mensaje = "No existe la variable para actualizar.";
+                            }
+                        }
                         break;
                     case 3: //Variable adicional Estudio
                         break;
@@ -831,6 +1002,23 @@ namespace Fuji.RISLite.DataAccess
                         }
                         break;
                     case 2: //Variable adicional Cita
+                        using (dbRisDA = new RISLiteEntities())
+                        {
+                            if (dbRisDA.tbl_CONFIG_VariablesAdiCita.Any(x => x.intVarAdiCitaID == intTipoVariable))
+                            {
+                                tbl_CONFIG_VariablesAdiCita mdl = new tbl_CONFIG_VariablesAdiCita();
+                                mdl = dbRisDA.tbl_CONFIG_VariablesAdiCita.First(x => x.intVarAdiCitaID == intTipoVariable);
+                                mdl.bitActivo = !mdl.bitActivo;
+                                mdl.vchUserAdmin = user;
+                                mdl.datFecha = DateTime.Now;
+                                dbRisDA.SaveChanges();
+                                valido = true;
+                            }
+                            else
+                            {
+                                mensaje = "No existe la variable para actualizar.";
+                            }
+                        }
                         break;
                     case 3: //Variable adicional Estudio
                         break;
@@ -845,6 +1033,212 @@ namespace Fuji.RISLite.DataAccess
             return valido;
         }
         #endregion varadicionales
+
+        #region Prestacion
+
+        public List<tbl_CAT_Modalidad> getListModalidades(string user)
+        {
+            List<tbl_CAT_Modalidad> lst = new List<tbl_CAT_Modalidad>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Modalidad.Any(x=> (bool)x.bitActivo))
+                    {
+                        var query = dbRisDA.tbl_CAT_Modalidad.Where(x => (bool)x.bitActivo).ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                lst = query;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception egLC)
+            {
+                Log.EscribeLog("Existe un error en getListModalidades: " + egLC.Message, 3, user);
+            }
+            return lst;
+        }
+
+        public List<clsPrestacion> getListPrestacion(int intModalidadID, string user)
+        {
+            List<clsPrestacion> list = new List<clsPrestacion>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    var query = dbRisDA.stp_getPrestacionModalidad(intModalidadID).ToList();
+                    if (query != null)
+                    {
+                        if (query.Count > 0)
+                        {
+                            foreach(var item in query)
+                            {
+                                clsPrestacion mdl = new clsPrestacion();
+                                mdl.bitActivo = (bool)item.bitActivo;
+                                mdl.intDuracionMin = (int)item.intDuracionMin;
+                                mdl.intModalidadID = (int)item.intModalidadID;
+                                mdl.intPrestacionID = (int)item.intPrestacionID;
+                                mdl.intRELModPres = item.intRELModPres;
+                                mdl.vchModalidad = item.vchModalidad;
+                                mdl.vchPrestacion = item.vchPrestacion;
+                                list.Add(mdl);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception egLC)
+            {
+                Log.EscribeLog("Existe un error en getListPrestacion: " + egLC.Message, 3, user);
+            }
+            return list;
+        }
+
+        public bool setPrestacion(clsPrestacion prestacion, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                bool validoCat = false;
+                tbl_CAT_Prestacion mdlCat = new tbl_CAT_Prestacion();
+                using (dbRisDA = new RISLiteEntities())
+                {   
+                    //Primero en cat
+                    if(!dbRisDA.tbl_CAT_Prestacion.Any(x=> x.vchPrestacion.ToUpper() == prestacion.vchPrestacion.ToUpper()))
+                    {
+                        validoCat = true;
+                        mdlCat.bitActivo = prestacion.bitActivo;
+                        mdlCat.datFecha = DateTime.Now;
+                        mdlCat.intDuracionMin = prestacion.intDuracionMin;
+                        mdlCat.vchPrestacion = prestacion.vchPrestacion;
+                        mdlCat.vchUserAdmin = user;
+                        dbRisDA.tbl_CAT_Prestacion.Add(mdlCat);
+                        dbRisDA.SaveChanges();
+                    }
+                    else
+                    {
+                        validoCat = false;
+                        mensaje += " Ya existe la prestación.";
+                        valido = false;
+                    }
+                }
+
+                if (validoCat && mdlCat.intPrestacionID > 0)
+                {
+                    using (dbRisDA = new RISLiteEntities())
+                    {
+                        //Luego en REL
+                        if (!dbRisDA.tbl_REL_ModalidadPrestacion.Any(x => x.intModalidadID == prestacion.intModalidadID && x.intPrestacionID == mdlCat.intPrestacionID))
+                        {
+                            tbl_REL_ModalidadPrestacion mdlMod = new tbl_REL_ModalidadPrestacion();
+                            mdlMod.bitActivo = prestacion.bitActivo;
+                            mdlMod.datFecha = DateTime.Now;
+                            mdlMod.intPrestacionID = mdlCat.intPrestacionID;
+                            mdlMod.intModalidadID = prestacion.intModalidadID;
+                            mdlMod.vchUserAdmin = user;
+                            dbRisDA.tbl_REL_ModalidadPrestacion.Add(mdlMod);
+                            dbRisDA.SaveChanges();
+                            valido = true;
+                        }
+                        else
+                        {
+                            mensaje += " La relación ya existe.";
+                            valido = false;
+                        }
+                    }
+                }
+            }
+            catch (Exception eSU)
+            {
+                valido = false;
+                mensaje += eSU.Message;
+                Log.EscribeLog("Existe un error en setUser: " + eSU.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public bool setActualizaPrestacion(clsPrestacion prestacion, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Prestacion.Any(x => x.intPrestacionID == prestacion.intPrestacionID))
+                    {
+                        if (!dbRisDA.tbl_CAT_Prestacion.Any(x => x.intPrestacionID == prestacion.intPrestacionID))
+                        {
+                            tbl_CAT_Prestacion mdlCat = new tbl_CAT_Prestacion();
+                            mdlCat = dbRisDA.tbl_CAT_Prestacion.First(x => x.intPrestacionID == prestacion.intPrestacionID);
+                            mdlCat.bitActivo = prestacion.bitActivo;
+                            mdlCat.datFecha = DateTime.Now;
+                            mdlCat.intDuracionMin = prestacion.intDuracionMin;
+                            mdlCat.vchUserAdmin = user;
+                            mdlCat.vchPrestacion = prestacion.vchPrestacion;
+                            dbRisDA.SaveChanges();
+                            valido = true;
+                        }
+                        else
+                        {
+                            mensaje = "El nombre de la prestación ya existe.";
+                            valido = false;
+                        }
+                    }
+                    else
+                    {
+                        mensaje = "No existe la prestación.";
+                        valido = false;
+                    }
+                }
+            }
+            catch (Exception eSU)
+            {
+                valido = false;
+                mensaje = eSU.Message;
+                Log.EscribeLog("Existe un error en setActualizaUsuario: " + eSU.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public bool setEstatusPrestacion(int intRELModPres, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_REL_ModalidadPrestacion.Any(x => x.intRELModPres == intRELModPres))
+                    {
+                        tbl_REL_ModalidadPrestacion mdlUser = new tbl_REL_ModalidadPrestacion();
+                        mdlUser = dbRisDA.tbl_REL_ModalidadPrestacion.First(x => x.intRELModPres == intRELModPres);
+                        mdlUser.bitActivo = !mdlUser.bitActivo;
+                        mdlUser.datFecha = DateTime.Today;
+                        mdlUser.vchUserAdmin = user;
+                        dbRisDA.SaveChanges();
+                        valido = true;
+                    }
+                    else
+                    {
+                        mensaje = "El usuario no existe.";
+                        valido = false;
+                    }
+                }
+            }
+            catch (Exception eSU)
+            {
+                valido = false;
+                mensaje = eSU.Message;
+                Log.EscribeLog("Existe un error en setEstatusUsuario: " + eSU.Message, 3, user);
+            }
+            return valido;
+        }
+
+        #endregion Prestacion
+
 
     }
 }

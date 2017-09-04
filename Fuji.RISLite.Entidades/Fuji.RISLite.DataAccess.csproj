@@ -54,6 +54,9 @@
     <Compile Include="DataBase\stp_getListCatalogo_Result.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
+    <Compile Include="DataBase\stp_getPrestacionModalidad_Result.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
     <Compile Include="DataBase\stp_setItemCatalogo_Result.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
@@ -87,10 +90,16 @@
     <Compile Include="DataBase\tbl_CAT_Modalidad.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
+    <Compile Include="DataBase\tbl_CAT_Prestacion.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
     <Compile Include="DataBase\tbl_CAT_TipoMovimiento.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\tbl_CAT_Vistas.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataBase\tbl_CONFIG_VariablesAdiCita.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\tbl_CONFIG_VariablesAdiPaciente.cs">
@@ -109,6 +118,9 @@
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\tbl_REL_BotonVista.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataBase\tbl_REL_ModalidadPrestacion.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\tbl_REL_TipoUsuarioBoton.cs">

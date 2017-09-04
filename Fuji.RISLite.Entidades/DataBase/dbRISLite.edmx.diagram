@@ -36,6 +36,11 @@
         <AssociationConnector Association="RISLiteModel.FK_DET_PacienteDinamico_MST_Paciente" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_MST_ConfiguracionSistema" Width="1.5" PointX="10.375" PointY="3.75" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_Conf_CorreoSitio" Width="1.5" PointX="12.375" PointY="0.75" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_CONFIG_VariablesAdiCita" Width="1.5" PointX="12.375" PointY="4.75" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Prestacion" Width="1.5" PointX="10.375" PointY="20.125" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_REL_ModalidadPrestacion" Width="1.5" PointX="12.625" PointY="8" />
+        <AssociationConnector Association="RISLiteModel.FK_REL_ModalidadPrestacion_CAT_Modalidad" />
+        <AssociationConnector Association="RISLiteModel.FK_REL_ModalidadPrestacion_CAT_Prestacion" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

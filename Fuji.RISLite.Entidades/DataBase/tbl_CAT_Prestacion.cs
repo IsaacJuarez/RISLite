@@ -12,22 +12,20 @@ namespace Fuji.RISLite.Entidades.DataBase
     using System;
     using System.Collections.Generic;
     
-    public partial class tbl_CAT_Modalidad
+    public partial class tbl_CAT_Prestacion
     {
-        public tbl_CAT_Modalidad()
+        public tbl_CAT_Prestacion()
         {
-            this.tbl_CAT_Equipo = new HashSet<tbl_CAT_Equipo>();
             this.tbl_REL_ModalidadPrestacion = new HashSet<tbl_REL_ModalidadPrestacion>();
         }
     
-        public int intModalidadID { get; set; }
-        public string vchModalidad { get; set; }
-        public string vchCodigo { get; set; }
+        public int intPrestacionID { get; set; }
+        public string vchPrestacion { get; set; }
+        public Nullable<int> intDuracionMin { get; set; }
         public Nullable<bool> bitActivo { get; set; }
         public Nullable<System.DateTime> datFecha { get; set; }
         public string vchUserAdmin { get; set; }
     
-        public virtual ICollection<tbl_CAT_Equipo> tbl_CAT_Equipo { get; set; }
         public virtual ICollection<tbl_REL_ModalidadPrestacion> tbl_REL_ModalidadPrestacion { get; set; }
     }
 }
