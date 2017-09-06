@@ -98,13 +98,13 @@
                                                         <asp:FileUpload ID="fuLogo" runat="server"  CssClass="btn btn-primary" accept=".png,.jpg,.jpeg,.gif"/>
                                                     </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6">
-                                                        <asp:Image ID="imgLogo" runat="server" Width="100%" Height="340px" Visible="false" />
+                                                        <asp:Image ID="imgLogo" runat="server" Width="250px" Height="150px" Visible="false" />
                                                     </div>
                                                 </div>                                                
                                             </div>
                                         </div> 
                                         <div class="row form-group ">
-                                            <div class="col-lg-5 col-md-12 col-sm-12 col-xs-12">
+                                            <div class="col-lg-5 col-md-12 col-sm-12 col-xs-12 text-right">
                                                <asp:Label runat="server" Text="Versión del Sistema" AssociatedControlID="txtPathRepositorio"></asp:Label>
                                             </div>
                                             <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12">
@@ -200,26 +200,55 @@
 									<div class="widget-main">
                                         <div class="row form-group">
                                             <div class="col-lg-4 col-sm-12">
-                                                <asp:TextBox runat="server" ID="txtNombre" Text="" CssClass="form-control" placeholder="Nombre de Usuario"></asp:TextBox>
-                                                <asp:RequiredFieldValidator ID="rfvNombreUser" runat="server" Text="* Capturar Nombre." ForeColor="Red"  ControlToValidate="txtNombre" ValidationGroup="vgAddUser"></asp:RequiredFieldValidator>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <asp:Label runat="server" Text="Nombre de Usuario" AssociatedControlID="txtNombre" Width="100%"></asp:Label>
+                                                        <asp:RequiredFieldValidator ID="rfvNombreUser" runat="server" Text="* Capturar Nombre." ForeColor="Red"  ControlToValidate="txtNombre" ValidationGroup="vgAddUser"></asp:RequiredFieldValidator>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <asp:TextBox runat="server" ID="txtNombre" Text="" CssClass="form-control" placeholder="Nombre de Usuario"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3 col-sm-12">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <asp:Label runat="server" Text="Usuario" AssociatedControlID="txtUsuario" Width="100%"></asp:Label>
+                                                        <asp:RequiredFieldValidator ID="rfvUsuario" runat="server" Text="* Capturar Usuario." ForeColor="Red"  ControlToValidate="txtUsuario" ValidationGroup="vgAddUser"></asp:RequiredFieldValidator>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <asp:TextBox runat="server" ID="txtUsuario" Text="" CssClass="form-control" placeholder="Usuario"></asp:TextBox>
+                                                     </div>
+                                                </div>
                                             </div>
                                             <div class="col-lg-4 col-sm-12">
-                                                 <asp:TextBox runat="server" ID="txtUsuario" Text="" CssClass="form-control" placeholder="Usuario"></asp:TextBox>
-                                                <asp:RequiredFieldValidator ID="rfvUsuario" runat="server" Text="* Capturar Usuario." ForeColor="Red"  ControlToValidate="txtUsuario" ValidationGroup="vgAddUser"></asp:RequiredFieldValidator>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <asp:Label runat="server" Text="Tipo de Usuario" AssociatedControlID="ddlTipoUsuario" Width="100%"></asp:Label>
+                                                        <asp:RequiredFieldValidator ID="rfvTipoUsuario" runat="server" Text="* Seleccionar tipo de usuario." ForeColor="Red" InitialValue="0"  ControlToValidate="ddlTipoUsuario" ValidationGroup="vgAddUser"></asp:RequiredFieldValidator>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <asp:DropDownList ID="ddlTipoUsuario" runat="server" CssClass="form-control" ></asp:DropDownList>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="col-lg-4 col-sm-12">
-                                                 <asp:DropDownList ID="ddlTipoUsuario" runat="server" CssClass="form-control" ></asp:DropDownList>
-                                                <asp:RequiredFieldValidator ID="rfvTipoUsuario" runat="server" Text="* Seleccionar tipo de usuario." ForeColor="Red" InitialValue="0"  ControlToValidate="ddlTipoUsuario" ValidationGroup="vgAddUser"></asp:RequiredFieldValidator>
-                                            </div>
-                                        </div>
-                                        <div class="row form-group ">
-                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <div class="col-lg-1 col-sm-12">
                                                 <div class="row">
                                                     <div class="col-lg-12 text-right">
                                                         <asp:Button runat="server" ID="btnAgregar" CssClass="btn btn-success" Text="Agregar" OnClick="btnAgregar_Click"  ValidationGroup="vgAddUser"/>
                                                     </div>
                                                 </div>
-                                                <hr />
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div class="row ">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                 <asp:UpdatePanel runat="server">
                                                     <ContentTemplate>
                                                         <asp:Panel runat="server">
@@ -321,8 +350,17 @@
 									                    <div class="widget-main">
                                                             <div class="row form-group">
                                                                 <div class="col-lg-12 col-md-12 col-sm-12">
-                                                                    <asp:RequiredFieldValidator ID="rfvAddVarAdiPac" runat="server" ValidationGroup="vgAddVarAdiPac" ErrorMessage="* Campo requerido" ControlToValidate="txtAddVarPac" Text="* Campo requerido" ForeColor="Red"></asp:RequiredFieldValidator>
-                                                                    <asp:TextBox runat="server" Text="" CssClass="form-control" ID="txtAddVarPac" placeholder="Nombre de la Variable"></asp:TextBox>
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <asp:Label runat="server" Text="Nombre de la Variable" AssociatedControlID="txtAddVarPac" Width="100%"></asp:Label>
+                                                                            <asp:RequiredFieldValidator ID="rfvAddVarAdiPac" runat="server" ValidationGroup="vgAddVarAdiPac" ErrorMessage="* Campo requerido" ControlToValidate="txtAddVarPac" Text="* Campo requerido" ForeColor="Red"></asp:RequiredFieldValidator>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <asp:TextBox runat="server" Text="" CssClass="form-control" ID="txtAddVarPac" placeholder="Nombre de la Variable"></asp:TextBox>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <div class="row form-group">
@@ -413,8 +451,17 @@
 									                    <div class="widget-main">
                                                             <div class="row form-group">
                                                                 <div class="col-lg-12 col-md-12 col-sm-12">
-                                                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ValidationGroup="vgAddVarAdiCita" ErrorMessage="* Campo requerido" ControlToValidate="txtNombreVarCita" Text="* Campo requerido" ForeColor="Red"></asp:RequiredFieldValidator>
-                                                                    <asp:TextBox runat="server" Text="" CssClass="form-control" ID="txtNombreVarCita" placeholder="Nombre de la Variable"></asp:TextBox>
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <asp:Label runat="server" Text="Nombre de la Variable" AssociatedControlID="txtNombreVarCita" Width="100%"></asp:Label>
+                                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ValidationGroup="vgAddVarAdiCita" ErrorMessage="* Campo requerido" ControlToValidate="txtNombreVarCita" Text="* Campo requerido" ForeColor="Red"></asp:RequiredFieldValidator>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <asp:TextBox runat="server" Text="" CssClass="form-control" ID="txtNombreVarCita" placeholder="Nombre de la Variable"></asp:TextBox>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <div class="row form-group">
@@ -533,12 +580,30 @@
 									<div class="widget-main">
                                         <div class="row form-group">
                                             <div class="col-lg-5 col-sm-12">
-                                                <asp:TextBox runat="server" ID="txtItemCat" Text="" CssClass="form-control" placeholder="Item del Catálogo"></asp:TextBox>
-                                                <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" Text="* Capturar Nombre." ForeColor="Red"  ControlToValidate="txtItemCat" ValidationGroup="vgAddCat"></asp:RequiredFieldValidator>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <asp:Label runat="server" Text="Item del Catálogo" AssociatedControlID="txtItemCat" Width="100%"></asp:Label>
+                                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" Text="* Capturar Nombre." ForeColor="Red"  ControlToValidate="txtItemCat" ValidationGroup="vgAddCat"></asp:RequiredFieldValidator>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <asp:TextBox runat="server" ID="txtItemCat" Text="" CssClass="form-control" placeholder="Item del Catálogo"></asp:TextBox>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="col-lg-5 col-sm-12">
-                                                 <asp:DropDownList ID="ddlCatalogo" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlCatalogo_SelectedIndexChanged"></asp:DropDownList>
-                                                <asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server" Text="* Seleccionar tipo de usuario." ForeColor="Red" InitialValue="0"  ControlToValidate="ddlCatalogo" ValidationGroup="vgAddCat"></asp:RequiredFieldValidator>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <asp:Label runat="server" Text="Catálogo" AssociatedControlID="ddlCatalogo" Width="100%"></asp:Label>
+                                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server" Text="* Seleccionar Catálogo." ForeColor="Red" InitialValue="0"  ControlToValidate="ddlCatalogo" ValidationGroup="vgAddCat"></asp:RequiredFieldValidator>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <asp:DropDownList ID="ddlCatalogo" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlCatalogo_SelectedIndexChanged"></asp:DropDownList>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="col-lg-2 col-sm-12">
                                                  <asp:Button runat="server" ID="btnAddItemCat" Text="Agregar" OnClick="btnAddItemCat_Click" CssClass="btn btn-success" ValidationGroup="vgAddCat"/>
@@ -646,20 +711,47 @@
 								                    <div class="widget-body">
 									                    <div class="widget-main">
                                                             <div class="row form-group">
-                                                                <div class="col-lg-3 col-sm-12 text-right">
-                                                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server" Text="* Campo requerido." ForeColor="Red"  ControlToValidate="txtPrestacion" ValidationGroup="vgAddPres"></asp:RequiredFieldValidator>
-                                                                    <asp:TextBox runat="server" ID="txtPrestacion" Text="" CssClass="form-control" placeholder="Prestación"></asp:TextBox>
+                                                                <div class="col-lg-3 col-sm-12 text-left">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <asp:Label runat="server" Text="Nombre de la prestación" AssociatedControlID="txtPrestacion" Width="100%"></asp:Label>
+                                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server" Text="* Campo requerido." ForeColor="Red"  ControlToValidate="txtPrestacion" ValidationGroup="vgAddPres"></asp:RequiredFieldValidator>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <asp:TextBox runat="server" ID="txtPrestacion" Text="" CssClass="form-control" placeholder="Prestación"></asp:TextBox>
+                                                                        </div>
+                                                                   </div>
                                                                 </div>
-                                                                <div class="col-lg-3 col-sm-12 text-right">
-                                                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator5" runat="server" Text="* Campo requerido." ForeColor="Red" InitialValue="0"  ControlToValidate="txtDuracionPres" ValidationGroup="vgAddPres"></asp:RequiredFieldValidator>
-                                                                    <asp:RangeValidator ID="rangev" runat="server" ControlToValidate="txtDuracionPres" Type="Integer" ErrorMessage="Valor debe estar entre 1 y 120 minutos" MinimumValue="1" MaximumValue="120" ValidationGroup="vgAddPres"></asp:RangeValidator>
-                                                                    <asp:TextBox ID="txtDuracionPres" runat="server" CssClass="form-control" TextMode="Number" placeholder="Duración (minutos)"></asp:TextBox>
+                                                                <div class="col-lg-3 col-sm-12 text-left">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <asp:Label runat="server" Text="Duración de la prestación" AssociatedControlID="txtDuracionPres" Width="100%"></asp:Label>
+                                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator5" runat="server" Text="* Campo requerido." ForeColor="Red"  ControlToValidate="txtDuracionPres" ValidationGroup="vgAddPres"></asp:RequiredFieldValidator>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <asp:TextBox ID="txtDuracionPres" runat="server" CssClass="form-control" TextMode="Number" placeholder="Duración (minutos)"></asp:TextBox>
+                                                                            <asp:RangeValidator ID="rangev" runat="server" ControlToValidate="txtDuracionPres" Type="Integer" ErrorMessage="Valor debe estar entre 1 y 120 minutos" MinimumValue="1" MaximumValue="120" ValidationGroup="vgAddPres"></asp:RangeValidator>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-lg-4 col-sm-12 text-right">
-                                                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator6" runat="server" Text="* Seleccionar modalidad." ForeColor="Red" InitialValue="0"  ControlToValidate="ddlModalidad" ValidationGroup="vgAddPres"></asp:RequiredFieldValidator>
-                                                                    <asp:DropDownList ID="ddlModalidad" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlModalidad_SelectedIndexChanged"></asp:DropDownList>
+                                                                <div class="col-lg-4 col-sm-12 text-left">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <asp:Label runat="server" Text="Modalidad" AssociatedControlID="ddlModalidad" Width="100%"></asp:Label>
+                                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator6" runat="server" Text="* Seleccionar modalidad." ForeColor="Red" InitialValue="0"  ControlToValidate="ddlModalidad" ValidationGroup="vgAddPres"></asp:RequiredFieldValidator>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <asp:DropDownList ID="ddlModalidad" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlModalidad_SelectedIndexChanged"></asp:DropDownList>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-lg-2 col-sm-12">
+                                                                <div class="col-lg-2 col-sm-12 text-center">
                                                                         <asp:Button runat="server" ID="btnAddPres" Text="Agregar" OnClick="btnAddPres_Click" CssClass="btn btn-success" ValidationGroup="vgAddPres"/>
                                                                 </div>
                                                             </div>
@@ -673,7 +765,7 @@
                                                                                 OnRowCommand="grvPrestaciones_RowCommand" OnRowEditing="grvPrestaciones_RowEditing" OnRowUpdating="grvPrestaciones_RowUpdating"
                                                                                 EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
                                                                                 <Columns>
-                                                                                    <asp:BoundField DataField="vchCatalogoID" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
+                                                                                    <asp:BoundField DataField="intRELModPres" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
                                                                                     <asp:TemplateField HeaderText="Prestación">
                                                                                         <ItemTemplate>
                                                                                             <asp:Label runat="server" ID="lblNomVar" Text='<%#Eval("vchPrestacion") %>' />
@@ -682,7 +774,7 @@
                                                                                             <asp:TextBox runat="server" ID="txtItemNombre" width="100%" Text='<%#Eval("vchPrestacion") %>'></asp:TextBox>
                                                                                         </EditItemTemplate>
                                                                                     </asp:TemplateField>
-                                                                                    <asp:TemplateField  HeaderText="Duración">
+                                                                                    <asp:TemplateField  HeaderText="Duración (minutos)">
                                                                                         <ItemTemplate>
                                                                                             <asp:Label runat="server" ID="lblDuracion" Text='<%#Eval("intDuracionMin") %>' />
                                                                                         </ItemTemplate>
@@ -753,24 +845,60 @@
 								                    <div class="widget-body">
 									                    <div class="widget-main">
                                                             <div class="row form-group">
-                                                                <div class="col-lg-2 col-sm-12 text-right">
-                                                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator7" runat="server" Text="* Campo requerido." ForeColor="Red"  ControlToValidate="txtNomEquipo" ValidationGroup="vgAddEquipo"></asp:RequiredFieldValidator>
-                                                                    <asp:TextBox runat="server" ID="txtNomEquipo" Text="" CssClass="form-control" placeholder="Nombre del Equipo"></asp:TextBox>
+                                                                <div class="col-lg-3 col-sm-12 text-left">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <asp:Label runat="server" Text="Nombre del Equipo" AssociatedControlID="txtNomEquipo"  Width="100%"></asp:Label>
+                                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator7" runat="server" Text="* Campo requerido." ForeColor="Red"  ControlToValidate="txtNomEquipo" ValidationGroup="vgAddEquipo"></asp:RequiredFieldValidator>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <asp:TextBox runat="server" ID="txtNomEquipo" Text="" CssClass="form-control" placeholder="Nombre del Equipo"></asp:TextBox>
+                                                                        </div>
+                                                                    </div>                                                                    
                                                                 </div>
-                                                                <div class="col-lg-2 col-sm-12 text-right">
-                                                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator11" runat="server" Text="* Campo requerido." ForeColor="Red"  ControlToValidate="txtCodeequipo" ValidationGroup="vgAddEquipo"></asp:RequiredFieldValidator>
-                                                                    <asp:TextBox runat="server" ID="txtCodeequipo" Text="" CssClass="form-control" placeholder="Nombre del Equipo"></asp:TextBox>
+                                                                <div class="col-lg-2 col-sm-12 text-left">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <asp:Label runat="server" Text="Código del Equipo" AssociatedControlID="txtCodeequipo" Width="100%"></asp:Label>
+                                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator11" runat="server" Text="* Campo requerido." ForeColor="Red"  ControlToValidate="txtCodeequipo" ValidationGroup="vgAddEquipo"></asp:RequiredFieldValidator>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <asp:TextBox runat="server" ID="txtCodeequipo" Text="" CssClass="form-control" placeholder="Código de equipo"></asp:TextBox>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-lg-2 col-sm-12 text-right">
-                                                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator8" runat="server" Text="* Campo requerido." ForeColor="Red"  ControlToValidate="txtAEtitle" ValidationGroup="vgAddEquipo"></asp:RequiredFieldValidator>
-                                                                    <asp:TextBox runat="server" ID="txtAEtitle" Text="" CssClass="form-control" placeholder="Nombre del Equipo"></asp:TextBox>
+                                                                <div class="col-lg-2 col-sm-12 text-left">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <asp:Label runat="server" Text="AETitle del Equipo" AssociatedControlID="txtAEtitle" Width="100%"></asp:Label>
+                                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator8" runat="server" Text="* Campo requerido." ForeColor="Red"  ControlToValidate="txtAEtitle" ValidationGroup="vgAddEquipo"></asp:RequiredFieldValidator>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <asp:TextBox runat="server" ID="txtAEtitle" Text="" CssClass="form-control" placeholder="AETitle del Equipo"></asp:TextBox>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-lg-2 col-sm-12 text-right">
-                                                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator9" runat="server" Text="* Seleccionar modalidad." ForeColor="Red" InitialValue="0"  ControlToValidate="ddlModalidadEquipo" ValidationGroup="vgAddEquipo"></asp:RequiredFieldValidator>
-                                                                    <asp:DropDownList ID="ddlModalidadEquipo" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlModalidadEquipo_SelectedIndexChanged"></asp:DropDownList>
+                                                                <div class="col-lg-3 col-sm-12 text-left">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <asp:Label runat="server" Text="Modalidad" AssociatedControlID="ddlModalidadEquipo"  Width="100%"></asp:Label>
+                                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator9" runat="server" Text="* Seleccionar modalidad." ForeColor="Red" InitialValue="0"  ControlToValidate="ddlModalidadEquipo" ValidationGroup="vgAddEquipo"></asp:RequiredFieldValidator>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <asp:DropDownList ID="ddlModalidadEquipo" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlModalidadEquipo_SelectedIndexChanged"></asp:DropDownList>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-lg-2 col-sm-12">
-                                                                    <asp:Button runat="server" ID="btnAddEquipo" Text="Agregar" OnClick="btnAddEquipo_Click" CssClass="btn btn-success" ValidationGroup="vgAddPres"/>
+                                                                <div class="col-lg-2 col-sm-12  text-center">
+                                                                    <asp:Button runat="server" ID="btnAddEquipo" Text="Agregar" OnClick="btnAddEquipo_Click" CssClass="btn btn-success" ValidationGroup="vgAddEquipo"/>
                                                                 </div>
                                                             </div>
                                                             <div class="row">
@@ -779,11 +907,11 @@
                                                                         <asp:Panel runat="server">
                                                                             <asp:GridView ID="grvEquipo" runat="server" AllowPaging="true" CssClass="table table-striped table-bordered"
                                                                                 PageSize="10" AutoGenerateColumns="false" OnRowDataBound="grvEquipo_RowDataBound" Font-Size="10px"
-                                                                                OnPageIndexChanging="grvEquipo_PageIndexChanging" DataKeyNames="intEquipoID" OnRowCancelingEdit="grvEquipo_RowCancelingEdit"
+                                                                                OnPageIndexChanging="grvEquipo_PageIndexChanging" DataKeyNames="intEquipoID,intModalidadID" OnRowCancelingEdit="grvEquipo_RowCancelingEdit"
                                                                                 OnRowCommand="grvEquipo_RowCommand" OnRowEditing="grvEquipo_RowEditing" OnRowUpdating="grvEquipo_RowUpdating"
                                                                                 EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
                                                                                 <Columns>
-                                                                                    <asp:BoundField DataField="vchCatalogoID" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
+                                                                                    <asp:BoundField DataField="intEquipoID" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
                                                                                     <asp:TemplateField HeaderText="Equipo">
                                                                                         <ItemTemplate>
                                                                                             <asp:Label runat="server" ID="lblNomEquipo" Text='<%#Eval("vchNombreEquipo") %>' />

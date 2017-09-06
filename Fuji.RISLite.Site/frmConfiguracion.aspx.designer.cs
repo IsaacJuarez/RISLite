@@ -175,15 +175,6 @@ namespace Fuji.RISLite.Site {
         protected global::System.Web.UI.WebControls.Button btnSaveEmailSistema;
         
         /// <summary>
-        /// Control txtNombre.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtNombre;
-        
-        /// <summary>
         /// Control rfvNombreUser.
         /// </summary>
         /// <remarks>
@@ -193,13 +184,13 @@ namespace Fuji.RISLite.Site {
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvNombreUser;
         
         /// <summary>
-        /// Control txtUsuario.
+        /// Control txtNombre.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtUsuario;
+        protected global::System.Web.UI.WebControls.TextBox txtNombre;
         
         /// <summary>
         /// Control rfvUsuario.
@@ -211,13 +202,13 @@ namespace Fuji.RISLite.Site {
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvUsuario;
         
         /// <summary>
-        /// Control ddlTipoUsuario.
+        /// Control txtUsuario.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlTipoUsuario;
+        protected global::System.Web.UI.WebControls.TextBox txtUsuario;
         
         /// <summary>
         /// Control rfvTipoUsuario.
@@ -227,6 +218,15 @@ namespace Fuji.RISLite.Site {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvTipoUsuario;
+        
+        /// <summary>
+        /// Control ddlTipoUsuario.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlTipoUsuario;
         
         /// <summary>
         /// Control btnAgregar.
@@ -319,15 +319,6 @@ namespace Fuji.RISLite.Site {
         protected global::System.Web.UI.WebControls.GridView grvAddCita;
         
         /// <summary>
-        /// Control txtItemCat.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtItemCat;
-        
-        /// <summary>
         /// Control RequiredFieldValidator1.
         /// </summary>
         /// <remarks>
@@ -337,13 +328,13 @@ namespace Fuji.RISLite.Site {
         protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator1;
         
         /// <summary>
-        /// Control ddlCatalogo.
+        /// Control txtItemCat.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlCatalogo;
+        protected global::System.Web.UI.WebControls.TextBox txtItemCat;
         
         /// <summary>
         /// Control RequiredFieldValidator3.
@@ -353,6 +344,15 @@ namespace Fuji.RISLite.Site {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator3;
+        
+        /// <summary>
+        /// Control ddlCatalogo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlCatalogo;
         
         /// <summary>
         /// Control btnAddItemCat.
@@ -400,15 +400,6 @@ namespace Fuji.RISLite.Site {
         protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator5;
         
         /// <summary>
-        /// Control rangev.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RangeValidator rangev;
-        
-        /// <summary>
         /// Control txtDuracionPres.
         /// </summary>
         /// <remarks>
@@ -416,6 +407,15 @@ namespace Fuji.RISLite.Site {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtDuracionPres;
+        
+        /// <summary>
+        /// Control rangev.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RangeValidator rangev;
         
         /// <summary>
         /// Control RequiredFieldValidator6.

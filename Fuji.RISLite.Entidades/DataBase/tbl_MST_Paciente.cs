@@ -17,6 +17,10 @@ namespace Fuji.RISLite.Entidades.DataBase
         public tbl_MST_Paciente()
         {
             this.tbl_DET_PacienteDinamico = new HashSet<tbl_DET_PacienteDinamico>();
+            this.tbl_DET_DireccionPaciente = new HashSet<tbl_DET_DireccionPaciente>();
+            this.tbl_DET_Paciente = new HashSet<tbl_DET_Paciente>();
+            this.tbl_REL_PacienteCita = new HashSet<tbl_REL_PacienteCita>();
+            this.tbl_REL_IdentificacionPaciente = new HashSet<tbl_REL_IdentificacionPaciente>();
         }
     
         public long intPacienteID { get; set; }
@@ -30,5 +34,9 @@ namespace Fuji.RISLite.Entidades.DataBase
     
         public virtual tbl_CAT_Genero tbl_CAT_Genero { get; set; }
         public virtual ICollection<tbl_DET_PacienteDinamico> tbl_DET_PacienteDinamico { get; set; }
+        public virtual ICollection<tbl_DET_DireccionPaciente> tbl_DET_DireccionPaciente { get; set; }
+        public virtual ICollection<tbl_DET_Paciente> tbl_DET_Paciente { get; set; }
+        public virtual ICollection<tbl_REL_PacienteCita> tbl_REL_PacienteCita { get; set; }
+        public virtual ICollection<tbl_REL_IdentificacionPaciente> tbl_REL_IdentificacionPaciente { get; set; }
     }
 }

@@ -29,6 +29,7 @@ namespace Fuji.RISLite.Site
         public static List<clsUsuario> lstUsuarios = new List<clsUsuario>();
         public static List<stp_getListCatalogo_Result> lstCat = new List<stp_getListCatalogo_Result>();
         public static List<clsPrestacion> lstPres = new List<clsPrestacion>();
+        public static List<tbl_CAT_Equipo> lstEquipo = new List<tbl_CAT_Equipo>();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -79,10 +80,96 @@ namespace Fuji.RISLite.Site
                 cargaConfigEmail();
                 cargaCatalogo();
                 cargaPrestaciones();
+                cargaEquipo();
             }
             catch(Exception ecF)
             {
                 Log.EscribeLog("Existe un error en cargarForma: " + ecF.Message, 3, "");
+            }
+        }
+
+        private void cargaEquipo()
+        {
+            try
+            {
+                cargaListaModalidadEquipo();
+                cargarEquipo();
+            }
+            catch (Exception ecP)
+            {
+                Log.EscribeLog("Existe un error en cargaPrestaciones: " + ecP.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargarEquipo()
+        {
+            try
+            {
+                if (ddlModalidadEquipo.SelectedItem.Value != "" && ddlModalidadEquipo.SelectedItem.Value != "0")
+                {
+                    List<tbl_CAT_Equipo> lst = new List<tbl_CAT_Equipo>();
+                    EquipoRequest request = new EquipoRequest();
+                    request.mdlUser = Usuario;
+                    request.intModalidadID = Convert.ToInt32(ddlModalidadEquipo.SelectedValue);
+                    lst = RisService.getListEquipo(request);
+                    if (lst != null)
+                    {
+                        if (lst.Count > 0)
+                        {
+                            lstEquipo = lst;
+                            grvEquipo.DataSource = lst.OrderBy(x => x.vchNombreEquipo).ToList();
+                        }
+                        else
+                        {
+                            lstEquipo = null;
+                            grvEquipo.DataSource = null;
+                        }
+                    }
+                    else
+                    {
+                        lstEquipo = null;
+                        grvEquipo.DataSource = null;
+                    }
+                }
+                else
+                {
+                    lstEquipo = null;
+                    grvEquipo.DataSource = null;
+                }
+                grvEquipo.DataBind();
+                //limpiarControlAdd();
+            }
+            catch (Exception ecc)
+            {
+                Log.EscribeLog("Existe un error cargarPrestacion: " + ecc.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargaListaModalidadEquipo()
+        {
+            try
+            {
+                CatalogoRequest request = new CatalogoRequest();
+                clsUsuario _user = new clsUsuario();
+                _user = Usuario;
+                request.mdlUser = _user;
+                List<tbl_CAT_Modalidad> response = new List<tbl_CAT_Modalidad>();
+                response = RisService.getListModalidades(request);
+                if (response != null)
+                {
+                    if (response.Count > 0)
+                    {
+                        ddlModalidadEquipo.DataSource = response;
+                        ddlModalidadEquipo.DataTextField = "vchModalidad";
+                        ddlModalidadEquipo.DataValueField = "intModalidadID";
+                        ddlModalidadEquipo.DataBind();
+                        ddlModalidadEquipo.Items.Insert(0, new ListItem("Seleccionar Modalidad...", "0"));
+                    }
+                }
+            }
+            catch (Exception eFC)
+            {
+                Log.EscribeLog("Existe un error en cargaListaModalidadEquipo: " + eFC.Message, 3, "");
             }
         }
 
@@ -1752,7 +1839,7 @@ namespace Fuji.RISLite.Site
                 }
                 else
                 {
-                    ShowMessage("Seleccionar el tipo de catálogo.", MessageType.Error, "alert_container");
+                    ShowMessage("Seleccionar el tipo de modalidad.", MessageType.Error, "alert_container");
                 }
             }
             catch (Exception eCat)
@@ -1907,9 +1994,8 @@ namespace Fuji.RISLite.Site
                 TextBox txtItemNombre = (TextBox)grvPrestaciones.Rows[e.RowIndex].FindControl("txtItemNombre");
                 TextBox txtDuracionItm = (TextBox)grvPrestaciones.Rows[e.RowIndex].FindControl("txtDuracionItem");
                 prestacion.vchPrestacion = txtItemNombre.Text;
-                prestacion.vchPrestacion = txtItemNombre.Text;
                 prestacion.intDuracionMin = Convert.ToInt32(txtDuracionItm.Text);
-                prestacion.intPrestacionID = Convert.ToInt32(grvCatalogos.DataKeys[e.RowIndex].Values["intPrestacionID"].ToString());
+                prestacion.intPrestacionID = Convert.ToInt32(grvPrestaciones.DataKeys[e.RowIndex].Values["intPrestacionID"].ToString());
                 request.mdlPres = prestacion;
                 PrestacionResponse response = new PrestacionResponse();
                 response = RisService.setActualizaPrestacion(request);
@@ -1977,54 +2063,271 @@ namespace Fuji.RISLite.Site
         }
         #endregion Prestacion
 
+        #region Equipo
         protected void btnAddEquipo_Click(object sender, EventArgs e)
         {
-
+            try
+            {
+                EquipoRequest request = new EquipoRequest();
+                tbl_CAT_Equipo equipo = new tbl_CAT_Equipo();
+                if (ddlModalidadEquipo.SelectedItem.Value != "" && ddlModalidadEquipo.SelectedItem.Value != "0")
+                {
+                    equipo.bitActivo = true;
+                    equipo.intModalidadID = Convert.ToInt32(ddlModalidadEquipo.SelectedValue.ToString());
+                    equipo.datFecha = DateTime.Now;
+                    equipo.vchAETitle = txtAEtitle.Text.ToUpper();
+                    equipo.vchCodigoEquipo = txtCodeequipo.Text.ToUpper();
+                    equipo.vchIPEquipo = "";
+                    equipo.vchNombreEquipo = txtNomEquipo.Text.ToUpper();
+                    equipo.vchUserAdmin = Usuario.vchUsuario;
+                    request.mdlEquipo = equipo;
+                    request.mdlUser = Usuario;
+                    EquipoResponse response = new EquipoResponse();
+                    response = RisService.setEquipo(request);
+                    if (response != null)
+                    {
+                        if (response.Success)
+                        {
+                            txtNomEquipo.Text = "";
+                            txtCodeequipo.Text = "";
+                            txtAEtitle.Text = "";
+                            cargarEquipo();
+                            ShowMessage("Cambios correctos.", MessageType.Correcto, "alert_container");
+                        }
+                        else
+                        {
+                            ShowMessage("Existe un error al guardar: " + response.Mensaje, MessageType.Error, "alert_container");
+                        }
+                    }
+                }
+                else
+                {
+                    ShowMessage("Seleccionar el tipo de modalidad.", MessageType.Error, "alert_container");
+                }
+            }
+            catch (Exception eCat)
+            {
+                ShowMessage("Existe un error al agregar el equipo: " + eCat.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error en btnAddEquipo_Click: " + eCat.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void ddlModalidadEquipo_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            try
+            {
+                cargarEquipo();
+            }
+            catch (Exception eCat)
+            {
+                Log.EscribeLog("Existe un error en ddlModalidad_SelectedIndexChanged: " + eCat.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void grvEquipo_RowDataBound(object sender, GridViewRowEventArgs e)
         {
+            try
+            {
+                if (e.Row.RowType == DataControlRowType.Pager)
+                {
+                    Label lblTotalNumDePaginas = (Label)e.Row.FindControl("lblBandejaTotal");
+                    lblTotalNumDePaginas.Text = grvUsuario.PageCount.ToString();
 
+                    TextBox txtIrAlaPagina = (TextBox)e.Row.FindControl("txtBandejaEquipo");
+                    txtIrAlaPagina.Text = (grvUsuario.PageIndex + 1).ToString();
+
+                    DropDownList ddlTamPagina = (DropDownList)e.Row.FindControl("ddlBandejaEquipo");
+                    ddlTamPagina.SelectedValue = grvUsuario.PageSize.ToString();
+                }
+
+                if (e.Row.RowType != DataControlRowType.DataRow)
+                {
+                    return;
+                }
+
+                if (e.Row.DataItem != null)
+                {
+                    tbl_CAT_Equipo _mdl = (tbl_CAT_Equipo)e.Row.DataItem;
+                    ImageButton ibtEstatus = (ImageButton)e.Row.FindControl("imbEstatus");
+                    ibtEstatus.Attributes.Add("onclick", "javascript:return confirm('¿Desea realizar el cambio de estatus del item seleccionado?');");
+                    if ((bool)_mdl.bitActivo)
+                        ibtEstatus.ImageUrl = @"~/Images/ic_action_tick.png";
+                    else
+                        ibtEstatus.ImageUrl = @"~/Images/ic_action_cancel.png";
+                }
+            }
+            catch (Exception eGUP)
+            {
+                Log.EscribeLog("Existe un error en grvEquipo_RowDataBound: " + eGUP.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void grvEquipo_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
-
+            try
+            {
+                if (e.NewPageIndex >= 0)
+                {
+                    this.grvEquipo.PageIndex = e.NewPageIndex;
+                    cargarEquipo();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.EscribeLog("Existe un error grvEquipo_PageIndexChanging: " + ex.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void grvEquipo_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
-
+            try
+            {
+                grvEquipo.EditIndex = -1;
+                cargarEquipo();
+            }
+            catch (Exception eCE)
+            {
+                Log.EscribeLog("Existe un error en grvEquipo_RowCancelingEdit: " + eCE.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void grvEquipo_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-
+            try
+            {
+                int intEquipoID = 0;
+                tbl_CAT_Equipo mdl = new tbl_CAT_Equipo();
+                switch (e.CommandName)
+                {
+                    case "Estatus":
+                        intEquipoID = Convert.ToInt32(e.CommandArgument.ToString());
+                        EquipoRequest request = new EquipoRequest();
+                        request.mdlUser = Usuario;
+                        request.intEquipoID = intEquipoID;
+                        EquipoResponse response = new EquipoResponse();
+                        response = RisService.setActualizaEquipo(request);
+                        if (response != null)
+                        {
+                            if (response.Success)
+                            {
+                                ShowMessage("Se actualizó correctamente.", MessageType.Correcto, "alert_container");
+                                //fillCat();
+                                cargarEquipo();
+                            }
+                            else
+                            {
+                                ShowMessage("Existe un error al actualizar: " + response.Mensaje, MessageType.Error, "alert_container");
+                            }
+                        }
+                        else
+                        {
+                            ShowMessage("Existe un error al actualizar, favor de revisar la información. ", MessageType.Advertencia, "alert_container");
+                        }
+                        break;
+                }
+            }
+            catch (Exception eRU)
+            {
+                ShowMessage("Existe un error al actualizar, favor de revisar la información: " + eRU.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error grvEquipo_RowCommand: " + eRU.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void grvEquipo_RowEditing(object sender, GridViewEditEventArgs e)
         {
-
+            try
+            {
+                grvEquipo.EditIndex = e.NewEditIndex;
+                cargarEquipo();
+            }
+            catch (Exception eRED)
+            {
+                Log.EscribeLog("Existe un error en grvEquipo_RowEditing: " + eRED.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void grvEquipo_RowUpdating(object sender, GridViewUpdateEventArgs e)
         {
-
+            try
+            {
+                EquipoRequest request = new EquipoRequest();
+                tbl_CAT_Equipo equipo = new tbl_CAT_Equipo();
+                request.mdlUser = Usuario;
+                equipo.bitActivo = true;
+                equipo.datFecha = DateTime.Now;
+                equipo.vchUserAdmin = Usuario.vchUsuario;
+                TextBox txtItemNombre = (TextBox)grvEquipo.Rows[e.RowIndex].FindControl("txtItemNombre");
+                TextBox txtCodigoItem = (TextBox)grvEquipo.Rows[e.RowIndex].FindControl("txtCodigoItem");
+                TextBox txtAEtitleItem = (TextBox)grvEquipo.Rows[e.RowIndex].FindControl("txtAEtitleItem");
+                equipo.vchNombreEquipo = txtItemNombre.Text;
+                equipo.vchCodigoEquipo = txtCodeequipo.Text;
+                equipo.vchAETitle = txtAEtitleItem.Text;
+                equipo.intModalidadID = Convert.ToInt32(grvEquipo.DataKeys[e.RowIndex].Values["intModalidadID"].ToString());
+                request.mdlEquipo = equipo;
+                EquipoResponse response = new EquipoResponse();
+                response = RisService.setActualizaEquipo(request);
+                if (response != null)
+                {
+                    if (response.Success)
+                    {
+                        ShowMessage("Cambios correctos.", MessageType.Correcto, "alert_container");
+                        grvPrestaciones.EditIndex = -1;
+                        cargarPrestacion();
+                    }
+                    else
+                    {
+                        ShowMessage("Existe un error al guardar: " + response.Mensaje, MessageType.Error, "alert_container");
+                    }
+                }
+                else
+                {
+                    ShowMessage("Existe un error, verificar la información.", MessageType.Error, "alert_container");
+                }
+            }
+            catch (Exception eUpdating)
+            {
+                ShowMessage("Existe un error: " + eUpdating.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Exiete un error en grvEquipo_RowUpdating: " + eUpdating.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void ddlBandejaEquipo_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            try
+            {
+                DropDownList dropDownList = (DropDownList)sender;
+                if (int.Parse(dropDownList.SelectedValue) != 0)
+                {
+                    this.grvEquipo.AllowPaging = true;
+                    this.grvEquipo.PageSize = int.Parse(dropDownList.SelectedValue);
+                }
+                else
+                    this.grvEquipo.AllowPaging = false;
+                this.cargarEquipo();
+            }
+            catch (Exception eddS)
+            {
+                Log.EscribeLog("Existe un error ddlBandejaEquipo_SelectedIndexChanged de frmConfiguracion: " + eddS.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void txtBandejaEquipo_TextChanged(object sender, EventArgs e)
         {
-
+            try
+            {
+                TextBox txtBandejaAvaluosGoToPage = (TextBox)sender;
+                int numeroPagina;
+                if (int.TryParse(txtBandejaAvaluosGoToPage.Text.Trim(), out numeroPagina))
+                    this.grvEquipo.PageIndex = numeroPagina - 1;
+                else
+                    this.grvEquipo.PageIndex = 0;
+                this.cargarEquipo();
+            }
+            catch (Exception ex)
+            {
+                Log.EscribeLog("Existe un error txtBandejaEquipo_TextChanged de frmConfiguracion: " + ex.Message, 3, Usuario.vchUsuario);
+            }
         }
+        #endregion Equipo
     }
 }

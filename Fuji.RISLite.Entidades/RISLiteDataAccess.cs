@@ -1384,5 +1384,34 @@ namespace Fuji.RISLite.DataAccess
         }
         #endregion Equipo
 
+
+        #region Paciente
+        public List<tbl_CAT_Genero> getListaGenero(string user)
+        {
+            List<tbl_CAT_Genero> lst = new List<tbl_CAT_Genero>();
+            try
+            {
+                using(dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Genero.Any(x => (bool)x.bitActivo))
+                    {
+                        var query = dbRisDA.tbl_CAT_Genero.Where(x => (bool)x.bitActivo).ToList();
+                        if(query!= null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                lst.AddRange(query);
+                            }
+                        }
+                    }
+                }
+            }
+            catch(Exception glG)
+            {
+                Log.EscribeLog("Existe un error en getListaGenero: " + glG.Message, 3, user);
+            }
+            return lst;
+        }
+        #endregion Paciente
     }
 }

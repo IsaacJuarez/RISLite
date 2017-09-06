@@ -41,6 +41,26 @@
         <AssociationConnector Association="RISLiteModel.FK_REL_ModalidadPrestacion_CAT_Prestacion" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Equipo" Width="1.5" PointX="7.625" PointY="4.75" />
         <AssociationConnector Association="RISLiteModel.FK_CAT_Equipo_CAT_Modalidad" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_CodigoPostal" Width="1.5" PointX="13" PointY="29.375" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Estado" Width="1.5" PointX="8.5" PointY="29.625" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Identificacion" Width="1.5" PointX="11" PointY="33.625" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Municipio" Width="1.5" PointX="10.75" PointY="29.375" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_DET_DireccionPaciente" Width="1.5" PointX="15.25" PointY="13.25" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_DET_Paciente" Width="1.5" PointX="12.25" PointY="24.375" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_MST_Cita" Width="1.5" PointX="15" PointY="0.75" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_REL_IdentificacionPaciente" Width="1.5" PointX="13.25" PointY="17.375" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_REL_PacienteCita" Width="1.5" PointX="17.25" PointY="7.375" />
+        <AssociationConnector Association="RISLiteModel.FK_CAT_CodigoPostal_CAT_Municipio" />
+        <AssociationConnector Association="RISLiteModel.FK_DET_DireccionPaciente_CAT_CodigoPostal" />
+        <AssociationConnector Association="RISLiteModel.FK_CAT_Municipio_CAT_Estado" />
+        <AssociationConnector Association="RISLiteModel.FK_MST_Cita_CAT_EstatusCita" />
+        <AssociationConnector Association="RISLiteModel.FK_REL_IdentificacionPaciente_CAT_Identificacion" />
+        <AssociationConnector Association="RISLiteModel.FK_MST_Cita_CAT_InstitucionProc" />
+        <AssociationConnector Association="RISLiteModel.FK_DET_DireccionPaciente_MST_Paciente" />
+        <AssociationConnector Association="RISLiteModel.FK_DET_Paciente_MST_Pacient" />
+        <AssociationConnector Association="RISLiteModel.FK_REL_PacienteCita_MST_Cita" />
+        <AssociationConnector Association="RISLiteModel.FK_REL_PacienteCita_MST_Paciente" />
+        <AssociationConnector Association="RISLiteModel.FK_TBL_REL__REFERENCE_TBL_MST_" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

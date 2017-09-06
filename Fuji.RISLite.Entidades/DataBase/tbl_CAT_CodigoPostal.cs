@@ -12,19 +12,22 @@ namespace Fuji.RISLite.Entidades.DataBase
     using System;
     using System.Collections.Generic;
     
-    public partial class tbl_CAT_InstitucionProcedencia
+    public partial class tbl_CAT_CodigoPostal
     {
-        public tbl_CAT_InstitucionProcedencia()
+        public tbl_CAT_CodigoPostal()
         {
-            this.tbl_MST_Cita = new HashSet<tbl_MST_Cita>();
+            this.tbl_DET_DireccionPaciente = new HashSet<tbl_DET_DireccionPaciente>();
         }
     
-        public int intInstitucionID { get; set; }
-        public string vchNombreIns { get; set; }
+        public int intCodigoPostalID { get; set; }
+        public Nullable<int> intMunicipioID { get; set; }
+        public string vchCodigoPostal { get; set; }
+        public string vchColonia { get; set; }
         public Nullable<bool> bitActivo { get; set; }
         public Nullable<System.DateTime> datFecha { get; set; }
         public string vchUserAdmin { get; set; }
     
-        public virtual ICollection<tbl_MST_Cita> tbl_MST_Cita { get; set; }
+        public virtual tbl_CAT_Municipio tbl_CAT_Municipio { get; set; }
+        public virtual ICollection<tbl_DET_DireccionPaciente> tbl_DET_DireccionPaciente { get; set; }
     }
 }

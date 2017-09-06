@@ -728,5 +728,25 @@ namespace Fuji.RISLite.Site.Services
             return response;
         }
         #endregion Equipo
+        #region Paciente
+        public List<tbl_CAT_Genero> getListaGenero(CatalogoRequest request)
+        {
+            List<tbl_CAT_Genero> response = new List<tbl_CAT_Genero>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListaGenero(request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getListaGenero: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+        #endregion Paciente
+
     }
 }

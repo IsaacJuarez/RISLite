@@ -1,9 +1,13 @@
-﻿using Fuji.RISLite.Entidades.Extensions;
+﻿using Fuji.RISLite.Entidades.DataBase;
+using Fuji.RISLite.Entidades.Extensions;
 using Fuji.RISLite.Entities;
 using Fuji.RISLite.Site.Services;
+using Fuji.RISLite.Site.Services.DataContract;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Web.UI;
+using System.Web.UI.WebControls;
 
 namespace Fuji.RISLite.Site
 {
@@ -92,6 +96,117 @@ namespace Fuji.RISLite.Site
                 Log.EscribeLog("Existe un error obtenerEstudioBusqueda:" + eOP.Message, 3, "");
             }
             return lstPaciente;
+        }
+
+        protected void btnAddUser_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                cargaFormaDetalle();
+                ScriptManager.RegisterStartupScript(Page, Page.GetType(), "myModal", "$('#myModal').modal();", true);
+            }
+            catch(Exception eAU)
+            {
+                Log.EscribeLog("Existe un error en btnAddUser_Click:" + eAU.Message, 3, Usuario.vchUserAdmin);
+            }
+        }
+
+        private void cargaFormaDetalle()
+        {
+            try
+            {
+                cargaListagenero();
+            }
+            catch(Exception ecF)
+            {
+                Log.EscribeLog("Existe un error en cargaFormaDetalle: " + ecF.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargaListagenero()
+        {
+            try
+            {
+                CatalogoRequest request = new CatalogoRequest();
+                request.mdlUser = Usuario;
+                List<tbl_CAT_Genero> response = new List<tbl_CAT_Genero>();
+                response = RisService.getListaGenero(request);
+                if (response != null)
+                {
+                    if (response.Count > 0)
+                    {
+                        ddlGeneroDet.DataSource = response;
+                        ddlGeneroDet.DataTextField = "vchGenero";
+                        ddlGeneroDet.DataValueField = "intGeneroID";
+                        ddlGeneroDet.DataBind();
+                        ddlGeneroDet.Items.Insert(0, new ListItem("Seleccionar Genero...", "0"));
+                    }
+                }
+            }
+            catch(Exception eclg)
+            {
+                Log.EscribeLog("Existe un error en cargaListagenero: " + eclg.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void btnEditPaciente_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void grvEstudios_RowDataBound(object sender, System.Web.UI.WebControls.GridViewRowEventArgs e)
+        {
+
+        }
+
+        protected void grvEstudios_PageIndexChanging(object sender, System.Web.UI.WebControls.GridViewPageEventArgs e)
+        {
+
+        }
+
+        protected void grvEstudios_RowCancelingEdit(object sender, System.Web.UI.WebControls.GridViewCancelEditEventArgs e)
+        {
+
+        }
+
+        protected void grvEstudios_RowCommand(object sender, System.Web.UI.WebControls.GridViewCommandEventArgs e)
+        {
+
+        }
+
+        protected void grvEstudios_RowEditing(object sender, System.Web.UI.WebControls.GridViewEditEventArgs e)
+        {
+
+        }
+
+        protected void grvEstudios_RowUpdating(object sender, System.Web.UI.WebControls.GridViewUpdateEventArgs e)
+        {
+
+        }
+
+        protected void grvEstudios_RowDeleting(object sender, System.Web.UI.WebControls.GridViewDeleteEventArgs e)
+        {
+
+        }
+
+        protected void ddlBandeja_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void txtBandeja_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void txtCodigoPostal_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void bntAddPacienteDEt_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

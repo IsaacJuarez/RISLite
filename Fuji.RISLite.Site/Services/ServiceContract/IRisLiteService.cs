@@ -135,5 +135,9 @@ namespace Fuji.RISLite.Site.Services
         [OperationContract]
         EquipoResponse setEstatusEquipo(EquipoRequest request);
         #endregion Equipo
+
+        #region Paciente
+        List<tbl_CAT_Genero> getListaGenero(CatalogoRequest request);
+        #endregion Paciente
     }
 }

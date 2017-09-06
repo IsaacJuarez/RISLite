@@ -37,6 +37,7 @@
     <script src="assets/jquery/dist/jquery.min.js"></script>
 	<!-- ace settings handler -->
 	<script src="assets/js/ace-extra.min.js"></script>
+    <script src="assets/js/bootbox.js"></script>
 
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>

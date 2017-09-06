@@ -72,7 +72,13 @@
     <Compile Include="DataBase\tbl_CAT_Catalogo.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
+    <Compile Include="DataBase\tbl_CAT_CodigoPostal.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
     <Compile Include="DataBase\tbl_CAT_Equipo.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataBase\tbl_CAT_Estado.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\tbl_CAT_EstatusCita.cs">
@@ -84,10 +90,16 @@
     <Compile Include="DataBase\tbl_CAT_Genero.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
+    <Compile Include="DataBase\tbl_CAT_Identificacion.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
     <Compile Include="DataBase\tbl_CAT_InstitucionProcedencia.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\tbl_CAT_Modalidad.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataBase\tbl_CAT_Municipio.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\tbl_CAT_Prestacion.cs">
@@ -108,7 +120,16 @@
     <Compile Include="DataBase\tbl_Conf_CorreoSitio.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
+    <Compile Include="DataBase\tbl_DET_DireccionPaciente.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataBase\tbl_DET_Paciente.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
     <Compile Include="DataBase\tbl_DET_PacienteDinamico.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataBase\tbl_MST_Cita.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\tbl_MST_ConfiguracionSistema.cs">
@@ -120,7 +141,13 @@
     <Compile Include="DataBase\tbl_REL_BotonVista.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
+    <Compile Include="DataBase\tbl_REL_IdentificacionPaciente.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
     <Compile Include="DataBase\tbl_REL_ModalidadPrestacion.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataBase\tbl_REL_PacienteCita.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\tbl_REL_TipoUsuarioBoton.cs">

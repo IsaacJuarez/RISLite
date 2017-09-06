@@ -1,5 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="frmConfiguraciones.aspx.cs" Inherits="Fuji.RISLite.Site.frmConfiguraciones" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="assets/jquery/dist/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="page-content">

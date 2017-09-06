@@ -31,6 +31,18 @@
           <Property Name="bitActivo" Type="bit" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
         </EntityType>
+        <EntityType Name="tbl_CAT_CodigoPostal">
+          <Key>
+            <PropertyRef Name="intCodigoPostalID" />
+          </Key>
+          <Property Name="intCodigoPostalID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="intMunicipioID" Type="int" />
+          <Property Name="vchCodigoPostal" Type="varchar" MaxLength="200" />
+          <Property Name="vchColonia" Type="varchar" MaxLength="200" />
+          <Property Name="bitActivo" Type="bit" />
+          <Property Name="datFecha" Type="datetime" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+        </EntityType>
         <EntityType Name="tbl_CAT_Equipo">
           <Key>
             <PropertyRef Name="intEquipoID" />
@@ -41,6 +53,16 @@
           <Property Name="vchCodigoEquipo" Type="varchar" MaxLength="200" />
           <Property Name="vchIPEquipo" Type="varchar" MaxLength="20" />
           <Property Name="vchAETitle" Type="varchar" MaxLength="100" />
+          <Property Name="bitActivo" Type="bit" />
+          <Property Name="datFecha" Type="datetime" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="tbl_CAT_Estado">
+          <Key>
+            <PropertyRef Name="intEstadoID" />
+          </Key>
+          <Property Name="intEstadoID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vchEstado" Type="varchar" MaxLength="200" />
           <Property Name="bitActivo" Type="bit" />
           <Property Name="datFecha" Type="datetime" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
@@ -75,6 +97,16 @@
           <Property Name="datFecha" Type="datetime" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
         </EntityType>
+        <EntityType Name="tbl_CAT_Identificacion">
+          <Key>
+            <PropertyRef Name="intIdentificacionID" />
+          </Key>
+          <Property Name="intIdentificacionID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vchNombreId" Type="varchar" MaxLength="200" />
+          <Property Name="bitActivo" Type="bit" />
+          <Property Name="datFecha" Type="datetime" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+        </EntityType>
         <EntityType Name="tbl_CAT_InstitucionProcedencia">
           <Key>
             <PropertyRef Name="intInstitucionID" />
@@ -92,6 +124,17 @@
           <Property Name="intModalidadID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="vchModalidad" Type="varchar" MaxLength="200" />
           <Property Name="vchCodigo" Type="varchar" MaxLength="200" />
+          <Property Name="bitActivo" Type="bit" />
+          <Property Name="datFecha" Type="datetime" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="tbl_CAT_Municipio">
+          <Key>
+            <PropertyRef Name="intMunicipioID" />
+          </Key>
+          <Property Name="intMunicipioID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="intEstadoID" Type="int" />
+          <Property Name="vchMunicipio" Type="varchar" MaxLength="200" />
           <Property Name="bitActivo" Type="bit" />
           <Property Name="datFecha" Type="datetime" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
@@ -196,6 +239,34 @@
           <Property Name="datFecha" Type="datetime" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
         </EntityType>
+        <EntityType Name="tbl_DET_DireccionPaciente">
+          <Key>
+            <PropertyRef Name="intDireccionID" />
+          </Key>
+          <Property Name="intDireccionID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="intPacienteID" Type="bigint" />
+          <Property Name="intCodigoPostalID" Type="int" />
+          <Property Name="vchCalle" Type="varchar" MaxLength="200" />
+          <Property Name="vchNumero" Type="varchar" MaxLength="200" />
+          <Property Name="bitActivo" Type="bit" />
+          <Property Name="datFecha" Type="datetime" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="tbl_DET_Paciente">
+          <Key>
+            <PropertyRef Name="intDETPacienteID" />
+          </Key>
+          <Property Name="intDETPacienteID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="intPacienteID" Type="bigint" />
+          <Property Name="vchNumeroContacto" Type="varchar" MaxLength="200" />
+          <Property Name="vchEmail" Type="varchar" MaxLength="200" />
+          <Property Name="vchNombreAcompaniante" Type="varchar" MaxLength="200" />
+          <Property Name="vchContactoAcompaniante" Type="varchar" MaxLength="100" />
+          <Property Name="vchParentesco" Type="varchar" MaxLength="100" />
+          <Property Name="bitActivo" Type="bit" />
+          <Property Name="datFecha" Type="datetime" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+        </EntityType>
         <EntityType Name="tbl_DET_PacienteDinamico">
           <Key>
             <PropertyRef Name="intADIPacienteID" />
@@ -218,6 +289,19 @@
           <Property Name="datFecha" Type="datetime" />
           <Property Name="vchMensaje" Type="varchar(max)" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="tbl_MST_Cita">
+          <Key>
+            <PropertyRef Name="intCitaID" />
+          </Key>
+          <Property Name="intCitaID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="intMedicoTraID" Type="int" />
+          <Property Name="intInstitucionID" Type="int" />
+          <Property Name="intEstatusCita" Type="int" />
+          <Property Name="datFechaCita" Type="datetime" />
+          <Property Name="bitActivo" Type="bit" />
+          <Property Name="datFecha" Type="datetime" />
+          <Property Name="vchUserAdmin" Type="varbinary" MaxLength="100" />
         </EntityType>
         <EntityType Name="tbl_MST_ConfiguracionSistema">
           <Key>
@@ -257,6 +341,18 @@
           <Property Name="datFecha" Type="datetime" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
         </EntityType>
+        <EntityType Name="tbl_REL_IdentificacionPaciente">
+          <Key>
+            <PropertyRef Name="intRELIdenPacienteID" />
+          </Key>
+          <Property Name="intRELIdenPacienteID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="intIdentificacionID" Type="bigint" />
+          <Property Name="intPacienteID" Type="bigint" />
+          <Property Name="vchValor" Type="varchar" MaxLength="200" />
+          <Property Name="bitActivo" Type="bit" />
+          <Property Name="datFecha" Type="datetime" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+        </EntityType>
         <EntityType Name="tbl_REL_ModalidadPrestacion">
           <Key>
             <PropertyRef Name="intRELModPres" />
@@ -264,6 +360,17 @@
           <Property Name="intRELModPres" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="intModalidadID" Type="int" />
           <Property Name="intPrestacionID" Type="int" />
+          <Property Name="bitActivo" Type="bit" />
+          <Property Name="datFecha" Type="datetime" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="tbl_REL_PacienteCita">
+          <Key>
+            <PropertyRef Name="intRELPacienteCItaID" />
+          </Key>
+          <Property Name="intRELPacienteCItaID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="intPacienteID" Type="bigint" />
+          <Property Name="intCitaID" Type="bigint" />
           <Property Name="bitActivo" Type="bit" />
           <Property Name="datFecha" Type="datetime" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
@@ -279,6 +386,18 @@
           <Property Name="datFecha" Type="datetime" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
         </EntityType>
+        <Association Name="FK_CAT_CodigoPostal_CAT_Municipio">
+          <End Role="tbl_CAT_Municipio" Type="Self.tbl_CAT_Municipio" Multiplicity="0..1" />
+          <End Role="tbl_CAT_CodigoPostal" Type="Self.tbl_CAT_CodigoPostal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_Municipio">
+              <PropertyRef Name="intMunicipioID" />
+            </Principal>
+            <Dependent Role="tbl_CAT_CodigoPostal">
+              <PropertyRef Name="intMunicipioID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_CAT_Equipo_CAT_Modalidad">
           <End Role="tbl_CAT_Modalidad" Type="Self.tbl_CAT_Modalidad" Multiplicity="0..1" />
           <End Role="tbl_CAT_Equipo" Type="Self.tbl_CAT_Equipo" Multiplicity="*" />
@@ -291,6 +410,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_CAT_Municipio_CAT_Estado">
+          <End Role="tbl_CAT_Estado" Type="Self.tbl_CAT_Estado" Multiplicity="0..1" />
+          <End Role="tbl_CAT_Municipio" Type="Self.tbl_CAT_Municipio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_Estado">
+              <PropertyRef Name="intEstadoID" />
+            </Principal>
+            <Dependent Role="tbl_CAT_Municipio">
+              <PropertyRef Name="intEstadoID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_CAT_Usuario_CAT_TipoUsuario">
           <End Role="tbl_CAT_TipoUsuario" Type="Self.tbl_CAT_TipoUsuario" Multiplicity="0..1" />
           <End Role="tbl_CAT_Usuario" Type="Self.tbl_CAT_Usuario" Multiplicity="*" />
@@ -300,6 +431,42 @@
             </Principal>
             <Dependent Role="tbl_CAT_Usuario">
               <PropertyRef Name="intTipoUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DET_DireccionPaciente_CAT_CodigoPostal">
+          <End Role="tbl_CAT_CodigoPostal" Type="Self.tbl_CAT_CodigoPostal" Multiplicity="0..1" />
+          <End Role="tbl_DET_DireccionPaciente" Type="Self.tbl_DET_DireccionPaciente" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_CodigoPostal">
+              <PropertyRef Name="intCodigoPostalID" />
+            </Principal>
+            <Dependent Role="tbl_DET_DireccionPaciente">
+              <PropertyRef Name="intCodigoPostalID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DET_DireccionPaciente_MST_Paciente">
+          <End Role="tbl_MST_Paciente" Type="Self.tbl_MST_Paciente" Multiplicity="0..1" />
+          <End Role="tbl_DET_DireccionPaciente" Type="Self.tbl_DET_DireccionPaciente" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_MST_Paciente">
+              <PropertyRef Name="intPacienteID" />
+            </Principal>
+            <Dependent Role="tbl_DET_DireccionPaciente">
+              <PropertyRef Name="intPacienteID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DET_Paciente_MST_Pacient">
+          <End Role="tbl_MST_Paciente" Type="Self.tbl_MST_Paciente" Multiplicity="0..1" />
+          <End Role="tbl_DET_Paciente" Type="Self.tbl_DET_Paciente" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_MST_Paciente">
+              <PropertyRef Name="intPacienteID" />
+            </Principal>
+            <Dependent Role="tbl_DET_Paciente">
+              <PropertyRef Name="intPacienteID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -339,6 +506,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_MST_Cita_CAT_EstatusCita">
+          <End Role="tbl_CAT_EstatusCita" Type="Self.tbl_CAT_EstatusCita" Multiplicity="0..1" />
+          <End Role="tbl_MST_Cita" Type="Self.tbl_MST_Cita" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_EstatusCita">
+              <PropertyRef Name="intEstatusCita" />
+            </Principal>
+            <Dependent Role="tbl_MST_Cita">
+              <PropertyRef Name="intEstatusCita" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MST_Cita_CAT_InstitucionProc">
+          <End Role="tbl_CAT_InstitucionProcedencia" Type="Self.tbl_CAT_InstitucionProcedencia" Multiplicity="0..1" />
+          <End Role="tbl_MST_Cita" Type="Self.tbl_MST_Cita" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_InstitucionProcedencia">
+              <PropertyRef Name="intInstitucionID" />
+            </Principal>
+            <Dependent Role="tbl_MST_Cita">
+              <PropertyRef Name="intInstitucionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_MST_Paciente_CAT_Genero">
           <End Role="tbl_CAT_Genero" Type="Self.tbl_CAT_Genero" Multiplicity="0..1" />
           <End Role="tbl_MST_Paciente" Type="Self.tbl_MST_Paciente" Multiplicity="*" />
@@ -375,6 +566,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_REL_IdentificacionPaciente_CAT_Identificacion">
+          <End Role="tbl_CAT_Identificacion" Type="Self.tbl_CAT_Identificacion" Multiplicity="0..1" />
+          <End Role="tbl_REL_IdentificacionPaciente" Type="Self.tbl_REL_IdentificacionPaciente" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_Identificacion">
+              <PropertyRef Name="intIdentificacionID" />
+            </Principal>
+            <Dependent Role="tbl_REL_IdentificacionPaciente">
+              <PropertyRef Name="intIdentificacionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_REL_ModalidadPrestacion_CAT_Modalidad">
           <End Role="tbl_CAT_Modalidad" Type="Self.tbl_CAT_Modalidad" Multiplicity="0..1" />
           <End Role="tbl_REL_ModalidadPrestacion" Type="Self.tbl_REL_ModalidadPrestacion" Multiplicity="*" />
@@ -399,6 +602,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_REL_PacienteCita_MST_Cita">
+          <End Role="tbl_MST_Cita" Type="Self.tbl_MST_Cita" Multiplicity="0..1" />
+          <End Role="tbl_REL_PacienteCita" Type="Self.tbl_REL_PacienteCita" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_MST_Cita">
+              <PropertyRef Name="intCitaID" />
+            </Principal>
+            <Dependent Role="tbl_REL_PacienteCita">
+              <PropertyRef Name="intCitaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_REL_PacienteCita_MST_Paciente">
+          <End Role="tbl_MST_Paciente" Type="Self.tbl_MST_Paciente" Multiplicity="0..1" />
+          <End Role="tbl_REL_PacienteCita" Type="Self.tbl_REL_PacienteCita" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_MST_Paciente">
+              <PropertyRef Name="intPacienteID" />
+            </Principal>
+            <Dependent Role="tbl_REL_PacienteCita">
+              <PropertyRef Name="intPacienteID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_REL_TipoUsuarioBoton_CAT_Botones">
           <End Role="tbl_CAT_Botones" Type="Self.tbl_CAT_Botones" Multiplicity="0..1" />
           <End Role="tbl_REL_TipoUsuarioBoton" Type="Self.tbl_REL_TipoUsuarioBoton" Multiplicity="*" />
@@ -420,6 +647,18 @@
             </Principal>
             <Dependent Role="tbl_REL_TipoUsuarioBoton">
               <PropertyRef Name="intTipoUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TBL_REL__REFERENCE_TBL_MST_">
+          <End Role="tbl_MST_Paciente" Type="Self.tbl_MST_Paciente" Multiplicity="0..1" />
+          <End Role="tbl_REL_IdentificacionPaciente" Type="Self.tbl_REL_IdentificacionPaciente" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_MST_Paciente">
+              <PropertyRef Name="intPacienteID" />
+            </Principal>
+            <Dependent Role="tbl_REL_IdentificacionPaciente">
+              <PropertyRef Name="intPacienteID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -450,12 +689,16 @@
         <EntityContainer Name="RISLiteModelStoreContainer">
           <EntitySet Name="tbl_CAT_Botones" EntityType="Self.tbl_CAT_Botones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_Catalogo" EntityType="Self.tbl_CAT_Catalogo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_CAT_CodigoPostal" EntityType="Self.tbl_CAT_CodigoPostal" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_Equipo" EntityType="Self.tbl_CAT_Equipo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_CAT_Estado" EntityType="Self.tbl_CAT_Estado" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_EstatusCita" EntityType="Self.tbl_CAT_EstatusCita" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_EstatusEstudio" EntityType="Self.tbl_CAT_EstatusEstudio" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_Genero" EntityType="Self.tbl_CAT_Genero" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_CAT_Identificacion" EntityType="Self.tbl_CAT_Identificacion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_InstitucionProcedencia" EntityType="Self.tbl_CAT_InstitucionProcedencia" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_Modalidad" EntityType="Self.tbl_CAT_Modalidad" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_CAT_Municipio" EntityType="Self.tbl_CAT_Municipio" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_Prestacion" EntityType="Self.tbl_CAT_Prestacion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_TipoMensaje" EntityType="Self.tbl_CAT_TipoMensaje" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_TipoMovimiento" EntityType="Self.tbl_CAT_TipoMovimiento" Schema="dbo" store:Type="Tables" />
@@ -465,20 +708,45 @@
           <EntitySet Name="tbl_Conf_CorreoSitio" EntityType="Self.tbl_Conf_CorreoSitio" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CONFIG_VariablesAdiCita" EntityType="Self.tbl_CONFIG_VariablesAdiCita" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CONFIG_VariablesAdiPaciente" EntityType="Self.tbl_CONFIG_VariablesAdiPaciente" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_DET_DireccionPaciente" EntityType="Self.tbl_DET_DireccionPaciente" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_DET_Paciente" EntityType="Self.tbl_DET_Paciente" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_DET_PacienteDinamico" EntityType="Self.tbl_DET_PacienteDinamico" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_MST_Bitacora" EntityType="Self.tbl_MST_Bitacora" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_MST_Cita" EntityType="Self.tbl_MST_Cita" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_MST_ConfiguracionSistema" EntityType="Self.tbl_MST_ConfiguracionSistema" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_MST_Paciente" EntityType="Self.tbl_MST_Paciente" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_REL_BotonVista" EntityType="Self.tbl_REL_BotonVista" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_REL_IdentificacionPaciente" EntityType="Self.tbl_REL_IdentificacionPaciente" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_REL_ModalidadPrestacion" EntityType="Self.tbl_REL_ModalidadPrestacion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_REL_PacienteCita" EntityType="Self.tbl_REL_PacienteCita" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_REL_TipoUsuarioBoton" EntityType="Self.tbl_REL_TipoUsuarioBoton" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_CAT_CodigoPostal_CAT_Municipio" Association="Self.FK_CAT_CodigoPostal_CAT_Municipio">
+            <End Role="tbl_CAT_Municipio" EntitySet="tbl_CAT_Municipio" />
+            <End Role="tbl_CAT_CodigoPostal" EntitySet="tbl_CAT_CodigoPostal" />
+          </AssociationSet>
           <AssociationSet Name="FK_CAT_Equipo_CAT_Modalidad" Association="Self.FK_CAT_Equipo_CAT_Modalidad">
             <End Role="tbl_CAT_Modalidad" EntitySet="tbl_CAT_Modalidad" />
             <End Role="tbl_CAT_Equipo" EntitySet="tbl_CAT_Equipo" />
           </AssociationSet>
+          <AssociationSet Name="FK_CAT_Municipio_CAT_Estado" Association="Self.FK_CAT_Municipio_CAT_Estado">
+            <End Role="tbl_CAT_Estado" EntitySet="tbl_CAT_Estado" />
+            <End Role="tbl_CAT_Municipio" EntitySet="tbl_CAT_Municipio" />
+          </AssociationSet>
           <AssociationSet Name="FK_CAT_Usuario_CAT_TipoUsuario" Association="Self.FK_CAT_Usuario_CAT_TipoUsuario">
             <End Role="tbl_CAT_TipoUsuario" EntitySet="tbl_CAT_TipoUsuario" />
             <End Role="tbl_CAT_Usuario" EntitySet="tbl_CAT_Usuario" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DET_DireccionPaciente_CAT_CodigoPostal" Association="Self.FK_DET_DireccionPaciente_CAT_CodigoPostal">
+            <End Role="tbl_CAT_CodigoPostal" EntitySet="tbl_CAT_CodigoPostal" />
+            <End Role="tbl_DET_DireccionPaciente" EntitySet="tbl_DET_DireccionPaciente" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DET_DireccionPaciente_MST_Paciente" Association="Self.FK_DET_DireccionPaciente_MST_Paciente">
+            <End Role="tbl_MST_Paciente" EntitySet="tbl_MST_Paciente" />
+            <End Role="tbl_DET_DireccionPaciente" EntitySet="tbl_DET_DireccionPaciente" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DET_Paciente_MST_Pacient" Association="Self.FK_DET_Paciente_MST_Pacient">
+            <End Role="tbl_MST_Paciente" EntitySet="tbl_MST_Paciente" />
+            <End Role="tbl_DET_Paciente" EntitySet="tbl_DET_Paciente" />
           </AssociationSet>
           <AssociationSet Name="FK_DET_PacienteDinamico_CONFIG_VariableAdiPaciente" Association="Self.FK_DET_PacienteDinamico_CONFIG_VariableAdiPaciente">
             <End Role="tbl_CONFIG_VariablesAdiPaciente" EntitySet="tbl_CONFIG_VariablesAdiPaciente" />
@@ -492,6 +760,14 @@
             <End Role="tbl_CAT_TipoMensaje" EntitySet="tbl_CAT_TipoMensaje" />
             <End Role="tbl_MST_Bitacora" EntitySet="tbl_MST_Bitacora" />
           </AssociationSet>
+          <AssociationSet Name="FK_MST_Cita_CAT_EstatusCita" Association="Self.FK_MST_Cita_CAT_EstatusCita">
+            <End Role="tbl_CAT_EstatusCita" EntitySet="tbl_CAT_EstatusCita" />
+            <End Role="tbl_MST_Cita" EntitySet="tbl_MST_Cita" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MST_Cita_CAT_InstitucionProc" Association="Self.FK_MST_Cita_CAT_InstitucionProc">
+            <End Role="tbl_CAT_InstitucionProcedencia" EntitySet="tbl_CAT_InstitucionProcedencia" />
+            <End Role="tbl_MST_Cita" EntitySet="tbl_MST_Cita" />
+          </AssociationSet>
           <AssociationSet Name="FK_MST_Paciente_CAT_Genero" Association="Self.FK_MST_Paciente_CAT_Genero">
             <End Role="tbl_CAT_Genero" EntitySet="tbl_CAT_Genero" />
             <End Role="tbl_MST_Paciente" EntitySet="tbl_MST_Paciente" />
@@ -504,6 +780,10 @@
             <End Role="tbl_REL_TipoUsuarioBoton" EntitySet="tbl_REL_TipoUsuarioBoton" />
             <End Role="tbl_REL_BotonVista" EntitySet="tbl_REL_BotonVista" />
           </AssociationSet>
+          <AssociationSet Name="FK_REL_IdentificacionPaciente_CAT_Identificacion" Association="Self.FK_REL_IdentificacionPaciente_CAT_Identificacion">
+            <End Role="tbl_CAT_Identificacion" EntitySet="tbl_CAT_Identificacion" />
+            <End Role="tbl_REL_IdentificacionPaciente" EntitySet="tbl_REL_IdentificacionPaciente" />
+          </AssociationSet>
           <AssociationSet Name="FK_REL_ModalidadPrestacion_CAT_Modalidad" Association="Self.FK_REL_ModalidadPrestacion_CAT_Modalidad">
             <End Role="tbl_CAT_Modalidad" EntitySet="tbl_CAT_Modalidad" />
             <End Role="tbl_REL_ModalidadPrestacion" EntitySet="tbl_REL_ModalidadPrestacion" />
@@ -512,6 +792,14 @@
             <End Role="tbl_CAT_Prestacion" EntitySet="tbl_CAT_Prestacion" />
             <End Role="tbl_REL_ModalidadPrestacion" EntitySet="tbl_REL_ModalidadPrestacion" />
           </AssociationSet>
+          <AssociationSet Name="FK_REL_PacienteCita_MST_Cita" Association="Self.FK_REL_PacienteCita_MST_Cita">
+            <End Role="tbl_MST_Cita" EntitySet="tbl_MST_Cita" />
+            <End Role="tbl_REL_PacienteCita" EntitySet="tbl_REL_PacienteCita" />
+          </AssociationSet>
+          <AssociationSet Name="FK_REL_PacienteCita_MST_Paciente" Association="Self.FK_REL_PacienteCita_MST_Paciente">
+            <End Role="tbl_MST_Paciente" EntitySet="tbl_MST_Paciente" />
+            <End Role="tbl_REL_PacienteCita" EntitySet="tbl_REL_PacienteCita" />
+          </AssociationSet>
           <AssociationSet Name="FK_REL_TipoUsuarioBoton_CAT_Botones" Association="Self.FK_REL_TipoUsuarioBoton_CAT_Botones">
             <End Role="tbl_CAT_Botones" EntitySet="tbl_CAT_Botones" />
             <End Role="tbl_REL_TipoUsuarioBoton" EntitySet="tbl_REL_TipoUsuarioBoton" />
@@ -519,6 +807,10 @@
           <AssociationSet Name="FK_REL_TipoUsuarioBoton_CAT_TipoUsuario" Association="Self.FK_REL_TipoUsuarioBoton_CAT_TipoUsuario">
             <End Role="tbl_CAT_TipoUsuario" EntitySet="tbl_CAT_TipoUsuario" />
             <End Role="tbl_REL_TipoUsuarioBoton" EntitySet="tbl_REL_TipoUsuarioBoton" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TBL_REL__REFERENCE_TBL_MST_" Association="Self.FK_TBL_REL__REFERENCE_TBL_MST_">
+            <End Role="tbl_MST_Paciente" EntitySet="tbl_MST_Paciente" />
+            <End Role="tbl_REL_IdentificacionPaciente" EntitySet="tbl_REL_IdentificacionPaciente" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -621,6 +913,59 @@
           <AssociationSet Name="FK_CAT_Equipo_CAT_Modalidad" Association="RISLiteModel.FK_CAT_Equipo_CAT_Modalidad">
             <End Role="tbl_CAT_Modalidad" EntitySet="tbl_CAT_Modalidad" />
             <End Role="tbl_CAT_Equipo" EntitySet="tbl_CAT_Equipo" />
+          </AssociationSet>
+          <EntitySet Name="tbl_CAT_CodigoPostal" EntityType="RISLiteModel.tbl_CAT_CodigoPostal" />
+          <EntitySet Name="tbl_CAT_Estado" EntityType="RISLiteModel.tbl_CAT_Estado" />
+          <EntitySet Name="tbl_CAT_Identificacion" EntityType="RISLiteModel.tbl_CAT_Identificacion" />
+          <EntitySet Name="tbl_CAT_Municipio" EntityType="RISLiteModel.tbl_CAT_Municipio" />
+          <EntitySet Name="tbl_DET_DireccionPaciente" EntityType="RISLiteModel.tbl_DET_DireccionPaciente" />
+          <EntitySet Name="tbl_DET_Paciente" EntityType="RISLiteModel.tbl_DET_Paciente" />
+          <EntitySet Name="tbl_MST_Cita" EntityType="RISLiteModel.tbl_MST_Cita" />
+          <EntitySet Name="tbl_REL_IdentificacionPaciente" EntityType="RISLiteModel.tbl_REL_IdentificacionPaciente" />
+          <EntitySet Name="tbl_REL_PacienteCita" EntityType="RISLiteModel.tbl_REL_PacienteCita" />
+          <AssociationSet Name="FK_CAT_CodigoPostal_CAT_Municipio" Association="RISLiteModel.FK_CAT_CodigoPostal_CAT_Municipio">
+            <End Role="tbl_CAT_Municipio" EntitySet="tbl_CAT_Municipio" />
+            <End Role="tbl_CAT_CodigoPostal" EntitySet="tbl_CAT_CodigoPostal" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DET_DireccionPaciente_CAT_CodigoPostal" Association="RISLiteModel.FK_DET_DireccionPaciente_CAT_CodigoPostal">
+            <End Role="tbl_CAT_CodigoPostal" EntitySet="tbl_CAT_CodigoPostal" />
+            <End Role="tbl_DET_DireccionPaciente" EntitySet="tbl_DET_DireccionPaciente" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CAT_Municipio_CAT_Estado" Association="RISLiteModel.FK_CAT_Municipio_CAT_Estado">
+            <End Role="tbl_CAT_Estado" EntitySet="tbl_CAT_Estado" />
+            <End Role="tbl_CAT_Municipio" EntitySet="tbl_CAT_Municipio" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MST_Cita_CAT_EstatusCita" Association="RISLiteModel.FK_MST_Cita_CAT_EstatusCita">
+            <End Role="tbl_CAT_EstatusCita" EntitySet="tbl_CAT_EstatusCita" />
+            <End Role="tbl_MST_Cita" EntitySet="tbl_MST_Cita" />
+          </AssociationSet>
+          <AssociationSet Name="FK_REL_IdentificacionPaciente_CAT_Identificacion" Association="RISLiteModel.FK_REL_IdentificacionPaciente_CAT_Identificacion">
+            <End Role="tbl_CAT_Identificacion" EntitySet="tbl_CAT_Identificacion" />
+            <End Role="tbl_REL_IdentificacionPaciente" EntitySet="tbl_REL_IdentificacionPaciente" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MST_Cita_CAT_InstitucionProc" Association="RISLiteModel.FK_MST_Cita_CAT_InstitucionProc">
+            <End Role="tbl_CAT_InstitucionProcedencia" EntitySet="tbl_CAT_InstitucionProcedencia" />
+            <End Role="tbl_MST_Cita" EntitySet="tbl_MST_Cita" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DET_DireccionPaciente_MST_Paciente" Association="RISLiteModel.FK_DET_DireccionPaciente_MST_Paciente">
+            <End Role="tbl_MST_Paciente" EntitySet="tbl_MST_Paciente" />
+            <End Role="tbl_DET_DireccionPaciente" EntitySet="tbl_DET_DireccionPaciente" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DET_Paciente_MST_Pacient" Association="RISLiteModel.FK_DET_Paciente_MST_Pacient">
+            <End Role="tbl_MST_Paciente" EntitySet="tbl_MST_Paciente" />
+            <End Role="tbl_DET_Paciente" EntitySet="tbl_DET_Paciente" />
+          </AssociationSet>
+          <AssociationSet Name="FK_REL_PacienteCita_MST_Cita" Association="RISLiteModel.FK_REL_PacienteCita_MST_Cita">
+            <End Role="tbl_MST_Cita" EntitySet="tbl_MST_Cita" />
+            <End Role="tbl_REL_PacienteCita" EntitySet="tbl_REL_PacienteCita" />
+          </AssociationSet>
+          <AssociationSet Name="FK_REL_PacienteCita_MST_Paciente" Association="RISLiteModel.FK_REL_PacienteCita_MST_Paciente">
+            <End Role="tbl_MST_Paciente" EntitySet="tbl_MST_Paciente" />
+            <End Role="tbl_REL_PacienteCita" EntitySet="tbl_REL_PacienteCita" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TBL_REL__REFERENCE_TBL_MST_" Association="RISLiteModel.FK_TBL_REL__REFERENCE_TBL_MST_">
+            <End Role="tbl_MST_Paciente" EntitySet="tbl_MST_Paciente" />
+            <End Role="tbl_REL_IdentificacionPaciente" EntitySet="tbl_REL_IdentificacionPaciente" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="tbl_CAT_TipoMensaje">
@@ -747,6 +1092,7 @@
           <Property Name="bitActivo" Type="Boolean" />
           <Property Name="datFecha" Type="DateTime" Precision="3" />
           <Property Name="vchUserAdmin" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_MST_Cita" Relationship="RISLiteModel.FK_MST_Cita_CAT_EstatusCita" FromRole="tbl_CAT_EstatusCita" ToRole="tbl_MST_Cita" />
         </EntityType>
         <EntityType Name="tbl_CAT_EstatusEstudio">
           <Key>
@@ -778,6 +1124,7 @@
           <Property Name="bitActivo" Type="Boolean" />
           <Property Name="datFecha" Type="DateTime" Precision="3" />
           <Property Name="vchUserAdmin" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_MST_Cita" Relationship="RISLiteModel.FK_MST_Cita_CAT_InstitucionProc" FromRole="tbl_CAT_InstitucionProcedencia" ToRole="tbl_MST_Cita" />
         </EntityType>
         <EntityType Name="tbl_CAT_TipoMovimiento">
           <Key>
@@ -918,6 +1265,10 @@
           <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="tbl_CAT_Genero" Relationship="RISLiteModel.FK_MST_Paciente_CAT_Genero" FromRole="tbl_MST_Paciente" ToRole="tbl_CAT_Genero" />
           <NavigationProperty Name="tbl_DET_PacienteDinamico" Relationship="RISLiteModel.FK_DET_PacienteDinamico_MST_Paciente" FromRole="tbl_MST_Paciente" ToRole="tbl_DET_PacienteDinamico" />
+          <NavigationProperty Name="tbl_DET_DireccionPaciente" Relationship="RISLiteModel.FK_DET_DireccionPaciente_MST_Paciente" FromRole="tbl_MST_Paciente" ToRole="tbl_DET_DireccionPaciente" />
+          <NavigationProperty Name="tbl_DET_Paciente" Relationship="RISLiteModel.FK_DET_Paciente_MST_Pacient" FromRole="tbl_MST_Paciente" ToRole="tbl_DET_Paciente" />
+          <NavigationProperty Name="tbl_REL_PacienteCita" Relationship="RISLiteModel.FK_REL_PacienteCita_MST_Paciente" FromRole="tbl_MST_Paciente" ToRole="tbl_REL_PacienteCita" />
+          <NavigationProperty Name="tbl_REL_IdentificacionPaciente" Relationship="RISLiteModel.FK_TBL_REL__REFERENCE_TBL_MST_" FromRole="tbl_MST_Paciente" ToRole="tbl_REL_IdentificacionPaciente" />
         </EntityType>
         <Association Name="FK_MST_Paciente_CAT_Genero">
           <End Type="RISLiteModel.tbl_CAT_Genero" Role="tbl_CAT_Genero" Multiplicity="0..1" />
@@ -1102,6 +1453,261 @@
             </Principal>
             <Dependent Role="tbl_CAT_Equipo">
               <PropertyRef Name="intModalidadID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tbl_CAT_CodigoPostal">
+          <Key>
+            <PropertyRef Name="intCodigoPostalID" />
+          </Key>
+          <Property Name="intCodigoPostalID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="intMunicipioID" Type="Int32" />
+          <Property Name="vchCodigoPostal" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="vchColonia" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_CAT_Municipio" Relationship="RISLiteModel.FK_CAT_CodigoPostal_CAT_Municipio" FromRole="tbl_CAT_CodigoPostal" ToRole="tbl_CAT_Municipio" />
+          <NavigationProperty Name="tbl_DET_DireccionPaciente" Relationship="RISLiteModel.FK_DET_DireccionPaciente_CAT_CodigoPostal" FromRole="tbl_CAT_CodigoPostal" ToRole="tbl_DET_DireccionPaciente" />
+        </EntityType>
+        <EntityType Name="tbl_CAT_Estado">
+          <Key>
+            <PropertyRef Name="intEstadoID" />
+          </Key>
+          <Property Name="intEstadoID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vchEstado" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_CAT_Municipio" Relationship="RISLiteModel.FK_CAT_Municipio_CAT_Estado" FromRole="tbl_CAT_Estado" ToRole="tbl_CAT_Municipio" />
+        </EntityType>
+        <EntityType Name="tbl_CAT_Identificacion">
+          <Key>
+            <PropertyRef Name="intIdentificacionID" />
+          </Key>
+          <Property Name="intIdentificacionID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vchNombreId" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_REL_IdentificacionPaciente" Relationship="RISLiteModel.FK_REL_IdentificacionPaciente_CAT_Identificacion" FromRole="tbl_CAT_Identificacion" ToRole="tbl_REL_IdentificacionPaciente" />
+        </EntityType>
+        <EntityType Name="tbl_CAT_Municipio">
+          <Key>
+            <PropertyRef Name="intMunicipioID" />
+          </Key>
+          <Property Name="intMunicipioID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="intEstadoID" Type="Int32" />
+          <Property Name="vchMunicipio" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_CAT_CodigoPostal" Relationship="RISLiteModel.FK_CAT_CodigoPostal_CAT_Municipio" FromRole="tbl_CAT_Municipio" ToRole="tbl_CAT_CodigoPostal" />
+          <NavigationProperty Name="tbl_CAT_Estado" Relationship="RISLiteModel.FK_CAT_Municipio_CAT_Estado" FromRole="tbl_CAT_Municipio" ToRole="tbl_CAT_Estado" />
+        </EntityType>
+        <EntityType Name="tbl_DET_DireccionPaciente">
+          <Key>
+            <PropertyRef Name="intDireccionID" />
+          </Key>
+          <Property Name="intDireccionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="intPacienteID" Type="Int64" />
+          <Property Name="intCodigoPostalID" Type="Int32" />
+          <Property Name="vchCalle" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="vchNumero" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_CAT_CodigoPostal" Relationship="RISLiteModel.FK_DET_DireccionPaciente_CAT_CodigoPostal" FromRole="tbl_DET_DireccionPaciente" ToRole="tbl_CAT_CodigoPostal" />
+          <NavigationProperty Name="tbl_MST_Paciente" Relationship="RISLiteModel.FK_DET_DireccionPaciente_MST_Paciente" FromRole="tbl_DET_DireccionPaciente" ToRole="tbl_MST_Paciente" />
+        </EntityType>
+        <EntityType Name="tbl_DET_Paciente">
+          <Key>
+            <PropertyRef Name="intDETPacienteID" />
+          </Key>
+          <Property Name="intDETPacienteID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="intPacienteID" Type="Int64" />
+          <Property Name="vchNumeroContacto" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="vchEmail" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="vchNombreAcompaniante" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="vchContactoAcompaniante" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="vchParentesco" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_MST_Paciente" Relationship="RISLiteModel.FK_DET_Paciente_MST_Pacient" FromRole="tbl_DET_Paciente" ToRole="tbl_MST_Paciente" />
+        </EntityType>
+        <EntityType Name="tbl_MST_Cita">
+          <Key>
+            <PropertyRef Name="intCitaID" />
+          </Key>
+          <Property Name="intCitaID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="intMedicoTraID" Type="Int32" />
+          <Property Name="intInstitucionID" Type="Int32" />
+          <Property Name="intEstatusCita" Type="Int32" />
+          <Property Name="datFechaCita" Type="DateTime" Precision="3" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="Binary" MaxLength="100" FixedLength="false" />
+          <NavigationProperty Name="tbl_CAT_EstatusCita" Relationship="RISLiteModel.FK_MST_Cita_CAT_EstatusCita" FromRole="tbl_MST_Cita" ToRole="tbl_CAT_EstatusCita" />
+          <NavigationProperty Name="tbl_CAT_InstitucionProcedencia" Relationship="RISLiteModel.FK_MST_Cita_CAT_InstitucionProc" FromRole="tbl_MST_Cita" ToRole="tbl_CAT_InstitucionProcedencia" />
+          <NavigationProperty Name="tbl_REL_PacienteCita" Relationship="RISLiteModel.FK_REL_PacienteCita_MST_Cita" FromRole="tbl_MST_Cita" ToRole="tbl_REL_PacienteCita" />
+        </EntityType>
+        <EntityType Name="tbl_REL_IdentificacionPaciente">
+          <Key>
+            <PropertyRef Name="intRELIdenPacienteID" />
+          </Key>
+          <Property Name="intRELIdenPacienteID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="intIdentificacionID" Type="Int64" />
+          <Property Name="intPacienteID" Type="Int64" />
+          <Property Name="vchValor" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_CAT_Identificacion" Relationship="RISLiteModel.FK_REL_IdentificacionPaciente_CAT_Identificacion" FromRole="tbl_REL_IdentificacionPaciente" ToRole="tbl_CAT_Identificacion" />
+          <NavigationProperty Name="tbl_MST_Paciente" Relationship="RISLiteModel.FK_TBL_REL__REFERENCE_TBL_MST_" FromRole="tbl_REL_IdentificacionPaciente" ToRole="tbl_MST_Paciente" />
+        </EntityType>
+        <EntityType Name="tbl_REL_PacienteCita">
+          <Key>
+            <PropertyRef Name="intRELPacienteCItaID" />
+          </Key>
+          <Property Name="intRELPacienteCItaID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="intPacienteID" Type="Int64" />
+          <Property Name="intCitaID" Type="Int64" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_MST_Cita" Relationship="RISLiteModel.FK_REL_PacienteCita_MST_Cita" FromRole="tbl_REL_PacienteCita" ToRole="tbl_MST_Cita" />
+          <NavigationProperty Name="tbl_MST_Paciente" Relationship="RISLiteModel.FK_REL_PacienteCita_MST_Paciente" FromRole="tbl_REL_PacienteCita" ToRole="tbl_MST_Paciente" />
+        </EntityType>
+        <Association Name="FK_CAT_CodigoPostal_CAT_Municipio">
+          <End Type="RISLiteModel.tbl_CAT_Municipio" Role="tbl_CAT_Municipio" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_CAT_CodigoPostal" Role="tbl_CAT_CodigoPostal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_Municipio">
+              <PropertyRef Name="intMunicipioID" />
+            </Principal>
+            <Dependent Role="tbl_CAT_CodigoPostal">
+              <PropertyRef Name="intMunicipioID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DET_DireccionPaciente_CAT_CodigoPostal">
+          <End Type="RISLiteModel.tbl_CAT_CodigoPostal" Role="tbl_CAT_CodigoPostal" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_DET_DireccionPaciente" Role="tbl_DET_DireccionPaciente" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_CodigoPostal">
+              <PropertyRef Name="intCodigoPostalID" />
+            </Principal>
+            <Dependent Role="tbl_DET_DireccionPaciente">
+              <PropertyRef Name="intCodigoPostalID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CAT_Municipio_CAT_Estado">
+          <End Type="RISLiteModel.tbl_CAT_Estado" Role="tbl_CAT_Estado" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_CAT_Municipio" Role="tbl_CAT_Municipio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_Estado">
+              <PropertyRef Name="intEstadoID" />
+            </Principal>
+            <Dependent Role="tbl_CAT_Municipio">
+              <PropertyRef Name="intEstadoID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MST_Cita_CAT_EstatusCita">
+          <End Type="RISLiteModel.tbl_CAT_EstatusCita" Role="tbl_CAT_EstatusCita" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_MST_Cita" Role="tbl_MST_Cita" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_EstatusCita">
+              <PropertyRef Name="intEstatusCita" />
+            </Principal>
+            <Dependent Role="tbl_MST_Cita">
+              <PropertyRef Name="intEstatusCita" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_REL_IdentificacionPaciente_CAT_Identificacion">
+          <End Type="RISLiteModel.tbl_CAT_Identificacion" Role="tbl_CAT_Identificacion" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_REL_IdentificacionPaciente" Role="tbl_REL_IdentificacionPaciente" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_Identificacion">
+              <PropertyRef Name="intIdentificacionID" />
+            </Principal>
+            <Dependent Role="tbl_REL_IdentificacionPaciente">
+              <PropertyRef Name="intIdentificacionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MST_Cita_CAT_InstitucionProc">
+          <End Type="RISLiteModel.tbl_CAT_InstitucionProcedencia" Role="tbl_CAT_InstitucionProcedencia" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_MST_Cita" Role="tbl_MST_Cita" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_InstitucionProcedencia">
+              <PropertyRef Name="intInstitucionID" />
+            </Principal>
+            <Dependent Role="tbl_MST_Cita">
+              <PropertyRef Name="intInstitucionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DET_DireccionPaciente_MST_Paciente">
+          <End Type="RISLiteModel.tbl_MST_Paciente" Role="tbl_MST_Paciente" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_DET_DireccionPaciente" Role="tbl_DET_DireccionPaciente" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_MST_Paciente">
+              <PropertyRef Name="intPacienteID" />
+            </Principal>
+            <Dependent Role="tbl_DET_DireccionPaciente">
+              <PropertyRef Name="intPacienteID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DET_Paciente_MST_Pacient">
+          <End Type="RISLiteModel.tbl_MST_Paciente" Role="tbl_MST_Paciente" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_DET_Paciente" Role="tbl_DET_Paciente" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_MST_Paciente">
+              <PropertyRef Name="intPacienteID" />
+            </Principal>
+            <Dependent Role="tbl_DET_Paciente">
+              <PropertyRef Name="intPacienteID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_REL_PacienteCita_MST_Cita">
+          <End Type="RISLiteModel.tbl_MST_Cita" Role="tbl_MST_Cita" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_REL_PacienteCita" Role="tbl_REL_PacienteCita" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_MST_Cita">
+              <PropertyRef Name="intCitaID" />
+            </Principal>
+            <Dependent Role="tbl_REL_PacienteCita">
+              <PropertyRef Name="intCitaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_REL_PacienteCita_MST_Paciente">
+          <End Type="RISLiteModel.tbl_MST_Paciente" Role="tbl_MST_Paciente" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_REL_PacienteCita" Role="tbl_REL_PacienteCita" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_MST_Paciente">
+              <PropertyRef Name="intPacienteID" />
+            </Principal>
+            <Dependent Role="tbl_REL_PacienteCita">
+              <PropertyRef Name="intPacienteID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TBL_REL__REFERENCE_TBL_MST_">
+          <End Type="RISLiteModel.tbl_MST_Paciente" Role="tbl_MST_Paciente" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_REL_IdentificacionPaciente" Role="tbl_REL_IdentificacionPaciente" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_MST_Paciente">
+              <PropertyRef Name="intPacienteID" />
+            </Principal>
+            <Dependent Role="tbl_REL_IdentificacionPaciente">
+              <PropertyRef Name="intPacienteID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1470,6 +2076,122 @@
                 <ScalarProperty Name="vchNombreEquipo" ColumnName="vchNombreEquipo" />
                 <ScalarProperty Name="intModalidadID" ColumnName="intModalidadID" />
                 <ScalarProperty Name="intEquipoID" ColumnName="intEquipoID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_CAT_CodigoPostal">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_CodigoPostal">
+              <MappingFragment StoreEntitySet="tbl_CAT_CodigoPostal">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="vchColonia" ColumnName="vchColonia" />
+                <ScalarProperty Name="vchCodigoPostal" ColumnName="vchCodigoPostal" />
+                <ScalarProperty Name="intMunicipioID" ColumnName="intMunicipioID" />
+                <ScalarProperty Name="intCodigoPostalID" ColumnName="intCodigoPostalID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_CAT_Estado">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_Estado">
+              <MappingFragment StoreEntitySet="tbl_CAT_Estado">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="vchEstado" ColumnName="vchEstado" />
+                <ScalarProperty Name="intEstadoID" ColumnName="intEstadoID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_CAT_Identificacion">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_Identificacion">
+              <MappingFragment StoreEntitySet="tbl_CAT_Identificacion">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="vchNombreId" ColumnName="vchNombreId" />
+                <ScalarProperty Name="intIdentificacionID" ColumnName="intIdentificacionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_CAT_Municipio">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_Municipio">
+              <MappingFragment StoreEntitySet="tbl_CAT_Municipio">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="vchMunicipio" ColumnName="vchMunicipio" />
+                <ScalarProperty Name="intEstadoID" ColumnName="intEstadoID" />
+                <ScalarProperty Name="intMunicipioID" ColumnName="intMunicipioID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_DET_DireccionPaciente">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_DET_DireccionPaciente">
+              <MappingFragment StoreEntitySet="tbl_DET_DireccionPaciente">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="vchNumero" ColumnName="vchNumero" />
+                <ScalarProperty Name="vchCalle" ColumnName="vchCalle" />
+                <ScalarProperty Name="intCodigoPostalID" ColumnName="intCodigoPostalID" />
+                <ScalarProperty Name="intPacienteID" ColumnName="intPacienteID" />
+                <ScalarProperty Name="intDireccionID" ColumnName="intDireccionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_DET_Paciente">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_DET_Paciente">
+              <MappingFragment StoreEntitySet="tbl_DET_Paciente">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="vchParentesco" ColumnName="vchParentesco" />
+                <ScalarProperty Name="vchContactoAcompaniante" ColumnName="vchContactoAcompaniante" />
+                <ScalarProperty Name="vchNombreAcompaniante" ColumnName="vchNombreAcompaniante" />
+                <ScalarProperty Name="vchEmail" ColumnName="vchEmail" />
+                <ScalarProperty Name="vchNumeroContacto" ColumnName="vchNumeroContacto" />
+                <ScalarProperty Name="intPacienteID" ColumnName="intPacienteID" />
+                <ScalarProperty Name="intDETPacienteID" ColumnName="intDETPacienteID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_MST_Cita">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_MST_Cita">
+              <MappingFragment StoreEntitySet="tbl_MST_Cita">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="datFechaCita" ColumnName="datFechaCita" />
+                <ScalarProperty Name="intEstatusCita" ColumnName="intEstatusCita" />
+                <ScalarProperty Name="intInstitucionID" ColumnName="intInstitucionID" />
+                <ScalarProperty Name="intMedicoTraID" ColumnName="intMedicoTraID" />
+                <ScalarProperty Name="intCitaID" ColumnName="intCitaID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_REL_IdentificacionPaciente">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_REL_IdentificacionPaciente">
+              <MappingFragment StoreEntitySet="tbl_REL_IdentificacionPaciente">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="vchValor" ColumnName="vchValor" />
+                <ScalarProperty Name="intPacienteID" ColumnName="intPacienteID" />
+                <ScalarProperty Name="intIdentificacionID" ColumnName="intIdentificacionID" />
+                <ScalarProperty Name="intRELIdenPacienteID" ColumnName="intRELIdenPacienteID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_REL_PacienteCita">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_REL_PacienteCita">
+              <MappingFragment StoreEntitySet="tbl_REL_PacienteCita">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="intCitaID" ColumnName="intCitaID" />
+                <ScalarProperty Name="intPacienteID" ColumnName="intPacienteID" />
+                <ScalarProperty Name="intRELPacienteCItaID" ColumnName="intRELPacienteCItaID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
