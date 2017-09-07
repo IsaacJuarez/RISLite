@@ -138,6 +138,18 @@ namespace Fuji.RISLite.Site.Services
 
         #region Paciente
         List<tbl_CAT_Genero> getListaGenero(CatalogoRequest request);
+
+        [OperationContract]
+        DireccionResponse getDireccionPaciente(DireccionRequest request);
+
+        [OperationContract]
+        PacienteResponse setPaciente(PacienteRequest request);
+
+        [OperationContract]
+        PacienteResponse getPacienteDetalle(PacienteRequest request);
+
+        [OperationContract]
+        PacienteResponse getBusquedaPacientes(PacienteRequest request);
         #endregion Paciente
     }
 }

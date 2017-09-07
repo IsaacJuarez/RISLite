@@ -1324,8 +1324,12 @@
     <Compile Include="Services\DataContract\ConfigEmailResponse.cs" />
     <Compile Include="Services\DataContract\ConfigSitioRequest.cs" />
     <Compile Include="Services\DataContract\ConfigSitioResponse.cs" />
+    <Compile Include="Services\DataContract\DireccionRequest.cs" />
+    <Compile Include="Services\DataContract\DireccionResponse.cs" />
     <Compile Include="Services\DataContract\EquipoRequest.cs" />
     <Compile Include="Services\DataContract\EquipoResponse.cs" />
+    <Compile Include="Services\DataContract\PacienteRequest.cs" />
+    <Compile Include="Services\DataContract\PacienteResponse.cs" />
     <Compile Include="Services\DataContract\PrestacionRequest.cs" />
     <Compile Include="Services\DataContract\PrestacionResponse.cs" />
     <Compile Include="Services\DataContract\TecnicoRequest.cs" />

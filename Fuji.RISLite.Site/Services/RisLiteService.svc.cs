@@ -408,6 +408,24 @@ namespace Fuji.RISLite.Site.Services
             return response;
         }
 
+        public List<tbl_CAT_Identificacion> getVariablesAdicionalID(VarAdicionalRequest request)
+        {
+            List<tbl_CAT_Identificacion> response = new List<tbl_CAT_Identificacion>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getVariablesAdicionalID(request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getVariablesAdicionalID: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
         public VarAdicionalResponse setAgregarVariable(VarAdicionalRequest request)
         {
             VarAdicionalResponse response = new VarAdicionalResponse();
@@ -743,6 +761,90 @@ namespace Fuji.RISLite.Site.Services
             catch (Exception egU)
             {
                 Log.EscribeLog("Existe un error en getListaGenero: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public DireccionResponse getDireccionPaciente(DireccionRequest request)
+        {
+            DireccionResponse response = new DireccionResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.lstDireccion = controller.getDireccionPaciente(request.vchCodigoPostal, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getDireccionPaciente: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public PacienteResponse setPaciente(PacienteRequest request)
+        {
+            PacienteResponse response = new PacienteResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    int intPacienteID = 0;
+                    response.Success = controller.setPaciente(request.mdlPaciente, request.mdlDireccion, request.mdlUser.vchUsuario, ref mensaje, ref intPacienteID);
+                    response.Mensaje = mensaje;
+                    response.intPacienteID = intPacienteID;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setPaciente: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public PacienteResponse getPacienteDetalle(PacienteRequest request)
+        {
+            PacienteResponse response = new PacienteResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    clsPaciente mdlPaciente = new clsPaciente();
+                    clsDireccion mdlDireccion = new clsDireccion();
+                    response.Success = controller.getPacienteDetalle(request.intPacienteID, request.mdlUser.vchUsuario, ref mdlPaciente, ref mdlDireccion, ref mensaje);
+                    response.Mensaje = mensaje;
+                    response.mdlDireccion = mdlDireccion;
+                    response.mdlPaciente = mdlPaciente;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getPacienteDetalle: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public PacienteResponse getBusquedaPacientes(PacienteRequest request)
+        {
+            PacienteResponse response = new PacienteResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response.lstCadenas = controller.getBusquedaPacientes(request.busqueda, request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getBusquedaPacientes: " + egU.Message, 3, "");
             }
             return response;
         }

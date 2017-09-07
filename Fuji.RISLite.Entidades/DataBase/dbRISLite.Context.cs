@@ -139,5 +139,14 @@ namespace Fuji.RISLite.Entidades.DataBase
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getPrestacionModalidad_Result>("stp_getPrestacionModalidad", intModalidadIdParameter);
         }
+    
+        public virtual ObjectResult<stp_getBusquedaPaciente_Result> stp_getBusquedaPaciente(string vchCadena)
+        {
+            var vchCadenaParameter = vchCadena != null ?
+                new ObjectParameter("vchCadena", vchCadena) :
+                new ObjectParameter("vchCadena", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getBusquedaPaciente_Result>("stp_getBusquedaPaciente", vchCadenaParameter);
+        }
     }
 }

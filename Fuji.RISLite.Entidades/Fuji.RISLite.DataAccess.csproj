@@ -48,6 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataBase\stp_getBusquedaPaciente_Result.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
     <Compile Include="DataBase\stp_getListaPaginas_Result.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>

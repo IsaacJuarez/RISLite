@@ -542,28 +542,105 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <%--<div class="col-lg-6 col-md-12 col-sm-12">
+                                            <div class="col-lg-6 col-md-12 col-sm-12">
                                                 <div class="widget-box">
 								                    <div class="widget-header">
-									                    <h4 class="widget-title">Estudio</h4>
-
-									                    <div class="widget-toolbar">
-										                    <a href="#" data-action="collapse">
-											                    <i class="ace-icon fa fa-chevron-up"></i>
-										                    </a>
-
-										                    <a href="#" data-action="close">
-											                    <i class="ace-icon fa fa-times"></i>
-										                    </a>
-									                    </div>
+									                    <h4 class="widget-title">Identificaciones Requeridas para el Paciente</h4>
 								                    </div>
 
 								                    <div class="widget-body">
 									                    <div class="widget-main">
+                                                            <div class="row form-group">
+                                                                <div class="col-lg-10 col-md-10 col-sm-10">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <asp:Label runat="server" Text="Nombre de la Identificación" AssociatedControlID="txtIdentificacion" Width="100%"></asp:Label>
+                                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator10" runat="server" ValidationGroup="vgAddVarId" ErrorMessage="* Campo requerido" ControlToValidate="txtIdentificacion" Text="* Campo requerido" ForeColor="Red"></asp:RequiredFieldValidator>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <asp:TextBox runat="server" Text="" CssClass="form-control" ID="txtIdentificacion" placeholder="Nombre de la Identificación"></asp:TextBox>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-2 col-md-2 col-sm-2 text-center">
+                                                                    <asp:Button runat="server" ID="btnAddVarID" Text="Guardar" OnClick="btnAddVarID_Click" CssClass="btn btn-primary" ValidationGroup="vgAddVarId"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <asp:UpdatePanel runat="server">
+                                                                    <ContentTemplate>
+                                                                        <asp:Panel runat="server">
+                                                                            <asp:GridView ID="grvVarID" runat="server" AllowPaging="true" CssClass="table table-striped table-bordered"
+                                                                                    PageSize="10" AutoGenerateColumns="false" OnRowDataBound="grvVarID_RowDataBound" Font-Size="10px"
+                                                                                    OnPageIndexChanging="grvVarID_PageIndexChanging" DataKeyNames="intIdentificacionID" OnRowCancelingEdit="grvVarID_RowCancelingEdit"
+                                                                                    OnRowCommand="grvVarID_RowCommand" OnRowEditing="grvVarID_RowEditing" OnRowUpdating="grvVarID_RowUpdating"
+                                                                                    EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
+                                                                                    <Columns>
+                                                                                        <asp:BoundField DataField="intIdentificacionID" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
+                                                                                        <asp:TemplateField HeaderText="Nombre Identificación">
+                                                                                            <ItemTemplate>
+                                                                                                <asp:Label runat="server" ID="lblNomVar" Text='<%#Eval("vchNombreID") %>' />
+                                                                                            </ItemTemplate>
+                                                                                            <EditItemTemplate>
+                                                                                                 <asp:TextBox ID="txtname" width="100%"  runat="server" Text='<%#Eval("vchNombreID") %>'/>
+                                                                                            </EditItemTemplate>
+                                                                                        </asp:TemplateField>
+                                                                                        
+                                                                                        <asp:TemplateField HeaderText="Editar" ItemStyle-HorizontalAlign="Center">
+                                                                                            <ItemTemplate>      
+                                                                                                <asp:LinkButton ID="btnVisualizar" CausesValidation="false" CommandName="Edit"  runat="server">
+                                                                                                    <i class="fa fa-pencil" aria-hidden="true" title="Editar" style="font-size:25px;"></i>
+                                                                                                </asp:LinkButton>
+                                                                                            </ItemTemplate>
+                                                                                            <EditItemTemplate>
+                                                                                                <asp:LinkButton ID="btnUpdateVarID" runat="server" CommandName="Update"  Text="Actualizar">
+                                                                                                    <i class="fa fa-floppy-o" aria-hidden="true"  title="Actualizar" style="font-size:25px;"></i>
+                                                                                                </asp:LinkButton>
+                                                                                                <asp:LinkButton ID="bntCancelEditID" runat="server" CommandName="Cancel"  Text="Cancelar">
+                                                                                                    <i class="fa fa-ban" aria-hidden="true" title="Cancelar" style="font-size:25px;"></i>
+                                                                                                </asp:LinkButton>
+                                                                                            </EditItemTemplate>
+                                                                                        </asp:TemplateField>
+                                                                                        <asp:TemplateField HeaderText="Estatus" ItemStyle-HorizontalAlign="Center">
+                                                                                            <ItemTemplate>
+                                                                                                <asp:ImageButton ID="imbEstatus" runat="server" BackColor="Transparent"  Height="25px" Width="25px" 
+                                                                                                    CommandArgument='<%#Eval("intIdentificacionID") %>' CommandName="Estatus" ToolTip="Cambia el estatus de la variable" />
+                                                                                            </ItemTemplate>
+                                                                                        </asp:TemplateField>
+                                                                                    </Columns>
+                                                                                    <PagerTemplate>
+                                                                                        <asp:Label ID="lblTemplate" runat="server" Text="Muestra Filas: " CssClass="Label" />
+                                                                                        <asp:DropDownList ID="ddlBandejaID" runat="server" AutoPostBack="true" CausesValidation="false"
+                                                                                            Enabled="true" OnSelectedIndexChanged="ddlBandejaID_SelectedIndexChanged">
+                                                                                                <asp:ListItem Value="10" />
+                                                                                                <asp:ListItem Value="15" />
+                                                                                                <asp:ListItem Value="20" />
+                                                                                        </asp:DropDownList>
+                                                                                        &nbsp;Página
+                                                                                        <asp:TextBox ID="txtBandejaID" runat="server" AutoPostBack="true" OnTextChanged="txtBandejaID_TextChanged"
+                                                                                            Width="40" MaxLength="10" />
+                                                                                        de
+                                                                                        <asp:Label ID="lblBandejaTotal" runat="server" />
+                                                                                        &nbsp;
+                                                                                        <asp:Button ID="btnBandeja_I" runat="server" CommandName="Page" CausesValidation="false"
+                                                                                            ToolTip="Página Anterior" CommandArgument="Prev" CssClass="previous" />
+                                                                                        <asp:Button ID="btnBandeja_II" runat="server" CommandName="Page" CausesValidation="false"
+                                                                                            ToolTip="Página Siguiente" CommandArgument="Next" CssClass="next" />
+                                                                                    </PagerTemplate>
+                                                                                    <HeaderStyle CssClass="headerstyle" />
+                                                                                    <FooterStyle CssClass="text-center" />
+                                                                                    <PagerStyle CssClass="text-center" />
+                                                                                </asp:GridView>
+                                                                        </asp:Panel>
+                                                                    </ContentTemplate>
+                                                                </asp:UpdatePanel>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>--%>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

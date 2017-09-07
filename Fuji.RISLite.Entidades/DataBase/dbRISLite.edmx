@@ -662,6 +662,9 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="stp_getBusquedaPaciente" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="vchCadena" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="stp_getListaPaginas" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="intTipoUsuarioID" Type="int" Mode="In" />
         </Function>
@@ -967,6 +970,9 @@
             <End Role="tbl_MST_Paciente" EntitySet="tbl_MST_Paciente" />
             <End Role="tbl_REL_IdentificacionPaciente" EntitySet="tbl_REL_IdentificacionPaciente" />
           </AssociationSet>
+          <FunctionImport Name="stp_getBusquedaPaciente" ReturnType="Collection(RISLiteModel.stp_getBusquedaPaciente_Result)">
+            <Parameter Name="vchCadena" Mode="In" Type="String" />
+          </FunctionImport>
           </EntityContainer>
         <EntityType Name="tbl_CAT_TipoMensaje">
           <Key>
@@ -1711,6 +1717,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="stp_getBusquedaPaciente_Result">
+          <Property Type="Int64" Name="intPacienteID" Nullable="false" />
+          <Property Type="String" Name="CADENA" Nullable="false" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2195,6 +2205,14 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="stp_getBusquedaPaciente" FunctionName="RISLiteModel.Store.stp_getBusquedaPaciente">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RISLiteModel.stp_getBusquedaPaciente_Result">
+                <ScalarProperty Name="intPacienteID" ColumnName="intPacienteID" />
+                <ScalarProperty Name="CADENA" ColumnName="CADENA" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

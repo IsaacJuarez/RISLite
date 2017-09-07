@@ -26,6 +26,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="page-content">
         <div class="page-header">
+            <div class="messagealert" id="alert_container"></div>
             <h1>Agenda
 			    <small>
                     <i class="ace-icon fa fa-angle-double-right"></i>
@@ -49,10 +50,11 @@
                                 <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 form-search">
                                     <span class="input-icon" style="width:100%">
                                         <asp:AutoCompleteExtender ID="acxBusqueda" runat="server" TargetControlID="txtBusquedaPaciente" MinimumPrefixLength="3" EnableCaching="true" CompletionSetCount="1"
-                                            CompletionInterval="500" ServiceMethod="obtenerPacienteBusqueda" CompletionListCssClass="completionList" CompletionListItemCssClass="listItem" 
+                                            CompletionInterval="500" ServiceMethod="obtenerPacienteBusqueda" CompletionListCssClass="completionList" CompletionListItemCssClass="listItem" OnClientItemSelected="autoCompleteEx_ItemSelected"
                                             CompletionListHighlightedItemCssClass="itemHighlighted">
                                         </asp:AutoCompleteExtender>
-                                        <asp:TextBox ID="txtBusquedaPaciente" runat="server" CssClass="nav-search-input" placeholder="Busquéda Paciente..." ToolTip="Búsqueda de Paciente por Nombre, Apellido, NSS, ID del paciente." Width="100%"></asp:TextBox>
+                                        <asp:TextBox ID="txtBusquedaPaciente" runat="server" CssClass="nav-search-input" placeholder="Busquéda Paciente..." 
+                                            ToolTip="Búsqueda de Paciente por Nombre, Apellido, NSS, ID del paciente." Width="100%" OnTextChanged="txtBusquedaPaciente_TextChanged"></asp:TextBox>
                                         <i runat="server" id="imgSearchNC" class="ace-icon fa fa-search nav-search-icon"></i>
                                     </span>
                                 </div>
@@ -64,11 +66,15 @@
                             </div>
                             <hr />
                             <div class="row">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                                     <asp:LinkButton ID="btnEditPaciente" runat="server" OnClick="btnEditPaciente_Click" Text="Editar">
                                         <i class="fa fa-pencil-square-o" aria-hidden="true"  title="Editar Paciente" style="font-size:25px;"></i>
                                     </asp:LinkButton>
                                     <asp:Label runat="server" ID="lblPacienteTitulo" ForeColor="DarkBlue" Text="Paciente" Font-Bold="true"></asp:Label>
+                                    <asp:HiddenField runat="server" ID="HFintPacienteID" ClientIDMode="Static" />
+                                </div>
+                                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 text-right">
+                                    <asp:Label runat="server" ID="lblIDs" ForeColor="PowderBlue" Text="" Font-Bold="true" Visible="false"></asp:Label>
                                 </div>
                             </div>
                             <hr />
@@ -477,18 +483,21 @@
                                         <asp:Label runat="server"  class="col-sm-3 control-label no-padding-right" AssociatedControlID="txtCodigoPostal"> Código Postal</asp:Label>
                                         <div class="col-sm-9">
                                             <asp:TextBox runat="server" type="text" ID="txtCodigoPostal" TextMode="Number" AutoPostBack="true"  OnTextChanged="txtCodigoPostal_TextChanged" CssClass="form-control" placeholder="Código Postal" class="col-xs-10 col-sm-5" />
+                                            <asp:HiddenField runat="server" ID="intCodigoPostalID" ClientIDMode="Static" />
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <asp:Label runat="server"  class="col-sm-3 control-label no-padding-right" AssociatedControlID="txtEstadoDet">Estado</asp:Label>
                                         <div class="col-sm-9">
                                             <asp:TextBox runat="server" type="text" ID="txtEstadoDet" CssClass="form-control" placeholder="Estado" class="col-xs-10 col-sm-5" />
+                                            <asp:HiddenField runat="server" ID="idEstadoDet" ClientIDMode="Static" />
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <asp:Label runat="server"  class="col-sm-3 control-label no-padding-right" AssociatedControlID="txtmunicipioDet">Municipio</asp:Label>
                                         <div class="col-sm-9">
                                             <asp:TextBox runat="server" type="text" ID="txtmunicipioDet"  CssClass="form-control" placeholder="Municipio/Delegación" class="col-xs-10 col-sm-5" />
+                                            <asp:HiddenField runat="server" ID="intMunicipioID" ClientIDMode="Static" />
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -501,7 +510,7 @@
                             </div>
                             <hr />
                             <div class="row">
-                                <div class="col-lg-12 col-md-12">
+                                <div class="col-lg-6 col-md-12">
                                     <div class="row " runat="server" id="divID">
                                         <div class="col-12">
                                             <asp:Label runat="server" Text="Identificaciones" ForeColor="DarkBlue" Font-Bold="true"></asp:Label>
@@ -512,9 +521,7 @@
 
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12 col-md-12">
+                                <div class="col-lg-6 col-md-12">
                                     <div class="row" runat="server" id="divDinamico">
                                         <div class="col-12">
                                             <asp:Label runat="server" Text="Adicionales" ForeColor="DarkBlue" Font-Bold="true"></asp:Label>
@@ -531,7 +538,7 @@
                 </asp:UpdatePanel>                
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <asp:Button runat="server" ID="btnCancelPacienteDet" class="btn btn-default" Text="Cerrar" OnClick="btnCancelPacienteDet_Click" data-dismiss="modal"></asp:Button>
                 <asp:Button runat="server" ID="bntAddPacienteDEt" OnClick="bntAddPacienteDEt_Click" Text="Guardar" CssClass="btn btn-primary" ValidationGroup="vgAddPaciente"></asp:Button>
             </div>
 
@@ -599,6 +606,32 @@
     <script type="text/javascript">
         function openModal() {
             $('#myModal').modal('show');
+        }
+
+        function ShowMessage(message, messagetype, idControl) {
+            var cssclass;
+            switch (messagetype) {
+                case 'Correcto':
+                    cssclass = 'alert-success'
+                    break;
+                case 'Error':
+                    cssclass = 'alert-danger'
+                    break;
+                case 'Advertencia':
+                    cssclass = 'alert-warning'
+                    break;
+                default:
+                    cssclass = 'alert-info'
+            }
+            var control = "#" + idControl;
+            $(control).append('<div id="' + idControl + '" style="margin: 0 0.5%; -webkit-box-shadow: 3px 4px 6px #999;" class="alert fade in ' + cssclass + '"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>' + messagetype + '!</strong> <span>' + message + '</span></div>');
+            $(control).fadeTo(2000, 700).slideUp(700, function () {
+                $(control).slideUp(700);
+            });
+        }
+
+        function autoCompleteEx_ItemSelected(sender, args) {
+            __doPostBack(sender.get_element().name, "");
         }
 
         jQuery(function ($) {

@@ -5,7 +5,7 @@
 <html>
 <head runat="server">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>RIS Lite</title>
+    <title>Axon</title>
     <link rel="icon" href="Images/favicon.ico" type="image/ico" />
     
     <!-- bootstrap & fontawesome -->
@@ -58,7 +58,7 @@
 				<a href="Default.aspx" class="navbar-brand">
 					<small>
 						<i class="fa fa-leaf"></i>
-						RIS Lite
+						Axon
 					</small>
 				</a>
 			</div>
@@ -477,7 +477,7 @@
 			<div class="footer-inner">
 				<div class="footer-content">
 					<span class="bigger-120">
-						<span class="blue bolder">RIS Lite FUJIFILM</span>
+						<span class="blue bolder">Axon FUJIFILM</span>
 						Aplicación &copy; 2017
 					</span>
 

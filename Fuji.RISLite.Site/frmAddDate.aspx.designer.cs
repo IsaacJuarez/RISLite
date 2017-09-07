@@ -67,6 +67,24 @@ namespace Fuji.RISLite.Site {
         protected global::System.Web.UI.WebControls.Label lblPacienteTitulo;
         
         /// <summary>
+        /// Control HFintPacienteID.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField HFintPacienteID;
+        
+        /// <summary>
+        /// Control lblIDs.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblIDs;
+        
+        /// <summary>
         /// Control txtNombrePaciente.
         /// </summary>
         /// <remarks>
@@ -175,15 +193,6 @@ namespace Fuji.RISLite.Site {
         protected global::System.Web.UI.WebControls.Button Button1;
         
         /// <summary>
-        /// Control rfvNombrePacienteDet.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvNombrePacienteDet;
-        
-        /// <summary>
         /// Control txtNombreDet.
         /// </summary>
         /// <remarks>
@@ -193,13 +202,13 @@ namespace Fuji.RISLite.Site {
         protected global::System.Web.UI.WebControls.TextBox txtNombreDet;
         
         /// <summary>
-        /// Control RequiredFieldValidator1.
+        /// Control rfvNombrePacienteDet.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator1;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvNombrePacienteDet;
         
         /// <summary>
         /// Control txtApellidosDet.
@@ -211,13 +220,13 @@ namespace Fuji.RISLite.Site {
         protected global::System.Web.UI.WebControls.TextBox txtApellidosDet;
         
         /// <summary>
-        /// Control RequiredFieldValidator2.
+        /// Control RequiredFieldValidator1.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator2;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator1;
         
         /// <summary>
         /// Control txtFecNacDet.
@@ -247,13 +256,13 @@ namespace Fuji.RISLite.Site {
         protected global::AjaxControlToolkit.CalendarExtender customCalendarExtender;
         
         /// <summary>
-        /// Control RequiredFieldValidator3.
+        /// Control RequiredFieldValidator2.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator3;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator2;
         
         /// <summary>
         /// Control ddlGeneroDet.
@@ -265,13 +274,13 @@ namespace Fuji.RISLite.Site {
         protected global::System.Web.UI.WebControls.DropDownList ddlGeneroDet;
         
         /// <summary>
-        /// Control RequiredFieldValidator4.
+        /// Control RequiredFieldValidator3.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator4;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator3;
         
         /// <summary>
         /// Control txtNumContactDet.
@@ -281,6 +290,24 @@ namespace Fuji.RISLite.Site {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtNumContactDet;
+        
+        /// <summary>
+        /// Control RequiredFieldValidator4.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator4;
+        
+        /// <summary>
+        /// Control txtEmailDet.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtEmailDet;
         
         /// <summary>
         /// Control RegularExpressionValidator1.
@@ -299,15 +326,6 @@ namespace Fuji.RISLite.Site {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator5;
-        
-        /// <summary>
-        /// Control txtEmailDet.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtEmailDet;
         
         /// <summary>
         /// Control txtCalleDet.
@@ -337,6 +355,15 @@ namespace Fuji.RISLite.Site {
         protected global::System.Web.UI.WebControls.TextBox txtCodigoPostal;
         
         /// <summary>
+        /// Control intCodigoPostalID.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField intCodigoPostalID;
+        
+        /// <summary>
         /// Control txtEstadoDet.
         /// </summary>
         /// <remarks>
@@ -346,6 +373,15 @@ namespace Fuji.RISLite.Site {
         protected global::System.Web.UI.WebControls.TextBox txtEstadoDet;
         
         /// <summary>
+        /// Control idEstadoDet.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField idEstadoDet;
+        
+        /// <summary>
         /// Control txtmunicipioDet.
         /// </summary>
         /// <remarks>
@@ -353,6 +389,15 @@ namespace Fuji.RISLite.Site {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtmunicipioDet;
+        
+        /// <summary>
+        /// Control intMunicipioID.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField intMunicipioID;
         
         /// <summary>
         /// Control ddlColoniaDet.
@@ -398,6 +443,15 @@ namespace Fuji.RISLite.Site {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl divDinamicoContenido;
+        
+        /// <summary>
+        /// Control btnCancelPacienteDet.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnCancelPacienteDet;
         
         /// <summary>
         /// Control bntAddPacienteDEt.

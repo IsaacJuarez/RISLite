@@ -447,10 +447,35 @@ namespace Fuji.RISLite.Site
             {
                 cargarPaciente();
                 cargarCita();
+                cargarIds();
             }
             catch(Exception ecva)
             {
                 Log.EscribeLog("Existe un error en cargarVarAdicioles: " + ecva.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargarIds()
+        {
+            try
+            {
+                VarAdicionalRequest request = new VarAdicionalRequest();
+                request.mdlUser = Usuario;
+                List<tbl_CAT_Identificacion> lst = new List<tbl_CAT_Identificacion>();
+                lst = RisService.getVariablesAdicionalID(request);
+                grvVarID.DataSource = null;
+                if (lst != null)
+                {
+                    if (lst.Count > 0)
+                    {
+                        grvVarID.DataSource = lst;
+                    }
+                }
+                grvVarID.DataBind();
+            }
+            catch (Exception ecP)
+            {
+                Log.EscribeLog("Existe un error en cargarCita: " + ecP.Message, 3, Usuario.vchUsuario);
             }
         }
 
@@ -2329,5 +2354,255 @@ namespace Fuji.RISLite.Site
             }
         }
         #endregion Equipo
+
+        #region IDS
+        protected void btnAddVarID_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                VarAdicionalRequest request = new VarAdicionalRequest();
+                VarAdicionalResponse response = new VarAdicionalResponse();
+                request.mdlUser = Usuario;
+                clsVarAcicionales mdlVar = new clsVarAcicionales();
+                mdlVar.bitActivo = true;
+                mdlVar.datFecha = DateTime.Now;
+                mdlVar.vchNombreVarAdi = txtIdentificacion.Text;
+                if (mdlVar != null)
+                {
+                    request.mdlVariable = mdlVar;
+                    request.intTipoVariable = 3;//Identificaciones
+                    response = RisService.setAgregarVariable(request);
+                    if (response != null)
+                    {
+                        if (response.Success)
+                        {
+                            ShowMessage("Se agregó correctamente la variable", MessageType.Correcto, "alert_container");
+                            cargarIds();
+                        }
+                        else
+                        {
+                            ShowMessage("Existe un error favor de revisar: " + response.Mensaje, MessageType.Error, "alert_container");
+                        }
+                    }
+                    else
+                    {
+                        ShowMessage("Favor de revisar la información.", MessageType.Error, "alert_container");
+                    }
+                }
+            }
+            catch (Exception ebAdd)
+            {
+                Log.EscribeLog("Existe un error al agregar la Identificación:  " + ebAdd.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvVarID_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            try
+            {
+                if (e.Row.RowType == DataControlRowType.Pager)
+                {
+                    Label lblTotalNumDePaginas = (Label)e.Row.FindControl("lblBandejaTotalID");
+                    lblTotalNumDePaginas.Text = grvAddPaciente.PageCount.ToString();
+
+                    TextBox txtIrAlaPagina = (TextBox)e.Row.FindControl("txtBandejaPaciente");
+                    txtIrAlaPagina.Text = (grvAddPaciente.PageIndex + 1).ToString();
+
+                    DropDownList ddlTamPagina = (DropDownList)e.Row.FindControl("ddlBandejaID");
+                    ddlTamPagina.SelectedValue = grvAddPaciente.PageSize.ToString();
+                }
+
+                if (e.Row.RowType != DataControlRowType.DataRow)
+                {
+                    return;
+                }
+
+                if (e.Row.DataItem != null)
+                {
+                    tbl_CAT_Identificacion _mdl = (tbl_CAT_Identificacion)e.Row.DataItem;
+                    ImageButton ibtEstatus = (ImageButton)e.Row.FindControl("imbEstatus");
+                    ibtEstatus.Attributes.Add("onclick", "javascript:return confirm('¿Desea realizar el cambio de estatus del item seleccionado?');");
+                    if ((bool)_mdl.bitActivo)
+                        ibtEstatus.ImageUrl = @"~/Images/ic_action_tick.png";
+                    else
+                        ibtEstatus.ImageUrl = @"~/Images/ic_action_cancel.png";
+                }
+            }
+            catch (Exception eGUP)
+            {
+                throw eGUP;
+            }
+        }
+
+        protected void grvVarID_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            try
+            {
+                if (e.NewPageIndex >= 0)
+                {
+                    this.grvVarID.PageIndex = e.NewPageIndex;
+                    cargarIds();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.EscribeLog("Existe un error grvVarID_PageIndexChanging: " + ex.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvVarID_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+            try
+            {
+                grvVarID.EditIndex = -1;
+                cargarIds();
+            }
+            catch (Exception eCE)
+            {
+                Log.EscribeLog("Existe un error en grvVarID_RowCancelingEdit: " + eCE.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvVarID_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            try
+            {
+                int intVarAdiID = 0;
+                clsUsuario mdl = new clsUsuario();
+                switch (e.CommandName)
+                {
+                    case "Estatus":
+                        intVarAdiID = Convert.ToInt32(e.CommandArgument.ToString());
+                        VarAdicionalRequest request = new VarAdicionalRequest();
+                        VarAdicionalResponse response = new VarAdicionalResponse();
+                        request.mdlUser = Usuario;
+                        request.intTipoVariable = 3;//identificaciones
+                        clsVarAcicionales mdlVar = new clsVarAcicionales();
+                        mdlVar.intVariableAdiID = intVarAdiID;
+                        if (mdlVar != null)
+                        {
+                            request.mdlVariable = mdlVar;
+                            response = RisService.setEstatusVariable(request);
+                            if (response != null)
+                            {
+                                if (response.Success)
+                                {
+                                    ShowMessage("Se actualizo correctamente la identificación", MessageType.Correcto, "alert_container");
+                                    //grvAddPaciente.EditIndex = -1;
+                                    cargarIds();
+                                }
+                                else
+                                {
+                                    ShowMessage("Existe un error: " + response.Success, MessageType.Error, "alert_container");
+                                }
+                            }
+                            else
+                            {
+                                ShowMessage("Favor de revisar la información.", MessageType.Error, "alert_container");
+                            }
+                        }
+                        break;
+                }
+            }
+            catch (Exception eRU)
+            {
+                Log.EscribeLog("Existe un error grvVista_RowCommand: " + eRU.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvVarID_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            try
+            {
+                grvVarID.EditIndex = e.NewEditIndex;
+                cargarIds();
+            }
+            catch(Exception eRW)
+            {
+                Log.EscribeLog("Existe un error en grvVarID_RowEditing: " + eRW.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvVarID_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+            try
+            {
+                VarAdicionalRequest request = new VarAdicionalRequest();
+                VarAdicionalResponse response = new VarAdicionalResponse();
+                request.mdlUser = Usuario;
+                request.intTipoVariable = 3;//Identificaciones
+                clsVarAcicionales mdlVar = new clsVarAcicionales();
+                mdlVar.bitActivo = true;
+                mdlVar.datFecha = DateTime.Now;
+                TextBox txtNamevar = (TextBox)grvVarID.Rows[e.RowIndex].FindControl("txtname");
+                mdlVar.vchNombreVarAdi = txtNamevar.Text;
+                mdlVar.intVariableAdiID = Convert.ToInt16(grvVarID.DataKeys[e.RowIndex].Values["intIdentificacionID"].ToString());
+                if (mdlVar != null)
+                {
+                    request.mdlVariable = mdlVar;
+                    response = RisService.setActualizarVariable(request);
+                    if (response != null)
+                    {
+                        if (response.Success)
+                        {
+                            ShowMessage("Se actualizo correctamente la identificación", MessageType.Correcto, "alert_container");
+                            grvVarID.EditIndex = -1;
+                            cargarIds();
+                        }
+                        else
+                        {
+                            ShowMessage("Existe un error: " + response.Success, MessageType.Error, "alert_container");
+                        }
+                    }
+                    else
+                    {
+                        ShowMessage("Favor de revisar la información.", MessageType.Error, "alert_container");
+                    }
+                }
+            }
+            catch (Exception eUpdating)
+            {
+                ShowMessage("Existe un error: " + eUpdating.Message, MessageType.Error, "alert_container");
+            }
+        }
+
+        protected void ddlBandejaID_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                DropDownList dropDownList = (DropDownList)sender;
+                if (int.Parse(dropDownList.SelectedValue) != 0)
+                {
+                    this.grvVarID.AllowPaging = true;
+                    this.grvVarID.PageSize = int.Parse(dropDownList.SelectedValue);
+                }
+                else
+                    this.grvVarID.AllowPaging = false;
+                this.cargarIds();
+            }
+            catch (Exception eddS)
+            {
+                Log.EscribeLog("Existe un error ddlBandejaID_SelectedIndexChanged de frmConfiguracion: " + eddS.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void txtBandejaID_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                TextBox txtBandejaAvaluosGoToPage = (TextBox)sender;
+                int numeroPagina;
+                if (int.TryParse(txtBandejaAvaluosGoToPage.Text.Trim(), out numeroPagina))
+                    this.grvVarID.PageIndex = numeroPagina - 1;
+                else
+                    this.grvVarID.PageIndex = 0;
+                this.cargarIds();
+            }
+            catch (Exception ex)
+            {
+                Log.EscribeLog("Existe un error txtBandejaID_TextChanged de frmConfiguracion: " + ex.Message, 3, Usuario.vchUsuario);
+            }
+        }
+        #endregion IDS
     }
 }

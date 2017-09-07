@@ -6,7 +6,9 @@ using Fuji.RISLite.Site.Services.DataContract;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
 namespace Fuji.RISLite.Site
@@ -35,7 +37,6 @@ namespace Fuji.RISLite.Site
                         Usuario = (clsUsuario)Session["User"];
                         if (Usuario != null)
                         {
-
                         }
                         else
                         {
@@ -58,17 +59,26 @@ namespace Fuji.RISLite.Site
 
         [System.Web.Script.Services.ScriptMethod()]
         [System.Web.Services.WebMethod]
-        public static List<string> obtenerPacienteBusqueda()
+        public static List<string> obtenerPacienteBusqueda(string prefixText, int count)
         {
             List<string> lstPaciente = new List<string>();
             try
             {
-                string paciente1 = "Paciente 1 || NSS : 11111";
-                lstPaciente.Add(paciente1);
-                string paciente2 = "Paciente 2 || NSS : 22222";
-                lstPaciente.Add(paciente2);
-                string paciente3 = "Paciente 3 || NSS : 33333";
-                lstPaciente.Add(paciente3);
+                if (prefixText != "")
+                {
+                    PacienteRequest request = new PacienteRequest();
+                    PacienteResponse response = new PacienteResponse();
+                    RisLiteService service = new RisLiteService();
+                    request.mdlUser = Usuario;
+                    request.busqueda = prefixText;
+                    response = service.getBusquedaPacientes(request);
+                    if (response != null)
+                    {
+                        if (response.lstCadenas.Count > 0)
+                            lstPaciente = response.lstCadenas;
+                    }
+                }
+
             }
             catch (Exception eOP)
             {
@@ -79,17 +89,26 @@ namespace Fuji.RISLite.Site
 
         [System.Web.Script.Services.ScriptMethod()]
         [System.Web.Services.WebMethod]
-        public static List<string> obtenerEstudioBusqueda()
+        public static List<string> obtenerEstudioBusqueda(string prefixText, int count)
         {
             List<string> lstPaciente = new List<string>();
             try
             {
-                string paciente1 = "Estudio 1 || Tipo :  US";
-                lstPaciente.Add(paciente1);
-                string paciente2 = "Estudio 2 || Tipo : RX";
-                lstPaciente.Add(paciente2);
-                string paciente3 = "Estudio 3 || Tipo : CT";
-                lstPaciente.Add(paciente3);
+                if (prefixText != "")
+                {
+                    PacienteRequest request = new PacienteRequest();
+                    PacienteResponse response = new PacienteResponse();
+                    RisLiteService service = new RisLiteService();
+                    request.mdlUser = Usuario;
+                    request.busqueda = prefixText;
+                    response = service.getBusquedaPacientes(request);
+                    if (response != null)
+                    {
+                        if (response.lstCadenas.Count > 0)
+                            lstPaciente = response.lstCadenas;
+                    }
+                }
+
             }
             catch (Exception eOP)
             {
@@ -116,10 +135,99 @@ namespace Fuji.RISLite.Site
             try
             {
                 cargaListagenero();
+                cargaVariablesAdicionales();
+                cargaIdentificaciones();
+                lblIDs.Visible = false;
             }
             catch(Exception ecF)
             {
                 Log.EscribeLog("Existe un error en cargaFormaDetalle: " + ecF.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargaIdentificaciones()
+        {
+            try
+            {
+                VarAdicionalRequest request = new VarAdicionalRequest();
+                request.mdlUser = Usuario;
+                List<tbl_CAT_Identificacion> lst = new List<tbl_CAT_Identificacion>();
+                lst = RisService.getVariablesAdicionalID(request);
+                if (lst != null)
+                {
+                    if (lst.Count > 0)
+                    {
+                        foreach (tbl_CAT_Identificacion item in lst)
+                        {
+                            HtmlGenericControl createDiv = new HtmlGenericControl("DIV");
+                            createDiv.ID = "Div" + item.vchNombreId;
+                            createDiv.Attributes.Add("class", "form-group");
+                            //createDiv.InnerHtml = " I'm a div, from code behind ";
+                            TextBox txt = new TextBox();
+                            txt.ID = "txt" + item.vchNombreId;
+                            txt.Attributes.Add("placeholder", item.vchNombreId);
+                            txt.CssClass = "form-control col-xs-10 col-sm-5";
+                            Label lbl = new Label();
+                            lbl.Text = item.vchNombreId;
+                            lbl.ID = "lbl" + item.vchNombreId;
+                            lbl.AssociatedControlID = "txt" + item.vchNombreId;
+                            lbl.Attributes.Add("class", "col-sm-3 control-label no-padding-right");
+                            HtmlGenericControl createDivText = new HtmlGenericControl();
+                            createDivText.Attributes.Add("class", "col-sm-9");
+                            createDivText.Controls.Add(txt);
+                            createDiv.Controls.Add(lbl);
+                            createDiv.Controls.Add(createDivText);
+                            divIDContenido.Controls.Add(createDiv);
+                        }
+                    }
+                }
+            }
+            catch (Exception cvA)
+            {
+                Log.EscribeLog("Existe un error en cargaIdentificaciones: " + cvA.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargaVariablesAdicionales()
+        {
+            try
+            {
+                VarAdicionalRequest request = new VarAdicionalRequest();
+                request.mdlUser = Usuario;
+                List<clsVarAcicionales> lst = new List<clsVarAcicionales>();
+                lst = RisService.getVariablesAdicionalPaciente(request);
+                if (lst != null)
+                {
+                    if (lst.Count > 0)
+                    {
+                        foreach(clsVarAcicionales item in lst)
+                        {
+                            HtmlGenericControl createDiv = new HtmlGenericControl("DIV");
+                            createDiv.ID = "Div" + item.vchNombreVarAdi;
+                            createDiv.Attributes.Add("class", "form-group");
+                            //createDiv.InnerHtml = " I'm a div, from code behind ";
+                            TextBox txt = new TextBox();
+                            txt.ID = "txt" + item.vchNombreVarAdi;
+                            txt.CssClass = "form-control col-xs-10 col-sm-5";
+                            txt.Attributes.Add("placeholder", item.vchNombreVarAdi);
+                            Label lbl = new Label();
+                            lbl.Text = item.vchNombreVarAdi;
+                            lbl.ID= "lbl" + item.vchNombreVarAdi;
+                            lbl.AssociatedControlID = "txt" + item.vchNombreVarAdi;
+                            lbl.Attributes.Add("class", "col-sm-3 control-label no-padding-right");
+                            HtmlGenericControl createDivText = new HtmlGenericControl();
+                            createDivText.Attributes.Add("class", "col-sm-9");
+                            createDivText.Controls.Add(txt);
+                            createDiv.Controls.Add(lbl);
+                            createDiv.Controls.Add(createDivText);
+                            divDinamicoContenido.Controls.Add(createDiv);
+                        }
+                    }
+                }
+            }
+            catch(Exception cvA)
+            {
+                Log.EscribeLog("Existe un error en cargaVariablesAdicionales: " + cvA.Message, 3, Usuario.vchUsuario);
             }
         }
 
@@ -201,12 +309,202 @@ namespace Fuji.RISLite.Site
 
         protected void txtCodigoPostal_TextChanged(object sender, EventArgs e)
         {
-
+            try
+            {
+                if (txtCodigoPostal.Text.Length >= 4)
+                {
+                    DireccionRequest request = new DireccionRequest();
+                    DireccionResponse response = new DireccionResponse();
+                    request.mdlUser = Usuario;
+                    request.vchCodigoPostal = txtCodigoPostal.Text;
+                    response = RisService.getDireccionPaciente(request);
+                    ddlColoniaDet.DataSource = null;
+                    ddlColoniaDet.Items.Clear();
+                    ddlColoniaDet.DataBind();
+                    if (response != null)
+                    {
+                        if (response.lstDireccion.Count > 0)
+                        {
+                            txtEstadoDet.Text = response.lstDireccion.First().vchEstado;
+                            txtmunicipioDet.Text = response.lstDireccion.First().vchMunicipio;
+                            ddlColoniaDet.DataSource = response.lstDireccion.OrderBy(x => x.vchColonia);
+                            ddlColoniaDet.DataTextField = "vchColonia";
+                            ddlColoniaDet.DataValueField = "intCodigoPostalID";
+                            ddlColoniaDet.DataBind();
+                            if (response.lstDireccion.Count == 1)
+                            {
+                                ddlColoniaDet.SelectedIndex = ddlColoniaDet.Items.IndexOf(ddlColoniaDet.Items.FindByValue(response.lstDireccion.First().intCodigoPostalID.ToString()));
+                            }
+                            else
+                            {
+                                ddlColoniaDet.Items.Insert(0, new ListItem("Seleccionar Colonia", "0"));
+                            }
+                        }
+                    }
+                }
+            }
+            catch(Exception eCP)
+            {
+                Log.EscribeLog("Existe un error en txtCodigoPostal_TextChanged: " + eCP.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void bntAddPacienteDEt_Click(object sender, EventArgs e)
         {
+            try
+            {
+                clsPaciente mdlPaciente = new clsPaciente();
+                clsDireccion mdlDireccion = new clsDireccion();
+                mdlPaciente = obtenerPacienteDet();
+                mdlDireccion = obtenerDireccion();
+                if (mdlPaciente != null)
+                {
+                    PacienteRequest request = new PacienteRequest();
+                    PacienteResponse response = new PacienteResponse();
+                    request.mdlUser = Usuario;
+                    request.mdlDireccion = mdlDireccion;
+                    request.mdlPaciente = mdlPaciente;
+                    if (request != null)
+                    {
+                        response = RisService.setPaciente(request);
+                        if(response!= null)
+                        {
+                            if (response.Success)
+                            {
+                                ShowMessage("Se agregó correctamente el paciente." + response.Mensaje, MessageType.Correcto, "alert_container");
+                                cargarDetallePaciente(response.intPacienteID);
+                                lblIDs.Text = response.intPacienteID.ToString();
+                                lblIDs.Visible = true;
+                            }
+                            else
+                            {
+                                ShowMessage("Verificar la informacion: " + response.Mensaje, MessageType.Advertencia, "alert_container");
+                            }
+                        }
+                        else
+                        {
+                            ShowMessage("Verificar la informacion. ", MessageType.Advertencia, "alert_container");
+                        }
+                    }
+                    else
+                    {
+                        ShowMessage("Verificar la informacion. ", MessageType.Advertencia, "alert_container");
+                    }
+                }
+            }
+            catch(Exception eAP)
+            {
+                ShowMessage("Existe un error al agregar el paciente: " + eAP.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error en bntAddPacienteDEt_Click: " + eAP.Message, 3, Usuario.vchUsuario);
+            }
+        }
 
+        private void cargarDetallePaciente(int intPacienteID)
+        {
+            try
+            {
+                PacienteRequest request = new PacienteRequest();
+                PacienteResponse response = new PacienteResponse();
+                request.mdlUser = Usuario;
+                request.intPacienteID = intPacienteID;
+
+                if (request != null)
+                {
+                    response = RisService.getPacienteDetalle(request);
+                    if (response != null)
+                    {
+                        if (response.Success)
+                        {
+                            HFintPacienteID.Value = intPacienteID.ToString();
+                            txtNombrePaciente.Text = response.mdlPaciente.vchNombre;
+                            txtApellidos.Text = response.mdlPaciente.vchApellidos;
+                            Date1.Text = response.mdlPaciente.datFechaNac.ToString("dd/MM/yyyy");
+                            lblIDs.Text = intPacienteID.ToString();
+                            lblIDs.Visible = true;
+                        }
+                        else
+                        {
+                            ShowMessage("Existe un error al cargar al paciente: " + response.Mensaje, MessageType.Error, "alert_container");
+                        }
+                    }
+                }
+            }
+            catch(Exception eCP)
+            {
+                Log.EscribeLog("Existe un error en cargarDetallePaciente: " + eCP.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private clsDireccion obtenerDireccion()
+        {
+            clsDireccion mdl = new clsDireccion();
+            try
+            {
+                mdl.intCodigoPostalID = Convert.ToInt32(ddlColoniaDet.SelectedValue);
+                mdl.vchCalle = txtCalleDet.Text;
+                mdl.vchNumero = txtNumeroDet.Text;
+            }
+            catch(Exception eoD)
+            {
+                Log.EscribeLog("Existe un error al obtener la dirección: " + eoD.Message, 3, Usuario.vchUsuario);
+            }
+            return mdl;
+        }
+
+        private clsPaciente obtenerPacienteDet()
+        {
+            clsPaciente mdl = new clsPaciente();
+            try
+            {
+                mdl.datFechaNac = Convert.ToDateTime(txtFecNacDet.Text);
+                mdl.intGeneroID = Convert.ToInt32(ddlGeneroDet.SelectedValue.ToString());
+                //mdl.intPacienteID
+                mdl.vchApellidos = txtApellidosDet.Text;
+                mdl.vchEmail = txtEmailDet.Text;
+                mdl.vchNombre = txtNombreDet.Text;
+                mdl.vchNumeroContacto = txtNumContactDet.Text;
+            }
+            catch (Exception eOP)
+            {
+                mdl = null;
+                Log.EscribeLog("Existe un error en obtenerPacienteDet: " + eOP.Message, 3, Usuario.vchUsuario);
+            }
+            return mdl;
+        }
+
+        protected void btnCancelPacienteDet_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        public enum MessageType { Correcto, Error, Informacion, Advertencia };
+
+        protected void ShowMessage(string Message, MessageType type, String container)
+        {
+            try
+            {
+                Message = Message.Replace("'", " ");
+                ScriptManager.RegisterStartupScript(this, this.GetType(), System.Guid.NewGuid().ToString(), "ShowMessage('" + Message + "','" + type + "','" + container + "');", true);
+            }
+            catch (Exception eSM)
+            {
+                throw eSM;
+            }
+        }
+
+        protected void txtBusquedaPaciente_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                string id = txtBusquedaPaciente.Text;
+                string[] paciente = txtBusquedaPaciente.Text.ToString().Split('|');
+                id = paciente[0];
+                cargarDetallePaciente(Convert.ToInt32(id));
+            }
+            catch(Exception etC)
+            {
+                Log.EscribeLog("Existe un error en txtBusquedaPaciente_TextChanged: " + etC.Message, 3, Usuario.vchUsuario);
+            }
         }
     }
 }
