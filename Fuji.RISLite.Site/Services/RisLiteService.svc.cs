@@ -746,6 +746,7 @@ namespace Fuji.RISLite.Site.Services
             return response;
         }
         #endregion Equipo
+
         #region Paciente
         public List<tbl_CAT_Genero> getListaGenero(CatalogoRequest request)
         {
@@ -848,7 +849,122 @@ namespace Fuji.RISLite.Site.Services
             }
             return response;
         }
+
+        public PacienteResponse getBusquedaEstudio(PacienteRequest request)
+        {
+            PacienteResponse response = new PacienteResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response.lstCadenas = controller.getBusquedaEstudio(request.busqueda, request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getBusquedaEstudio: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public EstudioResponse getEstudioDetalle(EstudioRequest request)
+        {
+            EstudioResponse response = new EstudioResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response.mdlEstudio = controller.getEstudioDetalle(request.mdlEstudio.intRelModPres, request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getEstudioDetalle: " + egU.Message, 3, "");
+            }
+            return response;
+        }
         #endregion Paciente
 
+        #region Indicacion
+        public List<tbl_DET_IndicacionPrestacion> getListIndicacion(IndicacionRequest request)
+        {
+            List<tbl_DET_IndicacionPrestacion> response = new List<tbl_DET_IndicacionPrestacion>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListIndicacion(request.intPrestacionID, request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getListIndicacion: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public IndicacionResponse setIndicacion(IndicacionRequest request)
+        {
+            IndicacionResponse response = new IndicacionResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setIndicacion(request.mdlIndicacion, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setIndicacion: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public IndicacionResponse setActualizaIndicacion(IndicacionRequest request)
+        {
+            IndicacionResponse response = new IndicacionResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setActualizaIndicacion(request.mdlIndicacion, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setActualizaIndicacion: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public IndicacionResponse setEstatusIndicacion(IndicacionRequest request)
+        {
+            IndicacionResponse response = new IndicacionResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setEstatusIndicacion(request.intIndicacionID, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setEstatusIndicacion: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+        #endregion Indicacion
     }
 }

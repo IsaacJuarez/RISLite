@@ -150,6 +150,27 @@ namespace Fuji.RISLite.Site.Services
 
         [OperationContract]
         PacienteResponse getBusquedaPacientes(PacienteRequest request);
+
+        [OperationContract]
+        PacienteResponse getBusquedaEstudio(PacienteRequest request);
+
+        [OperationContract]
+        EstudioResponse getEstudioDetalle(EstudioRequest request);
         #endregion Paciente
+
+        #region Indicacion
+        [OperationContract]
+        List<tbl_DET_IndicacionPrestacion> getListIndicacion(IndicacionRequest request);
+
+        [OperationContract]
+        IndicacionResponse setIndicacion(IndicacionRequest request);
+
+        [OperationContract]
+        IndicacionResponse setActualizaIndicacion(IndicacionRequest request);
+
+        [OperationContract]
+        IndicacionResponse setEstatusIndicacion(IndicacionRequest request);
+        #endregion Indicacion
+
     }
 }

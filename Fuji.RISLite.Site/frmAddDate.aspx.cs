@@ -24,6 +24,7 @@ namespace Fuji.RISLite.Site
         }
         RisLiteService RisService = new RisLiteService();
         public static clsUsuario Usuario = new clsUsuario();
+        public static List<clsEstudio> lstEstudios = new List<clsEstudio>();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -101,7 +102,7 @@ namespace Fuji.RISLite.Site
                     RisLiteService service = new RisLiteService();
                     request.mdlUser = Usuario;
                     request.busqueda = prefixText;
-                    response = service.getBusquedaPacientes(request);
+                    response = service.getBusquedaEstudio(request);
                     if (response != null)
                     {
                         if (response.lstCadenas.Count > 0)
@@ -279,7 +280,43 @@ namespace Fuji.RISLite.Site
 
         protected void grvEstudios_RowCommand(object sender, System.Web.UI.WebControls.GridViewCommandEventArgs e)
         {
-
+            try
+            {
+                int inrRelModPres = 0;
+                clsEstudio mdl = new clsEstudio();
+                switch (e.CommandName)
+                {
+                    case "ElegirHorario":
+                        inrRelModPres = Convert.ToInt32(e.CommandArgument.ToString());
+                        EquipoRequest request = new EquipoRequest();
+                        request.mdlUser = Usuario;
+                        //request.intEquipoID = intEquipoID;
+                        //EquipoResponse response = new EquipoResponse();
+                        //response = RisService.setActualizaEquipo(request);
+                        //if (response != null)
+                        //{
+                        //    if (response.Success)
+                        //    {
+                                ShowMessage("Se buscará un horario para el estudio.", MessageType.Correcto, "alert_container");
+                        //        //fillCat();
+                        //        cargarEquipo();
+                        //    }
+                        //    else
+                        //    {
+                        //        ShowMessage("Existe un error al actualizar: " + response.Mensaje, MessageType.Error, "alert_container");
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    ShowMessage("Existe un error al actualizar, favor de revisar la información. ", MessageType.Advertencia, "alert_container");
+                        //}
+                        break;
+                }
+            }
+            catch(Exception eRCE)
+            {
+                Log.EscribeLog("Existe un error en grvEstudios_RowCommand: " + eRCE.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void grvEstudios_RowEditing(object sender, System.Web.UI.WebControls.GridViewEditEventArgs e)
@@ -499,11 +536,101 @@ namespace Fuji.RISLite.Site
                 string id = txtBusquedaPaciente.Text;
                 string[] paciente = txtBusquedaPaciente.Text.ToString().Split('|');
                 id = paciente[0];
+                txtBusquedaPaciente.Text = "";
                 cargarDetallePaciente(Convert.ToInt32(id));
             }
             catch(Exception etC)
             {
                 Log.EscribeLog("Existe un error en txtBusquedaPaciente_TextChanged: " + etC.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void txtBusquedaEstudio_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                string id = txtBusquedaEstudio.Text;
+                string[] estudio = txtBusquedaEstudio.Text.ToString().Split('|');
+                id = estudio[0];
+                txtBusquedaEstudio.Text = "";
+                cargarEstudioGrid(Convert.ToInt32(id));
+            }
+            catch (Exception etC)
+            {
+                Log.EscribeLog("Existe un error en txtBusquedaEstudio_TextChanged: " + etC.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargarEstudioGrid(int v)
+        {
+            try
+            {
+                EstudioRequest request = new EstudioRequest();
+                EstudioResponse response = new EstudioResponse();
+                request.mdlUser = Usuario;
+                clsEstudio mdlEstudio = new clsEstudio();
+                mdlEstudio.intRelModPres = v;
+                request.mdlEstudio = mdlEstudio;
+                response = RisService.getEstudioDetalle(request);
+                if (response != null)
+                {
+                    lstEstudios.Add(response.mdlEstudio);
+                    grvEstudios.DataSource = null;
+                    grvEstudios.DataBind();
+                    grvEstudios.DataSource = lstEstudios;
+                    grvEstudios.DataBind();
+                }
+            }
+            catch(Exception ecEG)
+            {
+                Log.EscribeLog("Existe un error en cargarEstudioGrid: " + ecEG.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void btnAddCita_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if(lblIDs.Text != "")//Usuario
+                {
+                    if(lstEstudios!= null)
+                    {
+                        if (lstEstudios.Count > 0)
+                        {
+
+                        }
+                        else
+                        {
+                            ShowMessage("Validar los estudios", MessageType.Advertencia, "alert_container");
+                        }
+                    }
+                    else
+                    {
+                        ShowMessage("Validar los estudios", MessageType.Advertencia, "alert_container");
+                    }
+                }
+                else
+                {
+                    ShowMessage("Validar el usuario", MessageType.Advertencia, "alert_container");
+                }
+            }
+            catch (Exception eBC)
+            {
+                ShowMessage("Existe un error al agregar la cita: " + eBC.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error en btnAddCita_Click: " + eBC.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void btnCancelPaciente_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+            }
+            catch(Exception eBC)
+            {
+                ShowMessage("Existe un error al cancelar: " + eBC.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error en btnCancelPaciente_Click: " + eBC.Message, 3, Usuario.vchUsuario);
             }
         }
     }

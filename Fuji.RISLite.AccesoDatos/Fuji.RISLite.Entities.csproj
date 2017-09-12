@@ -43,6 +43,7 @@
     <Compile Include="clsCatalogo.cs" />
     <Compile Include="clsDireccion.cs" />
     <Compile Include="clsEquipo.cs" />
+    <Compile Include="clsEstudio.cs" />
     <Compile Include="clsPaciente.cs" />
     <Compile Include="clsPrestacion.cs" />
     <Compile Include="clsUsuario.cs" />

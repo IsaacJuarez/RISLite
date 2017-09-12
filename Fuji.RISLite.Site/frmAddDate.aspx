@@ -4,24 +4,24 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <!-- bootstrap & fontawesome -->
-		<link rel="stylesheet" href="assets/css/bootstrap.min.css" />
-		<link rel="stylesheet" href="assets/font-awesome/4.5.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="assets/font-awesome/4.5.0/css/font-awesome.min.css" />
 
-		<!-- page specific plugin styles -->
-		<link rel="stylesheet" href="assets/css/jquery-ui.custom.min.css" />
-		<link rel="stylesheet" href="assets/css/jquery.gritter.min.css" />
+	<!-- page specific plugin styles -->
+	<link rel="stylesheet" href="assets/css/jquery-ui.custom.min.css" />
+	<link rel="stylesheet" href="assets/css/jquery.gritter.min.css" />
 
-		<!-- text fonts -->
-		<link rel="stylesheet" href="assets/css/fonts.googleapis.com.css" />
+	<!-- text fonts -->
+	<link rel="stylesheet" href="assets/css/fonts.googleapis.com.css" />
 
-		<!-- ace styles -->
-		<link rel="stylesheet" href="assets/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
+	<!-- ace styles -->
+	<link rel="stylesheet" href="assets/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
 
-		<!--[if lte IE 9]>
-			<link rel="stylesheet" href="assets/css/ace-part2.min.css" class="ace-main-stylesheet" />
-		<![endif]-->
-		<link rel="stylesheet" href="assets/css/ace-skins.min.css" />
-		<link rel="stylesheet" href="assets/css/ace-rtl.min.css" />
+	<!--[if lte IE 9]>
+		<link rel="stylesheet" href="assets/css/ace-part2.min.css" class="ace-main-stylesheet" />
+	<![endif]-->
+	<link rel="stylesheet" href="assets/css/ace-skins.min.css" />
+	<link rel="stylesheet" href="assets/css/ace-rtl.min.css" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="page-content">
@@ -36,7 +36,7 @@
         </div>
         <!-- /.page-header -->
         <div class="row">
-            <div class="col-xs-4">
+            <div class="col-lg-4 col-md-12 col-sm-12">
                 <div class="widget-box">
                     <div class="widget-header widget-header-flat widget-header-small">
                         <h5 class="widget-title">
@@ -77,7 +77,6 @@
                                     <asp:Label runat="server" ID="lblIDs" ForeColor="PowderBlue" Text="" Font-Bold="true" Visible="false"></asp:Label>
                                 </div>
                             </div>
-                            <hr />
                             <div class="row form-group">
                                 <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
                                     <asp:Label runat="server" Text="Nombre" AssociatedControlID="txtNombrePaciente"></asp:Label>
@@ -163,11 +162,11 @@
                                 </div>
                                 <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
                                     <span class="input-icon" style="width:100%">
-                                        <asp:AutoCompleteExtender ID="AutoCompleteExtender1" runat="server" TargetControlID="txtEstudio" MinimumPrefixLength="3" EnableCaching="true" CompletionSetCount="1"
-                                            CompletionInterval="500" ServiceMethod="obtenerEstudioBusqueda" CompletionListCssClass="completionList" CompletionListItemCssClass="listItem"
+                                        <asp:AutoCompleteExtender ID="AutoCompleteExtender1" runat="server" TargetControlID="txtBusquedaEstudio" MinimumPrefixLength="3" EnableCaching="true" CompletionSetCount="1"
+                                            CompletionInterval="500" ServiceMethod="obtenerEstudioBusqueda" CompletionListCssClass="completionList" CompletionListItemCssClass="listItem" OnClientItemSelected="autoCompleteEx_ItemSelected"
                                             CompletionListHighlightedItemCssClass="itemHighlighted">
                                         </asp:AutoCompleteExtender>
-                                        <asp:TextBox ID="txtEstudio" runat="server" CssClass="nav-search-input" placeholder="Estudio..." ToolTip="Seleccionar Estudio" Width="100%"></asp:TextBox>
+                                        <asp:TextBox ID="txtBusquedaEstudio" runat="server" CssClass="nav-search-input" placeholder="Estudio..." ToolTip="Seleccionar Estudio" Width="100%" OnTextChanged="txtBusquedaEstudio_TextChanged"></asp:TextBox>
                                         <i runat="server" id="i1" class="ace-icon fa fa-search nav-search-icon"></i>
                                     </span>
                                 </div>
@@ -180,46 +179,28 @@
                                             <asp:Panel runat="server">
                                                 <asp:GridView ID="grvEstudios" runat="server" AllowPaging="true" CssClass="table table-striped table-bordered"
                                                     PageSize="10" AutoGenerateColumns="false" OnRowDataBound="grvEstudios_RowDataBound" Font-Size="10px"
-                                                    OnPageIndexChanging="grvEstudios_PageIndexChanging" DataKeyNames="intRELModPres, intPrestacionID" OnRowCancelingEdit="grvEstudios_RowCancelingEdit"
+                                                    OnPageIndexChanging="grvEstudios_PageIndexChanging" DataKeyNames="intRELModPres, intEstudioID, intPrestacionID" OnRowCancelingEdit="grvEstudios_RowCancelingEdit"
                                                     OnRowCommand="grvEstudios_RowCommand" OnRowEditing="grvEstudios_RowEditing" OnRowUpdating="grvEstudios_RowUpdating"
                                                     OnRowDeleting="grvEstudios_RowDeleting" EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
                                                     <Columns>
-                                                        <asp:BoundField DataField="intRELModPres" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
-                                                        <asp:TemplateField HeaderText="Prestación">
+                                                        <asp:BoundField DataField="intEstudioID" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
+                                                        <asp:BoundField DataField="vchPrestacion" HeaderText="Estudio" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
+                                                        <asp:BoundField DataField="fechaInicio" HeaderText="Fecha" dataformatstring="{0:MMMM d, yyyy}" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
+                                                        <asp:TemplateField HeaderText="Hora de Inicio" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
                                                             <ItemTemplate>
-                                                                <asp:Label runat="server" ID="lblNomVar" Text='<%#Eval("vchPrestacion") %>' />
+                                                                <asp:Label ID="lblFechaInicio" runat="server" Text='<%# String.Format("{0:hh/mm}", Eval("fechaInicio")) %>' ForeColor="DarkGreen" />
                                                             </ItemTemplate>
-                                                            <EditItemTemplate>
-                                                                <asp:TextBox runat="server" ID="txtItemNombre" width="100%" Text='<%#Eval("vchPrestacion") %>'></asp:TextBox>
-                                                            </EditItemTemplate>
                                                         </asp:TemplateField>
-                                                        <asp:TemplateField  HeaderText="Duración (minutos)">
+                                                        <asp:TemplateField HeaderText="Hora Final" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
                                                             <ItemTemplate>
-                                                                <asp:Label runat="server" ID="lblDuracion" Text='<%#Eval("intDuracionMin") %>' />
+                                                                <asp:Label ID="lblFechaFinal" runat="server" Text='<%# String.Format("{0:hh/mm}", Eval("fechaFin")) %>' ForeColor="DarkGreen" />
                                                             </ItemTemplate>
-                                                            <EditItemTemplate>
-                                                                <asp:TextBox runat="server" ID="txtDuracionItem" width="100%" Text='<%#Eval("intDuracionMin") %>'></asp:TextBox>
-                                                            </EditItemTemplate>
                                                         </asp:TemplateField>
-                                                        <asp:TemplateField HeaderText="Editar" ItemStyle-HorizontalAlign="Center">
-                                                            <ItemTemplate>      
-                                                                <asp:LinkButton ID="btnVisualizar" CausesValidation="false" CommandName="Edit" runat="server">
-                                                                    <i class="fa fa-pencil" aria-hidden="true" title="Editar" style="font-size:25px;"></i>
-                                                                </asp:LinkButton>
-                                                            </ItemTemplate>
-                                                            <EditItemTemplate>
-                                                                <asp:LinkButton ID="btnUpdateVarPacinete" runat="server" CommandName="Update"  Text="Actualizar">
-                                                                    <i class="fa fa-floppy-o" aria-hidden="true"  title="Actualizar" style="font-size:25px;"></i>
-                                                                </asp:LinkButton>
-                                                                <asp:LinkButton ID="bntCancelEditPaciente" runat="server" CommandName="Cancel"  Text="Cancelar">
-                                                                    <i class="fa fa-ban" aria-hidden="true" title="Cancelar" style="font-size:25px;"></i>
-                                                                </asp:LinkButton>
-                                                            </EditItemTemplate>
-                                                        </asp:TemplateField>
-                                                        <asp:TemplateField HeaderText="Estatus" ItemStyle-HorizontalAlign="Center">
+                                                        <asp:TemplateField HeaderText="Elegir Horario" ItemStyle-HorizontalAlign="Center">
                                                             <ItemTemplate>
-                                                                <asp:ImageButton ID="imbEstatus" runat="server" BackColor="Transparent"  Height="25px" Width="25px" 
-                                                                    CommandArgument='<%#Eval("intRELModPres") %>' CommandName="Estatus" ToolTip="Cambia el estatus del Sitio" />
+                                                                <asp:LinkButton ID="btnVisualizar" CausesValidation="false" CommandName="ElegirHorario" CommandArgument='<%#Eval("intRELModPres") %>' runat="server">
+                                                                    <i class="fa fa-calendar-check-o" aria-hidden="true" title="Buscar horario" style="font-size:25px;"></i>
+                                                                </asp:LinkButton>
                                                             </ItemTemplate>
                                                         </asp:TemplateField>
                                                     </Columns>
@@ -255,15 +236,15 @@
                                 <div class="col-lg-3 col-md-3 col-sm-1 col-xs-1">
                                 </div>
                                 <div class="col-lg-9 col-md-9 col-sm-11 col-xs-11 text-right">
-                                    <asp:Button ID="btnCancelPaciente" runat="server" Text="Cancelar" CssClass="btn btn-danger" />
-                                    <asp:Button ID="Button1" runat="server" Text="Guardar" CssClass="btn btn-success" />
+                                    <asp:Button ID="btnCancelPaciente" runat="server" OnClick="btnCancelPaciente_Click" Text="Cancelar" CssClass="btn btn-danger" />
+                                    <asp:Button ID="btnAddCita" OnClick="btnAddCita_Click" runat="server" Text="Guardar" CssClass="btn btn-success" />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-xs-8">
+            <div class="col-lg-8 col-md-12 col-sm-12">
                 <div class="tabbable">
                     <ul class="nav nav-tabs" id="myTab">
                         <li class="active">

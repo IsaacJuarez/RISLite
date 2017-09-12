@@ -148,13 +148,13 @@ namespace Fuji.RISLite.Site {
         protected global::AjaxControlToolkit.AutoCompleteExtender AutoCompleteExtender1;
         
         /// <summary>
-        /// Control txtEstudio.
+        /// Control txtBusquedaEstudio.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtEstudio;
+        protected global::System.Web.UI.WebControls.TextBox txtBusquedaEstudio;
         
         /// <summary>
         /// Control i1.
@@ -184,13 +184,13 @@ namespace Fuji.RISLite.Site {
         protected global::System.Web.UI.WebControls.Button btnCancelPaciente;
         
         /// <summary>
-        /// Control Button1.
+        /// Control btnAddCita.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Button1;
+        protected global::System.Web.UI.WebControls.Button btnAddCita;
         
         /// <summary>
         /// Control txtNombreDet.

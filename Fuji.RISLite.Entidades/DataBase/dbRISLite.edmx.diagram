@@ -61,6 +61,16 @@
         <AssociationConnector Association="RISLiteModel.FK_REL_PacienteCita_MST_Cita" />
         <AssociationConnector Association="RISLiteModel.FK_REL_PacienteCita_MST_Paciente" />
         <AssociationConnector Association="RISLiteModel.FK_TBL_REL__REFERENCE_TBL_MST_" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_MedicoTratante" Width="1.5" PointX="12.75" PointY="43.375" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_DET_CitaDinamico" Width="1.5" PointX="17.25" PointY="1.25" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_DET_Cuestionario" Width="1.5" PointX="12.625" PointY="36.625" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_DET_Restriccion" Width="1.5" PointX="12.625" PointY="39.75" />
+        <AssociationConnector Association="RISLiteModel.FK_MST_Cita_CAT_MedicoTratante" />
+        <AssociationConnector Association="RISLiteModel.FK_DET_Restriccion_CAT_Prestacion" />
+        <AssociationConnector Association="RISLiteModel.FK_TBL_DET__REFERENCE_TBL_CAT_" />
+        <AssociationConnector Association="RISLiteModel.FK_DET_CitaDinamico_MST_Cita" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_DET_IndicacionPrestacion" Width="1.5" PointX="12.625" PointY="47.375" />
+        <AssociationConnector Association="RISLiteModel.FK_DET_IndicacionPrestacion_CAT_Prestacion" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

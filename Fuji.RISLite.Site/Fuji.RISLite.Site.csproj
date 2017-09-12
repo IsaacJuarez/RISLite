@@ -1328,6 +1328,10 @@
     <Compile Include="Services\DataContract\DireccionResponse.cs" />
     <Compile Include="Services\DataContract\EquipoRequest.cs" />
     <Compile Include="Services\DataContract\EquipoResponse.cs" />
+    <Compile Include="Services\DataContract\EstudioRequest.cs" />
+    <Compile Include="Services\DataContract\EstudioResponse.cs" />
+    <Compile Include="Services\DataContract\IndicacionRequest.cs" />
+    <Compile Include="Services\DataContract\IndicacionResponse.cs" />
     <Compile Include="Services\DataContract\PacienteRequest.cs" />
     <Compile Include="Services\DataContract\PacienteResponse.cs" />
     <Compile Include="Services\DataContract\PrestacionRequest.cs" />

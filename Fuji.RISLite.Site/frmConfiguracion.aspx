@@ -1,5 +1,24 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="frmConfiguracion.aspx.cs" Inherits="Fuji.RISLite.Site.frmConfiguracion" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <!-- bootstrap & fontawesome -->
+	<link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="assets/font-awesome/4.5.0/css/font-awesome.min.css" />
+
+	<!-- page specific plugin styles -->
+	<link rel="stylesheet" href="assets/css/jquery-ui.custom.min.css" />
+	<link rel="stylesheet" href="assets/css/jquery.gritter.min.css" />
+
+	<!-- text fonts -->
+	<link rel="stylesheet" href="assets/css/fonts.googleapis.com.css" />
+
+	<!-- ace styles -->
+	<link rel="stylesheet" href="assets/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
+
+	<!--[if lte IE 9]>
+		<link rel="stylesheet" href="assets/css/ace-part2.min.css" class="ace-main-stylesheet" />
+	<![endif]-->
+	<link rel="stylesheet" href="assets/css/ace-skins.min.css" />
+	<link rel="stylesheet" href="assets/css/ace-rtl.min.css" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="page-content">
@@ -240,6 +259,10 @@
                                             </div>
                                             <div class="col-lg-1 col-sm-12">
                                                 <div class="row">
+                                                    <div class="col-lg-12">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
                                                     <div class="col-lg-12 text-right">
                                                         <asp:Button runat="server" ID="btnAgregar" CssClass="btn btn-success" Text="Agregar" OnClick="btnAgregar_Click"  ValidationGroup="vgAddUser"/>
                                                     </div>
@@ -358,7 +381,7 @@
                                                                     </div>
                                                                     <div class="row">
                                                                         <div class="col-lg-12">
-                                                                            <asp:TextBox runat="server" Text="" CssClass="form-control" ID="txtAddVarPac" placeholder="Nombre de la Variable"></asp:TextBox>
+                                                                            <asp:TextBox runat="server" Text="" CssClass="form-control" ID="txtAddVarPac" Width="100%" placeholder="Nombre de la Variable"></asp:TextBox>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -459,7 +482,7 @@
                                                                     </div>
                                                                     <div class="row">
                                                                         <div class="col-lg-12">
-                                                                            <asp:TextBox runat="server" Text="" CssClass="form-control" ID="txtNombreVarCita" placeholder="Nombre de la Variable"></asp:TextBox>
+                                                                            <asp:TextBox runat="server" Text="" CssClass="form-control" ID="txtNombreVarCita" Width="100%" placeholder="Nombre de la Variable"></asp:TextBox>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -551,7 +574,7 @@
 								                    <div class="widget-body">
 									                    <div class="widget-main">
                                                             <div class="row form-group">
-                                                                <div class="col-lg-10 col-md-10 col-sm-10">
+                                                                <div class="col-lg-12 col-md-12 col-sm-12">
                                                                     <div class="row">
                                                                         <div class="col-lg-12">
                                                                             <asp:Label runat="server" Text="Nombre de la Identificación" AssociatedControlID="txtIdentificacion" Width="100%"></asp:Label>
@@ -560,11 +583,13 @@
                                                                     </div>
                                                                     <div class="row">
                                                                         <div class="col-lg-12">
-                                                                            <asp:TextBox runat="server" Text="" CssClass="form-control" ID="txtIdentificacion" placeholder="Nombre de la Identificación"></asp:TextBox>
+                                                                            <asp:TextBox runat="server" Text="" CssClass="form-control" ID="txtIdentificacion" Width="100%" placeholder="Nombre de la Identificación"></asp:TextBox>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-lg-2 col-md-2 col-sm-2 text-center">
+                                                            </div>
+                                                            <div class="row form-group">
+                                                                <div class="col-lg-12 col-md-12 col-sm-12 text-right">
                                                                     <asp:Button runat="server" ID="btnAddVarID" Text="Guardar" OnClick="btnAddVarID_Click" CssClass="btn btn-primary" ValidationGroup="vgAddVarId"/>
                                                                 </div>
                                                             </div>
@@ -641,6 +666,8 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -682,8 +709,16 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-2 col-sm-12">
-                                                 <asp:Button runat="server" ID="btnAddItemCat" Text="Agregar" OnClick="btnAddItemCat_Click" CssClass="btn btn-success" ValidationGroup="vgAddCat"/>
+                                            <div class="col-lg-2 col-sm-12 text-right">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <asp:Button runat="server" ID="btnAddItemCat" Text="Agregar" OnClick="btnAddItemCat_Click" CssClass="btn btn-success" ValidationGroup="vgAddCat"/>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -873,6 +908,30 @@
                                                                                                 <i class="fa fa-ban" aria-hidden="true" title="Cancelar" style="font-size:25px;"></i>
                                                                                             </asp:LinkButton>
                                                                                         </EditItemTemplate>
+                                                                                    </asp:TemplateField>
+                                                                                    <asp:TemplateField HeaderText="Indicaciones" ItemStyle-HorizontalAlign="Center">
+                                                                                        <ItemTemplate>
+                                                                                            <asp:LinkButton ID="imbIndicaciones" runat="server" BackColor="Transparent"  Height="25px" Width="25px" 
+                                                                                                CommandArgument='<%#Eval("intRELModPres") %>' CommandName="Indicacion" ToolTip="Ver las indicaciones" >
+                                                                                                <i class="fa fa-comments-o" aria-hidden="true" title="Indicaciones" style="font-size:25px;"></i>
+                                                                                            </asp:LinkButton>
+                                                                                        </ItemTemplate>
+                                                                                    </asp:TemplateField>
+                                                                                    <asp:TemplateField HeaderText="Cuestionario" ItemStyle-HorizontalAlign="Center">
+                                                                                        <ItemTemplate>
+                                                                                            <asp:LinkButton ID="imbCuestionario" runat="server" BackColor="Transparent"  Height="25px" Width="25px" 
+                                                                                                CommandArgument='<%#Eval("intRELModPres") %>' CommandName="Cuestionario" ToolTip="Ver los cuestionarios">
+                                                                                                <i class="fa fa-question" aria-hidden="true" title="Cuestionario" style="font-size:25px;"></i>
+                                                                                            </asp:LinkButton>
+                                                                                        </ItemTemplate>
+                                                                                    </asp:TemplateField>
+                                                                                    <asp:TemplateField HeaderText="Restricciones" ItemStyle-HorizontalAlign="Center">
+                                                                                        <ItemTemplate>
+                                                                                            <asp:LinkButton ID="imbRestricciones" runat="server" BackColor="Transparent"  Height="25px" Width="25px" 
+                                                                                                CommandArgument='<%#Eval("intRELModPres") %>' CommandName="Restricciones" ToolTip="Ver las Restricciones">
+                                                                                                <i class="fa fa-ban" aria-hidden="true" title="Restricciones" style="font-size:25px;"></i>
+                                                                                            </asp:LinkButton>
+                                                                                        </ItemTemplate>
                                                                                     </asp:TemplateField>
                                                                                     <asp:TemplateField HeaderText="Estatus" ItemStyle-HorizontalAlign="Center">
                                                                                         <ItemTemplate>
@@ -1078,6 +1137,267 @@
         <asp:HiddenField ID="TabName" runat="server" />
     </div>
 
+    <!-- modals -->
+    <div class="modal fade bs-example-modal-sm" id="mdlIndicaciones" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" style="width:70%">
+            <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel3">Indicaciones</h4>
+            </div>
+            <div class="modal-body">
+                <asp:UpdatePanel runat="server">
+                    <ContentTemplate>
+                        <div class="form-horizontal" role="form">
+                            <div class="row">
+                                <div class="col-lg-10 col-md-10 col-sm-10">
+                                    <div class="row">
+                                        <div class="col-lg-10">
+                                            <asp:TextBox runat="server" Text="" ID="txtInstruccion" placeholder="Instrucción" CssClass="form-control"></asp:TextBox>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator12" ErrorMessage="*" ForeColor="Red" Text="*" ControlToValidate="txtInstruccion" ValidationGroup="vgIndicaciones"></asp:RequiredFieldValidator>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-2">
+                                    <asp:Button runat="server" ID="btnAddIndicaciones" OnClick="btnAddIndicaciones_Click" Text="Guardar" CssClass="btn btn-primary" ValidationGroup="vgIndicaciones"></asp:Button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <asp:UpdatePanel runat="server">
+                                        <ContentTemplate>
+                                            <asp:Panel runat="server">
+                                                <asp:GridView ID="grvIndicaciones" runat="server" AllowPaging="true" CssClass="table table-striped table-bordered"
+                                                        PageSize="10" AutoGenerateColumns="false" OnRowDataBound="grvIndicaciones_RowDataBound" Font-Size="10px"
+                                                        OnPageIndexChanging="grvIndicaciones_PageIndexChanging" DataKeyNames="intIndicacionID,intPrestacionID" OnRowCancelingEdit="grvIndicaciones_RowCancelingEdit"
+                                                        OnRowCommand="grvIndicaciones_RowCommand" OnRowEditing="grvIndicaciones_RowEditing" OnRowUpdating="grvIndicaciones_RowUpdating"
+                                                        EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
+                                                        <Columns>
+                                                            <asp:BoundField DataField="intIndicacionID" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
+                                                            <asp:TemplateField HeaderText="Nombre">
+                                                                <ItemTemplate>
+                                                                    <asp:Label runat="server" ID="lblNombreUsuario" Text='<%#Eval("vchIndicacion") %>' />
+                                                                </ItemTemplate>
+                                                                <EditItemTemplate>
+                                                                        <asp:TextBox ID="txtNombreUsuario" width="100%"  runat="server" Text='<%#Eval("vchIndicacion") %>'/>
+                                                                </EditItemTemplate>
+                                                            </asp:TemplateField>
+                                                            <asp:TemplateField HeaderText="Editar" ItemStyle-HorizontalAlign="Center">
+                                                                <ItemTemplate>      
+                                                                    <asp:LinkButton ID="btnVisualizar" CausesValidation="false" CommandName="Edit" runat="server">
+                                                                        <i class="fa fa-pencil" aria-hidden="true" title="Editar" style="font-size:25px;"></i>
+                                                                    </asp:LinkButton>
+                                                                </ItemTemplate>
+                                                                <EditItemTemplate>
+                                                                    <asp:LinkButton ID="btnUpdateVarPacinete" runat="server" CommandName="Update"  Text="Actualizar">
+                                                                        <i class="fa fa-floppy-o" aria-hidden="true"  title="Actualizar" style="font-size:25px;"></i>
+                                                                    </asp:LinkButton>
+                                                                    <asp:LinkButton ID="bntCancelEditPaciente" runat="server" CommandName="Cancel"  Text="Cancelar">
+                                                                        <i class="fa fa-ban" aria-hidden="true" title="Cancelar" style="font-size:25px;"></i>
+                                                                    </asp:LinkButton>
+                                                                </EditItemTemplate>
+                                                            </asp:TemplateField>
+                                                            <asp:TemplateField HeaderText="Estatus" ItemStyle-HorizontalAlign="Center">
+                                                                <ItemTemplate>
+                                                                    <asp:ImageButton ID="imbEstatus" runat="server" BackColor="Transparent"  Height="25px" Width="25px" 
+                                                                        CommandArgument='<%#Eval("intIndicacionID") %>' CommandName="Estatus" ToolTip="Cambia el estatus del Sitio" />
+                                                                </ItemTemplate>
+                                                            </asp:TemplateField>
+                                                        </Columns>
+                                                        <PagerTemplate>
+                                                            <asp:Label ID="lblTemplate" runat="server" Text="Muestra Filas: " CssClass="Label" />
+                                                            <asp:DropDownList ID="ddlBandejaInd" runat="server" AutoPostBack="true" CausesValidation="false"
+                                                                Enabled="true" OnSelectedIndexChanged="ddlBandejaInd_SelectedIndexChanged">
+                                                                    <asp:ListItem Value="10" />
+                                                                    <asp:ListItem Value="15" />
+                                                                    <asp:ListItem Value="20" />
+                                                            </asp:DropDownList>
+                                                            &nbsp;Página
+                                                            <asp:TextBox ID="txtBandejaInd" runat="server" AutoPostBack="true" OnTextChanged="txtBandejaInd_TextChanged"
+                                                                Width="40" MaxLength="10" />
+                                                            de
+                                                            <asp:Label ID="lblBandejaTotal" runat="server" />
+                                                            &nbsp;
+                                                            <asp:Button ID="btnBandeja_I" runat="server" CommandName="Page" CausesValidation="false"
+                                                                ToolTip="Página Anterior" CommandArgument="Prev" CssClass="previous" />
+                                                            <asp:Button ID="btnBandeja_II" runat="server" CommandName="Page" CausesValidation="false"
+                                                                ToolTip="Página Siguiente" CommandArgument="Next" CssClass="next" />
+                                                        </PagerTemplate>
+                                                        <HeaderStyle CssClass="headerstyle" />
+                                                        <FooterStyle CssClass="text-center" />
+                                                        <PagerStyle CssClass="text-center" />
+                                                    </asp:GridView>
+                                            </asp:Panel>
+                                        </ContentTemplate>
+                                    </asp:UpdatePanel>
+                                </div>
+                            </div>
+                        </div>
+                    </ContentTemplate>
+                </asp:UpdatePanel>                
+            </div>
+            <div class="modal-footer">
+                <asp:Button runat="server" ID="btnCancelIndicaciones" class="btn btn-default" Text="Cerrar" OnClick="btnCancelIndicaciones_Click" data-dismiss="modal"></asp:Button>
+            </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- /modals -->
+
+    <!-- modals -->
+    <div class="modal fade bs-example-modal-sm" id="mdlCuestionarios" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" style="width:70%">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel2">Cuestionarios</h4>
+                </div>
+                <div class="modal-body">
+                    <asp:UpdatePanel runat="server">
+                        <ContentTemplate>
+                            <div class="form-horizontal" role="form">
+                                <div class="row">
+                                    <div class="col-lg-10 col-md-10 col-sm-10">
+                                        <div class="row">
+                                            <div class="col-lg-10">
+                                                <asp:TextBox runat="server" Text="" ID="txtCuestionario" placeholder="Cuestionario" CssClass="form-control"></asp:TextBox>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <asp:RequiredFieldValidator runat="server" ID="rfvCuestionario" ErrorMessage="*" ForeColor="Red" Text="*" ControlToValidate="txtCuestionario" ValidationGroup="vgCuestionario"></asp:RequiredFieldValidator>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-2">
+                                        <asp:Button runat="server" ID="btnAddCuestionario" Text="Agregar" CssClass="btn btn-success" ValidationGroup="vgCuestionario" OnClick="btnAddCuestionario_Click" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <asp:UpdatePanel runat="server">
+                                            <ContentTemplate>
+                                                <asp:Panel runat="server">
+                                                    <asp:GridView ID="grvCuestionario" runat="server" AllowPaging="true" CssClass="table table-striped table-bordered"
+                                                            PageSize="10" AutoGenerateColumns="false" OnRowDataBound="grvCuestionario_RowDataBound" Font-Size="10px"
+                                                            OnPageIndexChanging="grvCuestionario_PageIndexChanging" DataKeyNames="intUsuarioID" OnRowCancelingEdit="grvCuestionario_RowCancelingEdit"
+                                                            OnRowCommand="grvCuestionario_RowCommand" OnRowEditing="grvCuestionario_RowEditing" OnRowUpdating="grvCuestionario_RowUpdating"
+                                                            EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
+                                                            <Columns>
+                                                                <asp:BoundField DataField="intUsuarioID" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
+                                                                <asp:TemplateField HeaderText="Nombre">
+                                                                    <ItemTemplate>
+                                                                        <asp:Label runat="server" ID="lblNombreUsuario" Text='<%#Eval("vchNombre") %>' />
+                                                                    </ItemTemplate>
+                                                                    <EditItemTemplate>
+                                                                            <asp:TextBox ID="txtNombreUsuario" width="100%"  runat="server" Text='<%#Eval("vchNombre") %>'/>
+                                                                    </EditItemTemplate>
+                                                                </asp:TemplateField>
+                                                                <asp:TemplateField HeaderText="Usuario">
+                                                                    <ItemTemplate>
+                                                                        <asp:Label runat="server" ID="lblUsuario" Text='<%#Eval("vchUsuario") %>' />
+                                                                    </ItemTemplate>
+                                                                    <EditItemTemplate>
+                                                                            <asp:TextBox ID="txtUsuario" width="100%"  runat="server" Text='<%#Eval("vchUsuario") %>'/>
+                                                                    </EditItemTemplate>
+                                                                </asp:TemplateField>
+                                                                <asp:BoundField DataField="vchTipoUsuario"  HeaderText="Tipo de Usuario" ReadOnly="true" />
+                                                                <asp:TemplateField HeaderText="Editar" ItemStyle-HorizontalAlign="Center">
+                                                                    <ItemTemplate>      
+                                                                        <asp:LinkButton ID="btnVisualizar" CausesValidation="false" CommandName="Edit" runat="server">
+                                                                            <i class="fa fa-pencil" aria-hidden="true" title="Editar" style="font-size:25px;"></i>
+                                                                        </asp:LinkButton>
+                                                                    </ItemTemplate>
+                                                                    <EditItemTemplate>
+                                                                        <asp:LinkButton ID="btnUpdateVarPacinete" runat="server" CommandName="Update"  Text="Actualizar">
+                                                                            <i class="fa fa-floppy-o" aria-hidden="true"  title="Actualizar" style="font-size:25px;"></i>
+                                                                        </asp:LinkButton>
+                                                                        <asp:LinkButton ID="bntCancelEditPaciente" runat="server" CommandName="Cancel"  Text="Cancelar">
+                                                                            <i class="fa fa-ban" aria-hidden="true" title="Cancelar" style="font-size:25px;"></i>
+                                                                        </asp:LinkButton>
+                                                                    </EditItemTemplate>
+                                                                </asp:TemplateField>
+                                                                <asp:TemplateField HeaderText="Estatus" ItemStyle-HorizontalAlign="Center">
+                                                                    <ItemTemplate>
+                                                                        <asp:ImageButton ID="imbEstatus" runat="server" BackColor="Transparent"  Height="25px" Width="25px" 
+                                                                            CommandArgument='<%#Eval("intUsuarioID") %>' CommandName="Estatus" ToolTip="Cambia el estatus del Sitio" />
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateField>
+                                                            </Columns>
+                                                            <PagerTemplate>
+                                                                <asp:Label ID="lblTemplate" runat="server" Text="Muestra Filas: " CssClass="Label" />
+                                                                <asp:DropDownList ID="ddlBandeja" runat="server" AutoPostBack="true" CausesValidation="false"
+                                                                    Enabled="true" OnSelectedIndexChanged="ddlBandeja_SelectedIndexChanged">
+                                                                        <asp:ListItem Value="10" />
+                                                                        <asp:ListItem Value="15" />
+                                                                        <asp:ListItem Value="20" />
+                                                                </asp:DropDownList>
+                                                                &nbsp;Página
+                                                                <asp:TextBox ID="txtBandeja" runat="server" AutoPostBack="true" OnTextChanged="txtBandeja_TextChanged"
+                                                                    Width="40" MaxLength="10" />
+                                                                de
+                                                                <asp:Label ID="lblBandejaTotal" runat="server" />
+                                                                &nbsp;
+                                                                <asp:Button ID="btnBandeja_I" runat="server" CommandName="Page" CausesValidation="false"
+                                                                    ToolTip="Página Anterior" CommandArgument="Prev" CssClass="previous" />
+                                                                <asp:Button ID="btnBandeja_II" runat="server" CommandName="Page" CausesValidation="false"
+                                                                    ToolTip="Página Siguiente" CommandArgument="Next" CssClass="next" />
+                                                            </PagerTemplate>
+                                                            <HeaderStyle CssClass="headerstyle" />
+                                                            <FooterStyle CssClass="text-center" />
+                                                            <PagerStyle CssClass="text-center" />
+                                                        </asp:GridView>
+                                                </asp:Panel>
+                                            </ContentTemplate>
+                                        </asp:UpdatePanel>
+                                    </div>
+                                </div>
+                            </div>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>                
+                </div>
+                <div class="modal-footer">
+                    <asp:Button runat="server" ID="btnCancelCuestionarios" class="btn btn-default" Text="Cerrar" OnClick="btnCancelCuestionarios_Click" data-dismiss="modal"></asp:Button>
+                    <asp:Button runat="server" ID="bntAddCuestionario" OnClick="bntAddCuestionario_Click" Text="Guardar" CssClass="btn btn-primary" ValidationGroup="vgAddPaciente"></asp:Button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /modals -->
+
+    <!-- modals -->
+    <div class="modal fade bs-example-modal-sm" id="mdlRestricciones" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" style="width:70%">
+            <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel4">Restricciones</h4>
+            </div>
+            <div class="modal-body">
+                <asp:UpdatePanel runat="server">
+                    <ContentTemplate>
+                        <div class="form-horizontal" role="form">
+                        </div>
+                    </ContentTemplate>
+                </asp:UpdatePanel>                
+            </div>
+            <div class="modal-footer">
+                <asp:Button runat="server" ID="btnCancelRestricciones" class="btn btn-default" Text="Cerrar" OnClick="btnCancelRestricciones_Click" data-dismiss="modal"></asp:Button>
+                <asp:Button runat="server" ID="btnAddRestricciones" OnClick="btnAddRestricciones_Click" Text="Guardar" CssClass="btn btn-primary" ValidationGroup="vgAddPaciente"></asp:Button>
+            </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- /modals -->
+
     <script type="text/javascript">
         $(function () {
             var tabName = $("[id*=TabName]").val() != "" ? $("[id*=TabName]").val() : "sistemaConfig";
@@ -1107,6 +1427,18 @@
             $(control).fadeTo(2000, 700).slideUp(700, function () {
                 $(control).slideUp(700);
             });
+        }
+
+        function openModal() {
+            $('#mdlCuestionarios').modal('show');
+        }
+
+        function openModal() {
+            $('#mdlIndicaciones').modal('show');
+        }
+
+        function openModal() {
+            $('#mdlRestricciones').modal('show');
         }
     </script>
 </asp:Content>

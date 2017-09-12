@@ -1754,6 +1754,496 @@ namespace Fuji.RISLite.DataAccess
             }
             return lst;
         }
+
+        public List<string> getBusquedaEstudio(string busqueda, string user)
+        {
+            List<string> lst = new List<string>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    var query = dbRisDA.stp_getBusquedaEstudio(busqueda.ToUpper()).ToList();
+                    if (query != null)
+                    {
+                        if (query.Count > 0)
+                        {
+                            foreach (var item in query)
+                            {
+                                string cadena = "";
+                                cadena = item.CADENA;
+                                lst.Add(cadena);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception egBP)
+            {
+                Log.EscribeLog("Existe un error en getBusquedaEstudio: " + egBP.Message, 3, user);
+            }
+            return lst;
+        }
+
+        public clsEstudio getEstudioDetalle(int intRELModPres, string user)
+        {
+            clsEstudio estudio = new clsEstudio();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_REL_ModalidadPrestacion.Any(x => x.intRELModPres == intRELModPres && (bool)x.bitActivo))
+                    {
+                        var query = (from item in dbRisDA.tbl_REL_ModalidadPrestacion
+                                     join mod in dbRisDA.tbl_CAT_Modalidad on item.intModalidadID equals mod.intModalidadID
+                                     join pres in dbRisDA.tbl_CAT_Prestacion on item.intPrestacionID equals pres.intPrestacionID
+                                     where item.intRELModPres == intRELModPres && (bool)item.bitActivo
+                                     select new
+                                     {
+                                         intRELModPres = item.intRELModPres,
+                                         intModalidadID = item.intModalidadID,
+                                         intPrestacionID = item.intPrestacionID,
+                                         vchCodigo = mod.vchCodigo,
+                                         vchModalidad = mod.vchModalidad,
+                                         intDuracionMin = pres.intDuracionMin,
+                                         vchPrestacion = pres.vchPrestacion
+                                     }).ToList().First();
+                        if (query != null)
+                        {
+                            estudio.cadena = query.vchCodigo + " - " + query.vchPrestacion;
+                            estudio.intRelModPres = query.intRELModPres;
+                            estudio.intModalidadID = (int)query.intModalidadID;
+                            estudio.intPrestacionID = (int)query.intPrestacionID;
+                            estudio.vchCodigo = query.vchCodigo;
+                            estudio.vchModalidad = query.vchModalidad;
+                            estudio.intDuracionMin = (int)query.intDuracionMin;
+                            estudio.vchPrestacion = query.vchPrestacion;
+                        } 
+                    }
+                }
+            }
+            catch (Exception egBP)
+            {
+                Log.EscribeLog("Existe un error en getEstudioDetalle: " + egBP.Message, 3, user);
+            }
+            return estudio;
+        }
         #endregion Paciente
+
+        #region Indicacion
+
+        public List<tbl_DET_IndicacionPrestacion> getListIndicacion(int intPrestacionID, string user)
+        {
+            List<tbl_DET_IndicacionPrestacion> list = new List<tbl_DET_IndicacionPrestacion>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    var query = dbRisDA.tbl_DET_IndicacionPrestacion.Where(x => x.intPrestacionID == intPrestacionID).ToList();
+                    if (query != null)
+                    {
+                        if (query.Count > 0)
+                        {
+                            list.AddRange(query);
+                        }
+                    }
+                }
+            }
+            catch (Exception egLC)
+            {
+                Log.EscribeLog("Existe un error en getListIndicacion: " + egLC.Message, 3, user);
+            }
+            return list;
+        }
+
+        public bool setIndicacion(tbl_DET_IndicacionPrestacion indicacion, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                tbl_DET_IndicacionPrestacion mdlInd = new tbl_DET_IndicacionPrestacion();
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    //Primero en cat
+                    if (!dbRisDA.tbl_DET_IndicacionPrestacion.Any(x => x.vchIndicacion.ToUpper() == indicacion.vchIndicacion.ToUpper()))
+                    {
+                        mdlInd.bitActivo = true;
+                        mdlInd.datFecha = DateTime.Now;
+                        mdlInd.intPrestacionID = indicacion.intPrestacionID;
+                        mdlInd.vchIndicacion = indicacion.vchIndicacion;
+                        mdlInd.vchUserAdmin = user;
+                        dbRisDA.tbl_DET_IndicacionPrestacion.Add(mdlInd);
+                        dbRisDA.SaveChanges();
+                    }
+                    else
+                    {
+                        mensaje += " Ya existe la indicación.";
+                        valido = false;
+                    }
+                }
+            }
+            catch (Exception eSU)
+            {
+                valido = false;
+                mensaje += eSU.Message;
+                Log.EscribeLog("Existe un error en setIndicacion: " + eSU.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public bool setActualizaIndicacion(tbl_DET_IndicacionPrestacion indicacion, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_DET_IndicacionPrestacion.Any(x => x.intIndicacionID == indicacion.intIndicacionID))
+                    {
+                        if (!dbRisDA.tbl_DET_IndicacionPrestacion.Any(x => x.vchIndicacion == indicacion.vchIndicacion))
+                        {
+                            tbl_DET_IndicacionPrestacion mdlInd = new tbl_DET_IndicacionPrestacion();
+                            mdlInd = dbRisDA.tbl_DET_IndicacionPrestacion.First(x => x.intIndicacionID == indicacion.intIndicacionID);
+                            mdlInd.bitActivo = indicacion.bitActivo;
+                            mdlInd.datFecha = DateTime.Now;
+                            mdlInd.intPrestacionID = (int)indicacion.intPrestacionID;
+                            mdlInd.vchUserAdmin = user;
+                            mdlInd.vchIndicacion = indicacion.vchIndicacion;
+                            dbRisDA.SaveChanges();
+                            valido = true;
+                        }
+                        else
+                        {
+                            mensaje = "La indicación ya existe.";
+                            valido = false;
+                        }
+                    }
+                    else
+                    {
+                        mensaje = "No existe la indicación.";
+                        valido = false;
+                    }
+                }
+            }
+            catch (Exception eSU)
+            {
+                valido = false;
+                mensaje = eSU.Message;
+                Log.EscribeLog("Existe un error en setActualizaIndicacion: " + eSU.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public bool setEstatusIndicacion(int intIndicacionID, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_DET_IndicacionPrestacion.Any(x => x.intIndicacionID == intIndicacionID))
+                    {
+                        tbl_DET_IndicacionPrestacion mdlUser = new tbl_DET_IndicacionPrestacion();
+                        mdlUser = dbRisDA.tbl_DET_IndicacionPrestacion.First(x => x.intIndicacionID == intIndicacionID);
+                        mdlUser.bitActivo = !mdlUser.bitActivo;
+                        mdlUser.datFecha = DateTime.Today;
+                        mdlUser.vchUserAdmin = user;
+                        dbRisDA.SaveChanges();
+                        valido = true;
+                    }
+                    else
+                    {
+                        mensaje = "La indicación no existe.";
+                        valido = false;
+                    }
+                }
+            }
+            catch (Exception eSU)
+            {
+                valido = false;
+                mensaje = eSU.Message;
+                Log.EscribeLog("Existe un error en setEstatusIndicacion: " + eSU.Message, 3, user);
+            }
+            return valido;
+        }
+
+        #endregion Indicacion
+
+        #region Restriccion
+
+        public List<tbl_DET_Restriccion> getListRestriccion(int intPrestacionID, string user)
+        {
+            List<tbl_DET_Restriccion> list = new List<tbl_DET_Restriccion>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    var query = dbRisDA.tbl_DET_Restriccion.Where(x => x.intPrestacionID == intPrestacionID).ToList();
+                    if (query != null)
+                    {
+                        if (query.Count > 0)
+                        {
+                            list.AddRange(query);
+                        }
+                    }
+                }
+            }
+            catch (Exception egLC)
+            {
+                Log.EscribeLog("Existe un error en getListRestriccion: " + egLC.Message, 3, user);
+            }
+            return list;
+        }
+
+        public bool setRestriccion(tbl_DET_Restriccion indicacion, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                tbl_DET_Restriccion mdlRes = new tbl_DET_Restriccion();
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    //Primero en cat
+                    if (!dbRisDA.tbl_DET_Restriccion.Any(x => x.vchNombreReestriccion.ToUpper() == indicacion.vchNombreReestriccion.ToUpper()))
+                    {
+                        mdlRes.bitActivo = true;
+                        mdlRes.datFecha = DateTime.Now;
+                        mdlRes.intPrestacionID = indicacion.intPrestacionID;
+                        mdlRes.vchNombreReestriccion = indicacion.vchNombreReestriccion;
+                        mdlRes.vchUserAdmin = user;
+                        dbRisDA.tbl_DET_Restriccion.Add(mdlRes);
+                        dbRisDA.SaveChanges();
+                    }
+                    else
+                    {
+                        mensaje += " Ya existe la restricción.";
+                        valido = false;
+                    }
+                }
+            }
+            catch (Exception eSU)
+            {
+                valido = false;
+                mensaje += eSU.Message;
+                Log.EscribeLog("Existe un error en setRestriccion: " + eSU.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public bool setActualizaRestriccion(tbl_DET_Restriccion indicacion, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_DET_Restriccion.Any(x => x.intReestriccionID == indicacion.intReestriccionID))
+                    {
+                        if (!dbRisDA.tbl_DET_Restriccion.Any(x => x.vchNombreReestriccion == indicacion.vchNombreReestriccion))
+                        {
+                            tbl_DET_Restriccion mdlRes = new tbl_DET_Restriccion();
+                            mdlRes = dbRisDA.tbl_DET_Restriccion.First(x => x.intReestriccionID == indicacion.intReestriccionID);
+                            mdlRes.bitActivo = indicacion.bitActivo;
+                            mdlRes.datFecha = DateTime.Now;
+                            mdlRes.intPrestacionID = (int)indicacion.intPrestacionID;
+                            mdlRes.vchUserAdmin = user;
+                            mdlRes.vchNombreReestriccion = indicacion.vchNombreReestriccion;
+                            dbRisDA.SaveChanges();
+                            valido = true;
+                        }
+                        else
+                        {
+                            mensaje = "La restricción ya existe.";
+                            valido = false;
+                        }
+                    }
+                    else
+                    {
+                        mensaje = "No existe la restricción.";
+                        valido = false;
+                    }
+                }
+            }
+            catch (Exception eSU)
+            {
+                valido = false;
+                mensaje = eSU.Message;
+                Log.EscribeLog("Existe un error en setActualizaRestriccion: " + eSU.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public bool setEstatusRestriccion(int intReestriccionID, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_DET_Restriccion.Any(x => x.intReestriccionID == intReestriccionID))
+                    {
+                        tbl_DET_Restriccion mdlUser = new tbl_DET_Restriccion();
+                        mdlUser = dbRisDA.tbl_DET_Restriccion.First(x => x.intReestriccionID == intReestriccionID);
+                        mdlUser.bitActivo = !mdlUser.bitActivo;
+                        mdlUser.datFecha = DateTime.Today;
+                        mdlUser.vchUserAdmin = user;
+                        dbRisDA.SaveChanges();
+                        valido = true;
+                    }
+                    else
+                    {
+                        mensaje = "La restricción no existe.";
+                        valido = false;
+                    }
+                }
+            }
+            catch (Exception eSU)
+            {
+                valido = false;
+                mensaje = eSU.Message;
+                Log.EscribeLog("Existe un error en setEstatusRestriccion: " + eSU.Message, 3, user);
+            }
+            return valido;
+        }
+
+        #endregion Restriccion
+
+        #region Cuestionario
+
+        public List<tbl_DET_Restriccion> getListCuestionario(int intPrestacionID, string user)
+        {
+            List<tbl_DET_Restriccion> list = new List<tbl_DET_Restriccion>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    var query = dbRisDA.tbl_DET_Restriccion.Where(x => x.intPrestacionID == intPrestacionID).ToList();
+                    if (query != null)
+                    {
+                        if (query.Count > 0)
+                        {
+                            list.AddRange(query);
+                        }
+                    }
+                }
+            }
+            catch (Exception egLC)
+            {
+                Log.EscribeLog("Existe un error en getListCuestionario: " + egLC.Message, 3, user);
+            }
+            return list;
+        }
+
+        public bool setCuestionario(tbl_DET_Restriccion indicacion, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                tbl_DET_Restriccion mdlRes = new tbl_DET_Restriccion();
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    //Primero en cat
+                    if (!dbRisDA.tbl_DET_Restriccion.Any(x => x.vchNombreReestriccion.ToUpper() == indicacion.vchNombreReestriccion.ToUpper()))
+                    {
+                        mdlRes.bitActivo = true;
+                        mdlRes.datFecha = DateTime.Now;
+                        mdlRes.intPrestacionID = indicacion.intPrestacionID;
+                        mdlRes.vchNombreReestriccion = indicacion.vchNombreReestriccion;
+                        mdlRes.vchUserAdmin = user;
+                        dbRisDA.tbl_DET_Restriccion.Add(mdlRes);
+                        dbRisDA.SaveChanges();
+                    }
+                    else
+                    {
+                        mensaje += " Ya existe el Cuestionario.";
+                        valido = false;
+                    }
+                }
+            }
+            catch (Exception eSU)
+            {
+                valido = false;
+                mensaje += eSU.Message;
+                Log.EscribeLog("Existe un error en setCuestionario: " + eSU.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public bool setActualizaCuestionario(tbl_DET_Restriccion indicacion, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_DET_Restriccion.Any(x => x.intReestriccionID == indicacion.intReestriccionID))
+                    {
+                        if (!dbRisDA.tbl_DET_Restriccion.Any(x => x.vchNombreReestriccion == indicacion.vchNombreReestriccion))
+                        {
+                            tbl_DET_Restriccion mdlRes = new tbl_DET_Restriccion();
+                            mdlRes = dbRisDA.tbl_DET_Restriccion.First(x => x.intReestriccionID == indicacion.intReestriccionID);
+                            mdlRes.bitActivo = indicacion.bitActivo;
+                            mdlRes.datFecha = DateTime.Now;
+                            mdlRes.intPrestacionID = (int)indicacion.intPrestacionID;
+                            mdlRes.vchUserAdmin = user;
+                            mdlRes.vchNombreReestriccion = indicacion.vchNombreReestriccion;
+                            dbRisDA.SaveChanges();
+                            valido = true;
+                        }
+                        else
+                        {
+                            mensaje = "El Cuestionario ya existe.";
+                            valido = false;
+                        }
+                    }
+                    else
+                    {
+                        mensaje = "No existe el Cuestionario.";
+                        valido = false;
+                    }
+                }
+            }
+            catch (Exception eSU)
+            {
+                valido = false;
+                mensaje = eSU.Message;
+                Log.EscribeLog("Existe un error en setActualizaCuestionario: " + eSU.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public bool setEstatusCuestionario(int intReestriccionID, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_DET_Restriccion.Any(x => x.intReestriccionID == intReestriccionID))
+                    {
+                        tbl_DET_Restriccion mdlUser = new tbl_DET_Restriccion();
+                        mdlUser = dbRisDA.tbl_DET_Restriccion.First(x => x.intReestriccionID == intReestriccionID);
+                        mdlUser.bitActivo = !mdlUser.bitActivo;
+                        mdlUser.datFecha = DateTime.Today;
+                        mdlUser.vchUserAdmin = user;
+                        dbRisDA.SaveChanges();
+                        valido = true;
+                    }
+                    else
+                    {
+                        mensaje = "El Cuestionario no existe.";
+                        valido = false;
+                    }
+                }
+            }
+            catch (Exception eSU)
+            {
+                valido = false;
+                mensaje = eSU.Message;
+                Log.EscribeLog("Existe un error en setEstatusCuestionario: " + eSU.Message, 3, user);
+            }
+            return valido;
+        }
+
+        #endregion Cuestionario
     }
 }

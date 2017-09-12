@@ -1987,6 +1987,16 @@ namespace Fuji.RISLite.Site
                             ShowMessage("Existe un error al actualizar, favor de revisar la información. ", MessageType.Advertencia, "alert_container");
                         }
                         break;
+
+                    case "Cuestionario":
+                        ScriptManager.RegisterStartupScript(Page, Page.GetType(), "myModal", "$('#mdlCuestionarios').modal();", true);
+                        break;
+                    case "Indicacion":
+                        ScriptManager.RegisterStartupScript(Page, Page.GetType(), "myModal", "$('#mdlIndicaciones').modal();", true);
+                        break;
+                    case "Restricciones":
+                        ScriptManager.RegisterStartupScript(Page, Page.GetType(), "myModal", "$('#mdlRestricciones').modal();", true);
+                        break;
                 }
             }
             catch (Exception eRU)
@@ -2402,10 +2412,10 @@ namespace Fuji.RISLite.Site
             {
                 if (e.Row.RowType == DataControlRowType.Pager)
                 {
-                    Label lblTotalNumDePaginas = (Label)e.Row.FindControl("lblBandejaTotalID");
+                    Label lblTotalNumDePaginas = (Label)e.Row.FindControl("lblBandejaTotal");
                     lblTotalNumDePaginas.Text = grvAddPaciente.PageCount.ToString();
 
-                    TextBox txtIrAlaPagina = (TextBox)e.Row.FindControl("txtBandejaPaciente");
+                    TextBox txtIrAlaPagina = (TextBox)e.Row.FindControl("txtBandejaID");
                     txtIrAlaPagina.Text = (grvAddPaciente.PageIndex + 1).ToString();
 
                     DropDownList ddlTamPagina = (DropDownList)e.Row.FindControl("ddlBandejaID");
@@ -2604,5 +2614,130 @@ namespace Fuji.RISLite.Site
             }
         }
         #endregion IDS
+
+
+        #region Cuestionarios
+        protected void btnCancelCuestionarios_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void bntAddCuestionario_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnAddCuestionario_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void grvCuestionario_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+
+        }
+
+        protected void grvCuestionario_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+
+        }
+
+        protected void grvCuestionario_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+
+        }
+
+        protected void grvCuestionario_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+
+        }
+
+        protected void grvCuestionario_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+
+        }
+
+        protected void grvCuestionario_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+
+        }
+        #endregion Cuestionarios
+
+
+        #region Indicaciones
+        protected void btnCancelIndicaciones_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnAddIndicaciones_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnAddInstruccion_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void grvIndicaciones_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+
+        }
+
+        protected void grvIndicaciones_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+
+        }
+
+        protected void grvIndicaciones_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+
+        }
+
+        protected void grvIndicaciones_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+
+        }
+
+        protected void grvIndicaciones_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+
+        }
+
+        protected void grvIndicaciones_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+
+        }
+        #endregion Indicaciones
+
+
+        #region restriccion
+        protected void btnAddRestricciones_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnCancelRestricciones_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
+
+
+
+
+        #endregion restriccion
+
+        protected void ddlBandejaInd_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void txtBandejaInd_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
