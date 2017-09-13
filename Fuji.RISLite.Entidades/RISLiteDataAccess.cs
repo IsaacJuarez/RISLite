@@ -1873,6 +1873,7 @@ namespace Fuji.RISLite.DataAccess
                         mdlInd.vchUserAdmin = user;
                         dbRisDA.tbl_DET_IndicacionPrestacion.Add(mdlInd);
                         dbRisDA.SaveChanges();
+                        valido = true;
                     }
                     else
                     {
@@ -2012,6 +2013,7 @@ namespace Fuji.RISLite.DataAccess
                         mdlRes.vchUserAdmin = user;
                         dbRisDA.tbl_DET_Restriccion.Add(mdlRes);
                         dbRisDA.SaveChanges();
+                        valido = true;
                     }
                     else
                     {
@@ -2029,24 +2031,24 @@ namespace Fuji.RISLite.DataAccess
             return valido;
         }
 
-        public bool setActualizaRestriccion(tbl_DET_Restriccion indicacion, string user, ref string mensaje)
+        public bool setActualizaRestriccion(tbl_DET_Restriccion restriccion, string user, ref string mensaje)
         {
             bool valido = false;
             try
             {
                 using (dbRisDA = new RISLiteEntities())
                 {
-                    if (dbRisDA.tbl_DET_Restriccion.Any(x => x.intReestriccionID == indicacion.intReestriccionID))
+                    if (dbRisDA.tbl_DET_Restriccion.Any(x => x.intReestriccionID == restriccion.intReestriccionID))
                     {
-                        if (!dbRisDA.tbl_DET_Restriccion.Any(x => x.vchNombreReestriccion == indicacion.vchNombreReestriccion))
+                        if (!dbRisDA.tbl_DET_Restriccion.Any(x => x.vchNombreReestriccion == restriccion.vchNombreReestriccion))
                         {
                             tbl_DET_Restriccion mdlRes = new tbl_DET_Restriccion();
-                            mdlRes = dbRisDA.tbl_DET_Restriccion.First(x => x.intReestriccionID == indicacion.intReestriccionID);
-                            mdlRes.bitActivo = indicacion.bitActivo;
+                            mdlRes = dbRisDA.tbl_DET_Restriccion.First(x => x.intReestriccionID == restriccion.intReestriccionID);
+                            mdlRes.bitActivo = restriccion.bitActivo;
                             mdlRes.datFecha = DateTime.Now;
-                            mdlRes.intPrestacionID = (int)indicacion.intPrestacionID;
+                            mdlRes.intPrestacionID = (int)restriccion.intPrestacionID;
                             mdlRes.vchUserAdmin = user;
-                            mdlRes.vchNombreReestriccion = indicacion.vchNombreReestriccion;
+                            mdlRes.vchNombreReestriccion = restriccion.vchNombreReestriccion;
                             dbRisDA.SaveChanges();
                             valido = true;
                         }
@@ -2109,14 +2111,14 @@ namespace Fuji.RISLite.DataAccess
 
         #region Cuestionario
 
-        public List<tbl_DET_Restriccion> getListCuestionario(int intPrestacionID, string user)
+        public List<tbl_DET_Cuestionario> getListCuestionario(int intPrestacionID, string user)
         {
-            List<tbl_DET_Restriccion> list = new List<tbl_DET_Restriccion>();
+            List<tbl_DET_Cuestionario> list = new List<tbl_DET_Cuestionario>();
             try
             {
                 using (dbRisDA = new RISLiteEntities())
                 {
-                    var query = dbRisDA.tbl_DET_Restriccion.Where(x => x.intPrestacionID == intPrestacionID).ToList();
+                    var query = dbRisDA.tbl_DET_Cuestionario.Where(x => x.intPrestacionID == intPrestacionID).ToList();
                     if (query != null)
                     {
                         if (query.Count > 0)
@@ -2133,24 +2135,25 @@ namespace Fuji.RISLite.DataAccess
             return list;
         }
 
-        public bool setCuestionario(tbl_DET_Restriccion indicacion, string user, ref string mensaje)
+        public bool setCuestionario(tbl_DET_Cuestionario cuestionario, string user, ref string mensaje)
         {
             bool valido = false;
             try
             {
-                tbl_DET_Restriccion mdlRes = new tbl_DET_Restriccion();
+                tbl_DET_Cuestionario mdlCues = new tbl_DET_Cuestionario();
                 using (dbRisDA = new RISLiteEntities())
                 {
                     //Primero en cat
-                    if (!dbRisDA.tbl_DET_Restriccion.Any(x => x.vchNombreReestriccion.ToUpper() == indicacion.vchNombreReestriccion.ToUpper()))
+                    if (!dbRisDA.tbl_DET_Cuestionario.Any(x => x.vchCuestionario.ToUpper() == cuestionario.vchCuestionario.ToUpper()))
                     {
-                        mdlRes.bitActivo = true;
-                        mdlRes.datFecha = DateTime.Now;
-                        mdlRes.intPrestacionID = indicacion.intPrestacionID;
-                        mdlRes.vchNombreReestriccion = indicacion.vchNombreReestriccion;
-                        mdlRes.vchUserAdmin = user;
-                        dbRisDA.tbl_DET_Restriccion.Add(mdlRes);
+                        mdlCues.bitActivo = true;
+                        mdlCues.datFecha = DateTime.Now;
+                        mdlCues.intPrestacionID = cuestionario.intPrestacionID;
+                        mdlCues.vchCuestionario = cuestionario.vchCuestionario;
+                        mdlCues.vchUserAdmin = user;
+                        dbRisDA.tbl_DET_Cuestionario.Add(mdlCues);
                         dbRisDA.SaveChanges();
+                        valido = true;
                     }
                     else
                     {
@@ -2168,24 +2171,24 @@ namespace Fuji.RISLite.DataAccess
             return valido;
         }
 
-        public bool setActualizaCuestionario(tbl_DET_Restriccion indicacion, string user, ref string mensaje)
+        public bool setActualizaCuestionario(tbl_DET_Cuestionario cuestionario, string user, ref string mensaje)
         {
             bool valido = false;
             try
             {
                 using (dbRisDA = new RISLiteEntities())
                 {
-                    if (dbRisDA.tbl_DET_Restriccion.Any(x => x.intReestriccionID == indicacion.intReestriccionID))
+                    if (dbRisDA.tbl_DET_Cuestionario.Any(x => x.intDETCuestionarioID == cuestionario.intDETCuestionarioID))
                     {
-                        if (!dbRisDA.tbl_DET_Restriccion.Any(x => x.vchNombreReestriccion == indicacion.vchNombreReestriccion))
+                        if (!dbRisDA.tbl_DET_Cuestionario.Any(x => x.vchCuestionario == cuestionario.vchCuestionario))
                         {
-                            tbl_DET_Restriccion mdlRes = new tbl_DET_Restriccion();
-                            mdlRes = dbRisDA.tbl_DET_Restriccion.First(x => x.intReestriccionID == indicacion.intReestriccionID);
-                            mdlRes.bitActivo = indicacion.bitActivo;
+                            tbl_DET_Cuestionario mdlRes = new tbl_DET_Cuestionario();
+                            mdlRes = dbRisDA.tbl_DET_Cuestionario.First(x => x.intDETCuestionarioID == cuestionario.intDETCuestionarioID);
+                            mdlRes.bitActivo = cuestionario.bitActivo;
                             mdlRes.datFecha = DateTime.Now;
-                            mdlRes.intPrestacionID = (int)indicacion.intPrestacionID;
+                            mdlRes.intPrestacionID = (int)cuestionario.intPrestacionID;
                             mdlRes.vchUserAdmin = user;
-                            mdlRes.vchNombreReestriccion = indicacion.vchNombreReestriccion;
+                            mdlRes.vchCuestionario = cuestionario.vchCuestionario;
                             dbRisDA.SaveChanges();
                             valido = true;
                         }
@@ -2211,17 +2214,17 @@ namespace Fuji.RISLite.DataAccess
             return valido;
         }
 
-        public bool setEstatusCuestionario(int intReestriccionID, string user, ref string mensaje)
+        public bool setEstatusCuestionario(int intDETCuestionarioID, string user, ref string mensaje)
         {
             bool valido = false;
             try
             {
                 using (dbRisDA = new RISLiteEntities())
                 {
-                    if (dbRisDA.tbl_DET_Restriccion.Any(x => x.intReestriccionID == intReestriccionID))
+                    if (dbRisDA.tbl_DET_Cuestionario.Any(x => x.intDETCuestionarioID == intDETCuestionarioID))
                     {
-                        tbl_DET_Restriccion mdlUser = new tbl_DET_Restriccion();
-                        mdlUser = dbRisDA.tbl_DET_Restriccion.First(x => x.intReestriccionID == intReestriccionID);
+                        tbl_DET_Cuestionario mdlUser = new tbl_DET_Cuestionario();
+                        mdlUser = dbRisDA.tbl_DET_Cuestionario.First(x => x.intDETCuestionarioID == intDETCuestionarioID);
                         mdlUser.bitActivo = !mdlUser.bitActivo;
                         mdlUser.datFecha = DateTime.Today;
                         mdlUser.vchUserAdmin = user;

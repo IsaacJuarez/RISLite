@@ -172,5 +172,33 @@ namespace Fuji.RISLite.Site.Services
         IndicacionResponse setEstatusIndicacion(IndicacionRequest request);
         #endregion Indicacion
 
+        #region Restriccion
+        [OperationContract]
+        List<tbl_DET_Restriccion> getListRestriccion(RestriccionRequest request);
+
+        [OperationContract]
+        RestriccionResponse setRestriccion(RestriccionRequest request);
+
+        [OperationContract]
+        RestriccionResponse setActualizaRestriccion(RestriccionRequest request);
+
+        [OperationContract]
+        RestriccionResponse setEstatusRestriccion(RestriccionRequest request);
+        #endregion Restriccion
+
+        #region Cuestionario
+        [OperationContract]
+        List<tbl_DET_Cuestionario> getListCuestionario(CuestionarioRequest request);
+
+        [OperationContract]
+        CuestionarioResponse setCuestionario(CuestionarioRequest request);
+
+        [OperationContract]
+        CuestionarioResponse setActualizaCuestionario(CuestionarioRequest request);
+
+        [OperationContract]
+        CuestionarioResponse setEstatusCuestionario(CuestionarioRequest request);
+        #endregion Cuestionario
+
     }
 }

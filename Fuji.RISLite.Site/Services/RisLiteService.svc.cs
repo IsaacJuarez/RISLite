@@ -966,5 +966,166 @@ namespace Fuji.RISLite.Site.Services
             return response;
         }
         #endregion Indicacion
+
+
+        #region Restriccion
+        public List<tbl_DET_Restriccion> getListRestriccion(RestriccionRequest request)
+        {
+            List<tbl_DET_Restriccion> response = new List<tbl_DET_Restriccion>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListRestriccion(request.intPrestacionID, request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getListRestriccion: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public RestriccionResponse setRestriccion(RestriccionRequest request)
+        {
+            RestriccionResponse response = new RestriccionResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setRestriccion(request.mdlRestriccion, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setRestriccion: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public RestriccionResponse setActualizaRestriccion(RestriccionRequest request)
+        {
+            RestriccionResponse response = new RestriccionResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setActualizaRestriccion(request.mdlRestriccion, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setActualizaRestriccion: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public RestriccionResponse setEstatusRestriccion(RestriccionRequest request)
+        {
+            RestriccionResponse response = new RestriccionResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setEstatusRestriccion(request.intReestriccionID, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setEstatusRestriccion: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+        #endregion Restriccion
+
+        #region Cuestionario
+        public List<tbl_DET_Cuestionario> getListCuestionario(CuestionarioRequest request)
+        {
+            List<tbl_DET_Cuestionario> response = new List<tbl_DET_Cuestionario>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListCuestionario(request.intPrestacionID, request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getListCuestionario: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public CuestionarioResponse setCuestionario(CuestionarioRequest request)
+        {
+            CuestionarioResponse response = new CuestionarioResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setCuestionario(request.mdlCuestionario, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setCuestionario: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public CuestionarioResponse setActualizaCuestionario(CuestionarioRequest request)
+        {
+            CuestionarioResponse response = new CuestionarioResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setActualizaCuestionario(request.mdlCuestionario, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setActualizaCuestionario: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public CuestionarioResponse setEstatusCuestionario(CuestionarioRequest request)
+        {
+            CuestionarioResponse response = new CuestionarioResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setEstatusCuestionario(request.intCuestionarioID, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setEstatusCuestionario: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+        #endregion Cuestionario
     }
 }

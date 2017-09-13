@@ -679,22 +679,22 @@ namespace Fuji.RISLite.Site {
         protected global::System.Web.UI.WebControls.Button btnCancelCuestionarios;
         
         /// <summary>
-        /// Control bntAddCuestionario.
+        /// Control txtRestriccion.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button bntAddCuestionario;
+        protected global::System.Web.UI.WebControls.TextBox txtRestriccion;
         
         /// <summary>
-        /// Control btnCancelRestricciones.
+        /// Control RequiredFieldValidator13.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnCancelRestricciones;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator13;
         
         /// <summary>
         /// Control btnAddRestricciones.
@@ -704,5 +704,23 @@ namespace Fuji.RISLite.Site {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnAddRestricciones;
+        
+        /// <summary>
+        /// Control grvRestriccion.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView grvRestriccion;
+        
+        /// <summary>
+        /// Control btnCancelRestricciones.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnCancelRestricciones;
     }
 }

@@ -1958,6 +1958,7 @@ namespace Fuji.RISLite.Site
             try
             {
                 int intRELModPres = 0;
+                int intPrestacionID = 0;
                 clsPrestacion mdl = new clsPrestacion();
                 switch (e.CommandName)
                 {
@@ -1968,7 +1969,7 @@ namespace Fuji.RISLite.Site
                         request.mdlUser = Usuario;
                         request.intRELModPres = intRELModPres;
                         PrestacionResponse response = new PrestacionResponse();
-                        response = RisService.setActualizaPrestacion(request);
+                        response = RisService.setEstatusPrestacion(request);
                         if (response != null)
                         {
                             if (response.Success)
@@ -1989,12 +1990,21 @@ namespace Fuji.RISLite.Site
                         break;
 
                     case "Cuestionario":
+                        intPrestacionID = Convert.ToInt32(e.CommandArgument.ToString());
+                        Session["intPrestacionID"] = intPrestacionID;
+                        cargarCuestionarios();
                         ScriptManager.RegisterStartupScript(Page, Page.GetType(), "myModal", "$('#mdlCuestionarios').modal();", true);
                         break;
                     case "Indicacion":
+                        intPrestacionID = Convert.ToInt32(e.CommandArgument.ToString());
+                        Session["intPrestacionID"] = intPrestacionID;
+                        cargarIndicaciones();
                         ScriptManager.RegisterStartupScript(Page, Page.GetType(), "myModal", "$('#mdlIndicaciones').modal();", true);
                         break;
                     case "Restricciones":
+                        intPrestacionID = Convert.ToInt32(e.CommandArgument.ToString());
+                        Session["intPrestacionID"] = intPrestacionID;
+                        cargarRestricciones();
                         ScriptManager.RegisterStartupScript(Page, Page.GetType(), "myModal", "$('#mdlRestricciones').modal();", true);
                         break;
                 }
@@ -2413,13 +2423,13 @@ namespace Fuji.RISLite.Site
                 if (e.Row.RowType == DataControlRowType.Pager)
                 {
                     Label lblTotalNumDePaginas = (Label)e.Row.FindControl("lblBandejaTotal");
-                    lblTotalNumDePaginas.Text = grvAddPaciente.PageCount.ToString();
+                    lblTotalNumDePaginas.Text = grvVarID.PageCount.ToString();
 
                     TextBox txtIrAlaPagina = (TextBox)e.Row.FindControl("txtBandejaID");
-                    txtIrAlaPagina.Text = (grvAddPaciente.PageIndex + 1).ToString();
+                    txtIrAlaPagina.Text = (grvVarID.PageIndex + 1).ToString();
 
                     DropDownList ddlTamPagina = (DropDownList)e.Row.FindControl("ddlBandejaID");
-                    ddlTamPagina.SelectedValue = grvAddPaciente.PageSize.ToString();
+                    ddlTamPagina.SelectedValue = grvVarID.PageSize.ToString();
                 }
 
                 if (e.Row.RowType != DataControlRowType.DataRow)
@@ -2503,7 +2513,7 @@ namespace Fuji.RISLite.Site
                                 }
                                 else
                                 {
-                                    ShowMessage("Existe un error: " + response.Success, MessageType.Error, "alert_container");
+                                    ShowMessage("Existe un error: " + response.Mensaje, MessageType.Error, "alert_container");
                                 }
                             }
                             else
@@ -2615,55 +2625,6 @@ namespace Fuji.RISLite.Site
         }
         #endregion IDS
 
-
-        #region Cuestionarios
-        protected void btnCancelCuestionarios_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        protected void bntAddCuestionario_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        protected void btnAddCuestionario_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        protected void grvCuestionario_PageIndexChanging(object sender, GridViewPageEventArgs e)
-        {
-
-        }
-
-        protected void grvCuestionario_RowDataBound(object sender, GridViewRowEventArgs e)
-        {
-
-        }
-
-        protected void grvCuestionario_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
-        {
-
-        }
-
-        protected void grvCuestionario_RowCommand(object sender, GridViewCommandEventArgs e)
-        {
-
-        }
-
-        protected void grvCuestionario_RowEditing(object sender, GridViewEditEventArgs e)
-        {
-
-        }
-
-        protected void grvCuestionario_RowUpdating(object sender, GridViewUpdateEventArgs e)
-        {
-
-        }
-        #endregion Cuestionarios
-
-
         #region Indicaciones
         protected void btnCancelIndicaciones_Click(object sender, EventArgs e)
         {
@@ -2672,50 +2633,617 @@ namespace Fuji.RISLite.Site
 
         protected void btnAddIndicaciones_Click(object sender, EventArgs e)
         {
-
-        }
-
-        protected void btnAddInstruccion_Click(object sender, EventArgs e)
-        {
-
+            try
+            {
+                IndicacionRequest request = new IndicacionRequest();
+                IndicacionResponse response = new IndicacionResponse();
+                request.mdlUser = Usuario;
+                tbl_DET_IndicacionPrestacion mdlInd = new tbl_DET_IndicacionPrestacion();
+                mdlInd.bitActivo = true;
+                mdlInd.datFecha = DateTime.Now;
+                mdlInd.vchIndicacion = txtInstruccion.Text;
+                mdlInd.intPrestacionID = Convert.ToInt32(Session["intPrestacionID"].ToString());
+                if (mdlInd != null)
+                {
+                    request.mdlIndicacion = mdlInd;
+                    response = RisService.setIndicacion(request);
+                    if (response != null)
+                    {
+                        if (response.Success)
+                        {
+                            ShowMessage("Se agregó correctamente la indicación", MessageType.Correcto, "alert_container");
+                            cargarIndicaciones();
+                        }
+                        else
+                        {
+                            ShowMessage("Existe un error favor de revisar: " + response.Mensaje, MessageType.Error, "alert_container");
+                        }
+                    }
+                    else
+                    {
+                        ShowMessage("Favor de revisar la información.", MessageType.Error, "alert_container");
+                    }
+                }
+                else
+                {
+                    ShowMessage("Favor de revisar la información.", MessageType.Error, "alert_container");
+                }
+            }
+            catch (Exception ebAdd)
+            {
+                ShowMessage("Favor de revisar la información." + ebAdd.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error al agregar la indicación:  " + ebAdd.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void grvIndicaciones_RowDataBound(object sender, GridViewRowEventArgs e)
         {
+            try
+            {
+                if (e.Row.RowType == DataControlRowType.Pager)
+                {
+                    Label lblTotalNumDePaginas = (Label)e.Row.FindControl("lblBandejaTotal");
+                    lblTotalNumDePaginas.Text = grvIndicaciones.PageCount.ToString();
 
+                    TextBox txtIrAlaPagina = (TextBox)e.Row.FindControl("txtBandejaInd");
+                    txtIrAlaPagina.Text = (grvIndicaciones.PageIndex + 1).ToString();
+
+                    DropDownList ddlTamPagina = (DropDownList)e.Row.FindControl("ddlBandejaInd");
+                    ddlTamPagina.SelectedValue = grvIndicaciones.PageSize.ToString();
+                }
+
+                if (e.Row.RowType != DataControlRowType.DataRow)
+                {
+                    return;
+                }
+
+                if (e.Row.DataItem != null)
+                {
+                    tbl_DET_IndicacionPrestacion _mdl = (tbl_DET_IndicacionPrestacion)e.Row.DataItem;
+                    ImageButton ibtEstatus = (ImageButton)e.Row.FindControl("imbEstatus");
+                    ibtEstatus.Attributes.Add("onclick", "javascript:return confirm('¿Desea realizar el cambio de estatus del item seleccionado?');");
+                    if ((bool)_mdl.bitActivo)
+                        ibtEstatus.ImageUrl = @"~/Images/ic_action_tick.png";
+                    else
+                        ibtEstatus.ImageUrl = @"~/Images/ic_action_cancel.png";
+                }
+            }
+            catch (Exception eGUP)
+            {
+                throw eGUP;
+            }
         }
 
         protected void grvIndicaciones_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
-
+            try
+            {
+                if (e.NewPageIndex >= 0)
+                {
+                    this.grvIndicaciones.PageIndex = e.NewPageIndex;
+                    cargarIndicaciones();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.EscribeLog("Existe un error grvIndicaciones_PageIndexChanging: " + ex.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void grvIndicaciones_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
-
+            try
+            {
+                grvIndicaciones.EditIndex = -1;
+                cargarIndicaciones();
+            }
+            catch (Exception eCE)
+            {
+                Log.EscribeLog("Existe un error en grvIndicaciones_RowCancelingEdit: " + eCE.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void grvIndicaciones_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-
+            try
+            {
+                int intIndicacionID = 0;
+                switch (e.CommandName)
+                {
+                    case "Estatus":
+                        intIndicacionID = Convert.ToInt32(e.CommandArgument.ToString());
+                        IndicacionRequest request = new IndicacionRequest();
+                        IndicacionResponse response = new IndicacionResponse();
+                        request.mdlUser = Usuario;
+                        request.intIndicacionID = intIndicacionID;
+                        if (request != null)
+                        {
+                            response = RisService.setEstatusIndicacion(request);
+                            if (response != null)
+                            {
+                                if (response.Success)
+                                {
+                                    ShowMessage("Se actualizo correctamente la indicación", MessageType.Correcto, "alert_container");
+                                    //grvAddPaciente.EditIndex = -1;
+                                    cargarIndicaciones();
+                                }
+                                else
+                                {
+                                    ShowMessage("Existe un error: " + response.Mensaje, MessageType.Error, "alert_container");
+                                }
+                            }
+                            else
+                            {
+                                ShowMessage("Favor de revisar la información.", MessageType.Error, "alert_container");
+                            }
+                        }
+                        else
+                        {
+                            ShowMessage("Favor de revisar la información.", MessageType.Error, "alert_container");
+                        }
+                        break;
+                }
+            }
+            catch (Exception eRU)
+            {
+                ShowMessage("Favor de revisar la información: " + eRU.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error grvIndicaciones_RowCommand: " + eRU.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void grvIndicaciones_RowEditing(object sender, GridViewEditEventArgs e)
         {
-
+            try
+            {
+                grvIndicaciones.EditIndex = e.NewEditIndex;
+                cargarIndicaciones();
+            }
+            catch (Exception eRW)
+            {
+                Log.EscribeLog("Existe un error en grvIndicaciones_RowEditing: " + eRW.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void grvIndicaciones_RowUpdating(object sender, GridViewUpdateEventArgs e)
         {
-
+            try
+            {
+                IndicacionRequest request = new IndicacionRequest();
+                IndicacionResponse response = new IndicacionResponse();
+                request.mdlUser = Usuario;
+                tbl_DET_IndicacionPrestacion mdlInd = new tbl_DET_IndicacionPrestacion();
+                mdlInd.bitActivo = true;
+                mdlInd.datFecha = DateTime.Now;
+                TextBox txtNamevar = (TextBox)grvIndicaciones.Rows[e.RowIndex].FindControl("txtname");
+                mdlInd.vchIndicacion = txtNamevar.Text;
+                mdlInd.intIndicacionID = Convert.ToInt16(grvIndicaciones.DataKeys[e.RowIndex].Values["intIndicacionID"].ToString());
+                mdlInd.intPrestacionID = Convert.ToInt16(grvIndicaciones.DataKeys[e.RowIndex].Values["intPrestacionID"].ToString());
+                if (mdlInd != null)
+                {
+                    request.mdlIndicacion = mdlInd;
+                    response = RisService.setActualizaIndicacion(request);
+                    if (response != null)
+                    {
+                        if (response.Success)
+                        {
+                            ShowMessage("Se actualizo correctamente la indicación", MessageType.Correcto, "alert_container");
+                            grvIndicaciones.EditIndex = -1;
+                            cargarIndicaciones();
+                        }
+                        else
+                        {
+                            ShowMessage("Existe un error: " + response.Success, MessageType.Error, "alert_container");
+                        }
+                    }
+                    else
+                    {
+                        ShowMessage("Favor de revisar la información.", MessageType.Error, "alert_container");
+                    }
+                }
+            }
+            catch (Exception eUpdating)
+            {
+                ShowMessage("Existe un error: " + eUpdating.Message, MessageType.Error, "alert_container");
+            }
         }
+
+        protected void ddlBandejaInd_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                DropDownList dropDownList = (DropDownList)sender;
+                if (int.Parse(dropDownList.SelectedValue) != 0)
+                {
+                    this.grvIndicaciones.AllowPaging = true;
+                    this.grvIndicaciones.PageSize = int.Parse(dropDownList.SelectedValue);
+                }
+                else
+                    this.grvIndicaciones.AllowPaging = false;
+                this.cargarIndicaciones();
+            }
+            catch (Exception eddS)
+            {
+                Log.EscribeLog("Existe un error ddlBandejaInd_SelectedIndexChanged de frmConfiguracion: " + eddS.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void txtBandejaInd_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                TextBox txtBandejaAvaluosGoToPage = (TextBox)sender;
+                int numeroPagina;
+                if (int.TryParse(txtBandejaAvaluosGoToPage.Text.Trim(), out numeroPagina))
+                    this.grvIndicaciones.PageIndex = numeroPagina - 1;
+                else
+                    this.grvIndicaciones.PageIndex = 0;
+                this.cargarIndicaciones();
+            }
+            catch (Exception ex)
+            {
+                Log.EscribeLog("Existe un error txtBandejaInd_TextChanged de frmConfiguracion: " + ex.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargarIndicaciones()
+        {
+            try
+            {
+                IndicacionRequest request = new IndicacionRequest();
+                List<tbl_DET_IndicacionPrestacion> response = new List<tbl_DET_IndicacionPrestacion>();
+                request.mdlUser = Usuario;
+                request.intPrestacionID = Convert.ToInt32(Session["intPrestacionID"].ToString());
+                response = RisService.getListIndicacion(request);
+                grvIndicaciones.DataSource = null;
+                grvIndicaciones.DataBind();
+                if (response != null)
+                {
+                    if (response.Count > 0)
+                    {
+                        grvIndicaciones.DataSource = response;
+                    }
+                }
+                grvIndicaciones.DataBind();
+            }
+            catch(Exception ecI)
+            {
+                Log.EscribeLog("Existe un error en cargarIndicaciones: " + ecI.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
         #endregion Indicaciones
 
+        #region Cuestionarios
+        protected void btnCancelCuestionarios_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnAddCuestionario_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                CuestionarioRequest request = new CuestionarioRequest();
+                CuestionarioResponse response = new CuestionarioResponse();
+                request.mdlUser = Usuario;
+                tbl_DET_Cuestionario mdlCuest = new tbl_DET_Cuestionario();
+                mdlCuest.bitActivo = true;
+                mdlCuest.datFecha = DateTime.Now;
+                mdlCuest.vchCuestionario = txtCuestionario.Text;
+                mdlCuest.intPrestacionID = Convert.ToInt32(Session["intPrestacionID"].ToString());
+                if (mdlCuest != null)
+                {
+                    request.mdlCuestionario = mdlCuest;
+                    response = RisService.setCuestionario(request);
+                    if (response != null)
+                    {
+                        if (response.Success)
+                        {
+                            ShowMessage("Se agregó correctamente el cuestionario", MessageType.Correcto, "alert_container");
+                            cargarCuestionarios();
+                        }
+                        else
+                        {
+                            ShowMessage("Existe un error favor de revisar: " + response.Mensaje, MessageType.Error, "alert_container");
+                        }
+                    }
+                    else
+                    {
+                        ShowMessage("Favor de revisar la información.", MessageType.Error, "alert_container");
+                    }
+                }
+                else
+                {
+                    ShowMessage("Favor de revisar la información.", MessageType.Error, "alert_container");
+                }
+            }
+            catch (Exception ebAdd)
+            {
+                ShowMessage("Favor de revisar la información." + ebAdd.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error al agregar la indicación:  " + ebAdd.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvCuestionario_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            try
+            {
+                if (e.NewPageIndex >= 0)
+                {
+                    this.grvCuestionario.PageIndex = e.NewPageIndex;
+                    cargarCuestionarios();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.EscribeLog("Existe un error grvCuestionario_PageIndexChanging: " + ex.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvCuestionario_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            try
+            {
+                if (e.Row.RowType == DataControlRowType.Pager)
+                {
+                    Label lblTotalNumDePaginas = (Label)e.Row.FindControl("lblBandejaTotal");
+                    lblTotalNumDePaginas.Text = grvCuestionario.PageCount.ToString();
+
+                    TextBox txtIrAlaPagina = (TextBox)e.Row.FindControl("txtBandejaCues");
+                    txtIrAlaPagina.Text = (grvCuestionario.PageIndex + 1).ToString();
+
+                    DropDownList ddlTamPagina = (DropDownList)e.Row.FindControl("ddlBandejaCues");
+                    ddlTamPagina.SelectedValue = grvCuestionario.PageSize.ToString();
+                }
+
+                if (e.Row.RowType != DataControlRowType.DataRow)
+                {
+                    return;
+                }
+
+                if (e.Row.DataItem != null)
+                {
+                    tbl_DET_Cuestionario _mdl = (tbl_DET_Cuestionario)e.Row.DataItem;
+                    ImageButton ibtEstatus = (ImageButton)e.Row.FindControl("imbEstatus");
+                    ibtEstatus.Attributes.Add("onclick", "javascript:return confirm('¿Desea realizar el cambio de estatus del item seleccionado?');");
+                    if ((bool)_mdl.bitActivo)
+                        ibtEstatus.ImageUrl = @"~/Images/ic_action_tick.png";
+                    else
+                        ibtEstatus.ImageUrl = @"~/Images/ic_action_cancel.png";
+                }
+            }
+            catch (Exception eGUP)
+            {
+                throw eGUP;
+            }
+        }
+
+        protected void grvCuestionario_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+            try
+            {
+                grvCuestionario.EditIndex = -1;
+                cargarCuestionarios();
+            }
+            catch (Exception eCE)
+            {
+                Log.EscribeLog("Existe un error en grvCuestionario_RowCancelingEdit: " + eCE.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvCuestionario_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            try
+            {
+                int intCuestionarioID = 0;
+                switch (e.CommandName)
+                {
+                    case "Estatus":
+                        intCuestionarioID = Convert.ToInt32(e.CommandArgument.ToString());
+                        CuestionarioRequest request = new CuestionarioRequest();
+                        CuestionarioResponse response = new CuestionarioResponse();
+                        request.mdlUser = Usuario;
+                        request.intCuestionarioID = intCuestionarioID;
+                        if (request != null)
+                        {
+                            response = RisService.setEstatusCuestionario(request);
+                            if (response != null)
+                            {
+                                if (response.Success)
+                                {
+                                    ShowMessage("Se actualizo correctamente el cuestionarioS", MessageType.Correcto, "alert_container");
+                                    //grvAddPaciente.EditIndex = -1;
+                                    cargarCuestionarios();
+                                }
+                                else
+                                {
+                                    ShowMessage("Existe un error: " + response.Mensaje, MessageType.Error, "alert_container");
+                                }
+                            }
+                            else
+                            {
+                                ShowMessage("Favor de revisar la información.", MessageType.Error, "alert_container");
+                            }
+                        }
+                        else
+                        {
+                            ShowMessage("Favor de revisar la información.", MessageType.Error, "alert_container");
+                        }
+                        break;
+                }
+            }
+            catch (Exception eRU)
+            {
+                ShowMessage("Favor de revisar la información: " + eRU.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error grvCuestionario_RowCommand: " + eRU.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvCuestionario_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            try
+            {
+                grvCuestionario.EditIndex = e.NewEditIndex;
+                cargarCuestionarios();
+            }
+            catch (Exception eRW)
+            {
+                Log.EscribeLog("Existe un error en grvCuestionario_RowEditing: " + eRW.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvCuestionario_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+            try
+            {
+                CuestionarioRequest request = new CuestionarioRequest();
+                CuestionarioResponse response = new CuestionarioResponse();
+                request.mdlUser = Usuario;
+                tbl_DET_Cuestionario mdlCues = new tbl_DET_Cuestionario();
+                mdlCues.bitActivo = true;
+                mdlCues.datFecha = DateTime.Now;
+                TextBox txtNamevar = (TextBox)grvCuestionario.Rows[e.RowIndex].FindControl("txtname");
+                mdlCues.vchCuestionario = txtNamevar.Text;
+                mdlCues.intDETCuestionarioID = Convert.ToInt16(grvCuestionario.DataKeys[e.RowIndex].Values["intDETCuestionarioID"].ToString());
+                mdlCues.intPrestacionID = Convert.ToInt16(grvCuestionario.DataKeys[e.RowIndex].Values["intPrestacionID"].ToString());
+                if (mdlCues != null)
+                {
+                    request.mdlCuestionario = mdlCues;
+                    response = RisService.setActualizaCuestionario(request);
+                    if (response != null)
+                    {
+                        if (response.Success)
+                        {
+                            ShowMessage("Se actualizo correctamente el cuestionario", MessageType.Correcto, "alert_container");
+                            grvCuestionario.EditIndex = -1;
+                            cargarCuestionarios();
+                        }
+                        else
+                        {
+                            ShowMessage("Existe un error: " + response.Success, MessageType.Error, "alert_container");
+                        }
+                    }
+                    else
+                    {
+                        ShowMessage("Favor de revisar la información.", MessageType.Error, "alert_container");
+                    }
+                }
+            }
+            catch (Exception eUpdating)
+            {
+                ShowMessage("Existe un error: " + eUpdating.Message, MessageType.Error, "alert_container");
+            }
+        }
+
+        protected void txtBandejaCues_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                TextBox txtBandejaAvaluosGoToPage = (TextBox)sender;
+                int numeroPagina;
+                if (int.TryParse(txtBandejaAvaluosGoToPage.Text.Trim(), out numeroPagina))
+                    this.grvCuestionario.PageIndex = numeroPagina - 1;
+                else
+                    this.grvCuestionario.PageIndex = 0;
+                this.cargarCuestionarios();
+            }
+            catch (Exception ex)
+            {
+                Log.EscribeLog("Existe un error txtBandejaCues_TextChanged de frmConfiguracion: " + ex.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void ddlBandejaCues_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                DropDownList dropDownList = (DropDownList)sender;
+                if (int.Parse(dropDownList.SelectedValue) != 0)
+                {
+                    this.grvCuestionario.AllowPaging = true;
+                    this.grvCuestionario.PageSize = int.Parse(dropDownList.SelectedValue);
+                }
+                else
+                    this.grvCuestionario.AllowPaging = false;
+                this.cargarCuestionarios();
+            }
+            catch (Exception eddS)
+            {
+                Log.EscribeLog("Existe un error ddlBandejaInd_SelectedIndexChanged de frmConfiguracion: " + eddS.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargarCuestionarios()
+        {
+            try
+            {
+                CuestionarioRequest request = new CuestionarioRequest();
+                List<tbl_DET_Cuestionario> response = new List<tbl_DET_Cuestionario>();
+                request.mdlUser = Usuario;
+                request.intPrestacionID = Convert.ToInt32(Session["intPrestacionID"].ToString());
+                response = RisService.getListCuestionario(request);
+                grvCuestionario.DataSource = null;
+                grvCuestionario.DataBind();
+                if (response != null)
+                {
+                    if (response.Count > 0)
+                    {
+                        grvCuestionario.DataSource = response;
+                    }
+                }
+                grvCuestionario.DataBind();
+            }
+            catch (Exception ecI)
+            {
+                Log.EscribeLog("Existe un error en cargarCuestionarios: " + ecI.Message, 3, Usuario.vchUsuario);
+            }
+        }
+        #endregion Cuestionarios
 
         #region restriccion
         protected void btnAddRestricciones_Click(object sender, EventArgs e)
         {
-
+            try
+            {
+                RestriccionRequest request = new RestriccionRequest();
+                RestriccionResponse response = new RestriccionResponse();
+                request.mdlUser = Usuario;
+                tbl_DET_Restriccion mdlRes = new tbl_DET_Restriccion();
+                mdlRes.bitActivo = true;
+                mdlRes.datFecha = DateTime.Now;
+                mdlRes.vchNombreReestriccion = txtRestriccion.Text;
+                mdlRes.intPrestacionID = Convert.ToInt32(Session["intPrestacionID"].ToString());
+                if (mdlRes != null)
+                {
+                    request.mdlRestriccion = mdlRes;
+                    response = RisService.setRestriccion(request);
+                    if (response != null)
+                    {
+                        if (response.Success)
+                        {
+                            ShowMessage("Se agregó correctamente la restricción", MessageType.Correcto, "alert_container");
+                            cargarRestricciones();
+                        }
+                        else
+                        {
+                            ShowMessage("Existe un error favor de revisar: " + response.Mensaje, MessageType.Error, "alert_container");
+                        }
+                    }
+                    else
+                    {
+                        ShowMessage("Favor de revisar la información.", MessageType.Error, "alert_container");
+                    }
+                }
+                else
+                {
+                    ShowMessage("Favor de revisar la información.", MessageType.Error, "alert_container");
+                }
+            }
+            catch (Exception ebAdd)
+            {
+                ShowMessage("Favor de revisar la información." + ebAdd.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error al agregar la restricción:  " + ebAdd.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void btnCancelRestricciones_Click(object sender, EventArgs e)
@@ -2723,21 +3251,242 @@ namespace Fuji.RISLite.Site
 
         }
 
+        protected void grvRestriccion_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            try
+            {
+                if (e.Row.RowType == DataControlRowType.Pager)
+                {
+                    Label lblTotalNumDePaginas = (Label)e.Row.FindControl("lblBandejaTotal");
+                    lblTotalNumDePaginas.Text = grvRestriccion.PageCount.ToString();
 
+                    TextBox txtIrAlaPagina = (TextBox)e.Row.FindControl("txtBandejaRes");
+                    txtIrAlaPagina.Text = (grvRestriccion.PageIndex + 1).ToString();
 
+                    DropDownList ddlTamPagina = (DropDownList)e.Row.FindControl("ddlBandejaRes");
+                    ddlTamPagina.SelectedValue = grvRestriccion.PageSize.ToString();
+                }
 
+                if (e.Row.RowType != DataControlRowType.DataRow)
+                {
+                    return;
+                }
 
+                if (e.Row.DataItem != null)
+                {
+                    tbl_DET_Restriccion _mdl = (tbl_DET_Restriccion)e.Row.DataItem;
+                    ImageButton ibtEstatus = (ImageButton)e.Row.FindControl("imbEstatus");
+                    ibtEstatus.Attributes.Add("onclick", "javascript:return confirm('¿Desea realizar el cambio de estatus del item seleccionado?');");
+                    if ((bool)_mdl.bitActivo)
+                        ibtEstatus.ImageUrl = @"~/Images/ic_action_tick.png";
+                    else
+                        ibtEstatus.ImageUrl = @"~/Images/ic_action_cancel.png";
+                }
+            }
+            catch (Exception eGUP)
+            {
+                throw eGUP;
+            }
+        }
 
+        protected void grvRestriccion_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            try
+            {
+                if (e.NewPageIndex >= 0)
+                {
+                    this.grvRestriccion.PageIndex = e.NewPageIndex;
+                    cargarRestricciones();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.EscribeLog("Existe un error grvRestriccion_PageIndexChanging: " + ex.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargarRestricciones()
+        {
+            try
+            {
+                RestriccionRequest request = new RestriccionRequest();
+                List<tbl_DET_Restriccion> response = new List<tbl_DET_Restriccion>();
+                request.mdlUser = Usuario;
+                request.intPrestacionID = Convert.ToInt32(Session["intPrestacionID"].ToString());
+                response = RisService.getListRestriccion(request);
+                grvRestriccion.DataSource = null;
+                grvRestriccion.DataBind();
+                if (response != null)
+                {
+                    if (response.Count > 0)
+                    {
+                        grvRestriccion.DataSource = response;
+                    }
+                }
+                grvRestriccion.DataBind();
+            }
+            catch (Exception ecI)
+            {
+                Log.EscribeLog("Existe un error en cargarRestricciones: " + ecI.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvRestriccion_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+            try
+            {
+                grvRestriccion.EditIndex = -1;
+                cargarRestricciones();
+            }
+            catch (Exception eCE)
+            {
+                Log.EscribeLog("Existe un error en grvRestriccion_RowCancelingEdit: " + eCE.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvRestriccion_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            try
+            {
+                int intRestriccionID = 0;
+                switch (e.CommandName)
+                {
+                    case "Estatus":
+                        intRestriccionID = Convert.ToInt32(e.CommandArgument.ToString());
+                        RestriccionRequest request = new RestriccionRequest();
+                        RestriccionResponse response = new RestriccionResponse();
+                        request.mdlUser = Usuario;
+                        request.intReestriccionID = intRestriccionID;
+                        if (request != null)
+                        {
+                            response = RisService.setEstatusRestriccion(request);
+                            if (response != null)
+                            {
+                                if (response.Success)
+                                {
+                                    ShowMessage("Se actualizo correctamente la restricción", MessageType.Correcto, "alert_container");
+                                    //grvAddPaciente.EditIndex = -1;
+                                    cargarRestricciones();
+                                }
+                                else
+                                {
+                                    ShowMessage("Existe un error: " + response.Mensaje, MessageType.Error, "alert_container");
+                                }
+                            }
+                            else
+                            {
+                                ShowMessage("Favor de revisar la información.", MessageType.Error, "alert_container");
+                            }
+                        }
+                        else
+                        {
+                            ShowMessage("Favor de revisar la información.", MessageType.Error, "alert_container");
+                        }
+                        break;
+                }
+            }
+            catch (Exception eRU)
+            {
+                ShowMessage("Favor de revisar la información: " + eRU.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error grvRestriccion_RowCommand: " + eRU.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvRestriccion_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            try
+            {
+                grvRestriccion.EditIndex = e.NewEditIndex;
+                cargarRestricciones();
+            }
+            catch (Exception eRW)
+            {
+                Log.EscribeLog("Existe un error en grvRestriccion_RowEditing: " + eRW.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvRestriccion_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+            try
+            {
+                RestriccionRequest request = new RestriccionRequest();
+                RestriccionResponse response = new RestriccionResponse();
+                request.mdlUser = Usuario;
+                tbl_DET_Restriccion mdlRes = new tbl_DET_Restriccion();
+                mdlRes.bitActivo = true;
+                mdlRes.datFecha = DateTime.Now;
+                TextBox txtNamevar = (TextBox)grvRestriccion.Rows[e.RowIndex].FindControl("txtname");
+                mdlRes.vchNombreReestriccion = txtNamevar.Text;
+                mdlRes.intReestriccionID = Convert.ToInt16(grvRestriccion.DataKeys[e.RowIndex].Values["intReestriccionID"].ToString());
+                mdlRes.intPrestacionID = Convert.ToInt16(grvRestriccion.DataKeys[e.RowIndex].Values["intPrestacionID"].ToString());
+                if (mdlRes != null)
+                {
+                    request.mdlRestriccion = mdlRes;
+                    response = RisService.setActualizaRestriccion(request);
+                    if (response != null)
+                    {
+                        if (response.Success)
+                        {
+                            ShowMessage("Se actualizo correctamente la restricción", MessageType.Correcto, "alert_container");
+                            grvRestriccion.EditIndex = -1;
+                            cargarRestricciones();
+                        }
+                        else
+                        {
+                            ShowMessage("Existe un error: " + response.Success, MessageType.Error, "alert_container");
+                        }
+                    }
+                    else
+                    {
+                        ShowMessage("Favor de revisar la información.", MessageType.Error, "alert_container");
+                    }
+                }
+            }
+            catch (Exception eUpdating)
+            {
+                ShowMessage("Existe un error: " + eUpdating.Message, MessageType.Error, "alert_container");
+            }
+        }
+
+        protected void ddlBandejaRes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                DropDownList dropDownList = (DropDownList)sender;
+                if (int.Parse(dropDownList.SelectedValue) != 0)
+                {
+                    this.grvRestriccion.AllowPaging = true;
+                    this.grvRestriccion.PageSize = int.Parse(dropDownList.SelectedValue);
+                }
+                else
+                    this.grvRestriccion.AllowPaging = false;
+                this.cargarRestricciones();
+            }
+            catch (Exception eddS)
+            {
+                Log.EscribeLog("Existe un error ddlBandejaRes_SelectedIndexChanged de frmConfiguracion: " + eddS.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void txtBandejaRes_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                TextBox txtBandejaAvaluosGoToPage = (TextBox)sender;
+                int numeroPagina;
+                if (int.TryParse(txtBandejaAvaluosGoToPage.Text.Trim(), out numeroPagina))
+                    this.grvRestriccion.PageIndex = numeroPagina - 1;
+                else
+                    this.grvRestriccion.PageIndex = 0;
+                this.cargarRestricciones();
+            }
+            catch (Exception ex)
+            {
+                Log.EscribeLog("Existe un error txtBandejaRes_TextChanged de frmConfiguracion: " + ex.Message, 3, Usuario.vchUsuario);
+            }
+        }
         #endregion restriccion
 
-        protected void ddlBandejaInd_SelectedIndexChanged(object sender, EventArgs e)
-        {
 
-        }
-
-        protected void txtBandejaInd_TextChanged(object sender, EventArgs e)
-        {
-
-        }
     }
 }

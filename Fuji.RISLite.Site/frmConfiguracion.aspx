@@ -912,7 +912,7 @@
                                                                                     <asp:TemplateField HeaderText="Indicaciones" ItemStyle-HorizontalAlign="Center">
                                                                                         <ItemTemplate>
                                                                                             <asp:LinkButton ID="imbIndicaciones" runat="server" BackColor="Transparent"  Height="25px" Width="25px" 
-                                                                                                CommandArgument='<%#Eval("intRELModPres") %>' CommandName="Indicacion" ToolTip="Ver las indicaciones" >
+                                                                                                CommandArgument='<%#Eval("intPrestacionID") %>' CommandName="Indicacion" ToolTip="Ver las indicaciones" >
                                                                                                 <i class="fa fa-comments-o" aria-hidden="true" title="Indicaciones" style="font-size:25px;"></i>
                                                                                             </asp:LinkButton>
                                                                                         </ItemTemplate>
@@ -920,7 +920,7 @@
                                                                                     <asp:TemplateField HeaderText="Cuestionario" ItemStyle-HorizontalAlign="Center">
                                                                                         <ItemTemplate>
                                                                                             <asp:LinkButton ID="imbCuestionario" runat="server" BackColor="Transparent"  Height="25px" Width="25px" 
-                                                                                                CommandArgument='<%#Eval("intRELModPres") %>' CommandName="Cuestionario" ToolTip="Ver los cuestionarios">
+                                                                                                CommandArgument='<%#Eval("intPrestacionID") %>' CommandName="Cuestionario" ToolTip="Ver los cuestionarios">
                                                                                                 <i class="fa fa-question" aria-hidden="true" title="Cuestionario" style="font-size:25px;"></i>
                                                                                             </asp:LinkButton>
                                                                                         </ItemTemplate>
@@ -928,7 +928,7 @@
                                                                                     <asp:TemplateField HeaderText="Restricciones" ItemStyle-HorizontalAlign="Center">
                                                                                         <ItemTemplate>
                                                                                             <asp:LinkButton ID="imbRestricciones" runat="server" BackColor="Transparent"  Height="25px" Width="25px" 
-                                                                                                CommandArgument='<%#Eval("intRELModPres") %>' CommandName="Restricciones" ToolTip="Ver las Restricciones">
+                                                                                                CommandArgument='<%#Eval("intPrestacionID") %>' CommandName="Restricciones" ToolTip="Ver las Restricciones">
                                                                                                 <i class="fa fa-ban" aria-hidden="true" title="Restricciones" style="font-size:25px;"></i>
                                                                                             </asp:LinkButton>
                                                                                         </ItemTemplate>
@@ -1183,7 +1183,7 @@
                                                                     <asp:Label runat="server" ID="lblNombreUsuario" Text='<%#Eval("vchIndicacion") %>' />
                                                                 </ItemTemplate>
                                                                 <EditItemTemplate>
-                                                                        <asp:TextBox ID="txtNombreUsuario" width="100%"  runat="server" Text='<%#Eval("vchIndicacion") %>'/>
+                                                                        <asp:TextBox ID="txtname" width="100%"  runat="server" Text='<%#Eval("vchIndicacion") %>'/>
                                                                 </EditItemTemplate>
                                                             </asp:TemplateField>
                                                             <asp:TemplateField HeaderText="Editar" ItemStyle-HorizontalAlign="Center">
@@ -1285,28 +1285,19 @@
                                                 <asp:Panel runat="server">
                                                     <asp:GridView ID="grvCuestionario" runat="server" AllowPaging="true" CssClass="table table-striped table-bordered"
                                                             PageSize="10" AutoGenerateColumns="false" OnRowDataBound="grvCuestionario_RowDataBound" Font-Size="10px"
-                                                            OnPageIndexChanging="grvCuestionario_PageIndexChanging" DataKeyNames="intUsuarioID" OnRowCancelingEdit="grvCuestionario_RowCancelingEdit"
+                                                            OnPageIndexChanging="grvCuestionario_PageIndexChanging" DataKeyNames="intDETCuestionarioID,intPrestacionID" OnRowCancelingEdit="grvCuestionario_RowCancelingEdit"
                                                             OnRowCommand="grvCuestionario_RowCommand" OnRowEditing="grvCuestionario_RowEditing" OnRowUpdating="grvCuestionario_RowUpdating"
                                                             EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
                                                             <Columns>
-                                                                <asp:BoundField DataField="intUsuarioID" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
+                                                                <asp:BoundField DataField="intDETCuestionarioID" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
                                                                 <asp:TemplateField HeaderText="Nombre">
                                                                     <ItemTemplate>
-                                                                        <asp:Label runat="server" ID="lblNombreUsuario" Text='<%#Eval("vchNombre") %>' />
+                                                                        <asp:Label runat="server" ID="lblNombreUsuario" Text='<%#Eval("vchCuestionario") %>' />
                                                                     </ItemTemplate>
                                                                     <EditItemTemplate>
-                                                                            <asp:TextBox ID="txtNombreUsuario" width="100%"  runat="server" Text='<%#Eval("vchNombre") %>'/>
+                                                                            <asp:TextBox ID="txtname" width="100%"  runat="server" Text='<%#Eval("vchCuestionario") %>'/>
                                                                     </EditItemTemplate>
                                                                 </asp:TemplateField>
-                                                                <asp:TemplateField HeaderText="Usuario">
-                                                                    <ItemTemplate>
-                                                                        <asp:Label runat="server" ID="lblUsuario" Text='<%#Eval("vchUsuario") %>' />
-                                                                    </ItemTemplate>
-                                                                    <EditItemTemplate>
-                                                                            <asp:TextBox ID="txtUsuario" width="100%"  runat="server" Text='<%#Eval("vchUsuario") %>'/>
-                                                                    </EditItemTemplate>
-                                                                </asp:TemplateField>
-                                                                <asp:BoundField DataField="vchTipoUsuario"  HeaderText="Tipo de Usuario" ReadOnly="true" />
                                                                 <asp:TemplateField HeaderText="Editar" ItemStyle-HorizontalAlign="Center">
                                                                     <ItemTemplate>      
                                                                         <asp:LinkButton ID="btnVisualizar" CausesValidation="false" CommandName="Edit" runat="server">
@@ -1325,20 +1316,20 @@
                                                                 <asp:TemplateField HeaderText="Estatus" ItemStyle-HorizontalAlign="Center">
                                                                     <ItemTemplate>
                                                                         <asp:ImageButton ID="imbEstatus" runat="server" BackColor="Transparent"  Height="25px" Width="25px" 
-                                                                            CommandArgument='<%#Eval("intUsuarioID") %>' CommandName="Estatus" ToolTip="Cambia el estatus del Sitio" />
+                                                                            CommandArgument='<%#Eval("intDETCuestionarioID") %>' CommandName="Estatus" ToolTip="Cambia el estatus del Sitio" />
                                                                     </ItemTemplate>
                                                                 </asp:TemplateField>
                                                             </Columns>
                                                             <PagerTemplate>
                                                                 <asp:Label ID="lblTemplate" runat="server" Text="Muestra Filas: " CssClass="Label" />
-                                                                <asp:DropDownList ID="ddlBandeja" runat="server" AutoPostBack="true" CausesValidation="false"
-                                                                    Enabled="true" OnSelectedIndexChanged="ddlBandeja_SelectedIndexChanged">
+                                                                <asp:DropDownList ID="ddlBandejaCues" runat="server" AutoPostBack="true" CausesValidation="false"
+                                                                    Enabled="true" OnSelectedIndexChanged="ddlBandejaCues_SelectedIndexChanged">
                                                                         <asp:ListItem Value="10" />
                                                                         <asp:ListItem Value="15" />
                                                                         <asp:ListItem Value="20" />
                                                                 </asp:DropDownList>
                                                                 &nbsp;Página
-                                                                <asp:TextBox ID="txtBandeja" runat="server" AutoPostBack="true" OnTextChanged="txtBandeja_TextChanged"
+                                                                <asp:TextBox ID="txtBandejaCues" runat="server" AutoPostBack="true" OnTextChanged="txtBandejaCues_TextChanged"
                                                                     Width="40" MaxLength="10" />
                                                                 de
                                                                 <asp:Label ID="lblBandejaTotal" runat="server" />
@@ -1363,7 +1354,6 @@
                 </div>
                 <div class="modal-footer">
                     <asp:Button runat="server" ID="btnCancelCuestionarios" class="btn btn-default" Text="Cerrar" OnClick="btnCancelCuestionarios_Click" data-dismiss="modal"></asp:Button>
-                    <asp:Button runat="server" ID="bntAddCuestionario" OnClick="bntAddCuestionario_Click" Text="Guardar" CssClass="btn btn-primary" ValidationGroup="vgAddPaciente"></asp:Button>
                 </div>
             </div>
         </div>
@@ -1382,15 +1372,99 @@
             </div>
             <div class="modal-body">
                 <asp:UpdatePanel runat="server">
-                    <ContentTemplate>
-                        <div class="form-horizontal" role="form">
-                        </div>
-                    </ContentTemplate>
-                </asp:UpdatePanel>                
+                        <ContentTemplate>
+                            <div class="form-horizontal" role="form">
+                                <div class="row">
+                                    <div class="col-lg-10 col-md-10 col-sm-10">
+                                        <div class="row">
+                                            <div class="col-lg-10">
+                                                <asp:TextBox runat="server" Text="" ID="txtRestriccion" placeholder="Restricción" CssClass="form-control"></asp:TextBox>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator13" ErrorMessage="*" ForeColor="Red" Text="*" ControlToValidate="txtRestriccion" ValidationGroup="vgRestriccion"></asp:RequiredFieldValidator>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-2">
+                                        <asp:Button runat="server" ID="btnAddRestricciones" OnClick="btnAddRestricciones_Click" Text="Guardar" CssClass="btn btn-primary" ValidationGroup="vgRestriccion"></asp:Button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <asp:UpdatePanel runat="server">
+                                            <ContentTemplate>
+                                                <asp:Panel runat="server">
+                                                    <asp:GridView ID="grvRestriccion" runat="server" AllowPaging="true" CssClass="table table-striped table-bordered"
+                                                            PageSize="10" AutoGenerateColumns="false" OnRowDataBound="grvRestriccion_RowDataBound" Font-Size="10px"
+                                                            OnPageIndexChanging="grvRestriccion_PageIndexChanging" DataKeyNames="intReestriccionID,intPrestacionID" OnRowCancelingEdit="grvRestriccion_RowCancelingEdit"
+                                                            OnRowCommand="grvRestriccion_RowCommand" OnRowEditing="grvRestriccion_RowEditing" OnRowUpdating="grvRestriccion_RowUpdating"
+                                                            EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
+                                                            <Columns>
+                                                                <asp:BoundField DataField="intReestriccionID" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
+                                                                <asp:TemplateField HeaderText="Nombre">
+                                                                    <ItemTemplate>
+                                                                        <asp:Label runat="server" ID="lblNombreUsuario" Text='<%#Eval("vchNombreReestriccion") %>' />
+                                                                    </ItemTemplate>
+                                                                    <EditItemTemplate>
+                                                                            <asp:TextBox ID="txtname" width="100%"  runat="server" Text='<%#Eval("vchNombreReestriccion") %>'/>
+                                                                    </EditItemTemplate>
+                                                                </asp:TemplateField>
+                                                                <asp:TemplateField HeaderText="Editar" ItemStyle-HorizontalAlign="Center">
+                                                                    <ItemTemplate>      
+                                                                        <asp:LinkButton ID="btnVisualizar" CausesValidation="false" CommandName="Edit" runat="server">
+                                                                            <i class="fa fa-pencil" aria-hidden="true" title="Editar" style="font-size:25px;"></i>
+                                                                        </asp:LinkButton>
+                                                                    </ItemTemplate>
+                                                                    <EditItemTemplate>
+                                                                        <asp:LinkButton ID="btnUpdateVarPacinete" runat="server" CommandName="Update"  Text="Actualizar">
+                                                                            <i class="fa fa-floppy-o" aria-hidden="true"  title="Actualizar" style="font-size:25px;"></i>
+                                                                        </asp:LinkButton>
+                                                                        <asp:LinkButton ID="bntCancelEditPaciente" runat="server" CommandName="Cancel"  Text="Cancelar">
+                                                                            <i class="fa fa-ban" aria-hidden="true" title="Cancelar" style="font-size:25px;"></i>
+                                                                        </asp:LinkButton>
+                                                                    </EditItemTemplate>
+                                                                </asp:TemplateField>
+                                                                <asp:TemplateField HeaderText="Estatus" ItemStyle-HorizontalAlign="Center">
+                                                                    <ItemTemplate>
+                                                                        <asp:ImageButton ID="imbEstatus" runat="server" BackColor="Transparent"  Height="25px" Width="25px" 
+                                                                            CommandArgument='<%#Eval("intReestriccionID") %>' CommandName="Estatus" ToolTip="Cambia el estatus del Sitio" />
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateField>
+                                                            </Columns>
+                                                            <PagerTemplate>
+                                                                <asp:Label ID="lblTemplate" runat="server" Text="Muestra Filas: " CssClass="Label" />
+                                                                <asp:DropDownList ID="ddlBandejaRes" runat="server" AutoPostBack="true" CausesValidation="false"
+                                                                    Enabled="true" OnSelectedIndexChanged="ddlBandejaRes_SelectedIndexChanged">
+                                                                        <asp:ListItem Value="10" />
+                                                                        <asp:ListItem Value="15" />
+                                                                        <asp:ListItem Value="20" />
+                                                                </asp:DropDownList>
+                                                                &nbsp;Página
+                                                                <asp:TextBox ID="txtBandejaRes" runat="server" AutoPostBack="true" OnTextChanged="txtBandejaRes_TextChanged"
+                                                                    Width="40" MaxLength="10" />
+                                                                de
+                                                                <asp:Label ID="lblBandejaTotal" runat="server" />
+                                                                &nbsp;
+                                                                <asp:Button ID="btnBandeja_I" runat="server" CommandName="Page" CausesValidation="false"
+                                                                    ToolTip="Página Anterior" CommandArgument="Prev" CssClass="previous" />
+                                                                <asp:Button ID="btnBandeja_II" runat="server" CommandName="Page" CausesValidation="false"
+                                                                    ToolTip="Página Siguiente" CommandArgument="Next" CssClass="next" />
+                                                            </PagerTemplate>
+                                                            <HeaderStyle CssClass="headerstyle" />
+                                                            <FooterStyle CssClass="text-center" />
+                                                            <PagerStyle CssClass="text-center" />
+                                                        </asp:GridView>
+                                                </asp:Panel>
+                                            </ContentTemplate>
+                                        </asp:UpdatePanel>
+                                    </div>
+                                </div>
+                            </div>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>                
             </div>
             <div class="modal-footer">
                 <asp:Button runat="server" ID="btnCancelRestricciones" class="btn btn-default" Text="Cerrar" OnClick="btnCancelRestricciones_Click" data-dismiss="modal"></asp:Button>
-                <asp:Button runat="server" ID="btnAddRestricciones" OnClick="btnAddRestricciones_Click" Text="Guardar" CssClass="btn btn-primary" ValidationGroup="vgAddPaciente"></asp:Button>
             </div>
 
             </div>
