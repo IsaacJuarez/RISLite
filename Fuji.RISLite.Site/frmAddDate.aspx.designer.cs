@@ -427,6 +427,15 @@ namespace Fuji.RISLite.Site {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl divIDContenido;
         
         /// <summary>
+        /// Control pnlIDContenido.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlIDContenido;
+        
+        /// <summary>
         /// Control divDinamico.
         /// </summary>
         /// <remarks>
@@ -443,6 +452,15 @@ namespace Fuji.RISLite.Site {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl divDinamicoContenido;
+        
+        /// <summary>
+        /// Control pnlDinamicoContenido.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlDinamicoContenido;
         
         /// <summary>
         /// Control btnCancelPacienteDet.

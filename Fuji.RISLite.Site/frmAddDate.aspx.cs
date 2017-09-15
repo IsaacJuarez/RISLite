@@ -25,6 +25,42 @@ namespace Fuji.RISLite.Site
         RisLiteService RisService = new RisLiteService();
         public static clsUsuario Usuario = new clsUsuario();
         public static List<clsEstudio> lstEstudios = new List<clsEstudio>();
+        public static List<tbl_CAT_Identificacion> lstIdentificaciones = new List<tbl_CAT_Identificacion>();
+        public static List<clsVarAcicionales> lstVarAdic = new List<clsVarAcicionales>();
+
+        protected void Page_Init(object sender, EventArgs e)
+        {
+            try
+            {
+                String var = "";
+                //if (!IsPostBack)
+                //{
+                    if (Session["User"] != null)
+                    {
+                        Usuario = (clsUsuario)Session["User"];
+                        if (Usuario != null)
+                        {
+                            cargaFormaDetalle();
+                        }
+                        else
+                        {
+                            var = Security.Encrypt("1");
+                            Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                        }
+                    }
+                    else
+                    {
+                        var = Security.Encrypt("1");
+                        Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                    }
+                //}
+                //else
+            }
+            catch (Exception ePL)
+            {
+                Log.EscribeLog("Existe un error en Page_Load de frmAddDate: " + ePL.Message, 3, "");
+            }
+        }
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -38,6 +74,7 @@ namespace Fuji.RISLite.Site
                         Usuario = (clsUsuario)Session["User"];
                         if (Usuario != null)
                         {
+
                         }
                         else
                         {
@@ -122,10 +159,11 @@ namespace Fuji.RISLite.Site
         {
             try
             {
+                limpiarControlesPaciente();
                 cargaFormaDetalle();
                 ScriptManager.RegisterStartupScript(Page, Page.GetType(), "myModal", "$('#myModal').modal();", true);
             }
-            catch(Exception eAU)
+            catch (Exception eAU)
             {
                 Log.EscribeLog("Existe un error en btnAddUser_Click:" + eAU.Message, 3, Usuario.vchUserAdmin);
             }
@@ -139,8 +177,9 @@ namespace Fuji.RISLite.Site
                 cargaVariablesAdicionales();
                 cargaIdentificaciones();
                 lblIDs.Visible = false;
+                btnEditPaciente.Visible = false;
             }
-            catch(Exception ecF)
+            catch (Exception ecF)
             {
                 Log.EscribeLog("Existe un error en cargaFormaDetalle: " + ecF.Message, 3, Usuario.vchUsuario);
             }
@@ -150,6 +189,7 @@ namespace Fuji.RISLite.Site
         {
             try
             {
+                pnlIDContenido.Controls.Clear();
                 VarAdicionalRequest request = new VarAdicionalRequest();
                 request.mdlUser = Usuario;
                 List<tbl_CAT_Identificacion> lst = new List<tbl_CAT_Identificacion>();
@@ -158,28 +198,130 @@ namespace Fuji.RISLite.Site
                 {
                     if (lst.Count > 0)
                     {
+                        lstIdentificaciones = lst;
+                        //-----
+                        Table tb = new Table();
+                        tb.ID = "tbIden";
+                        //-----
                         foreach (tbl_CAT_Identificacion item in lst)
                         {
-                            HtmlGenericControl createDiv = new HtmlGenericControl("DIV");
-                            createDiv.ID = "Div" + item.vchNombreId;
-                            createDiv.Attributes.Add("class", "form-group");
-                            //createDiv.InnerHtml = " I'm a div, from code behind ";
+                            //-----
+                            TableRow tr = new TableRow();
+                            //-----
+
+                            //HtmlGenericControl createDiv = new HtmlGenericControl("DIV");
+                            //createDiv.ID = "DivIden" + item.intIdentificacionID;
+                            //createDiv.Attributes.Add("class", "form-group");
+                            //createDiv.Attributes.Add("runat", "server");
+                            ////createDiv.InnerHtml = " I'm a div, from code behind ";
+                            //TextBox txt = new TextBox();
+                            //txt.ID = "txtIden" + item.intIdentificacionID;
+                            //txt.Attributes.Add("placeholder", item.vchNombreId);
+                            //txt.CssClass = "form-control col-xs-10 col-sm-5";
+                            //txt.ClientIDMode = ClientIDMode.Static;
+                            //Label lbl = new Label();
+                            //lbl.Text = item.vchNombreId;
+                            //lbl.ID = "lbl" + item.vchNombreId;
+                            //lbl.AssociatedControlID = "txtIden" + item.intIdentificacionID;
+                            //lbl.Attributes.Add("class", "col-sm-3 control-label no-padding-right");
+                            //HtmlGenericControl createDivText = new HtmlGenericControl();
+                            //createDivText.Attributes.Add("class", "col-sm-9");
+                            //createDivText.Controls.Add(txt);
+                            //createDiv.Controls.Add(lbl);
+                            //createDiv.Controls.Add(createDivText);
+                            //divIDContenido.Controls.Add(createDiv);
+                            ////pnlIDContenido.Controls.Add(lbl);
+                            ////pnlIDContenido.Controls.Add(txt);
+
+
+
+                            //-----
                             TextBox txt = new TextBox();
-                            txt.ID = "txt" + item.vchNombreId;
+                            txt.ID = "txtIden" + item.intIdentificacionID;
                             txt.Attributes.Add("placeholder", item.vchNombreId);
                             txt.CssClass = "form-control col-xs-10 col-sm-5";
+                            txt.ClientIDMode = ClientIDMode.Static;
                             Label lbl = new Label();
                             lbl.Text = item.vchNombreId;
                             lbl.ID = "lbl" + item.vchNombreId;
-                            lbl.AssociatedControlID = "txt" + item.vchNombreId;
-                            lbl.Attributes.Add("class", "col-sm-3 control-label no-padding-right");
-                            HtmlGenericControl createDivText = new HtmlGenericControl();
-                            createDivText.Attributes.Add("class", "col-sm-9");
-                            createDivText.Controls.Add(txt);
-                            createDiv.Controls.Add(lbl);
-                            createDiv.Controls.Add(createDivText);
-                            divIDContenido.Controls.Add(createDiv);
+                            lbl.AssociatedControlID = "txtIden" + item.intIdentificacionID;
+                            lbl.Attributes.Add("class", "control-label no-padding-left");
+                            lbl.Attributes.Add("width", "100%");
+                            TableCell tc = new TableCell();
+                            tc.Controls.Add(lbl);
+                            tc.Attributes.Add("width", "40%");
+                            TableCell tc2 = new TableCell();
+                            tc2.Controls.Add(txt);
+                            tc2.Attributes.Add("width", "60%");
+                            tr.Cells.Add(tc);
+                            tr.Cells.Add(tc2);
+                            tb.Rows.Add(tr);
+                            tb.Attributes.Add("width", "100%");
+                            //-----
+
                         }
+
+                        pnlIDContenido.Controls.Add(tb);
+                    }
+                }
+            }
+            catch (Exception cvA)
+            {
+                Log.EscribeLog("Existe un error en cargaIdentificaciones: " + cvA.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargaIdentificaciones(List<tbl_REL_IdentificacionPaciente> lstIden)
+        {
+            try
+            {
+                pnlIDContenido.Controls.Clear();
+                VarAdicionalRequest request = new VarAdicionalRequest();
+                request.mdlUser = Usuario;
+                List<tbl_CAT_Identificacion> lst = new List<tbl_CAT_Identificacion>();
+                lst = RisService.getVariablesAdicionalID(request);
+                if (lst != null)
+                {
+                    if (lst.Count > 0)
+                    {
+                        lstIdentificaciones = lst;
+                        //-----
+                        Table tb = new Table();
+                        tb.ID = "tbIden";
+                        //-----
+                        foreach (tbl_CAT_Identificacion item in lst)
+                        {
+                            //-----
+                            TableRow tr = new TableRow();
+                            //-----
+                            //-----
+                            TextBox txt = new TextBox();
+                            txt.ID = "txtIden" + item.intIdentificacionID;
+                            txt.Attributes.Add("placeholder", item.vchNombreId);
+                            txt.CssClass = "form-control col-xs-10 col-sm-5";
+                            txt.ClientIDMode = ClientIDMode.Static;
+                            txt.Text = lstIden.Where(x => x.intIdentificacionID == item.intIdentificacionID).First().vchValor;
+                            Label lbl = new Label();
+                            lbl.Text = item.vchNombreId;
+                            lbl.ID = "lbl" + item.vchNombreId;
+                            lbl.AssociatedControlID = "txtIden" + item.intIdentificacionID;
+                            lbl.Attributes.Add("class", "control-label no-padding-left");
+                            lbl.Attributes.Add("width", "100%");
+                            TableCell tc = new TableCell();
+                            tc.Controls.Add(lbl);
+                            tc.Attributes.Add("width", "40%");
+                            TableCell tc2 = new TableCell();
+                            tc2.Controls.Add(txt);
+                            tc2.Attributes.Add("width", "60%");
+                            tr.Cells.Add(tc);
+                            tr.Cells.Add(tc2);
+                            tb.Rows.Add(tr);
+                            tb.Attributes.Add("width", "100%");
+                            //-----
+
+                        }
+
+                        pnlIDContenido.Controls.Add(tb);
                     }
                 }
             }
@@ -193,6 +335,7 @@ namespace Fuji.RISLite.Site
         {
             try
             {
+                pnlDinamicoContenido.Controls.Clear();
                 VarAdicionalRequest request = new VarAdicionalRequest();
                 request.mdlUser = Usuario;
                 List<clsVarAcicionales> lst = new List<clsVarAcicionales>();
@@ -201,32 +344,126 @@ namespace Fuji.RISLite.Site
                 {
                     if (lst.Count > 0)
                     {
-                        foreach(clsVarAcicionales item in lst)
+                        lstVarAdic = lst;
+                        //-----
+                        Table tb = new Table();
+                        tb.ID = "tbAdic";
+                        //-----
+                        foreach (clsVarAcicionales item in lst)
                         {
-                            HtmlGenericControl createDiv = new HtmlGenericControl("DIV");
-                            createDiv.ID = "Div" + item.vchNombreVarAdi;
-                            createDiv.Attributes.Add("class", "form-group");
-                            //createDiv.InnerHtml = " I'm a div, from code behind ";
+                            //-----
+                            TableRow tr = new TableRow();
+                            //-----
+                            //HtmlGenericControl createDiv = new HtmlGenericControl("DIV");
+                            //createDiv.ID = "DivAdi" + item.intVariableAdiID;
+                            //createDiv.Attributes.Add("class", "form-group");
+                            ////createDiv.InnerHtml = " I'm a div, from code behind ";
+                            //TextBox txt = new TextBox();
+                            //txt.ID = "txtAdi" + item.intVariableAdiID;
+                            //txt.CssClass = "form-control col-xs-10 col-sm-5";
+                            //txt.Attributes.Add("placeholder", item.vchNombreVarAdi);
+                            //Label lbl = new Label();
+                            //lbl.Text = item.vchNombreVarAdi;
+                            //lbl.ID = "lbl" + item.vchNombreVarAdi;
+                            //lbl.AssociatedControlID = "txtAdi" + item.intVariableAdiID;
+                            //lbl.Attributes.Add("class", "col-sm-3 control-label no-padding-right");
+                            //HtmlGenericControl createDivText = new HtmlGenericControl();
+                            //createDivText.Attributes.Add("class", "col-sm-9");
+                            //createDivText.Controls.Add(txt);
+                            //createDiv.Controls.Add(lbl);
+                            //createDiv.Controls.Add(createDivText);
+                            //divDinamicoContenido.Controls.Add(createDiv);
+                            ////pnlDinamicoContenido.Controls.Add(lbl);
+                            ////pnlDinamicoContenido.Controls.Add(txt);
+
+                            //-----
                             TextBox txt = new TextBox();
-                            txt.ID = "txt" + item.vchNombreVarAdi;
+                            txt.ID = "txtAdi" + item.intVariableAdiID;
                             txt.CssClass = "form-control col-xs-10 col-sm-5";
                             txt.Attributes.Add("placeholder", item.vchNombreVarAdi);
+                            txt.Attributes.Add("width", "100%");
                             Label lbl = new Label();
                             lbl.Text = item.vchNombreVarAdi;
-                            lbl.ID= "lbl" + item.vchNombreVarAdi;
-                            lbl.AssociatedControlID = "txt" + item.vchNombreVarAdi;
-                            lbl.Attributes.Add("class", "col-sm-3 control-label no-padding-right");
-                            HtmlGenericControl createDivText = new HtmlGenericControl();
-                            createDivText.Attributes.Add("class", "col-sm-9");
-                            createDivText.Controls.Add(txt);
-                            createDiv.Controls.Add(lbl);
-                            createDiv.Controls.Add(createDivText);
-                            divDinamicoContenido.Controls.Add(createDiv);
+                            lbl.ID = "lbl" + item.vchNombreVarAdi;
+                            lbl.AssociatedControlID = "txtAdi" + item.intVariableAdiID;
+                            lbl.Attributes.Add("class", "control-label no-padding-left");
+                            lbl.Attributes.Add("width", "100%");
+                            TableCell tc = new TableCell();
+                            tc.Controls.Add(lbl);
+                            tc.Attributes.Add("width", "40%");
+                            TableCell tc2 = new TableCell();
+                            tc2.Controls.Add(txt);
+                            tc2.Attributes.Add("width", "60%");
+                            tr.Cells.Add(tc);
+                            tr.Cells.Add(tc2);
+                            tb.Rows.Add(tr);
+                            tb.Attributes.Add("width", "100%");
+                            //-----
                         }
+                        pnlDinamicoContenido.Controls.Add(tb);
                     }
                 }
             }
-            catch(Exception cvA)
+            catch (Exception cvA)
+            {
+                Log.EscribeLog("Existe un error en cargaVariablesAdicionales: " + cvA.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargaVariablesAdicionales(List<clsVarAcicionales> lstVarAdi)
+        {
+            try
+            {
+                pnlDinamicoContenido.Controls.Clear();
+                VarAdicionalRequest request = new VarAdicionalRequest();
+                request.mdlUser = Usuario;
+                List<clsVarAcicionales> lst = new List<clsVarAcicionales>();
+                lst = RisService.getVariablesAdicionalPaciente(request);
+                if (lst != null)
+                {
+                    if (lst.Count > 0)
+                    {
+                        lstVarAdic = lst;
+                        //-----
+                        Table tb = new Table();
+                        tb.ID = "tbAdic";
+                        //-----
+                        foreach (clsVarAcicionales item in lst)
+                        {
+                            //-----
+                            TableRow tr = new TableRow();
+                            //-----
+
+                            //-----
+                            TextBox txt = new TextBox();
+                            txt.ID = "txtAdi" + item.intVariableAdiID;
+                            txt.CssClass = "form-control col-xs-10 col-sm-5";
+                            txt.Attributes.Add("placeholder", item.vchNombreVarAdi);
+                            txt.Attributes.Add("width", "100%");
+                            txt.Text = lstVarAdi.First(x => x.intVariableAdiID == item.intVariableAdiID).vchValorAdicional;
+                            Label lbl = new Label();
+                            lbl.Text = item.vchNombreVarAdi;
+                            lbl.ID = "lbl" + item.vchNombreVarAdi;
+                            lbl.AssociatedControlID = "txtAdi" + item.intVariableAdiID;
+                            lbl.Attributes.Add("class", "control-label no-padding-left");
+                            lbl.Attributes.Add("width", "100%");
+                            TableCell tc = new TableCell();
+                            tc.Controls.Add(lbl);
+                            tc.Attributes.Add("width", "40%");
+                            TableCell tc2 = new TableCell();
+                            tc2.Controls.Add(txt);
+                            tc2.Attributes.Add("width", "60%");
+                            tr.Cells.Add(tc);
+                            tr.Cells.Add(tc2);
+                            tb.Rows.Add(tr);
+                            tb.Attributes.Add("width", "100%");
+                            //-----
+                        }
+                        pnlDinamicoContenido.Controls.Add(tb);
+                    }
+                }
+            }
+            catch (Exception cvA)
             {
                 Log.EscribeLog("Existe un error en cargaVariablesAdicionales: " + cvA.Message, 3, Usuario.vchUsuario);
             }
@@ -252,7 +489,7 @@ namespace Fuji.RISLite.Site
                     }
                 }
             }
-            catch(Exception eclg)
+            catch (Exception eclg)
             {
                 Log.EscribeLog("Existe un error en cargaListagenero: " + eclg.Message, 3, Usuario.vchUsuario);
             }
@@ -260,7 +497,23 @@ namespace Fuji.RISLite.Site
 
         protected void btnEditPaciente_Click(object sender, EventArgs e)
         {
-
+            try
+            {
+                if (lblIDs.Text != "")
+                {
+                    cargarDetallePaciente(Convert.ToInt32(lblIDs.Text));
+                    ScriptManager.RegisterStartupScript(Page, Page.GetType(), "myModal", "$('#myModal').modal();", true);
+                }
+                else
+                {
+                    ShowMessage("Existe un error al cargar el detalle del paciente.", MessageType.Error, "alert_container");
+                }
+            }
+            catch(Exception ebEdit)
+            {
+                ShowMessage("Existe un error al cargar el detalle del paciente: " + ebEdit.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error en btnEditPaciente_Click: " + ebEdit.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void grvEstudios_RowDataBound(object sender, System.Web.UI.WebControls.GridViewRowEventArgs e)
@@ -297,7 +550,7 @@ namespace Fuji.RISLite.Site
                         //{
                         //    if (response.Success)
                         //    {
-                                ShowMessage("Se buscará un horario para el estudio.", MessageType.Correcto, "alert_container");
+                        ShowMessage("Se buscará un horario para el estudio.", MessageType.Correcto, "alert_container");
                         //        //fillCat();
                         //        cargarEquipo();
                         //    }
@@ -313,7 +566,7 @@ namespace Fuji.RISLite.Site
                         break;
                 }
             }
-            catch(Exception eRCE)
+            catch (Exception eRCE)
             {
                 Log.EscribeLog("Existe un error en grvEstudios_RowCommand: " + eRCE.Message, 3, Usuario.vchUsuario);
             }
@@ -350,39 +603,53 @@ namespace Fuji.RISLite.Site
             {
                 if (txtCodigoPostal.Text.Length >= 4)
                 {
-                    DireccionRequest request = new DireccionRequest();
-                    DireccionResponse response = new DireccionResponse();
-                    request.mdlUser = Usuario;
-                    request.vchCodigoPostal = txtCodigoPostal.Text;
-                    response = RisService.getDireccionPaciente(request);
-                    ddlColoniaDet.DataSource = null;
-                    ddlColoniaDet.Items.Clear();
-                    ddlColoniaDet.DataBind();
-                    if (response != null)
+                    cargarDireccion(txtCodigoPostal.Text);
+                }
+                //cargaIdentificaciones();
+                //cargaVariablesAdicionales();
+            }
+            catch (Exception eCP)
+            {
+                Log.EscribeLog("Existe un error en txtCodigoPostal_TextChanged: " + eCP.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargarDireccion(string codigoPostal)
+        {
+            try
+            {
+                DireccionRequest request = new DireccionRequest();
+                DireccionResponse response = new DireccionResponse();
+                request.mdlUser = Usuario;
+                request.vchCodigoPostal = codigoPostal;
+                response = RisService.getDireccionPaciente(request);
+                ddlColoniaDet.DataSource = null;
+                ddlColoniaDet.Items.Clear();
+                ddlColoniaDet.DataBind();
+                if (response != null)
+                {
+                    if (response.lstDireccion.Count > 0)
                     {
-                        if (response.lstDireccion.Count > 0)
+                        txtEstadoDet.Text = response.lstDireccion.First().vchEstado;
+                        txtmunicipioDet.Text = response.lstDireccion.First().vchMunicipio;
+                        ddlColoniaDet.DataSource = response.lstDireccion.OrderBy(x => x.vchColonia);
+                        ddlColoniaDet.DataTextField = "vchColonia";
+                        ddlColoniaDet.DataValueField = "intCodigoPostalID";
+                        ddlColoniaDet.DataBind();
+                        if (response.lstDireccion.Count == 1)
                         {
-                            txtEstadoDet.Text = response.lstDireccion.First().vchEstado;
-                            txtmunicipioDet.Text = response.lstDireccion.First().vchMunicipio;
-                            ddlColoniaDet.DataSource = response.lstDireccion.OrderBy(x => x.vchColonia);
-                            ddlColoniaDet.DataTextField = "vchColonia";
-                            ddlColoniaDet.DataValueField = "intCodigoPostalID";
-                            ddlColoniaDet.DataBind();
-                            if (response.lstDireccion.Count == 1)
-                            {
-                                ddlColoniaDet.SelectedIndex = ddlColoniaDet.Items.IndexOf(ddlColoniaDet.Items.FindByValue(response.lstDireccion.First().intCodigoPostalID.ToString()));
-                            }
-                            else
-                            {
-                                ddlColoniaDet.Items.Insert(0, new ListItem("Seleccionar Colonia", "0"));
-                            }
+                            ddlColoniaDet.SelectedIndex = ddlColoniaDet.Items.IndexOf(ddlColoniaDet.Items.FindByValue(response.lstDireccion.First().intCodigoPostalID.ToString()));
+                        }
+                        else
+                        {
+                            ddlColoniaDet.Items.Insert(0, new ListItem("Seleccionar Colonia", "0"));
                         }
                     }
                 }
             }
-            catch(Exception eCP)
+            catch(Exception eCColo)
             {
-                Log.EscribeLog("Existe un error en txtCodigoPostal_TextChanged: " + eCP.Message, 3, Usuario.vchUsuario);
+                Log.EscribeLog("Existe un error en cargarColonia: " + eCColo.Message, 3, Usuario.vchUsuario);
             }
         }
 
@@ -392,8 +659,12 @@ namespace Fuji.RISLite.Site
             {
                 clsPaciente mdlPaciente = new clsPaciente();
                 clsDireccion mdlDireccion = new clsDireccion();
+                List<tbl_REL_IdentificacionPaciente> lstIden = new List<tbl_REL_IdentificacionPaciente>();
+                List<tbl_DET_PacienteDinamico> lstVar = new List<tbl_DET_PacienteDinamico>();
                 mdlPaciente = obtenerPacienteDet();
                 mdlDireccion = obtenerDireccion();
+                lstIden = obtenerIdentificaciones();
+                lstVar = obtenerVarAdicionales();
                 if (mdlPaciente != null)
                 {
                     PacienteRequest request = new PacienteRequest();
@@ -401,10 +672,12 @@ namespace Fuji.RISLite.Site
                     request.mdlUser = Usuario;
                     request.mdlDireccion = mdlDireccion;
                     request.mdlPaciente = mdlPaciente;
+                    request.lstIdent = lstIden;
+                    request.lstVarAdic = lstVar;
                     if (request != null)
                     {
                         response = RisService.setPaciente(request);
-                        if(response!= null)
+                        if (response != null)
                         {
                             if (response.Success)
                             {
@@ -412,6 +685,7 @@ namespace Fuji.RISLite.Site
                                 cargarDetallePaciente(response.intPacienteID);
                                 lblIDs.Text = response.intPacienteID.ToString();
                                 lblIDs.Visible = true;
+                                btnEditPaciente.Visible = true;
                             }
                             else
                             {
@@ -429,12 +703,75 @@ namespace Fuji.RISLite.Site
                     }
                 }
             }
-            catch(Exception eAP)
+            catch (Exception eAP)
             {
                 ShowMessage("Existe un error al agregar el paciente: " + eAP.Message, MessageType.Error, "alert_container");
                 Log.EscribeLog("Existe un error en bntAddPacienteDEt_Click: " + eAP.Message, 3, Usuario.vchUsuario);
             }
         }
+
+        private List<tbl_DET_PacienteDinamico> obtenerVarAdicionales()
+        {
+            List<tbl_DET_PacienteDinamico> lst = new List<tbl_DET_PacienteDinamico>();
+            try
+            {
+                if (lstIdentificaciones.Count > 0)
+                {
+                    foreach (clsVarAcicionales item in lstVarAdic)
+                    {
+                        tbl_DET_PacienteDinamico mdl = new tbl_DET_PacienteDinamico();
+                        mdl.bitActivo = true;
+                        mdl.datFecha = DateTime.Now;
+                        mdl.intVarAdiPacienteID = item.intVariableAdiID;
+                        mdl.vchUserAdmin = Usuario.vchUsuario;
+                        TextBox txt = (TextBox)pnlDinamicoContenido.FindControl("tbAdic").FindControl("txtAdi" + item.intVariableAdiID);
+                        if (txt != null)
+                            mdl.vchValorVar = txt.Text;
+                        if (mdl != null)
+                        {
+                            lst.Add(mdl);
+                        }
+                    }
+                }
+            }
+            catch (Exception eOIden)
+            {
+                Log.EscribeLog("Existe un error en obtenerVarAdicionales: " + eOIden.Message, 3, Usuario.vchUsuario);
+            }
+            return lst;
+        }
+
+        private List<tbl_REL_IdentificacionPaciente> obtenerIdentificaciones()
+        {
+            List<tbl_REL_IdentificacionPaciente> lst = new List<tbl_REL_IdentificacionPaciente>();
+            try
+            {
+                if (lstIdentificaciones.Count > 0)
+                {
+                    foreach (tbl_CAT_Identificacion item in lstIdentificaciones)
+                    {
+                        tbl_REL_IdentificacionPaciente mdl = new tbl_REL_IdentificacionPaciente();
+                        mdl.bitActivo = true;
+                        mdl.datFecha = DateTime.Now;
+                        mdl.intIdentificacionID = item.intIdentificacionID;
+                        mdl.vchUserAdmin = Usuario.vchUsuario;
+                        TextBox txt = (TextBox)pnlIDContenido.FindControl("tbIden").FindControl("txtIden" + item.intIdentificacionID);
+                        if(txt!= null)
+                            mdl.vchValor = txt.Text;
+                        if (mdl != null)
+                        {
+                            lst.Add(mdl);
+                        }
+                    }
+                }
+            }
+            catch (Exception eOIden)
+            {
+                Log.EscribeLog("Existe un error en obtenerIdentificaciones: " + eOIden.Message, 3, Usuario.vchUsuario);
+            }
+            return lst;
+        }
+
 
         private void cargarDetallePaciente(int intPacienteID)
         {
@@ -458,6 +795,33 @@ namespace Fuji.RISLite.Site
                             Date1.Text = response.mdlPaciente.datFechaNac.ToString("dd/MM/yyyy");
                             lblIDs.Text = intPacienteID.ToString();
                             lblIDs.Visible = true;
+                            btnEditPaciente.Visible = true;
+
+                            if (response.mdlDireccion != null)
+                            {
+                                fillDireccion(response.mdlDireccion);
+                            }
+
+                            if(response.mdlPaciente != null)
+                            {
+                                fillPaciente(response.mdlPaciente);
+                            }
+
+                            if (response.lstIden != null)
+                            {
+                                if(response.lstIden.Count > 0)
+                                {
+                                    fillIdentificaciones(response.lstIden);
+                                }
+                            }
+
+                            if (response.lstVarAdi != null)
+                            {
+                                if (response.lstVarAdi.Count > 0)
+                                {
+                                    fillVarAdicionalPaciente(response.lstVarAdi);
+                                }
+                            }
                         }
                         else
                         {
@@ -466,9 +830,71 @@ namespace Fuji.RISLite.Site
                     }
                 }
             }
-            catch(Exception eCP)
+            catch (Exception eCP)
             {
                 Log.EscribeLog("Existe un error en cargarDetallePaciente: " + eCP.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void fillPaciente(clsPaciente mdlPaciente)
+        {
+            try
+            {
+                txtNombreDet.Text = mdlPaciente.vchNombre;
+                txtApellidosDet.Text = mdlPaciente.vchApellidos;
+                txtFecNacDet.Text = mdlPaciente.datFechaNac.ToString("dd/MM/yyyy");
+                ddlGeneroDet.SelectedValue = mdlPaciente.intGeneroID.ToString();
+                txtNumContactDet.Text = mdlPaciente.vchNumeroContacto;
+                txtEmailDet.Text = mdlPaciente.vchEmail;
+
+            }
+            catch (Exception eFI)
+            {
+                Log.EscribeLog("Existe un error en fillVarAdicionalPaciente: " + eFI.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void fillDireccion(clsDireccion mdlDireccion)
+        {
+            try
+            {
+                txtCalleDet.Text = mdlDireccion.vchCalle;
+                txtNumeroDet.Text = mdlDireccion.vchNumero;
+                cargarDireccion(mdlDireccion.vchCodigoPostal);
+                txtCodigoPostal.Text = mdlDireccion.vchCodigoPostal;
+                //txtEstadoDet.Text = mdlDireccion.vchEstado;
+                //idEstadoDet.Value = mdlDireccion.intEstadoID.ToString();
+                //txtmunicipioDet.Text = mdlDireccion.vchMunicipio;
+                //intMunicipioID.Value = mdlDireccion.intMunicipioID.ToString();
+                ddlColoniaDet.SelectedValue = mdlDireccion.intCodigoPostalID.ToString();
+            }
+            catch (Exception eFI)
+            {
+                Log.EscribeLog("Existe un error en fillVarAdicionalPaciente: " + eFI.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void fillVarAdicionalPaciente(List<clsVarAcicionales> lstVarAdi)
+        {
+            try
+            {
+                cargaVariablesAdicionales(lstVarAdi);
+            }
+            catch (Exception eFI)
+            {
+                Log.EscribeLog("Existe un error en fillVarAdicionalPaciente: " + eFI.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void fillIdentificaciones(List<tbl_REL_IdentificacionPaciente> lstIden)
+        {
+            try
+            {
+                cargaIdentificaciones(lstIden);
+            }
+            catch(Exception eFI)
+            {
+                Log.EscribeLog("Existe un error en fillIdentificaciones: " + eFI.Message, 3, Usuario.vchUsuario);
             }
         }
 
@@ -481,7 +907,7 @@ namespace Fuji.RISLite.Site
                 mdl.vchCalle = txtCalleDet.Text;
                 mdl.vchNumero = txtNumeroDet.Text;
             }
-            catch(Exception eoD)
+            catch (Exception eoD)
             {
                 Log.EscribeLog("Existe un error al obtener la dirección: " + eoD.Message, 3, Usuario.vchUsuario);
             }
@@ -511,7 +937,39 @@ namespace Fuji.RISLite.Site
 
         protected void btnCancelPacienteDet_Click(object sender, EventArgs e)
         {
+            try
+            {
+                limpiarControlesPaciente();
+            }
+            catch(Exception eCPa)
+            {
+                Log.EscribeLog("Existe un error en btnCancelPacienteDet_Click: " + eCPa.Message, 3, Usuario.vchUsuario);
+            }
+        }
 
+        private void limpiarControlesPaciente()
+        {
+            try
+            {
+                txtNombreDet.Text = "";
+                txtApellidosDet.Text = "";
+                txtFecNacDet.Text = "";
+                ddlGeneroDet.SelectedIndex = -1;
+                txtNumContactDet.Text = "";
+                txtEmailDet.Text = "";
+                txtCalleDet.Text = "";
+                txtNumeroDet.Text = "";
+                txtCodigoPostal.Text = "";
+                txtEstadoDet.Text = "";
+                txtmunicipioDet.Text = "";
+                ddlColoniaDet.SelectedIndex = -1;
+                pnlDinamicoContenido.Controls.Clear();
+                pnlIDContenido.Controls.Clear();
+            }
+            catch (Exception eCPa)
+            {
+                Log.EscribeLog("Existe un error en limpiarControlesPaciente: " + eCPa.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         public enum MessageType { Correcto, Error, Informacion, Advertencia };
@@ -539,7 +997,7 @@ namespace Fuji.RISLite.Site
                 txtBusquedaPaciente.Text = "";
                 cargarDetallePaciente(Convert.ToInt32(id));
             }
-            catch(Exception etC)
+            catch (Exception etC)
             {
                 Log.EscribeLog("Existe un error en txtBusquedaPaciente_TextChanged: " + etC.Message, 3, Usuario.vchUsuario);
             }
@@ -581,7 +1039,7 @@ namespace Fuji.RISLite.Site
                     grvEstudios.DataBind();
                 }
             }
-            catch(Exception ecEG)
+            catch (Exception ecEG)
             {
                 Log.EscribeLog("Existe un error en cargarEstudioGrid: " + ecEG.Message, 3, Usuario.vchUsuario);
             }
@@ -591,9 +1049,9 @@ namespace Fuji.RISLite.Site
         {
             try
             {
-                if(lblIDs.Text != "")//Usuario
+                if (lblIDs.Text != "")//Usuario
                 {
-                    if(lstEstudios!= null)
+                    if (lstEstudios != null)
                     {
                         if (lstEstudios.Count > 0)
                         {
@@ -627,7 +1085,7 @@ namespace Fuji.RISLite.Site
             {
 
             }
-            catch(Exception eBC)
+            catch (Exception eBC)
             {
                 ShowMessage("Existe un error al cancelar: " + eBC.Message, MessageType.Error, "alert_container");
                 Log.EscribeLog("Existe un error en btnCancelPaciente_Click: " + eBC.Message, 3, Usuario.vchUsuario);

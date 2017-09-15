@@ -798,26 +798,21 @@
 						    <div class="widget-box">
 								<div class="widget-header">
 									<h4 class="widget-title">Administración de Modalidades, Prestaciones y Equipos</h4>
-
-									<div class="widget-toolbar">
-										<a href="#" data-action="collapse">
-											<i class="ace-icon fa fa-chevron-up"></i>
-										</a>
-
-										<a href="#" data-action="close">
-											<i class="ace-icon fa fa-times"></i>
-										</a>
-									</div>
 								</div>
 
 								<div class="widget-body">
 									<div class="widget-main">
                                         <div class="row">
-                                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                            <div class="col-lg-12 col-md-12 col-sm-12">
                                                 <div class="widget-box">
 								                    <div class="widget-header">
 									                    <h4 class="widget-title">Prestaciones</h4>
 
+                                                        <div class="widget-toolbar">
+										                    <a href="#" data-action="collapse">
+											                    <i class="ace-icon fa fa-chevron-up"></i>
+										                    </a>
+									                    </div>
 								                    </div>
 
 								                    <div class="widget-body">
@@ -891,7 +886,7 @@
                                                                                             <asp:Label runat="server" ID="lblDuracion" Text='<%#Eval("intDuracionMin") %>' />
                                                                                         </ItemTemplate>
                                                                                         <EditItemTemplate>
-                                                                                            <asp:TextBox runat="server" ID="txtDuracionItem" width="100%" Text='<%#Eval("intDuracionMin") %>'></asp:TextBox>
+                                                                                            <asp:TextBox runat="server" ID="txtDuracionItem" TextMode="Number" width="100%" Text='<%#Eval("intDuracionMin") %>'></asp:TextBox>
                                                                                         </EditItemTemplate>
                                                                                     </asp:TemplateField>
                                                                                     <asp:TemplateField HeaderText="Editar" ItemStyle-HorizontalAlign="Center">
@@ -971,11 +966,18 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-12 col-sm-12">
                                                 <div class="widget-box">
 								                    <div class="widget-header">
 									                    <h4 class="widget-title">Equipos</h4>
 
+                                                        <div class="widget-toolbar">
+										                    <a href="#" data-action="collapse">
+											                    <i class="ace-icon fa fa-chevron-up"></i>
+										                    </a>
+									                    </div>
 								                    </div>
 
 								                    <div class="widget-body">

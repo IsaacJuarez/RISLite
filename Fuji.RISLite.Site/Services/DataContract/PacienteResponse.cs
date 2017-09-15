@@ -1,4 +1,5 @@
-﻿using Fuji.RISLite.Entities;
+﻿using Fuji.RISLite.Entidades.DataBase;
+using Fuji.RISLite.Entities;
 using System.Collections.Generic;
 
 namespace Fuji.RISLite.Site.Services.DataContract
@@ -11,6 +12,8 @@ namespace Fuji.RISLite.Site.Services.DataContract
         public clsPaciente mdlPaciente;
         public clsDireccion mdlDireccion;
         public List<string> lstCadenas;
+        public List<tbl_REL_IdentificacionPaciente> lstIden;
+        public List<clsVarAcicionales> lstVarAdi;
 
         public PacienteResponse()
         {
@@ -20,6 +23,8 @@ namespace Fuji.RISLite.Site.Services.DataContract
             mdlPaciente = new clsPaciente();
             mdlDireccion = new clsDireccion();
             lstCadenas = new List<string>();
+            lstIden = new List<tbl_REL_IdentificacionPaciente>();
+            lstVarAdi = new List<clsVarAcicionales>();
         }
     }
 }

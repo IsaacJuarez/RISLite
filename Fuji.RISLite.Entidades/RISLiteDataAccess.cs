@@ -1543,7 +1543,7 @@ namespace Fuji.RISLite.DataAccess
             return lst;
         }
 
-        public bool setPaciente(clsPaciente mdlPaciente, clsDireccion mdlDireccion, string user, ref string mensaje, ref int intPacienteID)
+        public bool setPaciente(clsPaciente mdlPaciente, clsDireccion mdlDireccion, List<tbl_REL_IdentificacionPaciente> lstIdent, List<tbl_DET_PacienteDinamico> lstVarAdic, string user, ref string mensaje, ref int intPacienteID)
         {
             bool valido = false;
             bool validoPaciente = false;
@@ -1609,8 +1609,63 @@ namespace Fuji.RISLite.DataAccess
                             pac.vchNumeroContacto = mdlPaciente.vchNumeroContacto;
                             pac.vchParentesco = "";
                             pac.vchUserAdmin = user;
+                            dbRisDA.tbl_DET_Paciente.Add(pac);
+                            dbRisDA.SaveChanges();
                         }
                     }
+
+                    //Identificaciones
+                    foreach (tbl_REL_IdentificacionPaciente mdlIdent in lstIdent)
+                    {
+                        if (mdlIdent != null)
+                        {
+                            if (mdlIdent.intIdentificacionID != int.MinValue && mdlIdent.vchValor != "")
+                            {
+                                using (dbRisDA = new RISLiteEntities())
+                                {
+                                    if (!dbRisDA.tbl_REL_IdentificacionPaciente.Any(x => x.intIdentificacionID == (int)mdlIdent.intIdentificacionID && x.vchValor == mdlIdent.vchValor))
+                                    {
+                                        tbl_REL_IdentificacionPaciente mdl = new tbl_REL_IdentificacionPaciente();
+                                        mdl.bitActivo = true;
+                                        mdl.datFecha = DateTime.Now;
+                                        mdl.intIdentificacionID = mdlIdent.intIdentificacionID;
+                                        mdl.intPacienteID = _paciente.intPacienteID;
+                                        mdl.vchValor = mdlIdent.vchValor;
+                                        mdl.vchUserAdmin = user;
+                                        dbRisDA.tbl_REL_IdentificacionPaciente.Add(mdl);
+                                        dbRisDA.SaveChanges();
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    //Variables Adicionales
+                    foreach (tbl_DET_PacienteDinamico mdlAdic in lstVarAdic)
+                    {
+                        if (mdlAdic != null)
+                        {
+                            if (mdlAdic.intVarAdiPacienteID != int.MinValue && mdlAdic.vchValorVar != "")
+                            {
+                                using (dbRisDA = new RISLiteEntities())
+                                {
+                                    if (!dbRisDA.tbl_DET_PacienteDinamico.Any(x => x.intVarAdiPacienteID == (int)mdlAdic.intVarAdiPacienteID && x.vchValorVar == mdlAdic.vchValorVar))
+                                    {
+                                        tbl_DET_PacienteDinamico mdl = new tbl_DET_PacienteDinamico();
+                                        mdl.bitActivo = true;
+                                        mdl.datFecha = DateTime.Now;
+                                        mdl.intPacienteID = _paciente.intPacienteID;
+                                        mdl.intVarAdiPacienteID = mdlAdic.intVarAdiPacienteID;
+                                        mdl.vchValorVar = mdlAdic.vchValorVar;
+                                        mdl.vchUserAdmin = user;
+                                        dbRisDA.tbl_DET_PacienteDinamico.Add(mdl);
+                                        dbRisDA.SaveChanges();
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     intPacienteID = Convert.ToInt32(_paciente.intPacienteID);
                     valido = true;
                 }
@@ -1624,14 +1679,14 @@ namespace Fuji.RISLite.DataAccess
             return valido;
         }
 
-        public bool getPacienteDetalle(int intPacienteID, string user, ref clsPaciente paciente, ref clsDireccion direccion, ref string mensaje)
+        public bool getPacienteDetalle(int intPacienteID, string user, ref clsPaciente paciente, ref clsDireccion direccion, ref List<tbl_REL_IdentificacionPaciente> lstIden, ref List<clsVarAcicionales> lstVarAdi, ref string mensaje)
         {
             bool valido = false;
             try
             {
-                using(dbRisDA = new RISLiteEntities())
+                using (dbRisDA = new RISLiteEntities())
                 {
-                    if(dbRisDA.tbl_MST_Paciente.Any(x=> x.intPacienteID == intPacienteID))
+                    if (dbRisDA.tbl_MST_Paciente.Any(x => x.intPacienteID == intPacienteID))
                     {
                         var query = (from pac in dbRisDA.tbl_MST_Paciente
                                      where pac.intPacienteID == intPacienteID
@@ -1650,6 +1705,28 @@ namespace Fuji.RISLite.DataAccess
                             paciente.intPacienteID = intPacienteID;
                             paciente.vchApellidos = query.vchApellidos;
                             paciente.vchNombre = query.vchNombre;
+                        }
+                    }
+                }
+
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_DET_Paciente.Any(x => x.intPacienteID == intPacienteID))
+                    {
+                        var query = (from pac in dbRisDA.tbl_DET_Paciente
+                                     where pac.intPacienteID == intPacienteID
+                                     select new
+                                     {
+                                         PacienteID = pac.intPacienteID,
+                                         intDETPacienteID = pac.intDETPacienteID,
+                                         vchEmail = pac.vchEmail,
+                                         vchNumeroContacto = pac.vchNumeroContacto
+                                     }).ToList().First();
+                        if (query != null)
+                        {
+                            paciente.intDETPacienteID = (int)query.intDETPacienteID;
+                            paciente.vchEmail = query.vchEmail;
+                            paciente.vchNumeroContacto = query.vchNumeroContacto;
                         }
                     }
                 }
@@ -1716,8 +1793,49 @@ namespace Fuji.RISLite.DataAccess
                         valido = true;
                     }
                 }
+
+                //Identificaciones
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_REL_IdentificacionPaciente.Any(x => x.intPacienteID == intPacienteID))
+                    {
+                        var query = dbRisDA.tbl_REL_IdentificacionPaciente.Where(x => x.intPacienteID == intPacienteID).ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                lstIden.AddRange(query);
+                            }
+                        }
+                    }
+                }
+
+                //Variables Adicionales
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_DET_PacienteDinamico.Any(x => x.intPacienteID == intPacienteID))
+                    {
+                        var query = dbRisDA.tbl_DET_PacienteDinamico.Where(x => x.intPacienteID == intPacienteID).ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (tbl_DET_PacienteDinamico item in query)
+                                {
+                                    clsVarAcicionales mdl = new clsVarAcicionales();
+                                    mdl.bitActivo = (bool)item.bitActivo;
+                                    mdl.datFecha = (DateTime)item.datFecha;
+                                    mdl.intVariableAdiID = (int)item.intVarAdiPacienteID;
+                                    mdl.vchValorAdicional = item.vchValorVar;
+                                    mdl.vchUserAdmin = item.vchUserAdmin;
+                                    lstVarAdi.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
             }
-            catch(Exception egPD)
+            catch (Exception egPD)
             {
                 valido = false;
                 mensaje += egPD.Message;

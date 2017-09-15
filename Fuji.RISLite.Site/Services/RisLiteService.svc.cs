@@ -796,7 +796,7 @@ namespace Fuji.RISLite.Site.Services
                     RISLiteDataAccess controller = new RISLiteDataAccess();
                     string mensaje = "";
                     int intPacienteID = 0;
-                    response.Success = controller.setPaciente(request.mdlPaciente, request.mdlDireccion, request.mdlUser.vchUsuario, ref mensaje, ref intPacienteID);
+                    response.Success = controller.setPaciente(request.mdlPaciente, request.mdlDireccion, request.lstIdent, request.lstVarAdic, request.mdlUser.vchUsuario, ref mensaje, ref intPacienteID);
                     response.Mensaje = mensaje;
                     response.intPacienteID = intPacienteID;
                 }
@@ -819,10 +819,14 @@ namespace Fuji.RISLite.Site.Services
                     string mensaje = "";
                     clsPaciente mdlPaciente = new clsPaciente();
                     clsDireccion mdlDireccion = new clsDireccion();
-                    response.Success = controller.getPacienteDetalle(request.intPacienteID, request.mdlUser.vchUsuario, ref mdlPaciente, ref mdlDireccion, ref mensaje);
+                    List<tbl_REL_IdentificacionPaciente> lstIden = new List<tbl_REL_IdentificacionPaciente>();
+                    List<clsVarAcicionales> lstVarAdi = new List<clsVarAcicionales>();
+                    response.Success = controller.getPacienteDetalle(request.intPacienteID, request.mdlUser.vchUsuario, ref mdlPaciente, ref mdlDireccion, ref lstIden, ref lstVarAdi, ref mensaje);
                     response.Mensaje = mensaje;
                     response.mdlDireccion = mdlDireccion;
                     response.mdlPaciente = mdlPaciente;
+                    response.lstIden = lstIden;
+                    response.lstVarAdi = lstVarAdi;
                 }
             }
             catch (Exception egU)

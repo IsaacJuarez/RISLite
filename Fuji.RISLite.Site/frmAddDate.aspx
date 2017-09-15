@@ -67,7 +67,7 @@
                             <hr />
                             <div class="row">
                                 <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                                    <asp:LinkButton ID="btnEditPaciente" runat="server" OnClick="btnEditPaciente_Click" Text="Editar">
+                                    <asp:LinkButton ID="btnEditPaciente" runat="server" OnClick="btnEditPaciente_Click" Text="Editar" Visible="false">
                                         <i class="fa fa-pencil-square-o" aria-hidden="true"  title="Editar Paciente" style="font-size:25px;"></i>
                                     </asp:LinkButton>
                                     <asp:Label runat="server" ID="lblPacienteTitulo" ForeColor="DarkBlue" Text="Paciente" Font-Bold="true"></asp:Label>
@@ -355,6 +355,8 @@
                     <ContentTemplate>
                         <div class="form-horizontal" role="form">
                             <div class="row">
+                            </div>
+                            <div class="row">
                                 <div class="col-lg-6 col-md-12">
                                     <div class="row ">
                                         <div class="col-12">
@@ -499,7 +501,9 @@
                                     </div>
                                     <hr />
                                     <div runat="server" id="divIDContenido">
+                                        <asp:Panel ID="pnlIDContenido" CssClass="form-group" runat="server">
 
+                                        </asp:Panel>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-12">
@@ -510,7 +514,9 @@
                                     </div>
                                     <hr />
                                     <div runat="server" id="divDinamicoContenido">
+                                        <asp:Panel ID="pnlDinamicoContenido"  CssClass="form-group" runat="server">
 
+                                        </asp:Panel>
                                     </div>
                                 </div>
                             </div>
