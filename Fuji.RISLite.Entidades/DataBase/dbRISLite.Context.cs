@@ -66,6 +66,8 @@ namespace Fuji.RISLite.Entidades.DataBase
         public DbSet<tbl_DET_Cuestionario> tbl_DET_Cuestionario { get; set; }
         public DbSet<tbl_DET_Restriccion> tbl_DET_Restriccion { get; set; }
         public DbSet<tbl_DET_IndicacionPrestacion> tbl_DET_IndicacionPrestacion { get; set; }
+        public DbSet<tbl_MST_Estudio> tbl_MST_Estudio { get; set; }
+        public DbSet<tbl_REL_CitaEstudio> tbl_REL_CitaEstudio { get; set; }
     
         public virtual ObjectResult<stp_getListCatalogo_Result> stp_getListCatalogo(Nullable<int> intCatalogoID)
         {
@@ -161,6 +163,24 @@ namespace Fuji.RISLite.Entidades.DataBase
                 new ObjectParameter("estudio", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getBusquedaEstudio_Result>("stp_getBusquedaEstudio", estudioParameter);
+        }
+    
+        public virtual ObjectResult<stp_getBusquedaPacienteList_Result> stp_getBusquedaPacienteList(string vchCadena)
+        {
+            var vchCadenaParameter = vchCadena != null ?
+                new ObjectParameter("vchCadena", vchCadena) :
+                new ObjectParameter("vchCadena", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getBusquedaPacienteList_Result>("stp_getBusquedaPacienteList", vchCadenaParameter);
+        }
+    
+        public virtual ObjectResult<stp_getEstudiosPaciente_Result> stp_getEstudiosPaciente(Nullable<int> intPacienteID)
+        {
+            var intPacienteIDParameter = intPacienteID.HasValue ?
+                new ObjectParameter("intPacienteID", intPacienteID) :
+                new ObjectParameter("intPacienteID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getEstudiosPaciente_Result>("stp_getEstudiosPaciente", intPacienteIDParameter);
         }
     }
 }

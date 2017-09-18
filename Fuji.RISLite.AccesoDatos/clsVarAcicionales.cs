@@ -4,6 +4,7 @@ namespace Fuji.RISLite.Entities
 {
     public class clsVarAcicionales
     {
+        public int intADIPacienteID { get; set; }
         public int intVariableAdiID { get; set; }
         public string vchNombreVarAdi { get; set; }
         public string vchValorAdicional { get; set; }
@@ -13,6 +14,7 @@ namespace Fuji.RISLite.Entities
 
         public clsVarAcicionales()
         {
+            intADIPacienteID = int.MinValue;
             intVariableAdiID = int.MinValue;
             vchNombreVarAdi = string.Empty;
             vchValorAdicional = string.Empty;

@@ -14,6 +14,7 @@ namespace Fuji.RISLite.Site.Services.DataContract
         public List<string> lstCadenas;
         public List<tbl_REL_IdentificacionPaciente> lstIden;
         public List<clsVarAcicionales> lstVarAdi;
+        public List<clsPaciente> lstPacientes;
 
         public PacienteResponse()
         {
@@ -25,6 +26,7 @@ namespace Fuji.RISLite.Site.Services.DataContract
             lstCadenas = new List<string>();
             lstIden = new List<tbl_REL_IdentificacionPaciente>();
             lstVarAdi = new List<clsVarAcicionales>();
+            lstPacientes = new List<clsPaciente>();
         }
     }
 }

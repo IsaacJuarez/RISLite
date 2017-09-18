@@ -28,13 +28,13 @@ namespace Fuji.RISLite.Site
         public static List<tbl_CAT_Identificacion> lstIdentificaciones = new List<tbl_CAT_Identificacion>();
         public static List<clsVarAcicionales> lstVarAdic = new List<clsVarAcicionales>();
 
+        public static bool bitEditar = false;
+
         protected void Page_Init(object sender, EventArgs e)
         {
             try
             {
                 String var = "";
-                //if (!IsPostBack)
-                //{
                     if (Session["User"] != null)
                     {
                         Usuario = (clsUsuario)Session["User"];
@@ -53,8 +53,6 @@ namespace Fuji.RISLite.Site
                         var = Security.Encrypt("1");
                         Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
                     }
-                //}
-                //else
             }
             catch (Exception ePL)
             {
@@ -74,7 +72,12 @@ namespace Fuji.RISLite.Site
                         Usuario = (clsUsuario)Session["User"];
                         if (Usuario != null)
                         {
-
+                            bitEditar = false;
+                            if (Request.QueryString.Count > 0)
+                            {
+                                if (Request.QueryString["var"] != null)
+                                    nuevaCita(Request.QueryString["var"].ToString());
+                            }
                         }
                         else
                         {
@@ -159,6 +162,7 @@ namespace Fuji.RISLite.Site
         {
             try
             {
+                bitEditar = false;
                 limpiarControlesPaciente();
                 cargaFormaDetalle();
                 ScriptManager.RegisterStartupScript(Page, Page.GetType(), "myModal", "$('#myModal').modal();", true);
@@ -243,6 +247,10 @@ namespace Fuji.RISLite.Site
                             txt.ClientIDMode = ClientIDMode.Static;
                             Label lbl = new Label();
                             lbl.Text = item.vchNombreId;
+                            HiddenField hf = new HiddenField();
+                            hf.ID = "hf" + item.intIdentificacionID;
+                            hf.Value = "";
+                            hf.ClientIDMode = ClientIDMode.Static;
                             lbl.ID = "lbl" + item.vchNombreId;
                             lbl.AssociatedControlID = "txtIden" + item.intIdentificacionID;
                             lbl.Attributes.Add("class", "control-label no-padding-left");
@@ -253,8 +261,12 @@ namespace Fuji.RISLite.Site
                             TableCell tc2 = new TableCell();
                             tc2.Controls.Add(txt);
                             tc2.Attributes.Add("width", "60%");
+                            TableCell tc3 = new TableCell();
+                            tc3.Controls.Add(hf);
+                            tc3.Attributes.Add("width", "10%");
                             tr.Cells.Add(tc);
                             tr.Cells.Add(tc2);
+                            tr.Cells.Add(tc3);
                             tb.Rows.Add(tr);
                             tb.Attributes.Add("width", "100%");
                             //-----
@@ -288,6 +300,7 @@ namespace Fuji.RISLite.Site
                         //-----
                         Table tb = new Table();
                         tb.ID = "tbIden";
+                        
                         //-----
                         foreach (tbl_CAT_Identificacion item in lst)
                         {
@@ -301,6 +314,10 @@ namespace Fuji.RISLite.Site
                             txt.CssClass = "form-control col-xs-10 col-sm-5";
                             txt.ClientIDMode = ClientIDMode.Static;
                             txt.Text = lstIden.Where(x => x.intIdentificacionID == item.intIdentificacionID).First().vchValor;
+                            HiddenField hf = new HiddenField();
+                            hf.ID = "hf" + item.intIdentificacionID;
+                            hf.Value = lstIden.Where(x => x.intIdentificacionID == item.intIdentificacionID).First().intRELIdenPacienteID.ToString();
+                            hf.ClientIDMode = ClientIDMode.Static;
                             Label lbl = new Label();
                             lbl.Text = item.vchNombreId;
                             lbl.ID = "lbl" + item.vchNombreId;
@@ -312,9 +329,13 @@ namespace Fuji.RISLite.Site
                             tc.Attributes.Add("width", "40%");
                             TableCell tc2 = new TableCell();
                             tc2.Controls.Add(txt);
-                            tc2.Attributes.Add("width", "60%");
+                            tc2.Attributes.Add("width", "50%");
+                            TableCell tc3 = new TableCell();
+                            tc3.Controls.Add(hf);
+                            tc3.Attributes.Add("width", "10%");
                             tr.Cells.Add(tc);
                             tr.Cells.Add(tc2);
+                            tr.Cells.Add(tc3);
                             tb.Rows.Add(tr);
                             tb.Attributes.Add("width", "100%");
                             //-----
@@ -382,6 +403,10 @@ namespace Fuji.RISLite.Site
                             txt.CssClass = "form-control col-xs-10 col-sm-5";
                             txt.Attributes.Add("placeholder", item.vchNombreVarAdi);
                             txt.Attributes.Add("width", "100%");
+                            HiddenField hf = new HiddenField();
+                            hf.ID = "hfVA" + +item.intVariableAdiID;
+                            hf.Value = "";
+                            hf.ClientIDMode = ClientIDMode.Static;
                             Label lbl = new Label();
                             lbl.Text = item.vchNombreVarAdi;
                             lbl.ID = "lbl" + item.vchNombreVarAdi;
@@ -393,6 +418,7 @@ namespace Fuji.RISLite.Site
                             tc.Attributes.Add("width", "40%");
                             TableCell tc2 = new TableCell();
                             tc2.Controls.Add(txt);
+                            tc2.Controls.Add(hf);
                             tc2.Attributes.Add("width", "60%");
                             tr.Cells.Add(tc);
                             tr.Cells.Add(tc2);
@@ -441,6 +467,10 @@ namespace Fuji.RISLite.Site
                             txt.Attributes.Add("placeholder", item.vchNombreVarAdi);
                             txt.Attributes.Add("width", "100%");
                             txt.Text = lstVarAdi.First(x => x.intVariableAdiID == item.intVariableAdiID).vchValorAdicional;
+                            HiddenField hf = new HiddenField();
+                            hf.ID = "hfVA" + +item.intVariableAdiID;
+                            hf.Value = lstVarAdi.Where(x => x.intVariableAdiID == item.intVariableAdiID).First().intADIPacienteID.ToString();
+                            hf.ClientIDMode = ClientIDMode.Static;
                             Label lbl = new Label();
                             lbl.Text = item.vchNombreVarAdi;
                             lbl.ID = "lbl" + item.vchNombreVarAdi;
@@ -452,6 +482,7 @@ namespace Fuji.RISLite.Site
                             tc.Attributes.Add("width", "40%");
                             TableCell tc2 = new TableCell();
                             tc2.Controls.Add(txt);
+                            tc2.Controls.Add(hf);
                             tc2.Attributes.Add("width", "60%");
                             tr.Cells.Add(tc);
                             tr.Cells.Add(tc2);
@@ -501,6 +532,7 @@ namespace Fuji.RISLite.Site
             {
                 if (lblIDs.Text != "")
                 {
+                    bitEditar = true;
                     cargarDetallePaciente(Convert.ToInt32(lblIDs.Text));
                     ScriptManager.RegisterStartupScript(Page, Page.GetType(), "myModal", "$('#myModal').modal();", true);
                 }
@@ -664,7 +696,7 @@ namespace Fuji.RISLite.Site
                 mdlPaciente = obtenerPacienteDet();
                 mdlDireccion = obtenerDireccion();
                 lstIden = obtenerIdentificaciones();
-                lstVar = obtenerVarAdicionales();
+                lstVar = obtenerVarAdicionales();                
                 if (mdlPaciente != null)
                 {
                     PacienteRequest request = new PacienteRequest();
@@ -676,25 +708,60 @@ namespace Fuji.RISLite.Site
                     request.lstVarAdic = lstVar;
                     if (request != null)
                     {
-                        response = RisService.setPaciente(request);
-                        if (response != null)
+                        if (bitEditar)
                         {
-                            if (response.Success)
+                            if (request.mdlDireccion != null)
                             {
-                                ShowMessage("Se agregó correctamente el paciente." + response.Mensaje, MessageType.Correcto, "alert_container");
-                                cargarDetallePaciente(response.intPacienteID);
-                                lblIDs.Text = response.intPacienteID.ToString();
-                                lblIDs.Visible = true;
-                                btnEditPaciente.Visible = true;
+                                request.mdlDireccion.intDireccionID = Convert.ToInt32(Session["intDireccionID"]);
+                            }
+
+                            if (request.mdlPaciente != null && lblIDs.Text != "")
+                            {
+                                request.mdlPaciente.intPacienteID = Convert.ToInt32(lblIDs.Text);
+                            }
+                            response = RisService.setActualizaPaciente(request);
+                            if (response != null)
+                            {
+                                if (response.Success)
+                                {
+                                    ShowMessage("Se actualizó correctamente el paciente." + response.Mensaje, MessageType.Correcto, "alert_container");
+                                    cargarDetallePaciente(request.mdlPaciente.intPacienteID);
+                                    lblIDs.Text = request.mdlPaciente.intPacienteID.ToString();
+                                    lblIDs.Visible = true;
+                                    btnEditPaciente.Visible = true;
+                                }
+                                else
+                                {
+                                    ShowMessage("Verificar la informacion: " + response.Mensaje, MessageType.Advertencia, "alert_container");
+                                }
                             }
                             else
                             {
-                                ShowMessage("Verificar la informacion: " + response.Mensaje, MessageType.Advertencia, "alert_container");
+                                ShowMessage("Verificar la informacion. ", MessageType.Advertencia, "alert_container");
                             }
                         }
                         else
                         {
-                            ShowMessage("Verificar la informacion. ", MessageType.Advertencia, "alert_container");
+                            response = RisService.setPaciente(request);
+                            if (response != null)
+                            {
+                                if (response.Success)
+                                {
+                                    ShowMessage("Se agregó correctamente el paciente." + response.Mensaje, MessageType.Correcto, "alert_container");
+                                    cargarDetallePaciente(response.intPacienteID);
+                                    lblIDs.Text = response.intPacienteID.ToString();
+                                    lblIDs.Visible = true;
+                                    btnEditPaciente.Visible = true;
+                                }
+                                else
+                                {
+                                    ShowMessage("Verificar la informacion: " + response.Mensaje, MessageType.Advertencia, "alert_container");
+                                }
+                            }
+                            else
+                            {
+                                ShowMessage("Verificar la informacion. ", MessageType.Advertencia, "alert_container");
+                            }
                         }
                     }
                     else
@@ -725,8 +792,12 @@ namespace Fuji.RISLite.Site
                         mdl.intVarAdiPacienteID = item.intVariableAdiID;
                         mdl.vchUserAdmin = Usuario.vchUsuario;
                         TextBox txt = (TextBox)pnlDinamicoContenido.FindControl("tbAdic").FindControl("txtAdi" + item.intVariableAdiID);
+                        HiddenField hf = (HiddenField)pnlDinamicoContenido.FindControl("tbAdic").FindControl("hfVA" + item.intVariableAdiID);
                         if (txt != null)
-                            mdl.vchValorVar = txt.Text;
+                            mdl.vchValorVar = txt.Text.ToUpper();
+                        if (hf != null)
+                            if (hf.Value != "")
+                                mdl.intADIPacienteID = Convert.ToInt32(hf.Value);
                         if (mdl != null)
                         {
                             lst.Add(mdl);
@@ -756,8 +827,12 @@ namespace Fuji.RISLite.Site
                         mdl.intIdentificacionID = item.intIdentificacionID;
                         mdl.vchUserAdmin = Usuario.vchUsuario;
                         TextBox txt = (TextBox)pnlIDContenido.FindControl("tbIden").FindControl("txtIden" + item.intIdentificacionID);
-                        if(txt!= null)
-                            mdl.vchValor = txt.Text;
+                        HiddenField hf = (HiddenField)pnlIDContenido.FindControl("tbIden").FindControl("hf" + item.intIdentificacionID);
+                        if (txt!= null)
+                            mdl.vchValor = txt.Text.ToUpper();
+                        if (hf != null )
+                            if(hf.Value != "")
+                                mdl.intRELIdenPacienteID = Convert.ToInt32(hf.Value);
                         if (mdl != null)
                         {
                             lst.Add(mdl);
@@ -789,6 +864,7 @@ namespace Fuji.RISLite.Site
                     {
                         if (response.Success)
                         {
+                            bitEditar = true;
                             HFintPacienteID.Value = intPacienteID.ToString();
                             txtNombrePaciente.Text = response.mdlPaciente.vchNombre;
                             txtApellidos.Text = response.mdlPaciente.vchApellidos;
@@ -846,11 +922,11 @@ namespace Fuji.RISLite.Site
                 ddlGeneroDet.SelectedValue = mdlPaciente.intGeneroID.ToString();
                 txtNumContactDet.Text = mdlPaciente.vchNumeroContacto;
                 txtEmailDet.Text = mdlPaciente.vchEmail;
-
+                Session["intDetPaciente"] = mdlPaciente.intDETPacienteID > 0 ? mdlPaciente.intDETPacienteID : 0;
             }
             catch (Exception eFI)
             {
-                Log.EscribeLog("Existe un error en fillVarAdicionalPaciente: " + eFI.Message, 3, Usuario.vchUsuario);
+                Log.EscribeLog("Existe un error en fillPaciente: " + eFI.Message, 3, Usuario.vchUsuario);
             }
         }
 
@@ -858,6 +934,7 @@ namespace Fuji.RISLite.Site
         {
             try
             {
+                Session["intDireccionID"] = mdlDireccion.intDireccionID;
                 txtCalleDet.Text = mdlDireccion.vchCalle;
                 txtNumeroDet.Text = mdlDireccion.vchNumero;
                 cargarDireccion(mdlDireccion.vchCodigoPostal);
@@ -870,7 +947,7 @@ namespace Fuji.RISLite.Site
             }
             catch (Exception eFI)
             {
-                Log.EscribeLog("Existe un error en fillVarAdicionalPaciente: " + eFI.Message, 3, Usuario.vchUsuario);
+                Log.EscribeLog("Existe un error en fillDireccion: " + eFI.Message, 3, Usuario.vchUsuario);
             }
         }
 
@@ -904,8 +981,8 @@ namespace Fuji.RISLite.Site
             try
             {
                 mdl.intCodigoPostalID = Convert.ToInt32(ddlColoniaDet.SelectedValue);
-                mdl.vchCalle = txtCalleDet.Text;
-                mdl.vchNumero = txtNumeroDet.Text;
+                mdl.vchCalle = txtCalleDet.Text.ToUpper();
+                mdl.vchNumero = txtNumeroDet.Text.ToUpper();
             }
             catch (Exception eoD)
             {
@@ -922,10 +999,11 @@ namespace Fuji.RISLite.Site
                 mdl.datFechaNac = Convert.ToDateTime(txtFecNacDet.Text);
                 mdl.intGeneroID = Convert.ToInt32(ddlGeneroDet.SelectedValue.ToString());
                 //mdl.intPacienteID
-                mdl.vchApellidos = txtApellidosDet.Text;
+                mdl.vchApellidos = txtApellidosDet.Text.ToUpper();
                 mdl.vchEmail = txtEmailDet.Text;
-                mdl.vchNombre = txtNombreDet.Text;
-                mdl.vchNumeroContacto = txtNumContactDet.Text;
+                mdl.vchNombre = txtNombreDet.Text.ToUpper();
+                mdl.vchNumeroContacto = txtNumContactDet.Text.ToUpper();
+                mdl.intDETPacienteID = Session["intDetPaciente"] != null ? Convert.ToInt32(Session["intDetPaciente"]) : 0;
             }
             catch (Exception eOP)
             {
@@ -1002,6 +1080,22 @@ namespace Fuji.RISLite.Site
                 Log.EscribeLog("Existe un error en txtBusquedaPaciente_TextChanged: " + etC.Message, 3, Usuario.vchUsuario);
             }
         }
+
+        public void nuevaCita(string id_Codificado)
+        {
+            try
+            {
+                int id = Convert.ToInt32(Security.Decrypt(id_Codificado));
+                if(id > 0)
+                    cargarDetallePaciente(id);
+            }
+            catch(Exception eNC)
+            {
+                ShowMessage("Existe un error al consultar el paciente: " + eNC.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error en nuevaCita: " + eNC.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
 
         protected void txtBusquedaEstudio_TextChanged(object sender, EventArgs e)
         {

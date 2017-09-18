@@ -1823,6 +1823,7 @@ namespace Fuji.RISLite.DataAccess
                                 foreach (tbl_DET_PacienteDinamico item in query)
                                 {
                                     clsVarAcicionales mdl = new clsVarAcicionales();
+                                    mdl.intADIPacienteID = item.intADIPacienteID;
                                     mdl.bitActivo = (bool)item.bitActivo;
                                     mdl.datFecha = (DateTime)item.datFecha;
                                     mdl.intVariableAdiID = (int)item.intVarAdiPacienteID;
@@ -1869,6 +1870,38 @@ namespace Fuji.RISLite.DataAccess
             catch(Exception egBP)
             {
                 Log.EscribeLog("Existe un error en getBusquedaPacientes: " + egBP.Message, 3, user);
+            }
+            return lst;
+        }
+
+        public List<clsPaciente> getBusquedaPacientesList(string busqueda, string user)
+        {
+            List<clsPaciente> lst = new List<clsPaciente>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    var query = dbRisDA.stp_getBusquedaPacienteList(busqueda.ToUpper()).ToList();
+                    if (query != null)
+                    {
+                        if (query.Count > 0)
+                        {
+                            foreach (var item in query)
+                            {
+                                clsPaciente mdl = new clsPaciente();
+                                mdl.intPacienteID = (int)item.intPacienteID;
+                                mdl.vchNombre = item.vchNombre;
+                                mdl.datFechaNac = (DateTime)item.datFechaNac;
+                                mdl.vchApellidos = item.NSS;
+                                lst.Add(mdl);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception egBP)
+            {
+                Log.EscribeLog("Existe un error en getBusquedaPacientesList: " + egBP.Message, 3, user);
             }
             return lst;
         }
@@ -1944,6 +1977,179 @@ namespace Fuji.RISLite.DataAccess
                 Log.EscribeLog("Existe un error en getEstudioDetalle: " + egBP.Message, 3, user);
             }
             return estudio;
+        }
+
+        public bool setActualizaPaciente(clsPaciente mdlPaciente, clsDireccion mdlDireccion, List<tbl_REL_IdentificacionPaciente> lstIdent, List<tbl_DET_PacienteDinamico> lstVarAdic, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                //Master
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_MST_Paciente.Any(x => x.intPacienteID == mdlPaciente.intPacienteID))
+                    {
+                        tbl_MST_Paciente mdl = dbRisDA.tbl_MST_Paciente.First(x => x.intPacienteID == mdlPaciente.intPacienteID);
+                        if (mdl != null)
+                        {
+                            mdl.bitActivo = true;
+                            mdl.datFecha = DateTime.Now;
+                            mdl.datFechaNac = mdlPaciente.datFechaNac;
+                            mdl.intGeneroID = mdlPaciente.intGeneroID;
+                            mdl.vchApellidos = mdlPaciente.vchApellidos;
+                            mdl.vchNombre = mdlPaciente.vchNombre;
+                            mdl.vchUserAdmin = user;
+                            dbRisDA.SaveChanges();
+                        }
+                    }
+                }
+
+                //Detalle
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_DET_Paciente.Any(x => x.intDETPacienteID == mdlPaciente.intDETPacienteID))
+                    {
+                        tbl_DET_Paciente mdl = dbRisDA.tbl_DET_Paciente.First(x => x.intDETPacienteID == mdlPaciente.intDETPacienteID);
+                        if (mdl != null)
+                        {
+                            mdl.bitActivo = true;
+                            mdl.datFecha = DateTime.Now;
+                            mdl.vchEmail = mdlPaciente.vchEmail;
+                            mdl.vchNumeroContacto = mdlPaciente.vchNumeroContacto;
+                            mdl.vchUserAdmin = user;
+                            dbRisDA.SaveChanges();
+                        }
+                    }
+                    else
+                    {
+                        tbl_DET_Paciente mdl = new tbl_DET_Paciente();
+                        mdl.bitActivo = true;
+                        mdl.datFecha = DateTime.Now;
+                        mdl.vchEmail = mdlPaciente.vchEmail;
+                        mdl.vchNumeroContacto = mdlPaciente.vchNumeroContacto;
+                        mdl.vchUserAdmin = user;
+                        mdl.intPacienteID = mdlPaciente.intPacienteID;
+                        dbRisDA.tbl_DET_Paciente.Add(mdl);
+                        dbRisDA.SaveChanges();
+                    }
+                }
+
+                //Direccion
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_DET_DireccionPaciente.Any(x => x.intDireccionID == mdlDireccion.intDireccionID))
+                    {
+                        tbl_DET_DireccionPaciente mdl = dbRisDA.tbl_DET_DireccionPaciente.First(x => x.intDireccionID == mdlDireccion.intDireccionID);
+                        if (mdl != null)
+                        {
+                            mdl.bitActivo = true;
+                            mdl.datFecha = DateTime.Now;
+                            mdl.intCodigoPostalID = mdlDireccion.intCodigoPostalID;
+                            mdl.vchCalle = mdlDireccion.vchCalle;
+                            mdl.vchNumero = mdlDireccion.vchNumero;
+                            mdl.vchUserAdmin = user;
+                            dbRisDA.SaveChanges();
+                        }
+                    }
+                    else
+                    {
+                        tbl_DET_DireccionPaciente mdl = new tbl_DET_DireccionPaciente();
+                        mdl.bitActivo = true;
+                        mdl.datFecha = DateTime.Now;
+                        mdl.intCodigoPostalID = mdlDireccion.intCodigoPostalID;
+                        mdl.vchCalle = mdlDireccion.vchCalle;
+                        mdl.vchNumero = mdlDireccion.vchNumero;
+                        mdl.vchUserAdmin = user;
+                        mdl.intPacienteID = mdlPaciente.intPacienteID;
+                        dbRisDA.tbl_DET_DireccionPaciente.Add(mdl);
+                        dbRisDA.SaveChanges();
+                    }
+                }
+
+                //Identificaciones
+                foreach (tbl_REL_IdentificacionPaciente mdlIdent in lstIdent)
+                {
+                    if (mdlIdent != null)
+                    {
+                        if (mdlIdent.intRELIdenPacienteID != int.MinValue && mdlIdent.intRELIdenPacienteID > 0)
+                        {
+                            using (dbRisDA = new RISLiteEntities())
+                            {
+                                if (dbRisDA.tbl_REL_IdentificacionPaciente.Any(x => x.intRELIdenPacienteID == mdlIdent.intRELIdenPacienteID))
+                                {
+                                    tbl_REL_IdentificacionPaciente mdl = dbRisDA.tbl_REL_IdentificacionPaciente.First(x => x.intRELIdenPacienteID == mdlIdent.intRELIdenPacienteID);
+                                    mdl.bitActivo = true;
+                                    mdl.datFecha = DateTime.Now;
+                                    mdl.intIdentificacionID = mdlIdent.intIdentificacionID;
+                                    mdl.vchValor = mdlIdent.vchValor;
+                                    mdl.vchUserAdmin = user;
+                                    dbRisDA.SaveChanges();
+                                }
+                            }
+                        }
+                        else
+                        {
+                            using (dbRisDA = new RISLiteEntities())
+                            {
+                                tbl_REL_IdentificacionPaciente mdl = new tbl_REL_IdentificacionPaciente();
+                                mdl.bitActivo = true;
+                                mdl.datFecha = DateTime.Now;
+                                mdl.intIdentificacionID = mdlIdent.intIdentificacionID;
+                                mdl.vchValor = mdlIdent.vchValor;
+                                mdl.vchUserAdmin = user;
+                                mdl.intPacienteID = mdlPaciente.intPacienteID;
+                                dbRisDA.tbl_REL_IdentificacionPaciente.Add(mdl);
+                                dbRisDA.SaveChanges();
+                            }
+                        }
+                    }
+                }
+
+                //Var Adicionales
+                foreach (tbl_DET_PacienteDinamico mdlAdic in lstVarAdic)
+                {
+                    if (mdlAdic != null)
+                    {
+                        if (mdlAdic.intADIPacienteID != int.MinValue && mdlAdic.intADIPacienteID > 0)
+                        {
+                            using (dbRisDA = new RISLiteEntities())
+                            {
+                                if (dbRisDA.tbl_DET_PacienteDinamico.Any(x => x.intADIPacienteID == mdlAdic.intADIPacienteID))
+                                {
+                                    tbl_DET_PacienteDinamico mdl = dbRisDA.tbl_DET_PacienteDinamico.First(x => x.intADIPacienteID == mdlAdic.intADIPacienteID);
+                                    mdl.bitActivo = true;
+                                    mdl.datFecha = DateTime.Now;
+                                    mdl.intVarAdiPacienteID = mdlAdic.intVarAdiPacienteID;
+                                    mdl.vchValorVar = mdlAdic.vchValorVar;
+                                    mdl.vchUserAdmin = user;
+                                    dbRisDA.SaveChanges();
+                                }
+                            }
+                        }
+                        else
+                        {
+                            using (dbRisDA = new RISLiteEntities())
+                            {
+                                tbl_DET_PacienteDinamico mdl = dbRisDA.tbl_DET_PacienteDinamico.First(x => x.intADIPacienteID == mdlAdic.intADIPacienteID);
+                                mdl.bitActivo = true;
+                                mdl.datFecha = DateTime.Now;
+                                mdl.intVarAdiPacienteID = mdlAdic.intVarAdiPacienteID;
+                                mdl.vchValorVar = mdlAdic.vchValorVar;
+                                mdl.vchUserAdmin = user;
+                                dbRisDA.SaveChanges();
+                            }
+                        }
+                    }
+                }
+                valido = true;
+            }
+            catch (Exception eSAP)
+            {
+                valido = false;
+                mensaje = eSAP.Message;
+                Log.EscribeLog("Existe un error en setActualizaPaciente: " + eSAP.Message, 3, user);
+            }
+            return valido;
         }
         #endregion Paciente
 
@@ -2366,5 +2572,34 @@ namespace Fuji.RISLite.DataAccess
         }
 
         #endregion Cuestionario
+
+        #region Estudios
+        public void getEstudiosPaciente(int intPacienteID, string user)
+        {
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    var query = dbRisDA.stp_getEstudiosPaciente(intPacienteID).ToList();
+                    if (query != null)
+                    {
+                        if (query.Count > 0)
+                        {
+                            foreach (var item in query)
+                            {
+                                
+                                lst.Add(cadena);
+                            }
+                        }
+                    }
+                }
+            }
+            catch(Exception egeP)
+            {
+                Log.EscribeLog("Existe un error en getEstudiosPaciente: " + egeP.Message, 3, user);
+            }
+        }
+        #endregion Estudios
+
     }
 }

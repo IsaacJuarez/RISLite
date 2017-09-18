@@ -14,10 +14,17 @@ namespace Fuji.RISLite.Entidades.DataBase
     
     public partial class tbl_CAT_EstatusEstudio
     {
+        public tbl_CAT_EstatusEstudio()
+        {
+            this.tbl_MST_Estudio = new HashSet<tbl_MST_Estudio>();
+        }
+    
         public int intEstatusEstudio { get; set; }
         public string vchEstatus { get; set; }
         public Nullable<bool> bitActivo { get; set; }
         public Nullable<System.DateTime> datFecha { get; set; }
         public string vchUserAdmin { get; set; }
+    
+        public virtual ICollection<tbl_MST_Estudio> tbl_MST_Estudio { get; set; }
     }
 }

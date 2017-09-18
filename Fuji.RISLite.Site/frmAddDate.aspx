@@ -49,7 +49,7 @@
                             <div class="row">
                                 <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 form-search">
                                     <span class="input-icon" style="width:100%">
-                                        <asp:AutoCompleteExtender ID="acxBusqueda" runat="server" TargetControlID="txtBusquedaPaciente" MinimumPrefixLength="3" EnableCaching="true" CompletionSetCount="1"
+                                        <asp:AutoCompleteExtender ID="acxBusqueda" runat="server" TargetControlID="txtBusquedaPaciente" MinimumPrefixLength="1" EnableCaching="true" CompletionSetCount="1"
                                             CompletionInterval="500" ServiceMethod="obtenerPacienteBusqueda" CompletionListCssClass="completionList" CompletionListItemCssClass="listItem" OnClientItemSelected="autoCompleteEx_ItemSelected"
                                             CompletionListHighlightedItemCssClass="itemHighlighted">
                                         </asp:AutoCompleteExtender>

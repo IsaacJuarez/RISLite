@@ -152,10 +152,16 @@ namespace Fuji.RISLite.Site.Services
         PacienteResponse getBusquedaPacientes(PacienteRequest request);
 
         [OperationContract]
+        PacienteResponse getBusquedaPacientesList(PacienteRequest request);
+
+        [OperationContract]
         PacienteResponse getBusquedaEstudio(PacienteRequest request);
 
         [OperationContract]
         EstudioResponse getEstudioDetalle(EstudioRequest request);
+
+        [OperationContract]
+        PacienteResponse setActualizaPaciente(PacienteRequest request);
         #endregion Paciente
 
         #region Indicacion

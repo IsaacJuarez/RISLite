@@ -854,6 +854,24 @@ namespace Fuji.RISLite.Site.Services
             return response;
         }
 
+        public PacienteResponse getBusquedaPacientesList(PacienteRequest request)
+        {
+            PacienteResponse response = new PacienteResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response.lstPacientes = controller.getBusquedaPacientesList(request.busqueda, request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getBusquedaPacientesList: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
         public PacienteResponse getBusquedaEstudio(PacienteRequest request)
         {
             PacienteResponse response = new PacienteResponse();
@@ -886,6 +904,28 @@ namespace Fuji.RISLite.Site.Services
             catch (Exception egU)
             {
                 Log.EscribeLog("Existe un error en getEstudioDetalle: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public PacienteResponse setActualizaPaciente(PacienteRequest request)
+        {
+            PacienteResponse response = new PacienteResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    int intPacienteID = 0;
+                    response.Success = controller.setActualizaPaciente(request.mdlPaciente, request.mdlDireccion, request.lstIdent, request.lstVarAdic, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                    response.intPacienteID = intPacienteID;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setActualizaPaciente: " + egU.Message, 3, "");
             }
             return response;
         }

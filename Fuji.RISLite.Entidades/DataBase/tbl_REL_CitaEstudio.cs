@@ -12,22 +12,16 @@ namespace Fuji.RISLite.Entidades.DataBase
     using System;
     using System.Collections.Generic;
     
-    public partial class tbl_REL_ModalidadPrestacion
+    public partial class tbl_REL_CitaEstudio
     {
-        public tbl_REL_ModalidadPrestacion()
-        {
-            this.tbl_MST_Estudio = new HashSet<tbl_MST_Estudio>();
-        }
-    
-        public int intRELModPres { get; set; }
-        public Nullable<int> intModalidadID { get; set; }
-        public Nullable<int> intPrestacionID { get; set; }
+        public long intRELCitaEstudioID { get; set; }
+        public Nullable<long> intCitaID { get; set; }
+        public Nullable<long> intEstudioID { get; set; }
         public Nullable<bool> bitActivo { get; set; }
         public Nullable<System.DateTime> datFecha { get; set; }
         public string vchUserAdmin { get; set; }
     
-        public virtual tbl_CAT_Modalidad tbl_CAT_Modalidad { get; set; }
-        public virtual tbl_CAT_Prestacion tbl_CAT_Prestacion { get; set; }
-        public virtual ICollection<tbl_MST_Estudio> tbl_MST_Estudio { get; set; }
+        public virtual tbl_MST_Cita tbl_MST_Cita { get; set; }
+        public virtual tbl_MST_Estudio tbl_MST_Estudio { get; set; }
     }
 }

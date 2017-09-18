@@ -71,6 +71,13 @@
         <AssociationConnector Association="RISLiteModel.FK_DET_CitaDinamico_MST_Cita" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_DET_IndicacionPrestacion" Width="1.5" PointX="12.625" PointY="47.375" />
         <AssociationConnector Association="RISLiteModel.FK_DET_IndicacionPrestacion_CAT_Prestacion" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_MST_Estudio" Width="1.5" PointX="14.875" PointY="6.25" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_REL_CitaEstudio" Width="1.5" PointX="20.25" PointY="4.375" />
+        <AssociationConnector Association="RISLiteModel.FK_MST_Estudio_CAT_Equipo" />
+        <AssociationConnector Association="RISLiteModel.FK_MST_Estudio_CAT_EstatusEstudio" />
+        <AssociationConnector Association="RISLiteModel.FK_REL_CitaEstudio_MST_Cita" />
+        <AssociationConnector Association="RISLiteModel.FK_MST_Estudio_REL_ModalidadPrestacion" />
+        <AssociationConnector Association="RISLiteModel.FK_REL_CitaEstudio_MST_Estudio" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
