@@ -2277,8 +2277,9 @@
           <Property Type="Int64" Name="intPacienteID" Nullable="false" />
           <Property Type="String" Name="vchNombre" Nullable="true" MaxLength="200" />
           <Property Type="String" Name="vchApellidos" Nullable="true" MaxLength="200" />
-          <Property Type="Int64" Name="intCitaID" Nullable="true" />
-          <Property Type="Int32" Name="intEstatusCita" Nullable="true" />
+          <Property Type="Int64" Name="intCitaID" Nullable="false" />
+          <Property Type="Int32" Name="intEstatusCita" Nullable="false" />
+          <Property Type="String" Name="vchEstatusCita" Nullable="false" MaxLength="200" />
           <Property Type="DateTime" Name="datFechaCita" Nullable="true" Precision="23" />
           <Property Type="Int32" Name="intPrestacionID" Nullable="true" />
           <Property Type="String" Name="vchPrestacion" Nullable="true" MaxLength="200" />
@@ -2893,6 +2894,7 @@
                 <ScalarProperty Name="vchApellidos" ColumnName="vchApellidos" />
                 <ScalarProperty Name="intCitaID" ColumnName="intCitaID" />
                 <ScalarProperty Name="intEstatusCita" ColumnName="intEstatusCita" />
+                <ScalarProperty Name="vchEstatusCita" ColumnName="vchEstatusCita" />
                 <ScalarProperty Name="datFechaCita" ColumnName="datFechaCita" />
                 <ScalarProperty Name="intPrestacionID" ColumnName="intPrestacionID" />
                 <ScalarProperty Name="vchPrestacion" ColumnName="vchPrestacion" />

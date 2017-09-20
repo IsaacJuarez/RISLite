@@ -319,7 +319,7 @@
                         <div class="form-horizontal" role="form">
                             <div class="row">
                                 <div class="col-lg-12 col-md-12">
-                                    <asp:Label runat="server" Text="" ForeColor="DarkGreen" Font-Bold="true"></asp:Label>
+                                    <asp:Label runat="server" ID="lblNombrePaciente" Text="" ForeColor="DarkGreen" Font-Bold="true"></asp:Label>
                                 </div>
                             </div>
                             <div class="row">

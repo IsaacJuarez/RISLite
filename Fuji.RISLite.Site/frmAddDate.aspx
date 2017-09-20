@@ -36,7 +36,7 @@
         </div>
         <!-- /.page-header -->
         <div class="row">
-            <div class="col-lg-4 col-md-12 col-sm-12">
+            <div class="col-lg-5 col-md-12 col-sm-12">
                 <div class="widget-box">
                     <div class="widget-header widget-header-flat widget-header-small">
                         <h5 class="widget-title">
@@ -98,18 +98,7 @@
                                     <asp:Label runat="server" Text="Fecha de Nacimiento"></asp:Label>
                                 </div>
                                 <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
-                                    <%--<table style="width: 100%">
-                                        <tr>
-                                            <td style="width: 90%">--%>
                                     <asp:TextBox runat="server" ID="Date1" autocomplete="off" CssClass="form-control" Width="100%"  Enabled="false"/>
-                                            <%--</td>
-                                            <td style="width: 10%">
-                                                <asp:ImageButton ID="imgPopup" ImageUrl="~/Images/ic_action_calendar_month.png" Width="25px" Height="25px" ImageAlign="Bottom" runat="server" />
-                                                <asp:CalendarExtender ID="customCalendarExtender" runat="server" TargetControlID="Date1" PopupButtonID="imgPopup"
-                                                    CssClass="cal" Format="dd/MM/yyyy" />
-                                            </td>
-                                        </tr>
-                                    </table>--%>
                                 </div>
                             </div>
                             <hr />
@@ -155,186 +144,192 @@
                                     </div>
                                 </div>
                             </div>
-                            <hr />
-                            <div class="row">
-                                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
-                                    <asp:Label runat="server" ID="Label2" ForeColor="DarkBlue" Text="Estudios" Font-Bold="true"></asp:Label>
-                                </div>
-                                <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
-                                    <span class="input-icon" style="width:100%">
-                                        <asp:AutoCompleteExtender ID="AutoCompleteExtender1" runat="server" TargetControlID="txtBusquedaEstudio" MinimumPrefixLength="3" EnableCaching="true" CompletionSetCount="1"
-                                            CompletionInterval="500" ServiceMethod="obtenerEstudioBusqueda" CompletionListCssClass="completionList" CompletionListItemCssClass="listItem" OnClientItemSelected="autoCompleteEx_ItemSelected"
-                                            CompletionListHighlightedItemCssClass="itemHighlighted">
-                                        </asp:AutoCompleteExtender>
-                                        <asp:TextBox ID="txtBusquedaEstudio" runat="server" CssClass="nav-search-input" placeholder="Estudio..." ToolTip="Seleccionar Estudio" Width="100%" OnTextChanged="txtBusquedaEstudio_TextChanged"></asp:TextBox>
-                                        <i runat="server" id="i1" class="ace-icon fa fa-search nav-search-icon"></i>
-                                    </span>
-                                </div>
-                            </div>
-                            <hr />
-                            <div class="row">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <asp:UpdatePanel runat="server">
-                                        <ContentTemplate>
-                                            <asp:Panel runat="server">
-                                                <asp:GridView ID="grvEstudios" runat="server" AllowPaging="true" CssClass="table table-striped table-bordered"
-                                                    PageSize="10" AutoGenerateColumns="false" OnRowDataBound="grvEstudios_RowDataBound" Font-Size="10px"
-                                                    OnPageIndexChanging="grvEstudios_PageIndexChanging" DataKeyNames="intRELModPres, intEstudioID, intPrestacionID" OnRowCancelingEdit="grvEstudios_RowCancelingEdit"
-                                                    OnRowCommand="grvEstudios_RowCommand" OnRowEditing="grvEstudios_RowEditing" OnRowUpdating="grvEstudios_RowUpdating"
-                                                    OnRowDeleting="grvEstudios_RowDeleting" EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
-                                                    <Columns>
-                                                        <asp:BoundField DataField="intEstudioID" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
-                                                        <asp:BoundField DataField="vchPrestacion" HeaderText="Estudio" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
-                                                        <asp:BoundField DataField="fechaInicio" HeaderText="Fecha" dataformatstring="{0:MMMM d, yyyy}" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
-                                                        <asp:TemplateField HeaderText="Hora de Inicio" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                                                            <ItemTemplate>
-                                                                <asp:Label ID="lblFechaInicio" runat="server" Text='<%# String.Format("{0:hh/mm}", Eval("fechaInicio")) %>' ForeColor="DarkGreen" />
-                                                            </ItemTemplate>
-                                                        </asp:TemplateField>
-                                                        <asp:TemplateField HeaderText="Hora Final" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                                                            <ItemTemplate>
-                                                                <asp:Label ID="lblFechaFinal" runat="server" Text='<%# String.Format("{0:hh/mm}", Eval("fechaFin")) %>' ForeColor="DarkGreen" />
-                                                            </ItemTemplate>
-                                                        </asp:TemplateField>
-                                                        <asp:TemplateField HeaderText="Elegir Horario" ItemStyle-HorizontalAlign="Center">
-                                                            <ItemTemplate>
-                                                                <asp:LinkButton ID="btnVisualizar" CausesValidation="false" CommandName="ElegirHorario" CommandArgument='<%#Eval("intRELModPres") %>' runat="server">
-                                                                    <i class="fa fa-calendar-check-o" aria-hidden="true" title="Buscar horario" style="font-size:25px;"></i>
-                                                                </asp:LinkButton>
-                                                            </ItemTemplate>
-                                                        </asp:TemplateField>
-                                                    </Columns>
-                                                    <PagerTemplate>
-                                                        <asp:Label ID="lblTemplate" runat="server" Text="Muestra Filas: " CssClass="Label" />
-                                                        <asp:DropDownList ID="ddlBandeja" runat="server" AutoPostBack="true" CausesValidation="false"
-                                                            Enabled="true" OnSelectedIndexChanged="ddlBandeja_SelectedIndexChanged">
-                                                                <asp:ListItem Value="10" />
-                                                                <asp:ListItem Value="15" />
-                                                                <asp:ListItem Value="20" />
-                                                        </asp:DropDownList>
-                                                        &nbsp;Página
-                                                        <asp:TextBox ID="txtBandeja" runat="server" AutoPostBack="true" OnTextChanged="txtBandeja_TextChanged"
-                                                            Width="40" MaxLength="10" />
-                                                        de
-                                                        <asp:Label ID="lblBandejaTotal" runat="server" />
-                                                        &nbsp;
-                                                        <asp:Button ID="btnBandeja_I" runat="server" CommandName="Page" CausesValidation="false"
-                                                            ToolTip="Página Anterior" CommandArgument="Prev" CssClass="previous" />
-                                                        <asp:Button ID="btnBandeja_II" runat="server" CommandName="Page" CausesValidation="false"
-                                                            ToolTip="Página Siguiente" CommandArgument="Next" CssClass="next" />
-                                                    </PagerTemplate>
-                                                    <HeaderStyle CssClass="headerstyle" />
-                                                    <FooterStyle CssClass="text-center" />
-                                                    <PagerStyle CssClass="text-center" />
-                                                </asp:GridView>
-                                            </asp:Panel>
-                                        </ContentTemplate>
-                                    </asp:UpdatePanel>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-3 col-md-3 col-sm-1 col-xs-1">
-                                </div>
-                                <div class="col-lg-9 col-md-9 col-sm-11 col-xs-11 text-right">
-                                    <asp:Button ID="btnCancelPaciente" runat="server" OnClick="btnCancelPaciente_Click" Text="Cancelar" CssClass="btn btn-danger" />
-                                    <asp:Button ID="btnAddCita" OnClick="btnAddCita_Click" runat="server" Text="Guardar" CssClass="btn btn-success" />
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-8 col-md-12 col-sm-12">
-                <div class="tabbable">
-                    <ul class="nav nav-tabs" id="myTab">
-                        <li class="active">
-                            <a data-toggle="tab" href="#home">
-                                <i class="green ace-icon fa fa-home bigger-120"></i>
-                                Horarios
-                            </a>
-                        </li>
-
-                        <li>
-                            <a data-toggle="tab" href="#messages">Agenda
-								<span class="badge badge-danger">4</span>
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="tab-content">
-                        <div id="home" class="tab-pane fade in active">
-                            <p>Sugerencias</p>
+            <div class="col-lg-7 col-md-12 col-sm-12">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                <asp:Label runat="server" ID="Label2" ForeColor="DarkBlue" Text="Estudios" Font-Bold="true"></asp:Label>
+                            </div>
+                            <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                                <span class="input-icon" style="width:100%">
+                                    <asp:AutoCompleteExtender ID="AutoCompleteExtender1" runat="server" TargetControlID="txtBusquedaEstudio" MinimumPrefixLength="3" EnableCaching="true" CompletionSetCount="1"
+                                        CompletionInterval="500" ServiceMethod="obtenerEstudioBusqueda" CompletionListCssClass="completionList" CompletionListItemCssClass="listItem" OnClientItemSelected="autoCompleteEx_ItemSelected"
+                                        CompletionListHighlightedItemCssClass="itemHighlighted">
+                                    </asp:AutoCompleteExtender>
+                                    <asp:TextBox ID="txtBusquedaEstudio" runat="server" CssClass="nav-search-input" placeholder="Estudio..." ToolTip="Seleccionar Estudio" Width="100%" OnTextChanged="txtBusquedaEstudio_TextChanged"></asp:TextBox>
+                                    <i runat="server" id="i1" class="ace-icon fa fa-search nav-search-icon"></i>
+                                </span>
+                            </div>
                         </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <asp:UpdatePanel runat="server">
+                                    <ContentTemplate>
+                                        <asp:Panel runat="server">
+                                            <asp:GridView ID="grvEstudios" runat="server" AllowPaging="true" CssClass="table table-striped table-bordered"
+                                                PageSize="10" AutoGenerateColumns="false" OnRowDataBound="grvEstudios_RowDataBound" Font-Size="10px"
+                                                OnPageIndexChanging="grvEstudios_PageIndexChanging" DataKeyNames="intRELModPres, intEstudioID, intPrestacionID" OnRowCancelingEdit="grvEstudios_RowCancelingEdit"
+                                                OnRowCommand="grvEstudios_RowCommand" OnRowEditing="grvEstudios_RowEditing" OnRowUpdating="grvEstudios_RowUpdating"
+                                                OnRowDeleting="grvEstudios_RowDeleting" EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
+                                                <Columns>
+                                                    <asp:BoundField DataField="intEstudioID" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
+                                                    <asp:BoundField DataField="vchPrestacion" HeaderText="Estudio" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
+                                                    <asp:BoundField DataField="fechaInicio" HeaderText="Fecha" dataformatstring="{0:MMMM d, yyyy}" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
+                                                    <asp:TemplateField HeaderText="Hora de Inicio" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                                                        <ItemTemplate>
+                                                            <asp:Label ID="lblFechaInicio" runat="server" Text='<%# String.Format("{0:hh/mm}", Eval("fechaInicio")) %>' ForeColor="DarkGreen" />
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+                                                    <asp:TemplateField HeaderText="Hora Final" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                                                        <ItemTemplate>
+                                                            <asp:Label ID="lblFechaFinal" runat="server" Text='<%# String.Format("{0:hh/mm}", Eval("fechaFin")) %>' ForeColor="DarkGreen" />
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+                                                    <asp:TemplateField HeaderText="Elegir Horario" ItemStyle-HorizontalAlign="Center">
+                                                        <ItemTemplate>
+                                                            <asp:LinkButton ID="btnVisualizar" CausesValidation="false" CommandName="ElegirHorario" CommandArgument='<%#Eval("intRELModPres") %>' runat="server">
+                                                                <i class="fa fa-calendar-check-o" aria-hidden="true" title="Buscar horario" style="font-size:25px;"></i>
+                                                            </asp:LinkButton>
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+                                                </Columns>
+                                                <PagerTemplate>
+                                                    <asp:Label ID="lblTemplate" runat="server" Text="Muestra Filas: " CssClass="Label" />
+                                                    <asp:DropDownList ID="ddlBandeja" runat="server" AutoPostBack="true" CausesValidation="false"
+                                                        Enabled="true" OnSelectedIndexChanged="ddlBandeja_SelectedIndexChanged">
+                                                            <asp:ListItem Value="10" />
+                                                            <asp:ListItem Value="15" />
+                                                            <asp:ListItem Value="20" />
+                                                    </asp:DropDownList>
+                                                    &nbsp;Página
+                                                    <asp:TextBox ID="txtBandeja" runat="server" AutoPostBack="true" OnTextChanged="txtBandeja_TextChanged"
+                                                        Width="40" MaxLength="10" />
+                                                    de
+                                                    <asp:Label ID="lblBandejaTotal" runat="server" />
+                                                    &nbsp;
+                                                    <asp:Button ID="btnBandeja_I" runat="server" CommandName="Page" CausesValidation="false"
+                                                        ToolTip="Página Anterior" CommandArgument="Prev" CssClass="previous" />
+                                                    <asp:Button ID="btnBandeja_II" runat="server" CommandName="Page" CausesValidation="false"
+                                                        ToolTip="Página Siguiente" CommandArgument="Next" CssClass="next" />
+                                                </PagerTemplate>
+                                                <HeaderStyle CssClass="headerstyle" />
+                                                <FooterStyle CssClass="text-center" />
+                                                <PagerStyle CssClass="text-center" />
+                                            </asp:GridView>
+                                        </asp:Panel>
+                                    </ContentTemplate>
+                                </asp:UpdatePanel>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="tabbable">
+                            <ul class="nav nav-tabs" id="myTab">
+                                <li class="active">
+                                    <a data-toggle="tab" href="#home">
+                                        <i class="green ace-icon fa fa-home bigger-120"></i>
+                                        Horarios
+                                    </a>
+                                </li>
 
-                        <div id="messages" class="tab-pane fade">
-                            <!-- PAGE CONTENT BEGINS -->
-                            <div class="row">
-                                <div class="col-sm-9">
-                                    <div class="space"></div>
-
-                                    <div id="calendar"></div>
+                                <li>
+                                    <a data-toggle="tab" href="#messages">Agenda
+								        <span class="badge badge-danger">4</span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div id="home" class="tab-pane fade in active">
+                                    <p>Sugerencias</p>
                                 </div>
 
-                                <div class="col-sm-3">
-                                    <div class="widget-box transparent">
-                                        <div class="widget-header">
-                                            <h4>Draggable events</h4>
+                                <div id="messages" class="tab-pane fade">
+                                    <!-- PAGE CONTENT BEGINS -->
+                                    <div class="row">
+                                        <div class="col-sm-9">
+                                            <div class="space"></div>
+
+                                            <div id="calendar"></div>
                                         </div>
 
-                                        <div class="widget-body">
-                                            <div class="widget-main no-padding">
-                                                <div id="external-events">
-                                                    <div class="external-event label-grey" data-class="label-grey">
-                                                        <i class="ace-icon fa fa-arrows"></i>
-                                                        Evento 1
-                                                    </div>
+                                        <div class="col-sm-3">
+                                            <div class="widget-box transparent">
+                                                <div class="widget-header">
+                                                    <h4>Draggable events</h4>
+                                                </div>
 
-                                                    <div class="external-event label-success" data-class="label-success">
-                                                        <i class="ace-icon fa fa-arrows"></i>
-                                                        Evento 2
-                                                    </div>
+                                                <div class="widget-body">
+                                                    <div class="widget-main no-padding">
+                                                        <div id="external-events">
+                                                            <div class="external-event label-grey" data-class="label-grey">
+                                                                <i class="ace-icon fa fa-arrows"></i>
+                                                                Evento 1
+                                                            </div>
 
-                                                    <div class="external-event label-danger" data-class="label-danger">
-                                                        <i class="ace-icon fa fa-arrows"></i>
-                                                        Evento 3
-                                                    </div>
+                                                            <div class="external-event label-success" data-class="label-success">
+                                                                <i class="ace-icon fa fa-arrows"></i>
+                                                                Evento 2
+                                                            </div>
 
-                                                    <div class="external-event label-purple" data-class="label-purple">
-                                                        <i class="ace-icon fa fa-arrows"></i>
-                                                        Evento 4
-                                                    </div>
+                                                            <div class="external-event label-danger" data-class="label-danger">
+                                                                <i class="ace-icon fa fa-arrows"></i>
+                                                                Evento 3
+                                                            </div>
 
-                                                    <div class="external-event label-yellow" data-class="label-yellow">
-                                                        <i class="ace-icon fa fa-arrows"></i>
-                                                        Evento 5
-                                                    </div>
+                                                            <div class="external-event label-purple" data-class="label-purple">
+                                                                <i class="ace-icon fa fa-arrows"></i>
+                                                                Evento 4
+                                                            </div>
 
-                                                    <div class="external-event label-pink" data-class="label-pink">
-                                                        <i class="ace-icon fa fa-arrows"></i>
-                                                        Evento 6
-                                                    </div>
+                                                            <div class="external-event label-yellow" data-class="label-yellow">
+                                                                <i class="ace-icon fa fa-arrows"></i>
+                                                                Evento 5
+                                                            </div>
 
-                                                    <div class="external-event label-info" data-class="label-info">
-                                                        <i class="ace-icon fa fa-arrows"></i>
-                                                        Evento 7
-                                                    </div>
+                                                            <div class="external-event label-pink" data-class="label-pink">
+                                                                <i class="ace-icon fa fa-arrows"></i>
+                                                                Evento 6
+                                                            </div>
 
-                                                    <label>
-                                                        <input type="checkbox" class="ace ace-checkbox" id="drop-remove" />
-                                                        <span class="lbl">Quita despues de arrastrar</span>
-                                                    </label>
+                                                            <div class="external-event label-info" data-class="label-info">
+                                                                <i class="ace-icon fa fa-arrows"></i>
+                                                                Evento 7
+                                                            </div>
+
+                                                            <label>
+                                                                <input type="checkbox" class="ace ace-checkbox" id="drop-remove" />
+                                                                <span class="lbl">Quita despues de arrastrar</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <!-- PAGE CONTENT ENDS -->
                                 </div>
                             </div>
-                            <!-- PAGE CONTENT ENDS -->
                         </div>
                     </div>
                 </div>
-
             </div>
             <!-- /.col -->
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-1 col-xs-1">
+            </div>
+            <div class="col-lg-9 col-md-9 col-sm-11 col-xs-11 text-right">
+                <asp:Button ID="btnCancelPaciente" runat="server" OnClick="btnCancelPaciente_Click" Text="Cancelar" CssClass="btn btn-danger" />
+                <asp:Button ID="btnAddCita" OnClick="btnAddCita_Click" runat="server" Text="Guardar" CssClass="btn btn-success" />
+            </div>
         </div>
         <!-- /.row -->
     </div>

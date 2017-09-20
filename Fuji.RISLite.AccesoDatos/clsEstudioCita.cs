@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Fuji.RISLite.AccesoDatos
+namespace Fuji.RISLite.Entities
 {
     public class clsEstudioCita
     {
@@ -14,6 +10,8 @@ namespace Fuji.RISLite.AccesoDatos
         public int intEstatusCita { get; set; }
         public string vchEstatusCita { get; set; }
         public DateTime datFechaCita { get; set; }
+        public int intPrestacionID { get; set; }
+        public string vchPrestacion { get; set; }
 
         public clsEstudioCita()
         {
@@ -22,7 +20,8 @@ namespace Fuji.RISLite.AccesoDatos
             intCitaID = int.MinValue;
             vchEstatusCita = string.Empty;
             datFechaCita = DateTime.MinValue;
-
+            intPrestacionID = int.MinValue;
+            vchPrestacion = string.Empty;
         }
     }
 }

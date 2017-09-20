@@ -10,11 +10,13 @@ namespace Fuji.RISLite.Site.Services.DataContract
     {
         public clsEstudio mdlEstudio;
         public clsUsuario mdlUser;
+        public int intPacienteID { get; set; }
 
         public EstudioRequest()
         {
             mdlEstudio = new clsEstudio();
             mdlUser = new clsUsuario();
+            intPacienteID = int.MinValue;
         }
     }
 }

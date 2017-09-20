@@ -1171,5 +1171,26 @@ namespace Fuji.RISLite.Site.Services
             return response;
         }
         #endregion Cuestionario
+
+        #region Estudios
+        public List<clsEstudioCita> getEstudiosPaciente(EstudioRequest request)
+        {
+            List<clsEstudioCita> response = new List<clsEstudioCita>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getEstudiosPaciente(request.intPacienteID, request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getEstudiosPaciente: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+        #endregion Estudios
+
     }
 }

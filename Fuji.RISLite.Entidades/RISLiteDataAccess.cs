@@ -2130,12 +2130,13 @@ namespace Fuji.RISLite.DataAccess
                         {
                             using (dbRisDA = new RISLiteEntities())
                             {
-                                tbl_DET_PacienteDinamico mdl = dbRisDA.tbl_DET_PacienteDinamico.First(x => x.intADIPacienteID == mdlAdic.intADIPacienteID);
+                                tbl_DET_PacienteDinamico mdl = new tbl_DET_PacienteDinamico();
                                 mdl.bitActivo = true;
                                 mdl.datFecha = DateTime.Now;
                                 mdl.intVarAdiPacienteID = mdlAdic.intVarAdiPacienteID;
                                 mdl.vchValorVar = mdlAdic.vchValorVar;
                                 mdl.vchUserAdmin = user;
+                                dbRisDA.tbl_DET_PacienteDinamico.Add(mdl);
                                 dbRisDA.SaveChanges();
                             }
                         }
@@ -2574,8 +2575,9 @@ namespace Fuji.RISLite.DataAccess
         #endregion Cuestionario
 
         #region Estudios
-        public void getEstudiosPaciente(int intPacienteID, string user)
+        public List<clsEstudioCita> getEstudiosPaciente(int intPacienteID, string user)
         {
+            List<clsEstudioCita> lst = new List<clsEstudioCita>();
             try
             {
                 using (dbRisDA = new RISLiteEntities())
@@ -2587,8 +2589,16 @@ namespace Fuji.RISLite.DataAccess
                         {
                             foreach (var item in query)
                             {
-                                
-                                lst.Add(cadena);
+                                clsEstudioCita mdl = new clsEstudioCita();
+                                mdl.datFechaCita = (DateTime)item.datFechaCita;
+                                mdl.intCitaID = (int)item.intCitaID;
+                                mdl.intEstatusCita = item.intEstatusCita;
+                                mdl.intPacienteID = (int)item.intPacienteID;
+                                mdl.intPrestacionID = (int)item.intPrestacionID;
+                                mdl.vchEstatusCita = item.vchEstatusCita;
+                                mdl.vchNombrePaciente = item.vchNombre + " " + item.vchApellidos;
+                                mdl.vchPrestacion = item.vchPrestacion;
+                                lst.Add(mdl);
                             }
                         }
                     }
@@ -2598,6 +2608,7 @@ namespace Fuji.RISLite.DataAccess
             {
                 Log.EscribeLog("Existe un error en getEstudiosPaciente: " + egeP.Message, 3, user);
             }
+            return lst;
         }
         #endregion Estudios
 

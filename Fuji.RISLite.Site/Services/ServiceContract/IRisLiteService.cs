@@ -206,5 +206,10 @@ namespace Fuji.RISLite.Site.Services
         CuestionarioResponse setEstatusCuestionario(CuestionarioRequest request);
         #endregion Cuestionario
 
+        #region Estudios
+        [OperationContract]
+        List<clsEstudioCita> getEstudiosPaciente(EstudioRequest request);
+        #endregion Estudios
+
     }
 }

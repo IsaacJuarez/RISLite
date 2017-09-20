@@ -261,6 +261,7 @@ namespace Fuji.RISLite.Site
                         break;
                     case "Estudios":
                         intPacienteID = Convert.ToInt32(e.CommandArgument.ToString());
+                        Session["intPacienteID"] = intPacienteID;
                         cargarEstudiosPaciente(Convert.ToInt32(intPacienteID.ToString()));
                         ScriptManager.RegisterStartupScript(Page, Page.GetType(), "mdlEstudios", "$('#mdlEstudios').modal();", true);
                         break;
@@ -277,9 +278,23 @@ namespace Fuji.RISLite.Site
         {
             try
             {
-
+                EstudioRequest request = new EstudioRequest();
+                request.mdlUser = Usuario;
+                request.intPacienteID = v;
+                List<clsEstudioCita> response = new List<clsEstudioCita>();
+                response = RisService.getEstudiosPaciente(request);
+                grvEstudios.DataSource = null;
+                if (response != null)
+                {
+                    if (response.Count > 0)
+                    {
+                        lblNombrePaciente.Text = response.First().vchNombrePaciente;
+                        grvEstudios.DataSource = response;
+                    }
+                }
+                grvEstudios.DataBind();
             }
-            catch(Exception ecE)
+            catch (Exception ecE)
             {
                 Log.EscribeLog("Existe un error en cargarEstudiosPaciente: " + ecE.Message, 3, Usuario.vchUsuario);
             }
@@ -857,12 +872,56 @@ namespace Fuji.RISLite.Site
 
         protected void grvEstudios_RowDataBound(object sender, GridViewRowEventArgs e)
         {
+            try
+            {
+                if (e.Row.RowType == DataControlRowType.Pager)
+                {
+                    Label lblTotalNumDePaginas = (Label)e.Row.FindControl("lblBandejaTotal");
+                    lblTotalNumDePaginas.Text = grvEstudios.PageCount.ToString();
 
+                    TextBox txtIrAlaPagina = (TextBox)e.Row.FindControl("txtBandejaEst");
+                    txtIrAlaPagina.Text = (grvEstudios.PageIndex + 1).ToString();
+
+                    DropDownList ddlTamPagina = (DropDownList)e.Row.FindControl("ddlBandejaEst");
+                    ddlTamPagina.SelectedValue = grvEstudios.PageSize.ToString();
+                }
+
+                if (e.Row.RowType != DataControlRowType.DataRow)
+                {
+                    return;
+                }
+
+                //if (e.Row.DataItem != null)
+                //{
+                //    clsVarAcicionales _mdl = (clsVarAcicionales)e.Row.DataItem;
+                //    ImageButton ibtEstatus = (ImageButton)e.Row.FindControl("imbEstatus");
+                //    ibtEstatus.Attributes.Add("onclick", "javascript:return confirm('¿Desea realizar el cambio de estatus del item seleccionado?');");
+                //    if ((bool)_mdl.bitActivo)
+                //        ibtEstatus.ImageUrl = @"~/Images/ic_action_tick.png";
+                //    else
+                //        ibtEstatus.ImageUrl = @"~/Images/ic_action_cancel.png";
+                //}
+            }
+            catch (Exception eGUP)
+            {
+                throw eGUP;
+            }
         }
 
         protected void grvEstudios_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
-
+            try
+            {
+                if (e.NewPageIndex >= 0)
+                {
+                    this.grvEstudios.PageIndex = e.NewPageIndex;
+                    cargarEstudiosPaciente(Convert.ToInt32(Session["intPacienteID"]));
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.EscribeLog("Existe un error grvEstudios_PageIndexChanging: " + ex.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void grvEstudios_RowCommand(object sender, GridViewCommandEventArgs e)
@@ -872,12 +931,40 @@ namespace Fuji.RISLite.Site
 
         protected void txtBandejaEst_TextChanged(object sender, EventArgs e)
         {
-
+            try
+            {
+                TextBox txtBandejaAvaluosGoToPage = (TextBox)sender;
+                int numeroPagina;
+                if (int.TryParse(txtBandejaAvaluosGoToPage.Text.Trim(), out numeroPagina))
+                    this.grvEstudios.PageIndex = numeroPagina - 1;
+                else
+                    this.grvEstudios.PageIndex = 0;
+                this.cargarEstudiosPaciente(Convert.ToInt32(Session["intPacienteID"]));
+            }
+            catch (Exception ex)
+            {
+                Log.EscribeLog("Existe un error txtBandejaEst_TextChanged de frmPaciente: " + ex.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void ddlBandejaEst_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            try
+            {
+                DropDownList dropDownList = (DropDownList)sender;
+                if (int.Parse(dropDownList.SelectedValue) != 0)
+                {
+                    this.grvEstudios.AllowPaging = true;
+                    this.grvEstudios.PageSize = int.Parse(dropDownList.SelectedValue);
+                }
+                else
+                    this.grvEstudios.AllowPaging = false;
+                this.cargarEstudiosPaciente(Convert.ToInt32(Session["intPacienteID"]));
+            }
+            catch (Exception eddS)
+            {
+                Log.EscribeLog("Existe un error ddlBandejaEst_SelectedIndexChanged de frmPaciente: " + eddS.Message, 3, Usuario.vchUsuario);
+            }
         }
     }
 }

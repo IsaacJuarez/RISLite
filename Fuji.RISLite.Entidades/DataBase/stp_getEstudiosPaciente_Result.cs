@@ -16,8 +16,9 @@ namespace Fuji.RISLite.Entidades.DataBase
         public long intPacienteID { get; set; }
         public string vchNombre { get; set; }
         public string vchApellidos { get; set; }
-        public Nullable<long> intCitaID { get; set; }
-        public Nullable<int> intEstatusCita { get; set; }
+        public long intCitaID { get; set; }
+        public int intEstatusCita { get; set; }
+        public string vchEstatusCita { get; set; }
         public Nullable<System.DateTime> datFechaCita { get; set; }
         public Nullable<int> intPrestacionID { get; set; }
         public string vchPrestacion { get; set; }
