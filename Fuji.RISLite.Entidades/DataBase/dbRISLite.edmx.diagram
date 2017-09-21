@@ -78,6 +78,11 @@
         <AssociationConnector Association="RISLiteModel.FK_REL_CitaEstudio_MST_Cita" />
         <AssociationConnector Association="RISLiteModel.FK_MST_Estudio_REL_ModalidadPrestacion" />
         <AssociationConnector Association="RISLiteModel.FK_REL_CitaEstudio_MST_Estudio" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_TipoAdicional" Width="1.5" PointX="0.75" PointY="14.75" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_TipoBoton" Width="1.5" PointX="0.75" PointY="17.75" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_MST_Adicionales" Width="1.5" PointX="3" PointY="17.125" />
+        <AssociationConnector Association="RISLiteModel.FK_MST_Adicionales_CAT_TipoAdicional" />
+        <AssociationConnector Association="RISLiteModel.FK_MST_Adicionales_CAT_TipoBoton" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

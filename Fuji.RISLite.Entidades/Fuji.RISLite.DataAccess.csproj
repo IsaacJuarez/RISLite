@@ -120,6 +120,12 @@
     <Compile Include="DataBase\tbl_CAT_Prestacion.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
+    <Compile Include="DataBase\tbl_CAT_TipoAdicional.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataBase\tbl_CAT_TipoBoton.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
     <Compile Include="DataBase\tbl_CAT_TipoMovimiento.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
@@ -154,6 +160,9 @@
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\tbl_DET_Restriccion.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataBase\tbl_MST_Adicionales.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\tbl_MST_Cita.cs">

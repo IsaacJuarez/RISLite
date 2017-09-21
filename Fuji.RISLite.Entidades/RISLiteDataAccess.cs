@@ -1463,7 +1463,6 @@ namespace Fuji.RISLite.DataAccess
         }
         #endregion Equipo
 
-
         #region Paciente
         public List<tbl_CAT_Genero> getListaGenero(string user)
         {
@@ -2611,6 +2610,69 @@ namespace Fuji.RISLite.DataAccess
             return lst;
         }
         #endregion Estudios
+
+        #region Adicionales
+        public List<clsAdicionales> getAdicionalClinicos(int intTipoAdicional,string user)
+        {
+            List<clsAdicionales> lstreturn = new List<clsAdicionales>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_MST_Adicionales.Any(x => x.intAdicionalesID == intTipoAdicional))
+                    {
+                        var query = (from adi in dbRisDA.tbl_MST_Adicionales
+                            join catBoton in dbRisDA.tbl_CAT_TipoBoton on adi.intTipoBotonID equals catBoton.intTipoBotonID
+                            join catAdi in dbRisDA.tbl_CAT_TipoAdicional on adi.intTipoAdicional equals catAdi.intTipoAdicional
+                            where adi.intTipoAdicional == intTipoAdicional
+                            select new {
+                                bitActivo = adi.bitActivo,
+                                datFecha = adi.datFecha,
+                                bitIconBootstrap = adi.bitIconBoostrap,
+                                bitObservaciones = adi.bitObservaciones,
+                                intAdicionalesID = adi.intAdicionalesID,
+                                intTipoAdicionalID = adi.intTipoAdicional,
+                                intTipoBotonID = adi.intTipoBotonID,
+                                vchNombreAdicional = adi.vchNombre,
+                                vchTipoAdicional = catAdi.vchNombre,
+                                vchTipoBoton = catBoton.vchTipoBoton,
+                                vchURLImagen = adi.vchURLImagen,
+                                vchUserAdmin = adi.vchUserAdmin
+                            }).ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsAdicionales mdl = new clsAdicionales();
+                                    mdl.bitActivo = (bool)item.bitActivo;
+                                    mdl.datFecha = (DateTime)item.datFecha;
+                                    mdl.bitIconBootstrap = (bool)item.bitIconBootstrap;
+                                    mdl.bitObservaciones = (bool)item.bitObservaciones;
+                                    mdl.intAdicionalesID = item.intAdicionalesID;
+                                    mdl.intTipoAdicionalID = (int)item.intTipoAdicionalID;
+                                    mdl.intTipoBotonID = (int)item.intTipoBotonID;
+                                    mdl.vchNombreAdicional = item.vchNombreAdicional;
+                                    mdl.vchUserAdmin = item.vchUserAdmin;
+                                    mdl.vchTipoAdicional = item.vchTipoAdicional;
+                                    mdl.vchTipoBoton = item.vchTipoBoton;
+                                    mdl.vchURLImagen = item.vchURLImagen;
+                                    lstreturn.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception egV)
+            {
+                Log.EscribeLog("Existe un error en getAdicionalClinicos: " + egV.Message, 3, user);
+            }
+            return lstreturn;
+        }
+        #endregion Adicionales
+
 
     }
 }
