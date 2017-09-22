@@ -1192,5 +1192,122 @@ namespace Fuji.RISLite.Site.Services
         }
         #endregion Estudios
 
+        #region Adicionales
+        public List<clsAdicionales> getAdicionales(AdicionalesRequest request)
+        {
+            List<clsAdicionales> response = new List<clsAdicionales>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getAdicionales(request.intTipoAdicional, request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getAdicionales: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public AdicionalesResponse setAdicionales(AdicionalesRequest request)
+        {
+            AdicionalesResponse response = new AdicionalesResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setAdicionales(request.mdlAdicional, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setAdicionales: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public AdicionalesResponse setActualizarAdicionales(AdicionalesRequest request)
+        {
+            AdicionalesResponse response = new AdicionalesResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setActualizarAdicionales(request.mdlAdicional, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setActualizarAdicionales: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public List<tbl_CAT_TipoBoton> getCATTipoBoton(AdicionalesRequest request)
+        {
+            List<tbl_CAT_TipoBoton> response = new List<tbl_CAT_TipoBoton>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getCATTipoBoton(request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getCATTipoBoton: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public List<tbl_CAT_TipoAdicional> getCATTipoAdicional(AdicionalesRequest request)
+        {
+            List<tbl_CAT_TipoAdicional> response = new List<tbl_CAT_TipoAdicional>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getCATTipoAdicional(request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getCATTipoAdicional: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public AdicionalesResponse setEstatusAdicional(AdicionalesRequest request)
+        {
+            AdicionalesResponse response = new AdicionalesResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setEstatusAdicional(request.intAdicionalesID, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setEstatusAdicional: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        #endregion Adicionales
+
     }
 }

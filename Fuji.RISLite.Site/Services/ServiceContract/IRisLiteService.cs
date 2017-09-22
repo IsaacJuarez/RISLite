@@ -211,5 +211,26 @@ namespace Fuji.RISLite.Site.Services
         List<clsEstudioCita> getEstudiosPaciente(EstudioRequest request);
         #endregion Estudios
 
+
+        #region Adicionales
+        [OperationContract]
+        List<clsAdicionales> getAdicionales(AdicionalesRequest request);
+
+        [OperationContract]
+        AdicionalesResponse setAdicionales(AdicionalesRequest request);
+
+        [OperationContract]
+        AdicionalesResponse setActualizarAdicionales(AdicionalesRequest request);
+
+        [OperationContract]
+        List<tbl_CAT_TipoBoton> getCATTipoBoton(AdicionalesRequest request);
+
+        [OperationContract]
+        List<tbl_CAT_TipoAdicional> getCATTipoAdicional(AdicionalesRequest request);
+
+        [OperationContract]
+        AdicionalesResponse setEstatusAdicional(AdicionalesRequest request);
+        #endregion Adicionales
+
     }
 }

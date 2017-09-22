@@ -137,11 +137,10 @@
                                             <input type='checkbox' autocomplete='off' > Urgencia 
                                             <span class='glyphicon glyphicon-ok'></span> 
                                         </label> 
-<%--                                        <label class='btn btn-success '> 
-                                            <input type='checkbox' autocomplete='off' > D 
-                                            <span class='glyphicon glyphicon-ok'></span> 
-                                        </label>--%>
+                                        <a href="#" class="btn azm-social azm-size-64 azm-circle azm-long-shadow azm-dribbble"><i class="fa fa-dribbble"></i></a>
+                                        
                                     </div>
+                                    <label for="primary" class="btn btn-primary"><i class="fa fa-dribbble"></i> <input type="checkbox" id="primary" class="badgebox"><span class="badge">&check;</span></label>
                                 </div>
                             </div>
                         </div>
@@ -530,6 +529,36 @@
     <!-- /modals -->
 
     <style type="text/css">
+
+        /* Hiding the checkbox, but allowing it to be focused */
+        .badgebox
+        {
+            opacity: 0;
+        }
+
+        .badgebox + .badge
+        {
+            /* Move the check mark away when unchecked */
+            text-indent: -999999px;
+            /* Makes the badge's width stay the same checked and unchecked */
+	        width: 27px;
+        }
+
+        .badgebox:focus + .badge
+        {
+            /* Set something to make the badge looks focused */
+            /* This really depends on the application, in my case it was: */
+    
+            /* Adding a light border */
+            box-shadow: inset 0px 0px 5px;
+            /* Taking the difference out of the padding */
+        }
+
+        .badgebox:checked + .badge
+        {
+            /* Move the check mark back when checked */
+	        text-indent: 0;
+        }
         .completionList {
             border: solid 1px Gray;
             margin: 0px;
@@ -808,4 +837,5 @@
 
         })
     </script>
+
 </asp:Content>

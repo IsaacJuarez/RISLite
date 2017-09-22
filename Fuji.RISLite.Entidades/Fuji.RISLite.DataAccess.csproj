@@ -141,6 +141,9 @@
     <Compile Include="DataBase\tbl_Conf_CorreoSitio.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
+    <Compile Include="DataBase\tbl_DET_Cita.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
     <Compile Include="DataBase\tbl_DET_CitaDinamico.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>

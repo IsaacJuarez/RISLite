@@ -66,11 +66,12 @@ namespace Fuji.RISLite.Entidades.DataBase
         public DbSet<tbl_DET_Cuestionario> tbl_DET_Cuestionario { get; set; }
         public DbSet<tbl_DET_Restriccion> tbl_DET_Restriccion { get; set; }
         public DbSet<tbl_DET_IndicacionPrestacion> tbl_DET_IndicacionPrestacion { get; set; }
-        public DbSet<tbl_MST_Estudio> tbl_MST_Estudio { get; set; }
-        public DbSet<tbl_REL_CitaEstudio> tbl_REL_CitaEstudio { get; set; }
         public DbSet<tbl_CAT_TipoAdicional> tbl_CAT_TipoAdicional { get; set; }
         public DbSet<tbl_CAT_TipoBoton> tbl_CAT_TipoBoton { get; set; }
         public DbSet<tbl_MST_Adicionales> tbl_MST_Adicionales { get; set; }
+        public DbSet<tbl_MST_Estudio> tbl_MST_Estudio { get; set; }
+        public DbSet<tbl_REL_CitaEstudio> tbl_REL_CitaEstudio { get; set; }
+        public DbSet<tbl_DET_Cita> tbl_DET_Cita { get; set; }
     
         public virtual ObjectResult<stp_getListCatalogo_Result> stp_getListCatalogo(Nullable<int> intCatalogoID)
         {

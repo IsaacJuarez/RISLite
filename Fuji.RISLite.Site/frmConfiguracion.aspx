@@ -78,6 +78,13 @@
                             </a>
                         </li>
 
+                        <li>
+                            <a data-toggle="tab" href="#Adicionales">
+                                <i class="orange ace-icon fa fa-cubes"></i>
+							    Adicionales
+                            </a>
+                        </li>
+
 				    </ul>
 
 				    <div class="tab-content">
@@ -1127,6 +1134,160 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+					    </div>
+
+                        <div id="Adicionales" class="tab-pane">
+						    <div class="widget-box">
+								<div class="widget-header">
+									<h4 class="widget-title">Adicionales</h4>
+								</div>
+
+								<div class="widget-body">
+									<div class="widget-main">
+                                        <div class="row">
+                                            <div class="col-lg-2 col-md-12 col-sm-12">
+                                                <asp:Label runat="server" ID="lblTipoControl" Text="Tipo de Control" AssociatedControlID="ddlTipoControl"></asp:Label>
+                                                <asp:RequiredFieldValidator runat="server" ID="rfvtipoControl" Text="* Campo requerido" ErrorMessage="* Campo requerido" InitialValue="0" ForeColor="Red" ControlToValidate="ddlTipoControl" ValidationGroup="vgAdicional"></asp:RequiredFieldValidator>
+                                                <asp:DropDownList runat="server" CssClass="form-control" ID="ddlTipoControl" AutoPostBack="true" OnSelectedIndexChanged="ddlTipoControl_SelectedIndexChanged"></asp:DropDownList>
+                                            </div>
+                                            <div class="col-lg-2 col-md-12 col-sm-12">
+                                                <asp:Label runat="server" ID="lblTipoAdicional" Text="Tipo de Variable" AssociatedControlID="ddlTipoVariable"></asp:Label>
+                                                <asp:RequiredFieldValidator runat="server" ID="rfvTipoAdicional" Text="* Campo requerido" ErrorMessage="* Campo requerido" InitialValue="0" ForeColor="Red" ControlToValidate="ddlTipoVariable" ValidationGroup="vgAdicional"></asp:RequiredFieldValidator>
+                                                <asp:DropDownList runat="server" CssClass="form-control" ID="ddlTipoVariable" AutoPostBack="true" OnSelectedIndexChanged="ddlTipoVariable_SelectedIndexChanged"></asp:DropDownList>
+                                            </div>
+                                            <div class="col-lg-3 col-md-12 col-sm-12">
+                                                <asp:Label runat="server" ID="lblNomAdi" Text="Nombre" AssociatedControlID="txtNomAdi"></asp:Label>
+                                                <asp:RequiredFieldValidator runat="server" ID="rfvNomAdi" Text="* Nombre" ErrorMessage="* Nombre" ForeColor="Red" ControlToValidate="txtNomAdi" ValidationGroup="vgAdicional"></asp:RequiredFieldValidator>
+                                                <asp:TextBox runat="server" Text="" ID="txtNomAdi" CssClass="form-control" placeholder="Nombre"></asp:TextBox>
+                                            </div>
+                                            <div class="col-lg-2 col-md-12 col-sm-12">
+                                                <asp:Label runat="server" ID="lblURL" Text="Imagen" AssociatedControlID="txtImagenAdi"></asp:Label>
+                                                <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator14" Text="* Imagen" ErrorMessage="* Imagen" ForeColor="Red" ControlToValidate="txtImagenAdi" ValidationGroup="vgAdicional"></asp:RequiredFieldValidator>
+                                                <asp:TextBox runat="server" Text="" ID="txtImagenAdi" ToolTip="Imagen o Icono" CssClass="form-control" placeholder="Imagen"></asp:TextBox>
+                                            </div>
+                                            <div class="col-lg-1 col-md-12 col-sm-12">
+                                                <asp:Label runat="server" ID="lblObservac" Text="¿Obs?" AssociatedControlID="chkObservaciones"></asp:Label>
+                                                <asp:CheckBox runat="server" Text="SI" ID="chkObservaciones" ToolTip="Imagen o Icono" CssClass="form-control"></asp:CheckBox>
+                                            </div>
+                                            <div class="col-lg-1 col-md-12 col-sm-12">
+                                                <asp:Label runat="server" ID="lblIcono" Text="¿Icono?" AssociatedControlID="chkIcono"></asp:Label>
+                                                <asp:CheckBox runat="server" Text="SI" ID="chkIcono" ToolTip="La imagen es un icono" CssClass="form-control" ></asp:CheckBox>
+                                            </div>
+                                            <div class="col-lg-1 col-md-12 col-sm-12">
+                                                <asp:Button runat="server" ID="btnAgregarAdicional" Text="Agregar" CssClass="btn btn-success" ValidationGroup="vgAdicional" OnClick="btnAgregarAdicional_Click"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <asp:UpdatePanel runat="server">
+                                                <ContentTemplate>
+                                                    <asp:Panel runat="server">
+                                                        <asp:GridView ID="grvAdicional" runat="server" AllowPaging="true" CssClass="table table-striped table-bordered"
+                                                            PageSize="10" AutoGenerateColumns="false" OnRowDataBound="grvAdicional_RowDataBound" Font-Size="10px"
+                                                            OnPageIndexChanging="grvAdicional_PageIndexChanging" DataKeyNames="intAdicionalesID, intTipoAdicionalID" OnRowCancelingEdit="grvAdicional_RowCancelingEdit"
+                                                            OnRowCommand="grvAdicional_RowCommand" OnRowEditing="grvAdicional_RowEditing" OnRowUpdating="grvAdicional_RowUpdating"
+                                                            EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
+                                                            <Columns>
+                                                                <asp:BoundField DataField="intAdicionalesID" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
+                                                                <asp:TemplateField HeaderText="Nombre">
+                                                                    <ItemTemplate>
+                                                                        <asp:Label runat="server" ID="lblNomVar" Text='<%#Eval("vchNombreAdicional") %>' />
+                                                                    </ItemTemplate>
+                                                                    <EditItemTemplate>
+                                                                        <asp:TextBox runat="server" ID="txtItemNombre" width="100%" Text='<%#Eval("vchNombreAdicional") %>'></asp:TextBox>
+                                                                    </EditItemTemplate>
+                                                                </asp:TemplateField>
+                                                                <asp:TemplateField  HeaderText="Imagen">
+                                                                    <ItemTemplate>
+                                                                        <asp:Label runat="server" ID="lblImagen" Text='<%#Eval("vchURLImagen") %>' />
+                                                                    </ItemTemplate>
+                                                                    <EditItemTemplate>
+                                                                        <asp:TextBox runat="server" ID="txtImagenItem" TextMode="Number" width="100%" Text='<%#Eval("vchURLImagen") %>'></asp:TextBox>
+                                                                    </EditItemTemplate>
+                                                                </asp:TemplateField>
+                                                                <asp:TemplateField  HeaderText="Tipo Control">
+                                                                    <ItemTemplate>
+                                                                        <asp:Label runat="server" ID="lblControl" Text='<%#Eval("vchTipoBoton") %>' />
+                                                                    </ItemTemplate>
+                                                                    <EditItemTemplate>
+                                                                        <asp:DropDownList runat="server" ID="ddlTipoControlITem" width="100%" ></asp:DropDownList>
+                                                                    </EditItemTemplate>
+                                                                </asp:TemplateField>
+                                                                <asp:TemplateField  HeaderText="Tipo Variable">
+                                                                    <ItemTemplate>
+                                                                        <asp:Label runat="server" ID="lblAdicional" Text='<%#Eval("vchTipoAdicional") %>' />
+                                                                    </ItemTemplate>
+                                                                    <EditItemTemplate>
+                                                                        <asp:DropDownList runat="server" ID="ddlTipoAdicionalItem" width="100%" ></asp:DropDownList>
+                                                                    </EditItemTemplate>
+                                                                </asp:TemplateField>
+                                                                <asp:TemplateField  HeaderText="Observaciones">
+                                                                    <ItemTemplate>
+                                                                        <asp:CheckBox ID="chkObsItem" runat="server" Checked='<%#Eval("bitObservaciones")%>' Enabled="false" />
+                                                                    </ItemTemplate>
+                                                                    <EditItemTemplate>
+                                                                        <asp:CheckBox runat="server" ID="chkObsItem" width="100%" Checked='<%#Eval("bitObservaciones")%>'></asp:CheckBox>
+                                                                    </EditItemTemplate>
+                                                                </asp:TemplateField>
+                                                                <asp:TemplateField  HeaderText="Imagen">
+                                                                    <ItemTemplate>
+                                                                        <asp:CheckBox ID="chkIconItem" runat="server" Checked='<%#Eval("bitIconBootstrap")%>' Enabled="false" />
+                                                                    </ItemTemplate>
+                                                                    <EditItemTemplate>
+                                                                        <asp:CheckBox runat="server" ID="chkIconItem" width="100%" Checked='<%#Eval("bitIconBootstrap")%>'></asp:CheckBox>
+                                                                    </EditItemTemplate>
+                                                                </asp:TemplateField>
+                                                                <asp:TemplateField HeaderText="Editar" ItemStyle-HorizontalAlign="Center">
+                                                                    <ItemTemplate>      
+                                                                        <asp:LinkButton ID="btnVisualizar" CausesValidation="false" CommandName="Edit" runat="server">
+                                                                            <i class="fa fa-pencil" aria-hidden="true" title="Editar" style="font-size:25px;"></i>
+                                                                        </asp:LinkButton>
+                                                                    </ItemTemplate>
+                                                                    <EditItemTemplate>
+                                                                        <asp:LinkButton ID="btnUpdateVarPacinete" runat="server" CommandName="Update"  Text="Actualizar">
+                                                                            <i class="fa fa-floppy-o" aria-hidden="true"  title="Actualizar" style="font-size:25px;"></i>
+                                                                        </asp:LinkButton>
+                                                                        <asp:LinkButton ID="bntCancelEditPaciente" runat="server" CommandName="Cancel"  Text="Cancelar">
+                                                                            <i class="fa fa-ban" aria-hidden="true" title="Cancelar" style="font-size:25px;"></i>
+                                                                        </asp:LinkButton>
+                                                                    </EditItemTemplate>
+                                                                </asp:TemplateField>
+                                                                <asp:TemplateField HeaderText="Estatus" ItemStyle-HorizontalAlign="Center">
+                                                                    <ItemTemplate>
+                                                                        <asp:ImageButton ID="imbEstatus" runat="server" BackColor="Transparent"  Height="25px" Width="25px" 
+                                                                            CommandArgument='<%#Eval("intAdicionalesID") %>' CommandName="Estatus" ToolTip="Cambia el estatus" />
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateField>
+                                                            </Columns>
+                                                            <PagerTemplate>
+                                                                <asp:Label ID="lblTemplate" runat="server" Text="Muestra Filas: " CssClass="Label" />
+                                                                <asp:DropDownList ID="ddlBandejaAdi" runat="server" AutoPostBack="true" CausesValidation="false"
+                                                                    Enabled="true" OnSelectedIndexChanged="ddlBandejaAdi_SelectedIndexChanged">
+                                                                        <asp:ListItem Value="10" />
+                                                                        <asp:ListItem Value="15" />
+                                                                        <asp:ListItem Value="20" />
+                                                                </asp:DropDownList>
+                                                                &nbsp;Página
+                                                                <asp:TextBox ID="txtBandejaAdi" runat="server" AutoPostBack="true" OnTextChanged="txtBandejaAdi_TextChanged"
+                                                                    Width="40" MaxLength="10" />
+                                                                de
+                                                                <asp:Label ID="lblBandejaTotal" runat="server" />
+                                                                &nbsp;
+                                                                <asp:Button ID="btnBandeja_I" runat="server" CommandName="Page" CausesValidation="false"
+                                                                    ToolTip="Página Anterior" CommandArgument="Prev" CssClass="previous" />
+                                                                <asp:Button ID="btnBandeja_II" runat="server" CommandName="Page" CausesValidation="false"
+                                                                    ToolTip="Página Siguiente" CommandArgument="Next" CssClass="next" />
+                                                            </PagerTemplate>
+                                                            <HeaderStyle CssClass="headerstyle" />
+                                                            <FooterStyle CssClass="text-center" />
+                                                            <PagerStyle CssClass="text-center" />
+                                                        </asp:GridView>
+                                                    </asp:Panel>
+                                                </ContentTemplate>
+                                            </asp:UpdatePanel>
                                         </div>
                                     </div>
                                 </div>

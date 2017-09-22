@@ -30,6 +30,8 @@ namespace Fuji.RISLite.Site
         public static List<stp_getListCatalogo_Result> lstCat = new List<stp_getListCatalogo_Result>();
         public static List<clsPrestacion> lstPres = new List<clsPrestacion>();
         public static List<tbl_CAT_Equipo> lstEquipo = new List<tbl_CAT_Equipo>();
+        public static List<tbl_CAT_TipoAdicional> lstTipoAdicional = new List<tbl_CAT_TipoAdicional>();
+        public static List<tbl_CAT_TipoBoton> lstTipoControl = new List<tbl_CAT_TipoBoton>();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -81,10 +83,108 @@ namespace Fuji.RISLite.Site
                 cargaCatalogo();
                 cargaPrestaciones();
                 cargaEquipo();
+                cargarAdicionales();
             }
             catch(Exception ecF)
             {
                 Log.EscribeLog("Existe un error en cargarForma: " + ecF.Message, 3, "");
+            }
+        }
+
+        private void cargarAdicionales()
+        {
+            try
+            {
+                cargaTipoAdicional();
+                cargaTipoControl();
+                cargarAdicional();
+            }
+            catch (Exception ecP)
+            {
+                Log.EscribeLog("Existe un error en cargarAdicionales: " + ecP.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargarAdicional()
+        {
+            try
+            {
+                List<clsAdicionales> response = new List<clsAdicionales>();
+                AdicionalesRequest request = new AdicionalesRequest();
+                request.mdlUser = Usuario;
+                request.intTipoAdicional = Convert.ToInt32(ddlTipoVariable.SelectedValue);
+                response = RisService.getAdicionales(request);
+                grvAdicional.DataSource = null;
+                if (response!= null)
+                {
+                    if (response.Count > 0)
+                    {
+                        grvAdicional.DataSource = response;
+                    }
+                }
+                grvAdicional.DataBind();
+            }
+            catch(Exception ecA)
+            {
+                Log.EscribeLog("Existe un error en cargarAdicional: " + ecA.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargaTipoControl()
+        {
+            try
+            {
+                AdicionalesRequest request = new AdicionalesRequest();
+                clsUsuario _user = new clsUsuario();
+                _user = Usuario;
+                request.mdlUser = _user;
+                List<tbl_CAT_TipoBoton> response = new List<tbl_CAT_TipoBoton>();
+                response = RisService.getCATTipoBoton(request);
+                if (response != null)
+                {
+                    if (response.Count > 0)
+                    {
+                        lstTipoControl = response;
+                        ddlTipoControl.DataSource = response;
+                        ddlTipoControl.DataTextField = "vchTipoBoton";
+                        ddlTipoControl.DataValueField = "intTipoBotonID";
+                        ddlTipoControl.DataBind();
+                        ddlTipoControl.Items.Insert(0, new ListItem("Seleccionar Tipo de Control...", "0"));
+                    }
+                }
+            }
+            catch (Exception eFC)
+            {
+                Log.EscribeLog("Existe un error en cargaTipoAdicional: " + eFC.Message, 3, "");
+            }
+        }
+
+        private void cargaTipoAdicional()
+        {
+            try
+            {
+                AdicionalesRequest request = new AdicionalesRequest();
+                clsUsuario _user = new clsUsuario();
+                _user = Usuario;
+                request.mdlUser = _user;
+                List<tbl_CAT_TipoAdicional> response = new List<tbl_CAT_TipoAdicional>();
+                response = RisService.getCATTipoAdicional(request);
+                if (response != null)
+                {
+                    if (response.Count > 0)
+                    {
+                        lstTipoAdicional = response;
+                        ddlTipoVariable.DataSource = response;
+                        ddlTipoVariable.DataTextField = "vchNombre";
+                        ddlTipoVariable.DataValueField = "intTipoAdicional";
+                        ddlTipoVariable.DataBind();
+                        ddlTipoVariable.Items.Insert(0, new ListItem("Seleccionar Tipo de Variable...", "0"));
+                    }
+                }
+            }
+            catch (Exception eFC)
+            {
+                Log.EscribeLog("Existe un error en cargaTipoAdicional: " + eFC.Message, 3, "");
             }
         }
 
@@ -3485,8 +3585,323 @@ namespace Fuji.RISLite.Site
                 Log.EscribeLog("Existe un error txtBandejaRes_TextChanged de frmConfiguracion: " + ex.Message, 3, Usuario.vchUsuario);
             }
         }
+
         #endregion restriccion
 
+        protected void btnAgregarAdicional_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                AdicionalesResponse response = new AdicionalesResponse();
+                AdicionalesRequest request = new AdicionalesRequest();
+                request.mdlUser = Usuario;
+                clsAdicionales mdlAdi = new clsAdicionales();
+                mdlAdi = obtenerAdicional();
+                if (mdlAdi != null)
+                {
+                    request.mdlAdicional = mdlAdi;
+                    response = RisService.setAdicionales(request);
+                    if(response != null)
+                    {
+                        if (response.Success)
+                        {
+                            ShowMessage("Se guardó correctamente.", MessageType.Correcto, "alert_container");
+                            cargarAdicionales();
+                        }
+                        else
+                        {
+                            ShowMessage("Verificar la información: " + response.Mensaje, MessageType.Error, "alert_container");
+                        }
+                    }
+                    else
+                    {
+                        ShowMessage("Verificar la información", MessageType.Error, "alert_container");
+                    }
+                }
+            }
+            catch(Exception ebA)
+            {
+                ShowMessage("Existe un error al guardar la información: " + ebA.Message,MessageType.Error,"alert_container");
+                Log.EscribeLog("Existe un error en btnAgregarAdicional_Click: " + ebA.Message, 3, Usuario.vchUsuario);
+            }
+        }
 
+        private clsAdicionales obtenerAdicional()
+        {
+            clsAdicionales mdl = new clsAdicionales();
+            try
+            {
+                mdl.bitActivo = true;
+                mdl.bitIconBootstrap = chkIcono.Checked;
+                mdl.bitObservaciones = chkObservaciones.Checked;
+                mdl.datFecha = DateTime.Now;
+                mdl.intTipoAdicionalID = Convert.ToInt32(ddlTipoVariable.SelectedValue);
+                mdl.intTipoBotonID = Convert.ToInt32(ddlTipoControl.SelectedValue);
+                mdl.vchNombreAdicional = txtNomAdi.Text;
+                mdl.vchURLImagen = txtImagenAdi.Text;
+                mdl.vchUserAdmin = Usuario.vchUsuario;
+            }
+            catch(Exception eOA)
+            {
+                Log.EscribeLog("Existe un error en obtenerAdicional: " + eOA.Message, 3, Usuario.vchUsuario);
+            }
+            return mdl;
+        }
+
+        protected void ddlTipoVariable_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                cargarAdicional();
+            }
+            catch(Exception edd)
+            {
+                Log.EscribeLog("Existe un error en ddlTipoVariable_SelectedIndexChanged: " + edd.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void ddlTipoControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                cargarAdicional();
+            }
+            catch (Exception edd)
+            {
+                Log.EscribeLog("Existe un error en ddlTipoControl_SelectedIndexChanged: " + edd.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvAdicional_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            try
+            {
+                if (e.Row.RowType == DataControlRowType.Pager)
+                {
+                    Label lblTotalNumDePaginas = (Label)e.Row.FindControl("lblBandejaTotal");
+                    lblTotalNumDePaginas.Text = grvAdicional.PageCount.ToString();
+
+                    TextBox txtIrAlaPagina = (TextBox)e.Row.FindControl("txtBandejaAdi");
+                    txtIrAlaPagina.Text = (grvAdicional.PageIndex + 1).ToString();
+
+                    DropDownList ddlTamPagina = (DropDownList)e.Row.FindControl("ddlBandejaAdi");
+                    ddlTamPagina.SelectedValue = grvAdicional.PageSize.ToString();
+                }
+
+                if (e.Row.RowType != DataControlRowType.DataRow)
+                {
+                    return;
+                }
+
+                if (e.Row.DataItem != null)
+                {
+                    clsAdicionales _mdl = (clsAdicionales)e.Row.DataItem;
+                    ImageButton ibtEstatus = (ImageButton)e.Row.FindControl("imbEstatus");
+                    ibtEstatus.Attributes.Add("onclick", "javascript:return confirm('¿Desea realizar el cambio de estatus del item seleccionado?');");
+                    if ((bool)_mdl.bitActivo)
+                        ibtEstatus.ImageUrl = @"~/Images/ic_action_tick.png";
+                    else
+                        ibtEstatus.ImageUrl = @"~/Images/ic_action_cancel.png";
+                }
+
+                if (e.Row.RowType == DataControlRowType.DataRow && grvAdicional.EditIndex == e.Row.RowIndex)
+                {
+                    DropDownList ddlControl = (DropDownList)e.Row.FindControl("ddlTipoControlITem");
+                    ddlControl.DataSource = lstTipoControl;
+                    ddlControl.DataTextField = "vchTipoBoton";
+                    ddlControl.DataValueField = "intTipoBotonID";
+                    ddlControl.DataBind();
+                    ddlControl.Items.FindByValue((e.Row.FindControl("lblControl") as Label).Text).Selected = true;
+
+                    DropDownList ddlAdicional = (DropDownList)e.Row.FindControl("ddlTipoAdicionalItem");
+                    ddlAdicional.DataSource = lstTipoAdicional;
+                    ddlAdicional.DataTextField = "vchNombre";
+                    ddlAdicional.DataValueField = "intTipoAdicional";
+                    ddlAdicional.DataBind();
+                    ddlAdicional.Items.FindByValue((e.Row.FindControl("lblAdicional") as Label).Text).Selected = true;
+                }
+            }
+            catch (Exception eGUP)
+            {
+                throw eGUP;
+            }
+        }
+
+        protected void grvAdicional_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            try
+            {
+                if (e.NewPageIndex >= 0)
+                {
+                    this.grvAdicional.PageIndex = e.NewPageIndex;
+                    cargarAdicional();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.EscribeLog("Existe un error grvAdicional_PageIndexChanging: " + ex.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvAdicional_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+            try
+            {
+                grvAdicional.EditIndex = -1;
+                cargarAdicional();
+            }
+            catch (Exception eCE)
+            {
+                Log.EscribeLog("Existe un error en grvAdicional_RowCancelingEdit: " + eCE.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvAdicional_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            try
+            {
+                int intAdicionalesID = 0;
+                switch (e.CommandName)
+                {
+                    case "Estatus":
+                        intAdicionalesID = Convert.ToInt32(e.CommandArgument.ToString());
+                        AdicionalesRequest request = new AdicionalesRequest();
+                        AdicionalesResponse response = new AdicionalesResponse();
+                        request.mdlUser = Usuario;
+                        request.intTipoAdicional = intAdicionalesID;
+                        if (request != null)
+                        {
+                            response = RisService.setEstatusAdicional(request);
+                            if (response != null)
+                            {
+                                if (response.Success)
+                                {
+                                    ShowMessage("Se actualizo correctamente", MessageType.Correcto, "alert_container");
+                                    //grvAddPaciente.EditIndex = -1;
+                                    cargarAdicional();
+                                }
+                                else
+                                {
+                                    ShowMessage("Existe un error: " + response.Mensaje, MessageType.Error, "alert_container");
+                                }
+                            }
+                            else
+                            {
+                                ShowMessage("Favor de revisar la información.", MessageType.Error, "alert_container");
+                            }
+                        }
+                        else
+                        {
+                            ShowMessage("Favor de revisar la información.", MessageType.Error, "alert_container");
+                        }
+                        break;
+                }
+            }
+            catch (Exception eRU)
+            {
+                ShowMessage("Favor de revisar la información: " + eRU.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error grvAdicional_RowCommand: " + eRU.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvAdicional_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            try
+            {
+                grvAdicional.EditIndex = e.NewEditIndex;
+                cargarAdicional();
+            }
+            catch (Exception eRW)
+            {
+                Log.EscribeLog("Existe un error en grvAdicional_RowEditing: " + eRW.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvAdicional_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+            try
+            {
+                AdicionalesRequest request = new AdicionalesRequest();
+                AdicionalesResponse response = new AdicionalesResponse();
+                request.mdlUser = Usuario;
+                clsAdicionales mdlRes = new clsAdicionales();
+                mdlRes.bitActivo = true;
+                mdlRes.datFecha = DateTime.Now;
+                TextBox txtNamevar = (TextBox)grvAdicional.Rows[e.RowIndex].FindControl("txtItemNombre");
+                mdlRes.vchNombreAdicional = txtNamevar.Text;
+                TextBox txtImagen = (TextBox)grvAdicional.Rows[e.RowIndex].FindControl("txtImagenItem");
+                mdlRes.vchURLImagen = txtImagen.Text;
+                mdlRes.intTipoAdicionalID = Convert.ToInt32((grvAdicional.Rows[e.RowIndex].FindControl("ddlTipoAdicionalItem") as DropDownList).SelectedItem.Value);
+                mdlRes.intTipoBotonID = Convert.ToInt32((grvAdicional.Rows[e.RowIndex].FindControl("ddlTipoControlITem") as DropDownList).SelectedItem.Value);
+                mdlRes.bitObservaciones = (grvAdicional.Rows[e.RowIndex].FindControl("chkObsItem") as CheckBox).Checked;
+                mdlRes.bitIconBootstrap = (grvAdicional.Rows[e.RowIndex].FindControl("chkObsItem") as CheckBox).Checked;
+                mdlRes.vchUserAdmin = Usuario.vchUsuario;
+                if (mdlRes != null)
+                {
+                    request.mdlAdicional = mdlRes;
+                    response = RisService.setActualizarAdicionales(request);
+                    if (response != null)
+                    {
+                        if (response.Success)
+                        {
+                            ShowMessage("Se actualizo correctamente.", MessageType.Correcto, "alert_container");
+                            grvAdicional.EditIndex = -1;
+                            cargarAdicional();
+                        }
+                        else
+                        {
+                            ShowMessage("Existe un error: " + response.Success, MessageType.Error, "alert_container");
+                        }
+                    }
+                    else
+                    {
+                        ShowMessage("Favor de revisar la información.", MessageType.Error, "alert_container");
+                    }
+                }
+            }
+            catch (Exception eUpdating)
+            {
+                ShowMessage("Existe un error: " + eUpdating.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error en grvAdicional_RowUpdating: " + eUpdating.Message, 3, Usuario.vchUsuario);
+            } 
+        }
+
+        protected void txtBandejaAdi_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                TextBox txtBandejaAvaluosGoToPage = (TextBox)sender;
+                int numeroPagina;
+                if (int.TryParse(txtBandejaAvaluosGoToPage.Text.Trim(), out numeroPagina))
+                    this.grvAdicional.PageIndex = numeroPagina - 1;
+                else
+                    this.grvAdicional.PageIndex = 0;
+                this.cargarAdicional();
+            }
+            catch (Exception ex)
+            {
+                Log.EscribeLog("Existe un error txtBandejaAdi_TextChanged de frmConfiguracion: " + ex.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void ddlBandejaAdi_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                DropDownList dropDownList = (DropDownList)sender;
+                if (int.Parse(dropDownList.SelectedValue) != 0)
+                {
+                    this.grvAdicional.AllowPaging = true;
+                    this.grvAdicional.PageSize = int.Parse(dropDownList.SelectedValue);
+                }
+                else
+                    this.grvAdicional.AllowPaging = false;
+                this.cargarAdicional();
+            }
+            catch (Exception eddS)
+            {
+                Log.EscribeLog("Existe un error ddlBandejaAdi_SelectedIndexChanged de frmConfiguracion: " + eddS.Message, 3, Usuario.vchUsuario);
+            }
+        }
     }
 }

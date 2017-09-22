@@ -24,6 +24,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <WcfConfigValidationEnabled>True</WcfConfigValidationEnabled>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -1317,6 +1318,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\DataContract\AdicionalesRequest.cs" />
+    <Compile Include="Services\DataContract\AdicionalesResponse.cs" />
     <Compile Include="Services\DataContract\AdminUserRequest.cs" />
     <Compile Include="Services\DataContract\AdminUserResponse.cs" />
     <Compile Include="Services\DataContract\CatalogoRequest.cs" />

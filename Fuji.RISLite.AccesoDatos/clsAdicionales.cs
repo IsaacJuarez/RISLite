@@ -31,5 +31,6 @@ namespace Fuji.RISLite.Entities
             bitActivo = false;
             datFecha = DateTime.MinValue;
             vchUserAdmin = string.Empty;
+        }
     }
 }

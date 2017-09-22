@@ -2612,14 +2612,14 @@ namespace Fuji.RISLite.DataAccess
         #endregion Estudios
 
         #region Adicionales
-        public List<clsAdicionales> getAdicionalClinicos(int intTipoAdicional,string user)
+        public List<clsAdicionales> getAdicionales(int intTipoAdicional,string user)
         {
             List<clsAdicionales> lstreturn = new List<clsAdicionales>();
             try
             {
                 using (dbRisDA = new RISLiteEntities())
                 {
-                    if (dbRisDA.tbl_MST_Adicionales.Any(x => x.intAdicionalesID == intTipoAdicional))
+                    if (dbRisDA.tbl_MST_Adicionales.Any(x => x.intTipoAdicional == intTipoAdicional))
                     {
                         var query = (from adi in dbRisDA.tbl_MST_Adicionales
                             join catBoton in dbRisDA.tbl_CAT_TipoBoton on adi.intTipoBotonID equals catBoton.intTipoBotonID
@@ -2670,6 +2670,169 @@ namespace Fuji.RISLite.DataAccess
                 Log.EscribeLog("Existe un error en getAdicionalClinicos: " + egV.Message, 3, user);
             }
             return lstreturn;
+        }
+
+        public bool setAdicionales(clsAdicionales adicionales, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (!dbRisDA.tbl_MST_Adicionales.Any(x => x.vchNombre.ToUpper() == adicionales.vchNombreAdicional))
+                    {
+                        tbl_MST_Adicionales mdl = new tbl_MST_Adicionales();
+                        mdl.bitActivo = adicionales.bitActivo;
+                        mdl.bitIconBoostrap = adicionales.bitIconBootstrap;
+                        mdl.bitObservaciones = adicionales.bitObservaciones;
+                        mdl.datFecha = adicionales.datFecha;
+                        mdl.intTipoAdicional = adicionales.intTipoAdicionalID;
+                        mdl.intTipoBotonID = adicionales.intTipoBotonID;
+                        mdl.vchNombre = adicionales.vchNombreAdicional;
+                        mdl.vchURLImagen = adicionales.vchURLImagen;
+                        mdl.vchUserAdmin = user;
+                        dbRisDA.tbl_MST_Adicionales.Add(mdl);
+                        dbRisDA.SaveChanges();
+                        valido = true;
+                    }
+                    else
+                    {
+                        mensaje = "La variable ya existe. Favor de verificar.";
+                    }
+                }
+            }
+            catch (Exception esAV)
+            {
+                valido = false;
+                mensaje = esAV.Message;
+                Log.EscribeLog("Existe un error en setAdicionales: " + esAV.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public bool setActualizarAdicionales(clsAdicionales adicional, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_MST_Adicionales.Any(x => x.intAdicionalesID == adicional.intAdicionalesID))
+                    {
+                        tbl_MST_Adicionales mdl = new tbl_MST_Adicionales();
+                        mdl = dbRisDA.tbl_MST_Adicionales.First(x => x.intAdicionalesID == adicional.intAdicionalesID);
+                        mdl.bitActivo = adicional.bitActivo;
+                        mdl.bitIconBoostrap = adicional.bitIconBootstrap;
+                        mdl.bitObservaciones = adicional.bitObservaciones;
+                        mdl.datFecha = DateTime.Now;
+                        mdl.intTipoAdicional = adicional.intTipoAdicionalID;
+                        mdl.intTipoBotonID = adicional.intTipoBotonID;
+                        mdl.vchNombre = adicional.vchNombreAdicional;
+                        mdl.vchURLImagen = adicional.vchURLImagen;
+                        mdl.vchUserAdmin = user;
+                        dbRisDA.SaveChanges();
+                        valido = true;
+                    }
+                    else
+                    {
+                        mensaje = "No existe la variable para actualizar.";
+                    }
+                }
+            }
+            catch (Exception esAV)
+            {
+                valido = false;
+                mensaje = esAV.Message;
+                Log.EscribeLog("Existe un error en setAgregarVariable: " + esAV.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public List<tbl_CAT_TipoBoton> getCATTipoBoton(string user)
+        {
+            List<tbl_CAT_TipoBoton> lstResponse = new List<tbl_CAT_TipoBoton>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_TipoBoton.Any())
+                    {
+                        var query = dbRisDA.tbl_CAT_TipoBoton.ToList();
+                        if(query!=null)
+                        {
+                            if(query.Count>0)
+                            {
+                                lstResponse.AddRange(query);
+                            }
+                        }
+                    }
+                }
+            }
+            catch(Exception egTC)
+            {
+                Log.EscribeLog("Existe un error en getCATTipoBoton: " + egTC.Message, 3, user);
+            }
+            return lstResponse;
+        }
+
+        public List<tbl_CAT_TipoAdicional> getCATTipoAdicional(string user)
+        {
+            List<tbl_CAT_TipoAdicional> lstResponse = new List<tbl_CAT_TipoAdicional>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_TipoAdicional.Any())
+                    {
+                        var query = dbRisDA.tbl_CAT_TipoAdicional.ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                lstResponse.AddRange(query);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception egTC)
+            {
+                Log.EscribeLog("Existe un error en getCATTipoAdicional: " + egTC.Message, 3, user);
+            }
+            return lstResponse;
+        }
+
+        public bool setEstatusAdicional(int intAdicionalesID, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_MST_Adicionales.Any(x => x.intAdicionalesID == intAdicionalesID))
+                    {
+                        tbl_MST_Adicionales mdl = new tbl_MST_Adicionales();
+                        mdl = dbRisDA.tbl_MST_Adicionales.First(x => x.intAdicionalesID == intAdicionalesID);
+                        mdl.bitActivo = !mdl.bitActivo;
+                        mdl.vchUserAdmin = user;
+                        mdl.datFecha = DateTime.Now;
+                        dbRisDA.SaveChanges();
+                        valido = true;
+                    }
+                    else
+                    {
+                        mensaje = "No existe la variable para actualizar.";
+                    }
+                }
+            }
+            catch (Exception esAV)
+            {
+                valido = false;
+                mensaje = esAV.Message;
+                Log.EscribeLog("Existe un error en setEstatusAdicional: " + esAV.Message, 3, user);
+            }
+            return valido;
         }
         #endregion Adicionales
 
