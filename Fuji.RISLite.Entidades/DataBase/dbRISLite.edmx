@@ -177,6 +177,7 @@
           </Key>
           <Property Name="intTipoBotonID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="vchTipoBoton" Type="varchar" MaxLength="100" />
+          <Property Name="vchHtmlControl" Type="varchar(max)" />
           <Property Name="bitActivo" Type="bit" />
           <Property Name="datFecha" Type="datetime" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
@@ -383,6 +384,7 @@
           <Property Name="vchURLImagen" Type="varchar" MaxLength="200" />
           <Property Name="bitIconBoostrap" Type="bit" />
           <Property Name="bitObservaciones" Type="bit" />
+          <Property Name="vchHtmlControl" Type="varchar(max)" />
           <Property Name="bitActivo" Type="bit" />
           <Property Name="datFecha" Type="datetime" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
@@ -2350,6 +2352,7 @@
           <Property Name="datFecha" Type="DateTime" Precision="3" />
           <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="tbl_MST_Adicionales" Relationship="RISLiteModel.FK_MST_Adicionales_CAT_TipoBoton" FromRole="tbl_CAT_TipoBoton" ToRole="tbl_MST_Adicionales" />
+          <Property Name="vchHtmlControl" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="tbl_MST_Adicionales">
           <Key>
@@ -2368,6 +2371,7 @@
           <NavigationProperty Name="tbl_CAT_TipoAdicional" Relationship="RISLiteModel.FK_MST_Adicionales_CAT_TipoAdicional" FromRole="tbl_MST_Adicionales" ToRole="tbl_CAT_TipoAdicional" />
           <NavigationProperty Name="tbl_CAT_TipoBoton" Relationship="RISLiteModel.FK_MST_Adicionales_CAT_TipoBoton" FromRole="tbl_MST_Adicionales" ToRole="tbl_CAT_TipoBoton" />
           <NavigationProperty Name="tbl_DET_Cita" Relationship="RISLiteModel.FK_DET_Cita_MST_Adicionales" FromRole="tbl_MST_Adicionales" ToRole="tbl_DET_Cita" />
+          <Property Name="vchHtmlControl" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_MST_Adicionales_CAT_TipoAdicional">
           <End Type="RISLiteModel.tbl_CAT_TipoAdicional" Role="tbl_CAT_TipoAdicional" Multiplicity="0..1" />
@@ -3103,6 +3107,7 @@
           <EntitySetMapping Name="tbl_CAT_TipoBoton">
             <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_TipoBoton">
               <MappingFragment StoreEntitySet="tbl_CAT_TipoBoton">
+                <ScalarProperty Name="vchHtmlControl" ColumnName="vchHtmlControl" />
                 <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
                 <ScalarProperty Name="datFecha" ColumnName="datFecha" />
                 <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
@@ -3114,6 +3119,7 @@
           <EntitySetMapping Name="tbl_MST_Adicionales">
             <EntityTypeMapping TypeName="RISLiteModel.tbl_MST_Adicionales">
               <MappingFragment StoreEntitySet="tbl_MST_Adicionales">
+                <ScalarProperty Name="vchHtmlControl" ColumnName="vchHtmlControl" />
                 <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
                 <ScalarProperty Name="datFecha" ColumnName="datFecha" />
                 <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />

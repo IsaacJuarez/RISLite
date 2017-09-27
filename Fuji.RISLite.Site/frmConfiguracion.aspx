@@ -1152,7 +1152,7 @@
                                             <div class="col-lg-2 col-md-12 col-sm-12">
                                                 <asp:Label runat="server" ID="lblTipoControl" Text="Tipo de Control" AssociatedControlID="ddlTipoControl"></asp:Label>
                                                 <asp:RequiredFieldValidator runat="server" ID="rfvtipoControl" Text="* Campo requerido" ErrorMessage="* Campo requerido" InitialValue="0" ForeColor="Red" ControlToValidate="ddlTipoControl" ValidationGroup="vgAdicional"></asp:RequiredFieldValidator>
-                                                <asp:DropDownList runat="server" CssClass="form-control" ID="ddlTipoControl" AutoPostBack="true" OnSelectedIndexChanged="ddlTipoControl_SelectedIndexChanged"></asp:DropDownList>
+                                                <asp:DropDownList runat="server" CssClass="form-control" ID="ddlTipoControl"></asp:DropDownList>
                                             </div>
                                             <div class="col-lg-2 col-md-12 col-sm-12">
                                                 <asp:Label runat="server" ID="lblTipoAdicional" Text="Tipo de Variable" AssociatedControlID="ddlTipoVariable"></asp:Label>
@@ -1213,6 +1213,7 @@
                                                                         <asp:Label runat="server" ID="lblControl" Text='<%#Eval("vchTipoBoton") %>' />
                                                                     </ItemTemplate>
                                                                     <EditItemTemplate>
+                                                                        <asp:Label ID="lblControl" runat="server" Text='<%# Eval("vchTipoBoton")%>' Visible = "false"></asp:Label>
                                                                         <asp:DropDownList runat="server" ID="ddlTipoControlITem" width="100%" ></asp:DropDownList>
                                                                     </EditItemTemplate>
                                                                 </asp:TemplateField>
@@ -1221,6 +1222,7 @@
                                                                         <asp:Label runat="server" ID="lblAdicional" Text='<%#Eval("vchTipoAdicional") %>' />
                                                                     </ItemTemplate>
                                                                     <EditItemTemplate>
+                                                                        <asp:Label runat="server" ID="lblAdicional" Text='<%#Eval("vchTipoAdicional") %>'  Visible = "false"/>
                                                                         <asp:DropDownList runat="server" ID="ddlTipoAdicionalItem" width="100%" ></asp:DropDownList>
                                                                     </EditItemTemplate>
                                                                 </asp:TemplateField>

@@ -2637,6 +2637,7 @@ namespace Fuji.RISLite.DataAccess
                                 vchTipoAdicional = catAdi.vchNombre,
                                 vchTipoBoton = catBoton.vchTipoBoton,
                                 vchURLImagen = adi.vchURLImagen,
+                                vchHtmlControl = adi.vchHtmlControl,
                                 vchUserAdmin = adi.vchUserAdmin
                             }).ToList();
                         if (query != null)
@@ -2658,6 +2659,7 @@ namespace Fuji.RISLite.DataAccess
                                     mdl.vchTipoAdicional = item.vchTipoAdicional;
                                     mdl.vchTipoBoton = item.vchTipoBoton;
                                     mdl.vchURLImagen = item.vchURLImagen;
+                                    mdl.vchHtmlControl = item.vchHtmlControl;
                                     lstreturn.Add(mdl);
                                 }
                             }
@@ -2690,6 +2692,7 @@ namespace Fuji.RISLite.DataAccess
                         mdl.intTipoBotonID = adicionales.intTipoBotonID;
                         mdl.vchNombre = adicionales.vchNombreAdicional;
                         mdl.vchURLImagen = adicionales.vchURLImagen;
+                        mdl.vchHtmlControl = adicionales.vchHtmlControl;
                         mdl.vchUserAdmin = user;
                         dbRisDA.tbl_MST_Adicionales.Add(mdl);
                         dbRisDA.SaveChanges();
@@ -2729,6 +2732,7 @@ namespace Fuji.RISLite.DataAccess
                         mdl.intTipoBotonID = adicional.intTipoBotonID;
                         mdl.vchNombre = adicional.vchNombreAdicional;
                         mdl.vchURLImagen = adicional.vchURLImagen;
+                        mdl.vchHtmlControl = adicional.vchHtmlControl;
                         mdl.vchUserAdmin = user;
                         dbRisDA.SaveChanges();
                         valido = true;

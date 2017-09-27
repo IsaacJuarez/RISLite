@@ -11,11 +11,14 @@ namespace Fuji.RISLite.Entities
         public string vchTipoAdicional { get; set; }
         public string vchNombreAdicional { get; set; }
         public string vchURLImagen { get; set; }
+        public string vchHtmlControl { get; set; }
         public bool bitIconBootstrap { get; set; }
         public bool bitObservaciones { get; set; }
         public bool bitActivo { get; set; }
         public DateTime datFecha { get; set; }
         public string vchUserAdmin { get; set; }
+        public string vchObservaciones { get; set; }
+        public string vchValor { get; set; }
 
         public clsAdicionales()
         {
@@ -26,11 +29,14 @@ namespace Fuji.RISLite.Entities
             vchTipoAdicional = string.Empty;
             vchNombreAdicional = string.Empty;
             vchURLImagen = string.Empty;
+            vchHtmlControl = string.Empty;
             bitIconBootstrap = false;
             bitObservaciones = false;
             bitActivo = false;
             datFecha = DateTime.MinValue;
             vchUserAdmin = string.Empty;
+            vchObservaciones = string.Empty;
+            vchValor = string.Empty;
         }
     }
 }

@@ -3606,7 +3606,8 @@ namespace Fuji.RISLite.Site
                         if (response.Success)
                         {
                             ShowMessage("Se guardó correctamente.", MessageType.Correcto, "alert_container");
-                            cargarAdicionales();
+                            limpiarControlesAdicional();
+                            cargarAdicional();
                         }
                         else
                         {
@@ -3623,6 +3624,21 @@ namespace Fuji.RISLite.Site
             {
                 ShowMessage("Existe un error al guardar la información: " + ebA.Message,MessageType.Error,"alert_container");
                 Log.EscribeLog("Existe un error en btnAgregarAdicional_Click: " + ebA.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void limpiarControlesAdicional()
+        {
+            try
+            {
+                txtNomAdi.Text = "";
+                txtImagenAdi.Text = "";
+                chkObservaciones.Checked = false;
+                chkIcono.Checked = false;
+            }
+            catch(Exception elCOA)
+            {
+                Log.EscribeLog("Existe un error en limpiarControlesAdicional: " + elCOA.Message, 3, Usuario.vchUsuario);
             }
         }
 
@@ -3652,23 +3668,12 @@ namespace Fuji.RISLite.Site
         {
             try
             {
+                Session["ddlSelectedTipoVariable"] = ddlTipoVariable.SelectedValue;
                 cargarAdicional();
             }
             catch(Exception edd)
             {
                 Log.EscribeLog("Existe un error en ddlTipoVariable_SelectedIndexChanged: " + edd.Message, 3, Usuario.vchUsuario);
-            }
-        }
-
-        protected void ddlTipoControl_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                cargarAdicional();
-            }
-            catch (Exception edd)
-            {
-                Log.EscribeLog("Existe un error en ddlTipoControl_SelectedIndexChanged: " + edd.Message, 3, Usuario.vchUsuario);
             }
         }
 
@@ -3711,14 +3716,14 @@ namespace Fuji.RISLite.Site
                     ddlControl.DataTextField = "vchTipoBoton";
                     ddlControl.DataValueField = "intTipoBotonID";
                     ddlControl.DataBind();
-                    ddlControl.Items.FindByValue((e.Row.FindControl("lblControl") as Label).Text).Selected = true;
+                    ddlControl.Items.FindByText((e.Row.FindControl("lblControl") as Label).Text).Selected = true;
 
                     DropDownList ddlAdicional = (DropDownList)e.Row.FindControl("ddlTipoAdicionalItem");
                     ddlAdicional.DataSource = lstTipoAdicional;
                     ddlAdicional.DataTextField = "vchNombre";
                     ddlAdicional.DataValueField = "intTipoAdicional";
                     ddlAdicional.DataBind();
-                    ddlAdicional.Items.FindByValue((e.Row.FindControl("lblAdicional") as Label).Text).Selected = true;
+                    ddlAdicional.Items.FindByText((e.Row.FindControl("lblAdicional") as Label).Text).Selected = true;
                 }
             }
             catch (Exception eGUP)

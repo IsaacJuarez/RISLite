@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.14
+VisualStudioVersion = 15.0.26730.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fuji.RISLite.DataAccess", "Fuji.RISLite.Entidades\Fuji.RISLite.DataAccess.csproj", "{6BD05117-757E-4730-9701-F035FF604E3F}"
 EndProject
@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fuji.RISLite.Site", "Fuji.R
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataBaseSQL", "DataBaseSQL", "{5ED80C02-4764-4015-828E-B38205934E03}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\..\..\..\..\Program Files\Microsoft SQL Server\MSSQL12.MSSQLSERVER14\MSSQL\Backup\RISLite.bak = ..\..\..\..\..\..\Program Files\Microsoft SQL Server\MSSQL12.MSSQLSERVER14\MSSQL\Backup\RISLite.bak
+		..\..\..\..\..\Program Files\Microsoft SQL Server\MSSQL12.MSSQLSERVER14\MSSQL\Backup\RISLite.bak = ..\..\..\..\..\Program Files\Microsoft SQL Server\MSSQL12.MSSQLSERVER14\MSSQL\Backup\RISLite.bak
 	EndProjectSection
 EndProject
 Global
@@ -35,5 +35,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6AC5F305-46D6-41C6-80AA-6C9459205D8B}
 	EndGlobalSection
 EndGlobal

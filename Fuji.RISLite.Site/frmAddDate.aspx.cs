@@ -10,6 +10,7 @@ using System.Linq;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using Telerik.Web.UI;
 
 namespace Fuji.RISLite.Site
 {
@@ -27,6 +28,9 @@ namespace Fuji.RISLite.Site
         public static List<clsEstudio> lstEstudios = new List<clsEstudio>();
         public static List<tbl_CAT_Identificacion> lstIdentificaciones = new List<tbl_CAT_Identificacion>();
         public static List<clsVarAcicionales> lstVarAdic = new List<clsVarAcicionales>();
+        public static List<clsAdicionales> lstAdicionalesClinicos = new List<clsAdicionales>();
+        public static List<clsAdicionales> lstAdicionalesOper = new List<clsAdicionales>();
+        public static List<clsAdicionales> lstObser = new List<clsAdicionales>();
 
         public static bool bitEditar = false;
 
@@ -35,24 +39,25 @@ namespace Fuji.RISLite.Site
             try
             {
                 String var = "";
-                    if (Session["User"] != null)
+                if (Session["User"] != null)
+                {
+                    Usuario = (clsUsuario)Session["User"];
+                    if (Usuario != null)
                     {
-                        Usuario = (clsUsuario)Session["User"];
-                        if (Usuario != null)
-                        {
-                            cargaFormaDetalle();
-                        }
-                        else
-                        {
-                            var = Security.Encrypt("1");
-                            Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
-                        }
+                        cargaAdicionales();
+                        cargaFormaDetalle();
                     }
                     else
                     {
                         var = Security.Encrypt("1");
                         Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
                     }
+                }
+                else
+                {
+                    var = Security.Encrypt("1");
+                    Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                }
             }
             catch (Exception ePL)
             {
@@ -72,6 +77,8 @@ namespace Fuji.RISLite.Site
                         Usuario = (clsUsuario)Session["User"];
                         if (Usuario != null)
                         {
+                            lstObser.Clear();
+                            pnlObservaciones.Controls.Clear();
                             bitEditar = false;
                             if (Request.QueryString.Count > 0)
                             {
@@ -170,6 +177,207 @@ namespace Fuji.RISLite.Site
             catch (Exception eAU)
             {
                 Log.EscribeLog("Existe un error en btnAddUser_Click:" + eAU.Message, 3, Usuario.vchUserAdmin);
+            }
+        }
+
+        private void cargaAdicionales()
+        {
+            try
+            {
+                cargaAdicionalesClinicos();
+                cargaAdicionalesOperativos();
+                cargarObservacionesPanel();
+            }
+            catch (Exception eca)
+            {
+                Log.EscribeLog("Existe un error en cargaAdicionales: " + eca.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargarObservacionesPanel()
+        {
+            try
+            {
+                if (lstObser.Count > 0)
+                {
+                    foreach(clsAdicionales item in lstObser)
+                    {
+                        string intAdicionalID = item.intAdicionalesID.ToString();
+                        intAdicionalID = "lblAdicionalID" + intAdicionalID;
+                        Label txtObs = new Label();
+                        txtObs.ID = intAdicionalID;
+                        txtObs.Text = lstAdicionalesClinicos.First(x=> x.intAdicionalesID == item.intAdicionalesID).vchNombreAdicional + ": " + item.vchObservaciones;
+                        txtObs.ForeColor = System.Drawing.Color.DarkGreen;
+                        txtObs.ClientIDMode = ClientIDMode.Static;
+                        pnlObservaciones.Controls.Add(txtObs);
+                        HtmlGenericControl gen = new HtmlGenericControl("br");
+                        pnlObservaciones.Controls.Add(gen);
+                    }
+                }
+                else
+                {
+                    pnlObservaciones.Controls.Clear();
+                }
+            }
+            catch(Exception ecoP)
+            {
+                Log.EscribeLog("Existe un error en cargarObservacionesPanel: " + ecoP.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargaAdicionalesOperativos()
+        {
+            try
+            {
+                pnlAdiOpe.Controls.Clear();
+                List<clsAdicionales> lstresponse = new List<clsAdicionales>();
+                AdicionalesRequest request = new AdicionalesRequest();
+                request.mdlUser = Usuario;
+                request.intTipoAdicional = 2;//Operativo
+                lstresponse = RisService.getAdicionales(request).Where(x => x.bitActivo).ToList();
+                if (lstresponse != null)
+                {
+                    if (lstresponse.Count > 0)
+                    {
+                        lstAdicionalesOper = lstresponse;
+                        foreach (clsAdicionales item in lstresponse)
+                        {
+                            LinkButton lnk = new LinkButton();
+                            lnk.CssClass = "btn btn-app btn-success radius-4";
+                            lnk.ID = "lnk" + item.intAdicionalesID;
+                            lnk.ClientIDMode = ClientIDMode.Static;
+                            lnk.ToolTip = item.vchNombreAdicional;
+                            HtmlGenericControl img = new HtmlGenericControl("i");
+                            string imagen = "<i class='fa /imagen/ - o' aria-hidden='true'  title='/Titulo/' style='font - size:25px; '></i>";
+                            img.InnerHtml = imagen.Replace("/imagen/", item.vchURLImagen).Replace("/Titulo/", item.vchNombreAdicional);
+                            lnk.Controls.Add(img);
+                            lnk.CommandArgument = item.vchNombreAdicional;
+                            lnk.Click += onclickAdicionalOperativo;
+                            pnlAdiOpe.Controls.Add(lnk);
+                        }
+                    }
+                }
+            }
+            catch (Exception eca)
+            {
+                Log.EscribeLog("Existe un error en cargaAdicionalesOperativos: " + eca.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void onclickAdicionalOperativo(object sender, EventArgs e)
+        {
+            try
+            {
+                LinkButton btn = (LinkButton)sender;
+                switch (btn.CommandArgument)
+                {
+                    case "Imprimir":
+                        ShowMessage("Proceso: " + btn.CommandArgument, MessageType.Correcto, "alert_container");
+                        break;
+                    case "Interpretación":
+                        ShowMessage("Proceso: " + btn.CommandArgument, MessageType.Correcto, "alert_container");
+                        break;
+                    case "Enviar Email":
+                        ShowMessage("Proceso: " + btn.CommandArgument, MessageType.Correcto, "alert_container");
+                        break;
+                }
+            }
+            catch (Exception eonclik)
+            {
+                ShowMessage("Existe un error al realizar el proceso: " + eonclik.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error al cargar el proceso en onclickAdicionalOperativo: " + eonclik.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargaAdicionalesClinicos()
+        {
+            try
+            {
+                pnlAdiClin.Controls.Clear();
+                List<clsAdicionales> lstresponse = new List<clsAdicionales>();
+                AdicionalesRequest request = new AdicionalesRequest();
+                request.mdlUser = Usuario;
+                request.intTipoAdicional = 1;//Clinico
+                lstresponse = RisService.getAdicionales(request);
+                if (lstresponse != null)
+                {
+                    if (lstresponse.Count > 0)
+                    {
+                        lstAdicionalesClinicos = lstresponse;
+                        foreach (clsAdicionales item in lstresponse)
+                        {
+                            switch(item.intTipoBotonID)
+                            {
+                                case 1:
+                                    break;
+                                case 2:
+                                    RadButton btn = new RadButton();
+                                    btn.RenderMode = RenderMode.Lightweight;
+                                    btn.ToggleType = ButtonToggleType.CheckBox;
+                                    btn.CssClass = "btn btn-primary";
+                                    Literal radButtonContent = new Literal();
+                                    radButtonContent.ID = "radButtonContent";
+                                    string img = "<i class='fa /imagen/ fa-lg'></i>";
+                                    radButtonContent.Text = img.Replace("/imagen/", item.vchURLImagen);
+                                    btn.Controls.Add(radButtonContent);
+                                    RadButtonToggleState st0 = new RadButtonToggleState();
+                                    st0.CssClass = "";
+                                    btn.ToggleStates.Add(st0);
+                                    RadButtonToggleState st1 = new RadButtonToggleState();
+                                    st1.CssClass = "btn btn-empty";
+                                    btn.ToggleStates.Add(st1);
+                                    btn.ID = "radBtn" + item.intAdicionalesID;
+                                    btn.ToolTip = item.vchNombreAdicional;
+                                    btn.ClientIDMode = ClientIDMode.Static;
+                                    btn.CommandArgument = item.intAdicionalesID.ToString();
+                                    btn.Checked = false;
+                                    if (item.bitObservaciones)
+                                    {
+                                        btn.Click += cargarObservaciones;
+                                    }
+                                    pnlAdiClin.Controls.Add(btn);
+                                    break;
+                                case 3:
+                                    break;
+                            }
+                            
+                        }
+                    }
+                }
+
+            }
+            catch (Exception eca)
+            {
+                Log.EscribeLog("Existe un error en cargaAdicionalesClinicos: " + eca.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargarObservaciones(object sender, EventArgs e)
+        {
+            try
+            {
+                RadButton rbt = (RadButton)sender;
+                lblTitObs.Text = rbt.ToolTip;
+                hfintAdicionalID.Value = rbt.CommandArgument;
+                if (rbt.Checked)
+                {
+                    ScriptManager.RegisterStartupScript(Page, Page.GetType(), "modalObs", "$('#modalObs').modal();", true);
+                }
+                else
+                {
+                    string intAdicionalID = hfintAdicionalID.Value;
+                    intAdicionalID = "lblAdicionalID" + intAdicionalID;
+                    Label obs = (Label)pnlObservaciones.FindControl(intAdicionalID);
+                    if (obs != null)
+                    {
+                        pnlObservaciones.Controls.Remove(obs);
+                    }
+                    lstObser.RemoveAll(x => x.intAdicionalesID == Convert.ToInt32(hfintAdicionalID.Value));
+                }
+            }
+            catch (Exception eObs)
+            {
+                Log.EscribeLog("Existe un error en cargarObservaciones: " + eObs.Message, 3, Usuario.vchUsuario);
             }
         }
 
@@ -550,7 +758,59 @@ namespace Fuji.RISLite.Site
 
         protected void grvEstudios_RowDataBound(object sender, System.Web.UI.WebControls.GridViewRowEventArgs e)
         {
+            try
+            {
+                if (e.Row.RowType == DataControlRowType.Pager)
+                {
+                    Label lblTotalNumDePaginas = (Label)e.Row.FindControl("lblBandejaTotal");
+                    lblTotalNumDePaginas.Text = grvEstudios.PageCount.ToString();
 
+                    TextBox txtIrAlaPagina = (TextBox)e.Row.FindControl("txtBandeja");
+                    txtIrAlaPagina.Text = (grvEstudios.PageIndex + 1).ToString();
+
+                    DropDownList ddlTamPagina = (DropDownList)e.Row.FindControl("ddlBandeja");
+                    ddlTamPagina.SelectedValue = grvEstudios.PageSize.ToString();
+                }
+
+                if (e.Row.RowType != DataControlRowType.DataRow)
+                {
+                    return;
+                }
+
+                if (e.Row.DataItem != null)
+                {
+                    clsEstudio _mdl = (clsEstudio)e.Row.DataItem;
+                    if(_mdl.fechaInicio == DateTime.MinValue)
+                    {
+                        Label lblFI = (Label)e.Row.FindControl("lblFechaInicio");
+                        lblFI.ForeColor = System.Drawing.Color.White;
+                        lblFI.Visible = false;
+                    }
+                    else
+                    {
+                        Label lblFI = (Label)e.Row.FindControl("lblFechaInicio");
+                        lblFI.ForeColor = System.Drawing.Color.DarkGreen;
+                        lblFI.Visible = true;
+                    }
+
+                    if (_mdl.fechaInicio == DateTime.MinValue)
+                    {
+                        Label lblHI = (Label)e.Row.FindControl("lblHoraInicio");
+                        lblHI.ForeColor = System.Drawing.Color.White;
+                        lblHI.Visible = false;
+                    }
+                    else
+                    {
+                        Label lblHI = (Label)e.Row.FindControl("lblHoraInicio");
+                        lblHI.ForeColor = System.Drawing.Color.DarkGreen;
+                        lblHI.Visible = true;
+                    }
+                }
+            }
+            catch (Exception eEst)
+            {
+                Log.EscribeLog("Existe un error en grvEstudios_RowDataBound: " + eEst.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void grvEstudios_PageIndexChanging(object sender, System.Web.UI.WebControls.GridViewPageEventArgs e)
@@ -575,6 +835,7 @@ namespace Fuji.RISLite.Site
                         inrRelModPres = Convert.ToInt32(e.CommandArgument.ToString());
                         EquipoRequest request = new EquipoRequest();
                         request.mdlUser = Usuario;
+                        lblTituloSug.Text = "Horarios para " + lstEstudios.First(x => x.intRelModPres == inrRelModPres).vchModalidad;
                         //request.intEquipoID = intEquipoID;
                         //EquipoResponse response = new EquipoResponse();
                         //response = RisService.setActualizaEquipo(request);
@@ -582,7 +843,7 @@ namespace Fuji.RISLite.Site
                         //{
                         //    if (response.Success)
                         //    {
-                        ShowMessage("Se buscará un horario para el estudio.", MessageType.Correcto, "alert_container");
+                        //ShowMessage("Se buscará un horario para el estudio.", MessageType.Correcto, "alert_container");
                         //        //fillCat();
                         //        cargarEquipo();
                         //    }
@@ -1096,7 +1357,6 @@ namespace Fuji.RISLite.Site
             }
         }
 
-
         protected void txtBusquedaEstudio_TextChanged(object sender, EventArgs e)
         {
             try
@@ -1143,27 +1403,51 @@ namespace Fuji.RISLite.Site
         {
             try
             {
-                if (lblIDs.Text != "")//Usuario
+                bool paciente = validarPaciente();
+                bool estudios = validarEstudios();
+                bool horarios = validarHorarios();
+                if (paciente)
                 {
-                    if (lstEstudios != null)
+                    if (estudios)
                     {
-                        if (lstEstudios.Count > 0)
+                        if (horarios)
                         {
-
+                            clsPaciente mdlPaciete = new clsPaciente();
+                            mdlPaciete.intPacienteID = Convert.ToInt32(lblIDs.Text.ToString());
+                            List<clsEstudio> lstEst = new List<clsEstudio>();
+                            lstEst = lstEstudios;
+                            List<clsAdicionales> lstAdi = new List<clsAdicionales>();
+                            lstAdi = lstObser;
+                            if (mdlPaciete != null && lstEst != null)
+                            {
+                                if (mdlPaciete.intPacienteID > 0 && lstEst.Count > 0)
+                                {
+                                     List<clsAdicionales> lstVarAdi = getAdicionales();
+                                    ShowMessage("Favor de verificar la información del Paciente", MessageType.Correcto, "alert_container");
+                                }
+                                else
+                                {
+                                    ShowMessage("Favor de verificar la información del Paciente", MessageType.Advertencia, "alert_container");
+                                }
+                            }
+                            else
+                            {
+                                ShowMessage("Favor de verificar la información del Paciente", MessageType.Advertencia, "alert_container");
+                            }
                         }
                         else
                         {
-                            ShowMessage("Validar los estudios", MessageType.Advertencia, "alert_container");
+                            ShowMessage("Favor de verificar los horarios.", MessageType.Advertencia, "alert_container");
                         }
                     }
                     else
                     {
-                        ShowMessage("Validar los estudios", MessageType.Advertencia, "alert_container");
+                        ShowMessage("Favor de verificar los estudios.", MessageType.Advertencia, "alert_container");
                     }
                 }
                 else
                 {
-                    ShowMessage("Validar el usuario", MessageType.Advertencia, "alert_container");
+                    ShowMessage("Favor de verificar el paciente.", MessageType.Advertencia, "alert_container");
                 }
             }
             catch (Exception eBC)
@@ -1173,16 +1457,230 @@ namespace Fuji.RISLite.Site
             }
         }
 
+        private List<clsAdicionales> getAdicionales()
+        {
+            List<clsAdicionales> lst = new List<clsAdicionales>();
+            try
+            {
+                if(lstAdicionalesClinicos!= null)
+                {
+                    if(lstAdicionalesClinicos.Count > 0)
+                    {
+                        foreach(clsAdicionales item in lstAdicionalesClinicos)
+                        {
+                            RadButton btn = new RadButton();
+                            btn = (RadButton)pnlAdiClin.FindControl("radBtn" + item.intAdicionalesID);
+                            if (btn != null)
+                            {
+                                clsAdicionales mdl = new clsAdicionales();
+                                mdl.intAdicionalesID = item.intAdicionalesID;
+                                mdl.vchObservaciones = item.vchObservaciones;
+                                mdl.vchValor = btn.Checked ? "1" : "0";
+                                lst.Add(mdl);
+                            }
+                        }
+                    }
+                }
+            }
+            catch(Exception egA)
+            {
+                Log.EscribeLog("Existe un error en getAdicionales: " + egA.Message, 3, Usuario.vchUsuario);
+            }
+            return lst;
+        }
+
         protected void btnCancelPaciente_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                limpiarControlesIniciales();
+            }
+            catch (Exception eSOBs)
+            {
+                ShowMessage("Existe un error al limpiar los controles: " + eSOBs.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error en btnCancelPaciente_Click: " + eSOBs.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private bool validarHorarios()
+        {
+            bool valido = true;
+            try
+            {
+                if(lstEstudios.Count > 0)
+                {
+                    foreach(clsEstudio item in lstEstudios)
+                    {
+                        if (item.fechaInicio == DateTime.MinValue)
+                        {
+                            valido = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (Exception eBC)
+            {
+                valido = false;
+                //ShowMessage("Existe un error al cancelar: " + eBC.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error en validarHorarios: " + eBC.Message, 3, Usuario.vchUsuario);
+            }
+            return valido;
+        }
+
+        private bool validarEstudios()
+        {
+            bool valido = false;
+            try
+            {
+                if (lstEstudios.Count > 0)
+                {
+                    valido = true;
+                }
+            }
+            catch (Exception eBC)
+            {
+                valido = false;
+                //ShowMessage("Existe un error al cancelar: " + eBC.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error en validarEstudios: " + eBC.Message, 3, Usuario.vchUsuario);
+            }
+            return valido;
+        }
+
+        private bool validarPaciente()
+        {
+            bool valido = false;
+            try
+            {
+                if(lblIDs.Text != "")
+                {
+                    int idPaciente;
+                    if(Int32.TryParse(lblIDs.Text,out idPaciente))
+                    {
+                        valido = true;
+                    }
+                }
+            }
+            catch (Exception eBC)
+            {
+                valido = false;
+                //ShowMessage("Existe un error al cancelar: " + eBC.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error en validarPaciente: " + eBC.Message, 3, Usuario.vchUsuario);
+            }
+            return valido;
+        }
+
+        protected void btnCancelObs_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (txtObservaciones.Text == "")
+                {
+                    string btnID = hfintAdicionalID.Value;
+                    RadButton btn = (RadButton)pnlAdiClin.FindControl("radBtn" + btnID);
+                    if (btn != null)
+                    {
+                        btn.Checked = false;
+                    }
+                }
+            }
+            catch (Exception eSOBs)
+            {
+                ShowMessage("Existe un error al cancelar las observaciones: " + eSOBs.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error en btnCancelObs_Click: " + eSOBs.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void limpiarControlesIniciales()
+        {
+            try
+            {
+                lblIDs.Visible = false;
+                lblIDs.Text = "";
+                txtNombrePaciente.Text = "";
+                txtApellidos.Text = "";
+                Date1.Text = "";
+                lstEstudios.Clear();
+                lstObser.Clear();
+                cargaAdicionales();
+            }
+            catch (Exception eSOBs)
+            {
+                ShowMessage("Existe un error al limpiar los controles: " + eSOBs.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error en btnCancelObs_Click: " + eSOBs.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void btnSaveObs_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string intAdicionalID = hfintAdicionalID.Value;
+                intAdicionalID = "lblAdicionalID" + intAdicionalID;
+                Label obs = (Label)pnlObservaciones.FindControl(intAdicionalID);
+                if (obs == null)
+                {
+                    Label txtObs = new Label();
+                    txtObs.ID = intAdicionalID;
+                    txtObs.Text = lblTitObs.Text + ": " + txtObservaciones.Text;
+                    txtObs.ForeColor = System.Drawing.Color.DarkGreen;
+                    txtObs.ClientIDMode = ClientIDMode.Static;
+                    pnlObservaciones.Controls.Add(txtObs);
+                    clsAdicionales mdl = new clsAdicionales();
+                    mdl.intAdicionalesID = Convert.ToInt32(hfintAdicionalID.Value);
+                    mdl.vchObservaciones = txtObservaciones.Text;
+                    lstObser.Add(mdl);
+                }
+                else
+                {
+                    lstObser.Where(x=> x.intAdicionalesID == Convert.ToInt32(hfintAdicionalID.Value)).First().vchObservaciones = txtObservaciones.Text;
+                    obs.Text = lblTitObs.Text + ": " + txtObservaciones.Text;
+                }
+                txtObservaciones.Text = "";
+            }
+            catch(Exception eSOBs)
+            {
+                ShowMessage("Existe un error al agregar las observaciones: " + eSOBs.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error en btnSaveObs_Click: " + eSOBs.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void lnkImprimir_Click(object sender, EventArgs e)
         {
             try
             {
 
             }
-            catch (Exception eBC)
+            catch (Exception eBI)
             {
-                ShowMessage("Existe un error al cancelar: " + eBC.Message, MessageType.Error, "alert_container");
-                Log.EscribeLog("Existe un error en btnCancelPaciente_Click: " + eBC.Message, 3, Usuario.vchUsuario);
+                ShowMessage("Existe un error al imprimir la cita: " + eBI.Message, MessageType.Error, "alert_Container");
+                Log.EscribeLog("Existe un error en lnkImprimir_Click: " + eBI.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void lnkReEnviarCorreo_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+            }
+            catch (Exception eBI)
+            {
+                ShowMessage("Existe un error al re-enviar el correo: " + eBI.Message, MessageType.Error, "alert_Container");
+                Log.EscribeLog("Existe un error en lnkReEnviarCorreo_Click: " + eBI.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void lnkInterpretacion_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+            }
+            catch(Exception eBI)
+            {
+                ShowMessage("Existe un error al generar la interpretación: " + eBI.Message, MessageType.Error, "alert_Container");
+                Log.EscribeLog("Existe un error en lnkInterpretacion_Click: " + eBI.Message, 3, Usuario.vchUsuario);
             }
         }
     }

@@ -29,6 +29,7 @@ namespace Fuji.RISLite.Entidades.DataBase
         public Nullable<bool> bitActivo { get; set; }
         public Nullable<System.DateTime> datFecha { get; set; }
         public string vchUserAdmin { get; set; }
+        public string vchHtmlControl { get; set; }
     
         public virtual tbl_CAT_TipoAdicional tbl_CAT_TipoAdicional { get; set; }
         public virtual tbl_CAT_TipoBoton tbl_CAT_TipoBoton { get; set; }
