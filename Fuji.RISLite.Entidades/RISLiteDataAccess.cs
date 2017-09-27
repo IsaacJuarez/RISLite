@@ -3,6 +3,7 @@ using Fuji.RISLite.Entidades.Extensions;
 using Fuji.RISLite.Entities;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace Fuji.RISLite.DataAccess
@@ -1318,6 +1319,348 @@ namespace Fuji.RISLite.DataAccess
 
         #endregion Prestacion
 
+        #region Modalidadesagenda
+        public List<clsConfAgenda> getListAgenda(string user)
+        {
+            List<clsConfAgenda> lst = new List<clsConfAgenda>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Modalidad.Any())
+                    {
+                        var query = dbRisDA.tbl_CAT_Modalidad
+                           //.Where(x => (bool)x.bitActivo).ToList()
+                           .ToList();
+
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsConfAgenda mdl = new clsConfAgenda();
+                                    mdl.intModalidadID = (int)item.intModalidadID;
+                                    mdl.bitActivo = (bool)item.bitActivo;
+                                    mdl.datFecha = (DateTime)item.datFecha;
+                                    mdl.vchModalidad = item.vchModalidad;
+                                    mdl.vchCodigo = item.vchCodigo;
+                                    mdl.vchUserAdmin = item.vchUserAdmin;
+                                    mdl.vchColor = item.vchColor;
+                                    lst.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getModalidadAgenda: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }
+
+        public bool UpdateAgenda(string user, int idmodalidad, string codigo, string modalidad, string color)
+        {
+            bool bandera_Actualizar = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+
+                    var dbCstInfo = dbRisDA.tbl_CAT_Modalidad
+                        .Where(w => w.intModalidadID == idmodalidad)
+                        .SingleOrDefault();
+
+                    if (dbCstInfo != null)
+                    {
+                        dbCstInfo.vchCodigo = codigo;
+                        dbCstInfo.vchModalidad = modalidad;
+                        dbCstInfo.vchColor = color;
+                        dbRisDA.SaveChanges();
+                        bandera_Actualizar = true;
+                    }
+
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getModalidadAgenda: " + eLT.Message, 3, user);
+            }
+            return bandera_Actualizar;
+        }
+
+        public bool setEstatusAgenda(string user, int idmodalidad, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Modalidad.Any(x => x.intModalidadID == idmodalidad))
+                    {
+                        tbl_CAT_Modalidad mdlUser = new tbl_CAT_Modalidad();
+                        mdlUser = dbRisDA.tbl_CAT_Modalidad.First(x => x.intModalidadID == idmodalidad);
+                        mdlUser.bitActivo = !mdlUser.bitActivo;
+                        mdlUser.datFecha = DateTime.Today;
+                        mdlUser.vchUserAdmin = user;
+                        dbRisDA.SaveChanges();
+                        valido = true;
+                    }
+                    else
+                    {
+                        mensaje = "La modalidad no existe.";
+                        valido = false;
+                    }
+                }
+            }
+            catch (Exception eSU)
+            {
+                valido = false;
+                mensaje = eSU.Message;
+                Log.EscribeLog("Existe un error en setEstatusAgenda: " + eSU.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public bool setAgenda(clsConfAgenda agenda, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (!dbRisDA.tbl_CAT_Modalidad.Any(x => x.vchCodigo.ToUpper() == agenda.vchCodigo.ToUpper() && x.vchModalidad.ToUpper() == agenda.vchModalidad.ToUpper()
+                    && (bool)x.bitActivo))
+                    {
+                        tbl_CAT_Modalidad mdlAgenda = new tbl_CAT_Modalidad();
+                        mdlAgenda.bitActivo = agenda.bitActivo;
+                        mdlAgenda.vchModalidad = agenda.vchModalidad;
+                        mdlAgenda.vchCodigo = agenda.vchCodigo;
+                        mdlAgenda.vchColor = agenda.vchColor;
+                        mdlAgenda.datFecha = DateTime.Today;
+                        mdlAgenda.vchUserAdmin = user;
+
+                        dbRisDA.tbl_CAT_Modalidad.Add(mdlAgenda);
+                        dbRisDA.SaveChanges();
+                        valido = true;
+                    }
+                    else
+                    {
+                        mensaje = "La modalidad ya existe.";
+                        valido = false;
+                    }
+                }
+            }
+            catch (Exception eSU)
+            {
+                valido = false;
+                mensaje = eSU.Message;
+                Log.EscribeLog("Existe un error en setAgenda: " + eSU.Message, 3, user);
+            }
+            return valido;
+        }
+
+        #endregion Modalidadesagenda
+
+        #region AgendaDashboard
+
+        public List<clsEventoCita> getListEventoCita(string user)
+        {
+            List<clsEventoCita> lst = new List<clsEventoCita>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Modalidad.Any())
+                    {
+                        //var query = dbRisDA.tbl_CAT_Modalidad.Where(x => (bool)x.bitActivo).ToList();
+                        var query = dbRisDA.tbl_CAT_Eventos.ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsEventoCita mdl = new clsEventoCita();
+                                    mdl.TaskID = (int)item.TaskID;
+                                    mdl.Start = (DateTime)item.Start;
+                                    mdl.End = (DateTime)item.End;
+                                    mdl.Title = item.Title;
+                                    mdl.Description = item.Description;
+                                    mdl.OwnerID = (int)item.OwnerID;
+                                    if (item.IsAllDay == null)
+                                    {
+                                        mdl.IsAllDay = false;
+                                    }
+                                    else
+                                    {
+                                        mdl.IsAllDay = (bool)item.IsAllDay;
+                                    }
+                                    //
+                                    mdl.RecurrenceRule = item.RecurrenceRule;
+
+                                    if (item.RecurrenceID == null)
+                                    {
+                                        mdl.RecurrenceID = 0;
+                                    }
+                                    else
+                                    {
+                                        mdl.RecurrenceID = (int)item.RecurrenceID;
+                                    }
+
+
+                                    mdl.RecurrenceException = item.RecurrenceException;
+                                    //mdl.StarTimezone = (DateTime)item.StarTimezone;
+                                    //mdl.EndTimezone = (DateTime)item.EndTimezone;
+                                    mdl.intModalidadID = (int)item.intModalidadID;
+                                    lst.Add(mdl);
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getModalidadAgenda: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }
+
+        public List<clsEventoCita> getListCitas(string user, int idmodalidad)
+        {
+            List<clsEventoCita> lst = new List<clsEventoCita>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Modalidad.Any())
+                    {
+                        //var query = dbRisDA.tbl_CAT_Modalidad.Where(x => (bool)x.bitActivo).ToList();
+                        //var query = dbRisDA.tbl_CAT_Eventos.ToList();
+
+                        //int idmod = Convert.ToInt32(idmodalidad);
+
+                        var query = dbRisDA.tbl_CAT_Eventos
+                                    .Where(w => w.intModalidadID == idmodalidad).ToList();
+
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsEventoCita mdl = new clsEventoCita();
+                                    mdl.TaskID = (int)item.TaskID;
+                                    mdl.Start = (DateTime)item.Start;
+                                    mdl.End = (DateTime)item.End;
+                                    mdl.Title = item.Title;
+                                    mdl.Description = "";
+                                    mdl.OwnerID = (int)item.OwnerID;
+                                    if (item.IsAllDay == null)
+                                    {
+                                        mdl.IsAllDay = false;
+                                    }
+                                    else
+                                    {
+                                        mdl.IsAllDay = (bool)item.IsAllDay;
+                                    }
+                                    //
+                                    mdl.RecurrenceRule = item.RecurrenceRule;
+
+                                    if (item.RecurrenceID == null)
+                                    {
+                                        mdl.RecurrenceID = 0;
+                                    }
+                                    else
+                                    {
+                                        mdl.RecurrenceID = (int)item.RecurrenceID;
+                                    }
+
+
+                                    mdl.RecurrenceException = item.RecurrenceException;
+                                    //mdl.StarTimezone = (DateTime)item.StarTimezone;
+                                    //mdl.EndTimezone = (DateTime)item.EndTimezone;
+                                    mdl.intModalidadID = (int)item.intModalidadID;
+                                    lst.Add(mdl);
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getModalidadAgenda: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }
+
+        public string getListColorModalidad(string user, string modalidad)
+        {
+            string color = "";
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Modalidad.Any())
+                    {
+                        //var query = dbRisDA.tbl_CAT_Modalidad.Where(x => x.vchCodigo.Contains(modalidad)).ToString();
+
+
+                        var query = (from tblmod in dbRisDA.tbl_CAT_Modalidad
+                                     where tblmod.vchCodigo == modalidad
+                                     select tblmod.vchColor).First();
+
+                        if (query != null)
+                        {
+                            color = query;
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getModalidadAgenda: " + eLT.Message, 3, user);
+            }
+            return color;
+        }
+
+        public string getDescripcionModalidad(string user, int modalidad)
+        {
+            string modalidad_descripcion = "";
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Modalidad.Any())
+                    {
+                        //var query = dbRisDA.tbl_CAT_Modalidad.Where(x => x.vchCodigo.Contains(modalidad)).ToString();                        
+
+                        var query = (from tblmod in dbRisDA.tbl_CAT_Modalidad
+                                     where tblmod.intModalidadID == modalidad
+                                     select tblmod.vchCodigo).First();
+
+                        if (query != null)
+                        {
+                            modalidad_descripcion = query;
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getModalidadAgenda: " + eLT.Message, 3, user);
+            }
+            return modalidad_descripcion;
+        }
+
+        #endregion AgendaDashboard
+
         #region Equipo
         public List<tbl_CAT_Equipo> getListEquipo(int intModalidadID, string user)
         {
@@ -2152,6 +2495,411 @@ namespace Fuji.RISLite.DataAccess
             return valido;
         }
         #endregion Paciente
+
+        #region NuevaCitaAgenda
+        public List<clsEventoCita> getListCitaAgenda(string user)
+        {
+            List<clsEventoCita> lst = new List<clsEventoCita>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Modalidad.Any())
+                    {
+                        var query = dbRisDA.tbl_CAT_Eventos.Where(x => (x.intModalidadID == 0)).ToList();
+                        //var query = dbRisDA.tbl_CAT_Eventos.ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsEventoCita mdl = new clsEventoCita();
+                                    mdl.TaskID = (int)item.TaskID;
+                                    mdl.Start = (DateTime)item.Start;
+                                    mdl.End = (DateTime)item.End;
+                                    mdl.Title = item.Title;
+                                    mdl.Description = item.Description;
+                                    mdl.OwnerID = (int)item.OwnerID;
+                                    if (item.IsAllDay == null)
+                                    {
+                                        mdl.IsAllDay = false;
+                                    }
+                                    else
+                                    {
+                                        mdl.IsAllDay = (bool)item.IsAllDay;
+                                    }
+                                    //
+                                    mdl.RecurrenceRule = item.RecurrenceRule;
+
+                                    if (item.RecurrenceID == null)
+                                    {
+                                        mdl.RecurrenceID = 0;
+                                    }
+                                    else
+                                    {
+                                        mdl.RecurrenceID = (int)item.RecurrenceID;
+                                    }
+
+
+                                    mdl.RecurrenceException = item.RecurrenceException;
+                                    //mdl.StarTimezone = (DateTime)item.StarTimezone;
+                                    //mdl.EndTimezone = (DateTime)item.EndTimezone;
+                                    mdl.intModalidadID = (int)item.intModalidadID;
+                                    lst.Add(mdl);
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getModalidadAgenda: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }
+
+        #endregion NuevaCitaAgenda
+
+        #region ConfigAgenda
+
+        public List<clsConfScheduler> getListConfigScheduler(string user)
+        {
+            List<clsConfScheduler> lst = new List<clsConfScheduler>();
+            try
+            {
+                clsConfScheduler mdl = new clsConfScheduler();
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CONFIG_Agenda.Any())
+                    {
+                        var query = dbRisDA.tbl_CONFIG_Agenda.ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    mdl.intConfiguracionAgendaID = (int)item.intConfiguracionAgendaID;
+                                    mdl.tmeInicioDia = (TimeSpan)item.tmeInicioDia;
+                                    mdl.tmeFinDia = (TimeSpan)item.tmeFinDia;
+
+                                    lst.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getListConfigScheduler: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }
+
+        public List<clsDiaSemana> getListDiaSemana(string user)
+        {
+            List<clsDiaSemana> lst = new List<clsDiaSemana>();
+            try
+            {
+
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_DiaSemana.Any())
+                    {
+                        //var query = dbRisDA.tbl_CAT_DiaSemana.Where(x => (x.bitActivo == true)).ToList();
+                        var query = dbRisDA.tbl_CAT_DiaSemana.ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsDiaSemana mdl = new clsDiaSemana();
+                                    mdl.intSemanaID = (int)item.intDiaSemanaInt;
+                                    mdl.vchDiaSemana = item.vchDiaSemana;
+                                    mdl.bitActivo = item.bitActivo;
+
+                                    lst.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getListDiaSemana: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }
+
+        public List<clsDiaFeriado> getListDiaFeriado(string user)
+        {
+            List<clsDiaFeriado> lst = new List<clsDiaFeriado>();
+            try
+            {
+
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_DiaFeriado.Any())
+                    {
+                        var query = dbRisDA.tbl_CAT_DiaFeriado.Where(x => (x.bitActivo == true)).ToList();
+
+
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsDiaFeriado mdl = new clsDiaFeriado();
+                                    mdl.intDiaFeriadoID = (int)item.intDiaFeriadoID;
+                                    mdl.datDia = (DateTime)item.datDia;
+
+
+                                    lst.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getListDiaFeriado: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }
+
+        public List<clsHoraMuerta> getListHorasMuertas(string user)
+        {
+            List<clsHoraMuerta> lst = new List<clsHoraMuerta>();
+            try
+            {
+
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_HoraMuerta.Any())
+                    {
+                        var query = dbRisDA.tbl_CAT_HoraMuerta.Where(x => (x.bitActivo == true)).ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsHoraMuerta mdl = new clsHoraMuerta();
+                                    mdl.intHorasMuertasID = (int)item.intHorasMuertasID;
+                                    mdl.tmeInicio = item.tmeInicio.ToString();
+                                    mdl.tmeFin = item.tmeFin.ToString();
+                                    //mdl.bitRepetir = item.bitRepetir;
+
+                                    lst.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getListHorasMuertas: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }
+
+        public bool UpdateDiaSemana(string user, int idsemana, bool estatus)
+        {
+            bool bandera_Actualizar = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+
+                    var dbCstInfo = dbRisDA.tbl_CAT_DiaSemana
+                        .Where(w => w.intDiaSemanaInt == idsemana)
+                        .SingleOrDefault();
+
+                    if (dbCstInfo != null)
+                    {
+                        dbCstInfo.bitActivo = estatus;
+                        dbCstInfo.vchUserAdmin = user;
+                        dbCstInfo.datFecha = DateTime.Now;
+                        dbRisDA.SaveChanges();
+                        bandera_Actualizar = true;
+                    }
+
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en UpdateDiaSemana: " + eLT.Message, 3, user);
+            }
+            return bandera_Actualizar;
+        }
+
+        public bool UpdateHR_Activo(string user, TimeSpan HRInicio, TimeSpan HRFin)
+        {
+            bool bandera_Actualizar = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    tbl_CONFIG_Agenda mdlCOnf = new tbl_CONFIG_Agenda();
+
+                    mdlCOnf = dbRisDA.tbl_CONFIG_Agenda.First();
+                    mdlCOnf.tmeInicioDia = HRInicio;
+                    mdlCOnf.tmeFinDia = HRFin;
+
+                    //dbCstInfo.vchUserAdmin = user;
+                    //dbCstInfo.datFecha = DateTime.Now;
+                    dbRisDA.SaveChanges();
+                    bandera_Actualizar = true;
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en UpdateHorarioActivo: " + eLT.Message, 3, user);
+            }
+            return bandera_Actualizar;
+        }
+
+        public bool Set_DiaFeriado(string user, DateTime dia)
+        {
+            bool bandera_insert = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    tbl_CAT_DiaFeriado mdlDF = new tbl_CAT_DiaFeriado();
+                    mdlDF.datDia = dia;
+                    mdlDF.bitActivo = true;
+                    mdlDF.datFecha = DateTime.Today;
+                    mdlDF.vchUserAdmin = user;
+
+                    dbRisDA.tbl_CAT_DiaFeriado.Add(mdlDF);
+                    dbRisDA.SaveChanges();
+
+                    bandera_insert = true;
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en InsertDiaFeriado: " + eLT.Message, 3, user);
+            }
+            return bandera_insert;
+        }
+
+        public bool Update_DiaFeriado(string user, DateTime dia)
+        {
+            bool bandera_Actualizar = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    tbl_CAT_DiaFeriado mdlDF = new tbl_CAT_DiaFeriado();
+
+                    mdlDF = dbRisDA.tbl_CAT_DiaFeriado.First(x => x.datDia == dia);
+                    mdlDF.datFecha = DateTime.Today;
+                    mdlDF.vchUserAdmin = user;
+
+
+                    //mdlDF.bitActivo = mdlUser.bitActivo;             
+                    dbRisDA.SaveChanges();
+
+                    bandera_Actualizar = true;
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en UpdateDiaFeriado: " + eLT.Message, 3, user);
+            }
+            return bandera_Actualizar;
+        }
+
+        public bool Actualizar_Estatus_DiaFeriado(string user, DateTime dia, bool estatus)
+        {
+            bool bandera_Actualizar = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    tbl_CAT_DiaFeriado mdlDF = new tbl_CAT_DiaFeriado();
+
+                    mdlDF = dbRisDA.tbl_CAT_DiaFeriado.First(x => x.datDia == dia);
+                    mdlDF.bitActivo = estatus;
+                    mdlDF.datFecha = DateTime.Today;
+                    mdlDF.vchUserAdmin = user;
+
+                    dbRisDA.SaveChanges();
+                    bandera_Actualizar = true;
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en EliminarDiaFeriado: " + eLT.Message, 3, user);
+            }
+            return bandera_Actualizar;
+        }
+
+        public bool Eliminar_DiaFeriado(string user, DateTime dia)
+        {
+            bool bandera_Actualizar = false;
+            try
+            {
+
+                using (dbRisDA = new RISLiteEntities())
+                {
+
+                    var x = dbRisDA.tbl_CAT_DiaFeriado
+                        .Where(w => w.datDia == dia)
+                        .FirstOrDefault();
+
+                    dbRisDA.tbl_CAT_DiaFeriado.Remove(x);
+                    dbRisDA.SaveChanges();
+                }
+
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en EliminarDiaFeriado: " + eLT.Message, 3, user);
+            }
+            return bandera_Actualizar;
+        }
+
+        public bool Eliminar_HoraMuerta(string user, string HM1, string HM2)
+        {
+            bool bandera_Actualizar = false;
+
+            //string pp =  HM1.Hours.ToString();
+            //DateTime cc =  Convert.ToDateTime(HM1.SelectedTime.ToString()).ToShortTimeString();
+            TimeSpan vv = TimeSpan.Parse(HM1);
+            TimeSpan v2 = TimeSpan.Parse(HM2);
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    var x = dbRisDA.tbl_CAT_HoraMuerta
+                        .Where(w => w.tmeInicio == vv && w.tmeFin == v2)
+                        .FirstOrDefault();
+
+                    dbRisDA.tbl_CAT_HoraMuerta.Remove(x);
+                    dbRisDA.SaveChanges();
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en EliminarDiaFeriado: " + eLT.Message, 3, user);
+            }
+            return bandera_Actualizar;
+        }
+
+
+        #endregion ConfigAgenda
 
         #region Indicacion
 

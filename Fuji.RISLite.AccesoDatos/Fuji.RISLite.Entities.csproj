@@ -42,10 +42,17 @@
   <ItemGroup>
     <Compile Include="clsAdicionales.cs" />
     <Compile Include="clsCatalogo.cs" />
+    <Compile Include="clsConfAgenda.cs" />
+    <Compile Include="clsConfScheduler.cs" />
+    <Compile Include="clsDiaFeriado.cs" />
+    <Compile Include="clsDiaSemana.cs" />
     <Compile Include="clsDireccion.cs" />
     <Compile Include="clsEquipo.cs" />
     <Compile Include="clsEstudio.cs" />
     <Compile Include="clsEstudioCita.cs" />
+    <Compile Include="clsEventoCita.cs" />
+    <Compile Include="clsGeneralConfigAgenda.cs" />
+    <Compile Include="clsHoraMuerta.cs" />
     <Compile Include="clsPaciente.cs" />
     <Compile Include="clsPrestacion.cs" />
     <Compile Include="clsUsuario.cs" />

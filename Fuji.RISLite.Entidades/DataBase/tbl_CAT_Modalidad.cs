@@ -26,6 +26,7 @@ namespace Fuji.RISLite.Entidades.DataBase
         public Nullable<bool> bitActivo { get; set; }
         public Nullable<System.DateTime> datFecha { get; set; }
         public string vchUserAdmin { get; set; }
+        public string vchColor { get; set; }
     
         public virtual ICollection<tbl_REL_ModalidadPrestacion> tbl_REL_ModalidadPrestacion { get; set; }
         public virtual ICollection<tbl_CAT_Equipo> tbl_CAT_Equipo { get; set; }

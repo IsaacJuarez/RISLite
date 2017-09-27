@@ -35,6 +35,11 @@
             <telerik:AjaxSetting AjaxControlID="pnlAdiOpe" >
                 <UpdatedControls><telerik:AjaxUpdatedControl  ControlID="pnlAdiOpe"/></UpdatedControls>
             </telerik:AjaxSetting>
+
+            <telerik:AjaxSetting AjaxControlID="grvEstudios" >
+                <UpdatedControls><telerik:AjaxUpdatedControl  ControlID="RS_Agenda"/></UpdatedControls>
+                <UpdatedControls><telerik:AjaxUpdatedControl  ControlID="IMG_encabezado"/></UpdatedControls>
+            </telerik:AjaxSetting>
         </AjaxSettings>
     </telerik:RadAjaxManager>
     <div class="page-content">
@@ -247,7 +252,7 @@
                                 </li>
 
                                 <li>
-                                    <a data-toggle="tab" href="#messages">Agenda
+                                    <a data-toggle="tab" href="#AgendaManual">Agenda
 								        <span class="badge badge-danger">4</span>
                                     </a>
                                 </li>
@@ -268,7 +273,63 @@
 						            </div> 
                                 </div>
 
-                                <div id="messages" class="tab-pane fade">
+                                <div id="AgendaManual" class="tab-pane fade">
+                                    
+
+                                       
+                                    <div id="encabezado_agenda" runat="server"> 
+                                        <div class="row">
+                                             <div class="col-xs-4 center">
+                                              <asp:Image ID="IMG_encabezado" runat="server" Height="50px" Width="50px" />
+                                                 </div>
+                                             <div class="col-xs-4 center-block">
+                                                 <asp:Label ID="Ltitulo" runat="server" Text=""></asp:Label>
+                                                 </div>
+
+                                             <div class="col-xs-4">
+                                                 <asp:Label ID="Label4" runat="server" Text=""></asp:Label>
+                                                 </div>
+
+                                         </div>
+                                    </div>
+                                        <telerik:RadScheduler ID="RS_Agenda" runat="server"
+                                            DataKeyField="TaskID"
+                                            AllowDelete="false"
+                                            AllowInsert="false"
+                                            AllowEdit="false"
+                                            ShowFooter="false"
+                                            DataSubjectField="Description"
+                                            DataStartField="Start"
+                                            DataEndField="End"
+                                            Culture="es-ES" 
+                                            SelectedDate="2017-08-24"
+                                            Localization-HeaderTimeline="Linea de tiempo"                         
+                                            Localization-HeaderWeek="Semana" Localization-HeaderYear="Año" 
+                                            Localization-HeaderToday="Hoy" Localization-HeaderMonth="Mes" 
+                                            Localization-HeaderDay="Día" Localization-AllDay="Todo el día" 
+                                            Localization-HeaderAgendaAppointment="Cita" 
+                                            Localization-HeaderAgendaDate="Fecha" 
+                                            Localization-HeaderAgendaResource="Modalidad" 
+                                            Localization-HeaderAgendaTime="Horario">
+                                            <WeekView UserSelectable="false" />
+                                            <MonthView UserSelectable="false" />
+                                            <TimelineView UserSelectable="false" />
+                                            <AgendaView UserSelectable="false"  />
+                                                <ResourceHeaderTemplate>
+                                                    <div id="DIVTitulosEncabezados_agenda" class="row">
+                                                        <asp:Panel ID="Panel_Agenda" runat="server">
+                                                            <div class="col-sm-3">
+                                                                <asp:Panel ID="ResourceImageWrapper_Agenda" runat="server">
+                                                                    <asp:Image ID="Imagen_Modalidad_Agenda" runat="server" Height="50px" hAlternateText='<%# Eval("Text") %>'></asp:Image>
+                                                                </asp:Panel>
+                                                            </div>
+                                                            <div class="col-sm-9 align-center">
+                                                                <asp:Label ID="LEncabezado" runat="server" Text='<%# Eval("Text") %>'></asp:Label>
+                                                            </div>
+                                                        </asp:Panel>
+                                                    </div>
+                                                </ResourceHeaderTemplate>
+                                         </telerik:RadScheduler>
                                 </div>
                             </div>
                         </div>

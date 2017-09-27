@@ -87,6 +87,12 @@
     <Compile Include="DataBase\tbl_CAT_CodigoPostal.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
+    <Compile Include="DataBase\tbl_CAT_DiaFeriado.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataBase\tbl_CAT_DiaSemana.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
     <Compile Include="DataBase\tbl_CAT_Equipo.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
@@ -99,7 +105,13 @@
     <Compile Include="DataBase\tbl_CAT_EstatusEstudio.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
+    <Compile Include="DataBase\tbl_CAT_Eventos.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
     <Compile Include="DataBase\tbl_CAT_Genero.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataBase\tbl_CAT_HoraMuerta.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\tbl_CAT_Identificacion.cs">
@@ -130,6 +142,9 @@
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\tbl_CAT_Vistas.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataBase\tbl_CONFIG_Agenda.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\tbl_CONFIG_VariablesAdiCita.cs">

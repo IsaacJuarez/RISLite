@@ -43,6 +43,26 @@
           <Property Name="datFecha" Type="datetime" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
         </EntityType>
+        <EntityType Name="tbl_CAT_DiaFeriado">
+          <Key>
+            <PropertyRef Name="intDiaFeriadoID" />
+          </Key>
+          <Property Name="intDiaFeriadoID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="datDia" Type="date" Nullable="false" />
+          <Property Name="datFecha" Type="datetime" Nullable="false" />
+          <Property Name="bitActivo" Type="bit" Nullable="false" />
+          <Property Name="vchUserAdmin" Type="nchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_CAT_DiaSemana">
+          <Key>
+            <PropertyRef Name="intDiaSemanaInt" />
+          </Key>
+          <Property Name="intDiaSemanaInt" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vchDiaSemana" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="bitActivo" Type="bit" Nullable="false" />
+          <Property Name="datFecha" Type="datetime" Nullable="false" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="tbl_CAT_Equipo">
           <Key>
             <PropertyRef Name="intEquipoID" />
@@ -87,6 +107,24 @@
           <Property Name="datFecha" Type="datetime" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
         </EntityType>
+        <EntityType Name="tbl_CAT_Eventos">
+          <Key>
+            <PropertyRef Name="TaskID" />
+          </Key>
+          <Property Name="TaskID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Start" Type="datetime" />
+          <Property Name="End" Type="datetime" />
+          <Property Name="Title" Type="nvarchar" MaxLength="200" />
+          <Property Name="Description" Type="nvarchar" MaxLength="200" />
+          <Property Name="OwnerID" Type="int" />
+          <Property Name="IsAllDay" Type="bit" />
+          <Property Name="RecurrenceRule" Type="nvarchar" MaxLength="200" />
+          <Property Name="RecurrenceID" Type="int" />
+          <Property Name="RecurrenceException" Type="nvarchar" MaxLength="200" />
+          <Property Name="StarTimezone" Type="datetime" />
+          <Property Name="EndTimezone" Type="datetime" />
+          <Property Name="intModalidadID" Type="int" />
+        </EntityType>
         <EntityType Name="tbl_CAT_Genero">
           <Key>
             <PropertyRef Name="intGeneroID" />
@@ -96,6 +134,17 @@
           <Property Name="bitActivo" Type="bit" />
           <Property Name="datFecha" Type="datetime" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="tbl_CAT_HoraMuerta">
+          <Key>
+            <PropertyRef Name="intHorasMuertasID" />
+          </Key>
+          <Property Name="intHorasMuertasID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="tmeInicio" Type="time" Precision="7" Nullable="false" />
+          <Property Name="tmeFin" Type="time" Precision="7" Nullable="false" />
+          <Property Name="datFecha" Type="datetime" Nullable="false" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="bitActivo" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="tbl_CAT_Identificacion">
           <Key>
@@ -138,6 +187,7 @@
           <Property Name="bitActivo" Type="bit" />
           <Property Name="datFecha" Type="datetime" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+          <Property Name="vchColor" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="tbl_CAT_Municipio">
           <Key>
@@ -249,6 +299,17 @@
           <Property Name="BitEnableSsl" Type="bit" />
           <Property Name="bitActivo" Type="bit" />
           <Property Name="datFecha" Type="datetime" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="tbl_CONFIG_Agenda">
+          <Key>
+            <PropertyRef Name="intConfiguracionAgendaID" />
+          </Key>
+          <Property Name="intConfiguracionAgendaID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vchConfiguracionAgenda" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="tmeInicioDia" Type="time" Precision="5" />
+          <Property Name="tmeFinDia" Type="time" Precision="5" />
+          <Property Name="datFecha" Type="date" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="tbl_CONFIG_VariablesAdiCita">
@@ -1006,11 +1067,15 @@
           <EntitySet Name="tbl_CAT_Botones" EntityType="Self.tbl_CAT_Botones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_Catalogo" EntityType="Self.tbl_CAT_Catalogo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_CodigoPostal" EntityType="Self.tbl_CAT_CodigoPostal" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_CAT_DiaFeriado" EntityType="Self.tbl_CAT_DiaFeriado" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_CAT_DiaSemana" EntityType="Self.tbl_CAT_DiaSemana" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_Equipo" EntityType="Self.tbl_CAT_Equipo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_Estado" EntityType="Self.tbl_CAT_Estado" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_EstatusCita" EntityType="Self.tbl_CAT_EstatusCita" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_EstatusEstudio" EntityType="Self.tbl_CAT_EstatusEstudio" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_CAT_Eventos" EntityType="Self.tbl_CAT_Eventos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_Genero" EntityType="Self.tbl_CAT_Genero" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_CAT_HoraMuerta" EntityType="Self.tbl_CAT_HoraMuerta" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_Identificacion" EntityType="Self.tbl_CAT_Identificacion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_InstitucionProcedencia" EntityType="Self.tbl_CAT_InstitucionProcedencia" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_MedicoTratante" EntityType="Self.tbl_CAT_MedicoTratante" Schema="dbo" store:Type="Tables" />
@@ -1025,6 +1090,7 @@
           <EntitySet Name="tbl_CAT_Usuario" EntityType="Self.tbl_CAT_Usuario" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CAT_Vistas" EntityType="Self.tbl_CAT_Vistas" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Conf_CorreoSitio" EntityType="Self.tbl_Conf_CorreoSitio" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_CONFIG_Agenda" EntityType="Self.tbl_CONFIG_Agenda" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CONFIG_VariablesAdiCita" EntityType="Self.tbl_CONFIG_VariablesAdiCita" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CONFIG_VariablesAdiPaciente" EntityType="Self.tbl_CONFIG_VariablesAdiPaciente" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_DET_Cita" EntityType="Self.tbl_DET_Cita" Schema="dbo" store:Type="Tables" />
@@ -1429,6 +1495,11 @@
             <End Role="tbl_MST_Cita" EntitySet="tbl_MST_Cita" />
             <End Role="tbl_DET_Cita" EntitySet="tbl_DET_Cita" />
           </AssociationSet>
+          <EntitySet Name="tbl_CAT_DiaFeriado" EntityType="RISLiteModel.tbl_CAT_DiaFeriado" />
+          <EntitySet Name="tbl_CAT_DiaSemana" EntityType="RISLiteModel.tbl_CAT_DiaSemana" />
+          <EntitySet Name="tbl_CAT_HoraMuerta" EntityType="RISLiteModel.tbl_CAT_HoraMuerta" />
+          <EntitySet Name="tbl_CONFIG_Agenda" EntityType="RISLiteModel.tbl_CONFIG_Agenda" />
+          <EntitySet Name="tbl_CAT_Eventos" EntityType="RISLiteModel.tbl_CAT_Eventos" />
           </EntityContainer>
         <EntityType Name="tbl_CAT_TipoMensaje">
           <Key>
@@ -1544,6 +1615,7 @@
           <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="tbl_REL_ModalidadPrestacion" Relationship="RISLiteModel.FK_REL_ModalidadPrestacion_CAT_Modalidad" FromRole="tbl_CAT_Modalidad" ToRole="tbl_REL_ModalidadPrestacion" />
           <NavigationProperty Name="tbl_CAT_Equipo" Relationship="RISLiteModel.FK_CAT_Equipo_CAT_Modalidad" FromRole="tbl_CAT_Modalidad" ToRole="tbl_CAT_Equipo" />
+          <Property Name="vchColor" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="tbl_CAT_EstatusCita">
           <Key>
@@ -2530,6 +2602,66 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="tbl_CAT_DiaFeriado">
+          <Key>
+            <PropertyRef Name="intDiaFeriadoID" />
+          </Key>
+          <Property Name="intDiaFeriadoID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="datDia" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="datFecha" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="bitActivo" Type="Boolean" Nullable="false" />
+          <Property Name="vchUserAdmin" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
+        </EntityType>
+        <EntityType Name="tbl_CAT_DiaSemana">
+          <Key>
+            <PropertyRef Name="intDiaSemanaInt" />
+          </Key>
+          <Property Name="intDiaSemanaInt" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vchDiaSemana" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="bitActivo" Type="Boolean" Nullable="false" />
+          <Property Name="datFecha" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tbl_CAT_HoraMuerta">
+          <Key>
+            <PropertyRef Name="intHorasMuertasID" />
+          </Key>
+          <Property Name="intHorasMuertasID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="tmeInicio" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="tmeFin" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="datFecha" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="bitActivo" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_CONFIG_Agenda">
+          <Key>
+            <PropertyRef Name="intConfiguracionAgendaID" />
+          </Key>
+          <Property Name="intConfiguracionAgendaID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vchConfiguracionAgenda" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="tmeInicioDia" Type="Time" Precision="5" />
+          <Property Name="tmeFinDia" Type="Time" Precision="5" />
+          <Property Name="datFecha" Type="DateTime" Precision="0" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tbl_CAT_Eventos">
+          <Key>
+            <PropertyRef Name="TaskID" />
+          </Key>
+          <Property Name="TaskID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Start" Type="DateTime" Precision="3" />
+          <Property Name="End" Type="DateTime" Precision="3" />
+          <Property Name="Title" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="OwnerID" Type="Int32" />
+          <Property Name="IsAllDay" Type="Boolean" />
+          <Property Name="RecurrenceRule" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="RecurrenceID" Type="Int32" />
+          <Property Name="RecurrenceException" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="StarTimezone" Type="DateTime" Precision="3" />
+          <Property Name="EndTimezone" Type="DateTime" Precision="3" />
+          <Property Name="intModalidadID" Type="Int32" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2633,6 +2765,7 @@
           <EntitySetMapping Name="tbl_CAT_Modalidad">
             <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_Modalidad">
               <MappingFragment StoreEntitySet="tbl_CAT_Modalidad">
+                <ScalarProperty Name="vchColor" ColumnName="vchColor" />
                 <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
                 <ScalarProperty Name="datFecha" ColumnName="datFecha" />
                 <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
@@ -3174,6 +3307,71 @@
                 <ScalarProperty Name="intAdicionalesID" ColumnName="intAdicionalesID" />
                 <ScalarProperty Name="intCitaID" ColumnName="intCitaID" />
                 <ScalarProperty Name="intDETCitaID" ColumnName="intDETCitaID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_CAT_DiaFeriado">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_DiaFeriado">
+              <MappingFragment StoreEntitySet="tbl_CAT_DiaFeriado">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="datDia" ColumnName="datDia" />
+                <ScalarProperty Name="intDiaFeriadoID" ColumnName="intDiaFeriadoID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_CAT_DiaSemana">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_DiaSemana">
+              <MappingFragment StoreEntitySet="tbl_CAT_DiaSemana">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="vchDiaSemana" ColumnName="vchDiaSemana" />
+                <ScalarProperty Name="intDiaSemanaInt" ColumnName="intDiaSemanaInt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_CAT_HoraMuerta">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_HoraMuerta">
+              <MappingFragment StoreEntitySet="tbl_CAT_HoraMuerta">
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="tmeFin" ColumnName="tmeFin" />
+                <ScalarProperty Name="tmeInicio" ColumnName="tmeInicio" />
+                <ScalarProperty Name="intHorasMuertasID" ColumnName="intHorasMuertasID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_CONFIG_Agenda">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_CONFIG_Agenda">
+              <MappingFragment StoreEntitySet="tbl_CONFIG_Agenda">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="tmeFinDia" ColumnName="tmeFinDia" />
+                <ScalarProperty Name="tmeInicioDia" ColumnName="tmeInicioDia" />
+                <ScalarProperty Name="vchConfiguracionAgenda" ColumnName="vchConfiguracionAgenda" />
+                <ScalarProperty Name="intConfiguracionAgendaID" ColumnName="intConfiguracionAgendaID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_CAT_Eventos">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_Eventos">
+              <MappingFragment StoreEntitySet="tbl_CAT_Eventos">
+                <ScalarProperty Name="intModalidadID" ColumnName="intModalidadID" />
+                <ScalarProperty Name="EndTimezone" ColumnName="EndTimezone" />
+                <ScalarProperty Name="StarTimezone" ColumnName="StarTimezone" />
+                <ScalarProperty Name="RecurrenceException" ColumnName="RecurrenceException" />
+                <ScalarProperty Name="RecurrenceID" ColumnName="RecurrenceID" />
+                <ScalarProperty Name="RecurrenceRule" ColumnName="RecurrenceRule" />
+                <ScalarProperty Name="IsAllDay" ColumnName="IsAllDay" />
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="End" ColumnName="End" />
+                <ScalarProperty Name="Start" ColumnName="Start" />
+                <ScalarProperty Name="TaskID" ColumnName="TaskID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

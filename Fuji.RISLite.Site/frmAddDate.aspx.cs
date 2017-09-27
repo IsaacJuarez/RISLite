@@ -836,6 +836,7 @@ namespace Fuji.RISLite.Site
                         EquipoRequest request = new EquipoRequest();
                         request.mdlUser = Usuario;
                         lblTituloSug.Text = "Horarios para " + lstEstudios.First(x => x.intRelModPres == inrRelModPres).vchModalidad;
+                        carga_citas_(lstEstudios.First(x => x.intRelModPres == inrRelModPres).intModalidadID.ToString());
                         //request.intEquipoID = intEquipoID;
                         //EquipoResponse response = new EquipoResponse();
                         //response = RisService.setActualizaEquipo(request);
@@ -1683,5 +1684,77 @@ namespace Fuji.RISLite.Site
                 Log.EscribeLog("Existe un error en lnkInterpretacion_Click: " + eBI.Message, 3, Usuario.vchUsuario);
             }
         }
+
+        #region CargaAgenda
+
+        protected void Button2_Click(object sender, EventArgs e)
+        {
+            carga_citas_("1");
+
+        }
+
+        private void carga_citas_(string id)
+        {
+
+            int id_mod = Convert.ToInt32(id);
+
+            try
+            {
+                RS_Agenda.DataSource = null;
+
+                string descrip_modalidad = "";
+                try
+                {
+                    AgendaRequest request_desc_mod = new AgendaRequest();
+                    request_desc_mod.mdlUser = Usuario;
+                    request_desc_mod.mdlagenda.intModalidadID = id_mod;
+                    descrip_modalidad = RisService.getDescripcionModalidad(request_desc_mod);
+
+                }
+                catch (Exception ecU)
+                {
+                    Log.EscribeLog("Existe un error en la busqueda de el tipo de modadlidad: " + ecU.Message, 3, Usuario.vchUsuario);
+                }
+
+
+                IMG_encabezado.ImageUrl = "images/" + descrip_modalidad + ".png";
+
+
+                Ltitulo.Text = descrip_modalidad;
+
+                string carga_color = "";
+                try
+                {
+                    AgendaRequest request_ = new AgendaRequest();
+                    request_.mdlUser = Usuario;
+                    request_.mdlagenda.vchCodigo = descrip_modalidad;
+                    carga_color = RisService.getListColorModalidad(request_);
+                    carga_color = carga_color.TrimEnd();
+                }
+                catch (Exception ecU)
+                {
+                    Log.EscribeLog("Existe un error en la busqueda de color de la modalidad: " + ecU.Message, 3, Usuario.vchUsuario);
+                }
+
+                encabezado_agenda.Style["Background"] = "linear-gradient(75deg, #CCCCCC, " + carga_color + " 10px, white);";
+
+
+                List<clsEventoCita> lstTec = new List<clsEventoCita>();
+                CitasRequest request = new CitasRequest();
+                request.mdlUser = Usuario;
+                request.mdlevento.intModalidadID = id_mod;
+                lstTec = RisService.getListCitas(request);
+                RS_Agenda.DataSource = lstTec;
+                RS_Agenda.DataBind();
+            }
+            catch (Exception ecU)
+            {
+                Log.EscribeLog("Existe un error en la carga de las citas: " + ecU.Message, 3, Usuario.vchUsuario);
+            }
+
+
+        }
+
+        #endregion CargaAgenda
     }
 }

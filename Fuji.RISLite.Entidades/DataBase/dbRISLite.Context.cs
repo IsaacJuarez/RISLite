@@ -72,6 +72,11 @@ namespace Fuji.RISLite.Entidades.DataBase
         public DbSet<tbl_MST_Estudio> tbl_MST_Estudio { get; set; }
         public DbSet<tbl_REL_CitaEstudio> tbl_REL_CitaEstudio { get; set; }
         public DbSet<tbl_DET_Cita> tbl_DET_Cita { get; set; }
+        public DbSet<tbl_CAT_DiaFeriado> tbl_CAT_DiaFeriado { get; set; }
+        public DbSet<tbl_CAT_DiaSemana> tbl_CAT_DiaSemana { get; set; }
+        public DbSet<tbl_CAT_HoraMuerta> tbl_CAT_HoraMuerta { get; set; }
+        public DbSet<tbl_CONFIG_Agenda> tbl_CONFIG_Agenda { get; set; }
+        public DbSet<tbl_CAT_Eventos> tbl_CAT_Eventos { get; set; }
     
         public virtual ObjectResult<stp_getListCatalogo_Result> stp_getListCatalogo(Nullable<int> intCatalogoID)
         {
