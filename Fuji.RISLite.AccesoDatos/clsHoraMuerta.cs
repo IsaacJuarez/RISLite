@@ -9,6 +9,7 @@ namespace Fuji.RISLite.Entities
     public class clsHoraMuerta
     {
         public int intHorasMuertasID { get; set; }
+        public int intSitioID { get; set; }
         public string tmeInicio { get; set; }
         public string tmeFin { get; set; }
         public bool bitRepetir { get; set; }
@@ -18,6 +19,7 @@ namespace Fuji.RISLite.Entities
         public clsHoraMuerta()
         {
             intHorasMuertasID = int.MinValue;
+            intSitioID = int.MinValue;
             tmeInicio = string.Empty;
             tmeFin = string.Empty;
             bitRepetir = false;

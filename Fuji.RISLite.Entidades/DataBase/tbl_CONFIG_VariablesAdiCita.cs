@@ -15,9 +15,12 @@ namespace Fuji.RISLite.Entidades.DataBase
     public partial class tbl_CONFIG_VariablesAdiCita
     {
         public int intVarAdiCitaID { get; set; }
+        public Nullable<int> intSitioID { get; set; }
         public string vchNombreVariable { get; set; }
         public Nullable<bool> bitActivo { get; set; }
         public Nullable<System.DateTime> datFecha { get; set; }
         public string vchUserAdmin { get; set; }
+    
+        public virtual tbl_CAT_Sitio tbl_CAT_Sitio { get; set; }
     }
 }

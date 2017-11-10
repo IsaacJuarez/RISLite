@@ -14,13 +14,9 @@ namespace Fuji.RISLite.Entidades.DataBase
     
     public partial class tbl_CAT_Equipo
     {
-        public tbl_CAT_Equipo()
-        {
-            this.tbl_MST_Estudio = new HashSet<tbl_MST_Estudio>();
-        }
-    
         public int intEquipoID { get; set; }
         public Nullable<int> intModalidadID { get; set; }
+        public Nullable<int> intSitioID { get; set; }
         public string vchNombreEquipo { get; set; }
         public string vchCodigoEquipo { get; set; }
         public string vchIPEquipo { get; set; }
@@ -30,6 +26,6 @@ namespace Fuji.RISLite.Entidades.DataBase
         public string vchUserAdmin { get; set; }
     
         public virtual tbl_CAT_Modalidad tbl_CAT_Modalidad { get; set; }
-        public virtual ICollection<tbl_MST_Estudio> tbl_MST_Estudio { get; set; }
+        public virtual tbl_CAT_Sitio tbl_CAT_Sitio { get; set; }
     }
 }

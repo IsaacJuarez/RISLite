@@ -11,11 +11,13 @@ namespace Fuji.RISLite.Site.Services.DataContract
     {
         public clsUsuario mdlUser;
         public tbl_Conf_CorreoSitio mdlEmail;
+        public int intSitioID { get; set; }
 
         public ConfigEmailRequest()
         {
             mdlEmail = new tbl_Conf_CorreoSitio();
             mdlUser = new clsUsuario();
+            intSitioID = int.MinValue;
         }
     }
 }

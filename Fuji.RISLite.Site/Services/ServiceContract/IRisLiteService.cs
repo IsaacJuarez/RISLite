@@ -53,6 +53,21 @@ namespace Fuji.RISLite.Site.Services
         List<clsUsuario> getListTecnico(TecnicoRequest request);
         #endregion Tecnico
 
+
+        #region Sitio
+        [OperationContract]
+        List<tbl_CAT_Sitio> getListSitios(SitioRequest request);
+
+        [OperationContract]
+        SitioResponse setSitio(SitioRequest request);
+
+        [OperationContract]
+        SitioResponse setActualizaSitio(SitioRequest request);
+
+        [OperationContract]
+        SitioResponse setEstatusSitio(SitioRequest request);
+        #endregion Sitio
+
         #region ConfigEmail
         [OperationContract]
         ConfigEmailResponse getConfigEmail(ConfigEmailRequest request);
@@ -161,6 +176,9 @@ namespace Fuji.RISLite.Site.Services
         EstudioResponse getEstudioDetalle(EstudioRequest request);
 
         [OperationContract]
+        AsignacionModalidadNuevaCita_Response getEstudioDetalle_citaNueva(AsignacionModalidadNuevaCita_Request request, int id_tabla_modalidad);
+
+        [OperationContract]
         PacienteResponse setActualizaPaciente(PacienteRequest request);
         #endregion Paciente
 
@@ -232,5 +250,30 @@ namespace Fuji.RISLite.Site.Services
         AdicionalesResponse setEstatusAdicional(AdicionalesRequest request);
         #endregion Adicionales
 
+        #region SugerenciasCita
+        [OperationContract]
+        List<stp_getCitaDisponible_Result> getSugerenciasCita(SugerenciasRequest request);
+        #endregion SugerenciasCita
+
+        [OperationContract]
+        List<clsEquipo> getCitaEquipo_Sitio(CitaNumEquipos request);
+
+        [OperationContract]
+        string getDescripcionModalidad_sitio(AgendaRequest request);
+
+        [OperationContract]
+        int getListDuracionGen_Sitio(CitaModalidad request);
+
+        [OperationContract]
+        string getListColorModalidad_Sitio(AgendaRequest request);
+
+        [OperationContract]
+        List<clsEventoCita> getListCitas_en_agenda_Sitio(CitasRequest request);
+
+        [OperationContract]
+        List<clsConfScheduler> getConfScheduler_Sitio(ConfigSchedulerRequest request);
+
+        [OperationContract]
+        List<clsHoraMuerta> getHoraMuertaConfScheduler_Sitio(ConfigScheduler_HoraMuertaRequest request);
     }
 }

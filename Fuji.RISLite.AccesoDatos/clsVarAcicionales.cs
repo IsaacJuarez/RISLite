@@ -11,6 +11,7 @@ namespace Fuji.RISLite.Entities
         public bool bitActivo { get; set; }
         public DateTime datFecha { get; set; }
         public string vchUserAdmin { get; set; }
+        public int intSitioID { get; set; }
 
         public clsVarAcicionales()
         {
@@ -21,6 +22,7 @@ namespace Fuji.RISLite.Entities
             bitActivo = false;
             datFecha = DateTime.MinValue;
             vchUserAdmin = string.Empty;
+            intSitioID = int.MinValue;
         }
     }
 }

@@ -9,8 +9,6 @@
         <EntityTypeShape EntityType="RISLiteModel.tbl_MST_Bitacora" Width="1.5" PointX="3" PointY="0.875" />
         <AssociationConnector Association="RISLiteModel.FK_MST_Bitacora_CAT_TipoMensaje" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_TipoUsuario" Width="1.5" PointX="0.75" PointY="4.875" />
-        <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Usuario" Width="1.5" PointX="3" PointY="4.625" />
-        <AssociationConnector Association="RISLiteModel.FK_CAT_Usuario_CAT_TipoUsuario" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Catalogo" Width="1.5" PointX="5.375" PointY="0.75" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Modalidad" Width="1.5" PointX="5.375" PointY="5" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_EstatusCita" Width="1.5" PointX="7.75" PointY="0.75" />
@@ -28,22 +26,14 @@
         <AssociationConnector Association="RISLiteModel.FK_REL_BotonVista_REL_UsuarioBoton" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_MST_Paciente" Width="1.5" PointX="10" PointY="12.375" />
         <AssociationConnector Association="RISLiteModel.FK_MST_Paciente_CAT_Genero" />
-        <EntityTypeShape EntityType="RISLiteModel.tbl_CONFIG_VariablesAdiPaciente" Width="1.5" PointX="10" PointY="16.75" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_DET_PacienteDinamico" Width="1.5" PointX="12.25" PointY="12.375" />
-        <AssociationConnector Association="RISLiteModel.FK_DET_PacienteDinamico_CONFIG_VariableAdiPaciente" />
         <AssociationConnector Association="RISLiteModel.FK_DET_PacienteDinamico_MST_Paciente" />
-        <EntityTypeShape EntityType="RISLiteModel.tbl_MST_ConfiguracionSistema" Width="1.5" PointX="10.375" PointY="3.75" />
-        <EntityTypeShape EntityType="RISLiteModel.tbl_Conf_CorreoSitio" Width="1.5" PointX="12.375" PointY="0.75" />
-        <EntityTypeShape EntityType="RISLiteModel.tbl_CONFIG_VariablesAdiCita" Width="1.5" PointX="12.375" PointY="4.75" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Prestacion" Width="1.5" PointX="10.375" PointY="20.125" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_REL_ModalidadPrestacion" Width="1.5" PointX="12.625" PointY="8" />
         <AssociationConnector Association="RISLiteModel.FK_REL_ModalidadPrestacion_CAT_Modalidad" />
         <AssociationConnector Association="RISLiteModel.FK_REL_ModalidadPrestacion_CAT_Prestacion" />
-        <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Equipo" Width="1.5" PointX="7.625" PointY="4.75" />
-        <AssociationConnector Association="RISLiteModel.FK_CAT_Equipo_CAT_Modalidad" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_CodigoPostal" Width="1.5" PointX="13" PointY="29.375" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Estado" Width="1.5" PointX="8.5" PointY="29.625" />
-        <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Identificacion" Width="1.5" PointX="11" PointY="33.625" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Municipio" Width="1.5" PointX="10.75" PointY="29.375" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_DET_DireccionPaciente" Width="1.5" PointX="15.25" PointY="13.25" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_DET_Paciente" Width="1.5" PointX="12.25" PointY="24.375" />
@@ -54,7 +44,6 @@
         <AssociationConnector Association="RISLiteModel.FK_DET_DireccionPaciente_CAT_CodigoPostal" />
         <AssociationConnector Association="RISLiteModel.FK_CAT_Municipio_CAT_Estado" />
         <AssociationConnector Association="RISLiteModel.FK_MST_Cita_CAT_EstatusCita" />
-        <AssociationConnector Association="RISLiteModel.FK_REL_IdentificacionPaciente_CAT_Identificacion" />
         <AssociationConnector Association="RISLiteModel.FK_MST_Cita_CAT_InstitucionProc" />
         <AssociationConnector Association="RISLiteModel.FK_DET_DireccionPaciente_MST_Paciente" />
         <AssociationConnector Association="RISLiteModel.FK_DET_Paciente_MST_Pacient" />
@@ -73,24 +62,50 @@
         <AssociationConnector Association="RISLiteModel.FK_DET_IndicacionPrestacion_CAT_Prestacion" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_TipoAdicional" Width="1.5" PointX="0.75" PointY="14.75" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_TipoBoton" Width="1.5" PointX="0.75" PointY="17.75" />
-        <EntityTypeShape EntityType="RISLiteModel.tbl_MST_Adicionales" Width="1.5" PointX="3" PointY="17.125" />
-        <AssociationConnector Association="RISLiteModel.FK_MST_Adicionales_CAT_TipoAdicional" />
-        <AssociationConnector Association="RISLiteModel.FK_MST_Adicionales_CAT_TipoBoton" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_MST_Estudio" Width="1.5" PointX="14.875" PointY="6.25" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_REL_CitaEstudio" Width="1.5" PointX="20.25" PointY="4.25" />
-        <AssociationConnector Association="RISLiteModel.FK_MST_Estudio_CAT_Equipo" />
         <AssociationConnector Association="RISLiteModel.FK_MST_Estudio_CAT_EstatusEstudio" />
         <AssociationConnector Association="RISLiteModel.FK_REL_CitaEstudio_MST_Cita" />
         <AssociationConnector Association="RISLiteModel.FK_MST_Estudio_REL_ModalidadPrestacion" />
         <AssociationConnector Association="RISLiteModel.FK_REL_CitaEstudio_MST_Estudio" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_DET_Cita" Width="1.5" PointX="18.25" PointY="11.125" />
-        <AssociationConnector Association="RISLiteModel.FK_DET_Cita_MST_Adicionales" />
         <AssociationConnector Association="RISLiteModel.FK_DET_Cita_MST_Cita" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_DiaFeriado" Width="1.5" PointX="5.375" PointY="15.75" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_DiaSemana" Width="1.5" PointX="17.375" PointY="15.75" />
-        <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_HoraMuerta" Width="1.5" PointX="5.375" PointY="18.75" />
-        <EntityTypeShape EntityType="RISLiteModel.tbl_CONFIG_Agenda" Width="1.5" PointX="15.375" PointY="18.75" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Eventos" Width="1.5" PointX="17.375" PointY="18.75" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Sitio" Width="1.5" PointX="0.75" PointY="21" IsExpanded="true" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_CONFIG_VariablesAdiPaciente" Width="1.5" PointX="3" PointY="22.125" />
+        <AssociationConnector Association="RISLiteModel.FK_Config_VariablesAdiPaciente_CAT_Sitio" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Identificacion" Width="1.5" PointX="3" PointY="26.25" />
+        <AssociationConnector Association="RISLiteModel.FK_CAT_Identificacion_CAT_Sitio" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Usuario" Width="1.5" PointX="8" PointY="17.75" />
+        <AssociationConnector Association="RISLiteModel.FK_CAT_Usuario_CAT_Sitio" />
+        <AssociationConnector Association="RISLiteModel.FK_CAT_Usuario_CAT_TipoUsuario" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_MST_ConfiguracionSistema" Width="1.5" PointX="3" PointY="29.75" />
+        <AssociationConnector Association="RISLiteModel.FK_MST_ConfiguracionSistema_CAT_Sitio" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_Conf_CorreoSitio" Width="1.5" PointX="3" PointY="33.875" />
+        <AssociationConnector Association="RISLiteModel.FK_Config_CorreoSitio_CAT_Stio" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_CONFIG_VariablesAdiCita" Width="1.5" PointX="3" PointY="5.5" />
+        <AssociationConnector Association="RISLiteModel.FK_Config_VariablesAdiCita_CAT_Sitio" />
+        <AssociationConnector Association="RISLiteModel.FK_CAT_InstitucionProcedencia_CAT_Sitio" />
+        <AssociationConnector Association="RISLiteModel.FK_CAT_MedicoTratante_CAT_Sitio" />
+        <AssociationConnector Association="RISLiteModel.FK_CAT_Modalidad_CAT_Sitio" />
+        <AssociationConnector Association="RISLiteModel.FK_CAT_Prestacion_CAT_Sitio" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_Equipo" Width="1.5" PointX="7.625" PointY="13.5" />
+        <AssociationConnector Association="RISLiteModel.FK_CAT_Equipo_CAT_Modalidad" />
+        <AssociationConnector Association="RISLiteModel.FK_CAT_Equipo_CAT_Sitio" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_MST_Adicionales" Width="1.5" PointX="3" PointY="17.25" />
+        <AssociationConnector Association="RISLiteModel.FK_MST_Adicionales_CAT_Sitio" />
+        <AssociationConnector Association="RISLiteModel.FK_MST_Adicionales_CAT_TipoAdicional" />
+        <AssociationConnector Association="RISLiteModel.FK_MST_Adicionales_CAT_TipoBoton" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_REL_SitioPaciente" Width="1.5" PointX="15.25" PointY="23.625" />
+        <AssociationConnector Association="RISLiteModel.FK_REL_SitioPaciente_CAT_Sitio" />
+        <AssociationConnector Association="RISLiteModel.FK_REL_SitioPaciente_MST_Paciente" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_CONFIG_Agenda" Width="1.5" PointX="3" PointY="38" />
+        <AssociationConnector Association="RISLiteModel.FK_CONFIG_Agenda_CAT_Sitio" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_HoraMuerta" Width="1.5" PointX="3" PointY="42.125" />
+        <AssociationConnector Association="RISLiteModel.FK_CAT_HoraMuerta_CAT_Sitio" />
+        <AssociationConnector Association="RISLiteModel.FK_CAT_DiaFeriado_CAT_Sitio" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -68,6 +68,7 @@ namespace Fuji.RISLite.Site
                                 Session["User"] = response.mdlUser;
                                 Usuario = response.mdlUser;
                                 //cargarAgenda();
+                                RS_Agenda.SelectedDate = DateTime.Now;
                                 carga_citas();                               
                              
                             }
@@ -102,6 +103,8 @@ namespace Fuji.RISLite.Site
                 lstTec = RisService.getListEventoCita(request);
                 RS_Agenda.DataSource = lstTec;
                 RS_Agenda.DataBind();
+
+                
             }
             catch (Exception ecU)
             {

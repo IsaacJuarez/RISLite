@@ -31,7 +31,6 @@ namespace Fuji.RISLite.Entidades.DataBase
         public DbSet<tbl_CAT_TipoMensaje> tbl_CAT_TipoMensaje { get; set; }
         public DbSet<tbl_MST_Bitacora> tbl_MST_Bitacora { get; set; }
         public DbSet<tbl_CAT_TipoUsuario> tbl_CAT_TipoUsuario { get; set; }
-        public DbSet<tbl_CAT_Usuario> tbl_CAT_Usuario { get; set; }
         public DbSet<tbl_CAT_Catalogo> tbl_CAT_Catalogo { get; set; }
         public DbSet<tbl_CAT_Modalidad> tbl_CAT_Modalidad { get; set; }
         public DbSet<tbl_CAT_EstatusCita> tbl_CAT_EstatusCita { get; set; }
@@ -44,17 +43,11 @@ namespace Fuji.RISLite.Entidades.DataBase
         public DbSet<tbl_REL_BotonVista> tbl_REL_BotonVista { get; set; }
         public DbSet<tbl_REL_TipoUsuarioBoton> tbl_REL_TipoUsuarioBoton { get; set; }
         public DbSet<tbl_MST_Paciente> tbl_MST_Paciente { get; set; }
-        public DbSet<tbl_CONFIG_VariablesAdiPaciente> tbl_CONFIG_VariablesAdiPaciente { get; set; }
         public DbSet<tbl_DET_PacienteDinamico> tbl_DET_PacienteDinamico { get; set; }
-        public DbSet<tbl_MST_ConfiguracionSistema> tbl_MST_ConfiguracionSistema { get; set; }
-        public DbSet<tbl_Conf_CorreoSitio> tbl_Conf_CorreoSitio { get; set; }
-        public DbSet<tbl_CONFIG_VariablesAdiCita> tbl_CONFIG_VariablesAdiCita { get; set; }
         public DbSet<tbl_CAT_Prestacion> tbl_CAT_Prestacion { get; set; }
         public DbSet<tbl_REL_ModalidadPrestacion> tbl_REL_ModalidadPrestacion { get; set; }
-        public DbSet<tbl_CAT_Equipo> tbl_CAT_Equipo { get; set; }
         public DbSet<tbl_CAT_CodigoPostal> tbl_CAT_CodigoPostal { get; set; }
         public DbSet<tbl_CAT_Estado> tbl_CAT_Estado { get; set; }
-        public DbSet<tbl_CAT_Identificacion> tbl_CAT_Identificacion { get; set; }
         public DbSet<tbl_CAT_Municipio> tbl_CAT_Municipio { get; set; }
         public DbSet<tbl_DET_DireccionPaciente> tbl_DET_DireccionPaciente { get; set; }
         public DbSet<tbl_DET_Paciente> tbl_DET_Paciente { get; set; }
@@ -68,24 +61,24 @@ namespace Fuji.RISLite.Entidades.DataBase
         public DbSet<tbl_DET_IndicacionPrestacion> tbl_DET_IndicacionPrestacion { get; set; }
         public DbSet<tbl_CAT_TipoAdicional> tbl_CAT_TipoAdicional { get; set; }
         public DbSet<tbl_CAT_TipoBoton> tbl_CAT_TipoBoton { get; set; }
-        public DbSet<tbl_MST_Adicionales> tbl_MST_Adicionales { get; set; }
         public DbSet<tbl_MST_Estudio> tbl_MST_Estudio { get; set; }
         public DbSet<tbl_REL_CitaEstudio> tbl_REL_CitaEstudio { get; set; }
         public DbSet<tbl_DET_Cita> tbl_DET_Cita { get; set; }
         public DbSet<tbl_CAT_DiaFeriado> tbl_CAT_DiaFeriado { get; set; }
         public DbSet<tbl_CAT_DiaSemana> tbl_CAT_DiaSemana { get; set; }
-        public DbSet<tbl_CAT_HoraMuerta> tbl_CAT_HoraMuerta { get; set; }
-        public DbSet<tbl_CONFIG_Agenda> tbl_CONFIG_Agenda { get; set; }
         public DbSet<tbl_CAT_Eventos> tbl_CAT_Eventos { get; set; }
-    
-        public virtual ObjectResult<stp_getListCatalogo_Result> stp_getListCatalogo(Nullable<int> intCatalogoID)
-        {
-            var intCatalogoIDParameter = intCatalogoID.HasValue ?
-                new ObjectParameter("intCatalogoID", intCatalogoID) :
-                new ObjectParameter("intCatalogoID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getListCatalogo_Result>("stp_getListCatalogo", intCatalogoIDParameter);
-        }
+        public DbSet<tbl_CAT_Sitio> tbl_CAT_Sitio { get; set; }
+        public DbSet<tbl_CONFIG_VariablesAdiPaciente> tbl_CONFIG_VariablesAdiPaciente { get; set; }
+        public DbSet<tbl_CAT_Identificacion> tbl_CAT_Identificacion { get; set; }
+        public DbSet<tbl_CAT_Usuario> tbl_CAT_Usuario { get; set; }
+        public DbSet<tbl_MST_ConfiguracionSistema> tbl_MST_ConfiguracionSistema { get; set; }
+        public DbSet<tbl_Conf_CorreoSitio> tbl_Conf_CorreoSitio { get; set; }
+        public DbSet<tbl_CONFIG_VariablesAdiCita> tbl_CONFIG_VariablesAdiCita { get; set; }
+        public DbSet<tbl_CAT_Equipo> tbl_CAT_Equipo { get; set; }
+        public DbSet<tbl_MST_Adicionales> tbl_MST_Adicionales { get; set; }
+        public DbSet<tbl_REL_SitioPaciente> tbl_REL_SitioPaciente { get; set; }
+        public DbSet<tbl_CONFIG_Agenda> tbl_CONFIG_Agenda { get; set; }
+        public DbSet<tbl_CAT_HoraMuerta> tbl_CAT_HoraMuerta { get; set; }
     
         public virtual ObjectResult<stp_updateCatEstatus_Result> stp_updateCatEstatus(Nullable<int> intCatalogoID, Nullable<bool> bitActivo, Nullable<int> intPrimaryKey)
         {
@@ -102,23 +95,6 @@ namespace Fuji.RISLite.Entidades.DataBase
                 new ObjectParameter("intPrimaryKey", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_updateCatEstatus_Result>("stp_updateCatEstatus", intCatalogoIDParameter, bitActivoParameter, intPrimaryKeyParameter);
-        }
-    
-        public virtual ObjectResult<stp_setItemCatalogo_Result> stp_setItemCatalogo(Nullable<int> intCatalogoID, string vchValor, string vchUserAdmin)
-        {
-            var intCatalogoIDParameter = intCatalogoID.HasValue ?
-                new ObjectParameter("intCatalogoID", intCatalogoID) :
-                new ObjectParameter("intCatalogoID", typeof(int));
-    
-            var vchValorParameter = vchValor != null ?
-                new ObjectParameter("vchValor", vchValor) :
-                new ObjectParameter("vchValor", typeof(string));
-    
-            var vchUserAdminParameter = vchUserAdmin != null ?
-                new ObjectParameter("vchUserAdmin", vchUserAdmin) :
-                new ObjectParameter("vchUserAdmin", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_setItemCatalogo_Result>("stp_setItemCatalogo", intCatalogoIDParameter, vchValorParameter, vchUserAdminParameter);
         }
     
         public virtual ObjectResult<stp_updateCatalogo_Result> stp_updateCatalogo(Nullable<int> intCatalogoID, Nullable<int> intPrimaryKey, string vchValor)
@@ -145,15 +121,6 @@ namespace Fuji.RISLite.Entidades.DataBase
                 new ObjectParameter("intTipoUsuarioID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getListaPaginas_Result>("stp_getListaPaginas", intTipoUsuarioIDParameter);
-        }
-    
-        public virtual ObjectResult<stp_getPrestacionModalidad_Result> stp_getPrestacionModalidad(Nullable<int> intModalidadId)
-        {
-            var intModalidadIdParameter = intModalidadId.HasValue ?
-                new ObjectParameter("intModalidadId", intModalidadId) :
-                new ObjectParameter("intModalidadId", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getPrestacionModalidad_Result>("stp_getPrestacionModalidad", intModalidadIdParameter);
         }
     
         public virtual ObjectResult<stp_getBusquedaPaciente_Result> stp_getBusquedaPaciente(string vchCadena)
@@ -190,6 +157,95 @@ namespace Fuji.RISLite.Entidades.DataBase
                 new ObjectParameter("intPacienteID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getEstudiosPaciente_Result>("stp_getEstudiosPaciente", intPacienteIDParameter);
+        }
+    
+        public virtual ObjectResult<stp_getListCatalogo_Result> stp_getListCatalogo(Nullable<int> intCatalogoID, Nullable<int> intSitioID)
+        {
+            var intCatalogoIDParameter = intCatalogoID.HasValue ?
+                new ObjectParameter("intCatalogoID", intCatalogoID) :
+                new ObjectParameter("intCatalogoID", typeof(int));
+    
+            var intSitioIDParameter = intSitioID.HasValue ?
+                new ObjectParameter("intSitioID", intSitioID) :
+                new ObjectParameter("intSitioID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getListCatalogo_Result>("stp_getListCatalogo", intCatalogoIDParameter, intSitioIDParameter);
+        }
+    
+        public virtual ObjectResult<stp_setItemCatalogo_Result> stp_setItemCatalogo(Nullable<int> intCatalogoID, Nullable<int> intSitioID, string vchValor, string vchUserAdmin)
+        {
+            var intCatalogoIDParameter = intCatalogoID.HasValue ?
+                new ObjectParameter("intCatalogoID", intCatalogoID) :
+                new ObjectParameter("intCatalogoID", typeof(int));
+    
+            var intSitioIDParameter = intSitioID.HasValue ?
+                new ObjectParameter("intSitioID", intSitioID) :
+                new ObjectParameter("intSitioID", typeof(int));
+    
+            var vchValorParameter = vchValor != null ?
+                new ObjectParameter("vchValor", vchValor) :
+                new ObjectParameter("vchValor", typeof(string));
+    
+            var vchUserAdminParameter = vchUserAdmin != null ?
+                new ObjectParameter("vchUserAdmin", vchUserAdmin) :
+                new ObjectParameter("vchUserAdmin", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_setItemCatalogo_Result>("stp_setItemCatalogo", intCatalogoIDParameter, intSitioIDParameter, vchValorParameter, vchUserAdminParameter);
+        }
+    
+        public virtual ObjectResult<stp_getPrestacionModalidad_Result> stp_getPrestacionModalidad(Nullable<int> intModalidadId, Nullable<int> intSitioID)
+        {
+            var intModalidadIdParameter = intModalidadId.HasValue ?
+                new ObjectParameter("intModalidadId", intModalidadId) :
+                new ObjectParameter("intModalidadId", typeof(int));
+    
+            var intSitioIDParameter = intSitioID.HasValue ?
+                new ObjectParameter("intSitioID", intSitioID) :
+                new ObjectParameter("intSitioID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getPrestacionModalidad_Result>("stp_getPrestacionModalidad", intModalidadIdParameter, intSitioIDParameter);
+        }
+    
+        public virtual ObjectResult<stp_getBusquedaCita_Sitio_Result> stp_getBusquedaCita_Sitio(Nullable<int> intIdModalidad, Nullable<int> intIdSitio)
+        {
+            var intIdModalidadParameter = intIdModalidad.HasValue ?
+                new ObjectParameter("intIdModalidad", intIdModalidad) :
+                new ObjectParameter("intIdModalidad", typeof(int));
+    
+            var intIdSitioParameter = intIdSitio.HasValue ?
+                new ObjectParameter("intIdSitio", intIdSitio) :
+                new ObjectParameter("intIdSitio", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getBusquedaCita_Sitio_Result>("stp_getBusquedaCita_Sitio", intIdModalidadParameter, intIdSitioParameter);
+        }
+    
+        public virtual ObjectResult<stp_getCitaDisponible_Result> stp_getCitaDisponible(Nullable<System.DateTime> datFechaInicio, Nullable<System.DateTime> datFechaFinal, Nullable<int> intModalidad, string vchDias, string vchHoras, Nullable<int> intSitioID)
+        {
+            var datFechaInicioParameter = datFechaInicio.HasValue ?
+                new ObjectParameter("datFechaInicio", datFechaInicio) :
+                new ObjectParameter("datFechaInicio", typeof(System.DateTime));
+    
+            var datFechaFinalParameter = datFechaFinal.HasValue ?
+                new ObjectParameter("datFechaFinal", datFechaFinal) :
+                new ObjectParameter("datFechaFinal", typeof(System.DateTime));
+    
+            var intModalidadParameter = intModalidad.HasValue ?
+                new ObjectParameter("intModalidad", intModalidad) :
+                new ObjectParameter("intModalidad", typeof(int));
+    
+            var vchDiasParameter = vchDias != null ?
+                new ObjectParameter("vchDias", vchDias) :
+                new ObjectParameter("vchDias", typeof(string));
+    
+            var vchHorasParameter = vchHoras != null ?
+                new ObjectParameter("vchHoras", vchHoras) :
+                new ObjectParameter("vchHoras", typeof(string));
+    
+            var intSitioIDParameter = intSitioID.HasValue ?
+                new ObjectParameter("intSitioID", intSitioID) :
+                new ObjectParameter("intSitioID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getCitaDisponible_Result>("stp_getCitaDisponible", datFechaInicioParameter, datFechaFinalParameter, intModalidadParameter, vchDiasParameter, vchHorasParameter, intSitioIDParameter);
         }
     }
 }

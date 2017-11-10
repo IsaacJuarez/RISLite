@@ -28,10 +28,12 @@ namespace Fuji.RISLite.Entidades.DataBase
         public Nullable<bool> bitActivo { get; set; }
         public Nullable<System.DateTime> datFecha { get; set; }
         public string vchUserAdmin { get; set; }
+        public Nullable<int> intSitioID { get; set; }
     
         public virtual ICollection<tbl_REL_ModalidadPrestacion> tbl_REL_ModalidadPrestacion { get; set; }
         public virtual ICollection<tbl_DET_Restriccion> tbl_DET_Restriccion { get; set; }
         public virtual ICollection<tbl_DET_Cuestionario> tbl_DET_Cuestionario { get; set; }
         public virtual ICollection<tbl_DET_IndicacionPrestacion> tbl_DET_IndicacionPrestacion { get; set; }
+        public virtual tbl_CAT_Sitio tbl_CAT_Sitio { get; set; }
     }
 }

@@ -15,6 +15,7 @@ namespace Fuji.RISLite.Entities
         public TimeSpan tmeFinDia { get; set; }
         public DateTime datFecha { get; set; }        
         public string vchUserAdmin { get; set; }
+        public int intIntervalo { get; set; }
 
         public clsGeneralConfigAgenda()
         {
@@ -24,6 +25,7 @@ namespace Fuji.RISLite.Entities
             tmeFinDia = TimeSpan.Zero;
             datFecha = DateTime.MinValue;
             vchUserAdmin = string.Empty;         
+            intIntervalo = int.MinValue;
         }
     }
 }

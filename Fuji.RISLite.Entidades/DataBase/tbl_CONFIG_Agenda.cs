@@ -15,10 +15,14 @@ namespace Fuji.RISLite.Entidades.DataBase
     public partial class tbl_CONFIG_Agenda
     {
         public int intConfiguracionAgendaID { get; set; }
+        public Nullable<int> intSitioID { get; set; }
         public string vchConfiguracionAgenda { get; set; }
         public Nullable<System.TimeSpan> tmeInicioDia { get; set; }
         public Nullable<System.TimeSpan> tmeFinDia { get; set; }
+        public Nullable<int> intIntervalo { get; set; }
         public Nullable<System.DateTime> datFecha { get; set; }
         public string vchUserAdmin { get; set; }
+    
+        public virtual tbl_CAT_Sitio tbl_CAT_Sitio { get; set; }
     }
 }

@@ -14,17 +14,13 @@ namespace Fuji.RISLite.Entidades.DataBase
     
     public partial class tbl_CAT_Identificacion
     {
-        public tbl_CAT_Identificacion()
-        {
-            this.tbl_REL_IdentificacionPaciente = new HashSet<tbl_REL_IdentificacionPaciente>();
-        }
-    
         public long intIdentificacionID { get; set; }
+        public Nullable<int> intSitioID { get; set; }
         public string vchNombreId { get; set; }
         public Nullable<bool> bitActivo { get; set; }
         public Nullable<System.DateTime> datFecha { get; set; }
         public string vchUserAdmin { get; set; }
     
-        public virtual ICollection<tbl_REL_IdentificacionPaciente> tbl_REL_IdentificacionPaciente { get; set; }
+        public virtual tbl_CAT_Sitio tbl_CAT_Sitio { get; set; }
     }
 }

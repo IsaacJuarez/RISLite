@@ -15,6 +15,7 @@ namespace Fuji.RISLite.Entidades.DataBase
     public partial class tbl_Conf_CorreoSitio
     {
         public int intConfigCorreoID { get; set; }
+        public Nullable<int> intSitioID { get; set; }
         public string vchCorreo { get; set; }
         public string vchUsuarioCorreo { get; set; }
         public string vchPassword { get; set; }
@@ -24,5 +25,7 @@ namespace Fuji.RISLite.Entidades.DataBase
         public Nullable<bool> bitActivo { get; set; }
         public Nullable<System.DateTime> datFecha { get; set; }
         public string vchUserAdmin { get; set; }
+    
+        public virtual tbl_CAT_Sitio tbl_CAT_Sitio { get; set; }
     }
 }

@@ -71,10 +71,10 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="Telerik.Web.Spreadsheet">
-      <HintPath>..\lib\RCAJAX\2017.3.913.45.Trial\AdditionalLibraries\Bin45\Telerik.Web.Spreadsheet.dll</HintPath>
+      <HintPath>..\lib\RCAJAX\2017.3.913.45\AdditionalLibraries\Bin45\Telerik.Web.Spreadsheet.dll</HintPath>
     </Reference>
     <Reference Include="Telerik.Web.UI">
-      <HintPath>..\lib\RCAJAX\2017.3.913.45.Trial\Telerik.Web.UI.dll</HintPath>
+      <HintPath>..\lib\RCAJAX\2017.3.913.45\Telerik.Web.UI.dll</HintPath>
     </Reference>
     <Reference Include="Telerik.Windows.Documents.Core, Version=2017.3.907.40, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL" />
     <Reference Include="Telerik.Windows.Documents.Flow, Version=2017.3.907.40, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL" />
@@ -100,6 +100,7 @@
     <Content Include="frmPaciente.aspx" />
     <Content Include="frmRepEstadisticas.aspx" />
     <Content Include="frmSalir.aspx" />
+    <Content Include="frmTest.aspx" />
     <Content Include="Images\CR.png" />
     <Content Include="Images\CT.png" />
     <Content Include="Images\HD.png" />
@@ -1414,6 +1415,7 @@
     <Content Include="styles\kendo.silver.mobile.min.css.map" />
     <Content Include="styles\kendo.uniform.min.css.map" />
     <Content Include="styles\kendo.uniform.mobile.min.css.map" />
+    <None Include="Properties\PublishProfiles\CustomProfile1.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1762,6 +1764,13 @@
     <Compile Include="frmSalir.aspx.designer.cs">
       <DependentUpon>frmSalir.aspx</DependentUpon>
     </Compile>
+    <Compile Include="frmTest.aspx.cs">
+      <DependentUpon>frmTest.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="frmTest.aspx.designer.cs">
+      <DependentUpon>frmTest.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -1772,7 +1781,11 @@
     <Compile Include="Services\DataContract\AdminUserResponse.cs" />
     <Compile Include="Services\DataContract\AgendaRequest.cs" />
     <Compile Include="Services\DataContract\AgendaResponse.cs" />
+    <Compile Include="Services\DataContract\AsignacionModalidadNuevaCita_Request.cs" />
+    <Compile Include="Services\DataContract\AsignacionModalidadNuevaCita_Response.cs" />
     <Compile Include="Services\DataContract\CatalogoRequest.cs" />
+    <Compile Include="Services\DataContract\CitaModalidad.cs" />
+    <Compile Include="Services\DataContract\CitaNumEquipos.cs" />
     <Compile Include="Services\DataContract\CitasRequest.cs" />
     <Compile Include="Services\DataContract\ConfigEmailRequest.cs" />
     <Compile Include="Services\DataContract\ConfigEmailResponse.cs" />
@@ -1799,6 +1812,9 @@
     <Compile Include="Services\DataContract\PrestacionResponse.cs" />
     <Compile Include="Services\DataContract\RestriccionRequest.cs" />
     <Compile Include="Services\DataContract\RestriccionResponse.cs" />
+    <Compile Include="Services\DataContract\SitioRequest.cs" />
+    <Compile Include="Services\DataContract\SitioResponse.cs" />
+    <Compile Include="Services\DataContract\SugerenciasRequest.cs" />
     <Compile Include="Services\DataContract\TecnicoRequest.cs" />
     <Compile Include="Services\DataContract\ValidaUserRequest.cs" />
     <Compile Include="Services\DataContract\ValidaUserResponse.cs" />
@@ -1825,6 +1841,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Iconos\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>

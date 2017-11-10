@@ -50,11 +50,14 @@
     <Compile Include="clsEquipo.cs" />
     <Compile Include="clsEstudio.cs" />
     <Compile Include="clsEstudioCita.cs" />
+    <Compile Include="clsEstudioNuevaCita.cs" />
     <Compile Include="clsEventoCita.cs" />
     <Compile Include="clsGeneralConfigAgenda.cs" />
     <Compile Include="clsHoraMuerta.cs" />
+    <Compile Include="clsModalidad.cs" />
     <Compile Include="clsPaciente.cs" />
     <Compile Include="clsPrestacion.cs" />
+    <Compile Include="clsSugerencia.cs" />
     <Compile Include="clsUsuario.cs" />
     <Compile Include="clsVarAcicionales.cs" />
     <Compile Include="clsVistasUsuarios.cs" />

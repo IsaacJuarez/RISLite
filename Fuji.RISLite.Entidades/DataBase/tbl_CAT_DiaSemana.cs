@@ -16,8 +16,8 @@ namespace Fuji.RISLite.Entidades.DataBase
     {
         public int intDiaSemanaInt { get; set; }
         public string vchDiaSemana { get; set; }
-        public bool bitActivo { get; set; }
-        public System.DateTime datFecha { get; set; }
+        public Nullable<bool> bitActivo { get; set; }
+        public Nullable<System.DateTime> datFecha { get; set; }
         public string vchUserAdmin { get; set; }
     }
 }

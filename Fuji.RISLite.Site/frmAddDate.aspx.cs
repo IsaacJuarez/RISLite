@@ -6,6 +6,7 @@ using Fuji.RISLite.Site.Services.DataContract;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
@@ -26,11 +27,17 @@ namespace Fuji.RISLite.Site
         RisLiteService RisService = new RisLiteService();
         public static clsUsuario Usuario = new clsUsuario();
         public static List<clsEstudio> lstEstudios = new List<clsEstudio>();
+        public static List<stp_getCitaDisponible_Result> lstSug = new List<stp_getCitaDisponible_Result>();
         public static List<tbl_CAT_Identificacion> lstIdentificaciones = new List<tbl_CAT_Identificacion>();
+        public static List<clsEstudioNuevaCita> do_stEstudios = new List<clsEstudioNuevaCita>();
         public static List<clsVarAcicionales> lstVarAdic = new List<clsVarAcicionales>();
         public static List<clsAdicionales> lstAdicionalesClinicos = new List<clsAdicionales>();
         public static List<clsAdicionales> lstAdicionalesOper = new List<clsAdicionales>();
         public static List<clsAdicionales> lstObser = new List<clsAdicionales>();
+
+        DataTable DT_Modalidad_Horario = new DataTable();
+
+
 
         public static bool bitEditar = false;
 
@@ -44,6 +51,8 @@ namespace Fuji.RISLite.Site
                     Usuario = (clsUsuario)Session["User"];
                     if (Usuario != null)
                     {
+                        lstEstudios = new List<clsEstudio>();
+                        //lstSug = null;
                         cargaAdicionales();
                         cargaFormaDetalle();
                     }
@@ -72,6 +81,13 @@ namespace Fuji.RISLite.Site
                 String var = "";
                 if (!IsPostBack)
                 {
+                    //Busqueda_estudio();
+                    //getEstudioDetalle_citaNueva();
+
+                    grvEstudios.DataSource = null;
+                    grvEstudios.DataBind();
+                    lstSug = null;
+
                     if (Session["User"] != null)
                     {
                         Usuario = (clsUsuario)Session["User"];
@@ -779,7 +795,7 @@ namespace Fuji.RISLite.Site
 
                 if (e.Row.DataItem != null)
                 {
-                    clsEstudio _mdl = (clsEstudio)e.Row.DataItem;
+                    clsEstudioNuevaCita _mdl = (clsEstudioNuevaCita)e.Row.DataItem;
                     if(_mdl.fechaInicio == DateTime.MinValue)
                     {
                         Label lblFI = (Label)e.Row.FindControl("lblFechaInicio");
@@ -833,10 +849,21 @@ namespace Fuji.RISLite.Site
                 {
                     case "ElegirHorario":
                         inrRelModPres = Convert.ToInt32(e.CommandArgument.ToString());
+                        Session["inrRelModPres"] = inrRelModPres;
                         EquipoRequest request = new EquipoRequest();
                         request.mdlUser = Usuario;
-                        lblTituloSug.Text = "Horarios para " + lstEstudios.First(x => x.intRelModPres == inrRelModPres).vchModalidad;
-                        carga_citas_(lstEstudios.First(x => x.intRelModPres == inrRelModPres).intModalidadID.ToString());
+                        lblTituloSug.Text = "Horarios para " + do_stEstudios.First(x => x.intRelModPres == inrRelModPres).vchModalidad;
+                        string IDMODALIDAD = do_stEstudios.First(x => x.intRelModPres == inrRelModPres).intModalidadID.ToString();
+                        string ID_modalidad_seleccionada = do_stEstudios.First(x => x.intRelModPres == inrRelModPres).intconsecutivo_Modalidad.ToString();
+                        Session["intModSug"] = do_stEstudios.First(x => x.intRelModPres == inrRelModPres).intModalidadID.ToString();
+                        carga_tabla_citas(do_stEstudios.First(x => x.intRelModPres == inrRelModPres).intModalidadID.ToString(), DateTime.Today, IDMODALIDAD, ID_modalidad_seleccionada, Usuario.intSitioID);
+
+                        RB_antes_fecha.Enabled = true;
+                        RB_despues_feha.Enabled = true;
+                        calFecIni.SelectedDate = DateTime.Today;
+                        calFecFin.SelectedDate = DateTime.Today.AddDays(7);
+                        btnCargarSug.Enabled = true;
+                        obtenerSugerenciasDefault();
                         //request.intEquipoID = intEquipoID;
                         //EquipoResponse response = new EquipoResponse();
                         //response = RisService.setActualizaEquipo(request);
@@ -858,11 +885,43 @@ namespace Fuji.RISLite.Site
                         //    ShowMessage("Existe un error al actualizar, favor de revisar la información. ", MessageType.Advertencia, "alert_container");
                         //}
                         break;
+                    case "Eliminar":
+                        inrRelModPres = Convert.ToInt32(e.CommandArgument.ToString());
+                        var itemToRemove = do_stEstudios.Single(r => r.intRelModPres == inrRelModPres);
+                        do_stEstudios.Remove(itemToRemove);
+                        grvEstudios.DataSource = do_stEstudios;
+                        grvEstudios.DataBind();
+                        break;
                 }
             }
             catch (Exception eRCE)
             {
                 Log.EscribeLog("Existe un error en grvEstudios_RowCommand: " + eRCE.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void obtenerSugerenciasDefault()
+        {
+            try
+            {
+                grvSugerencia.DataSource = null;
+                List<stp_getCitaDisponible_Result> response = new List<stp_getCitaDisponible_Result>();
+                SugerenciasRequest request = new SugerenciasRequest();
+                request = obtenerBusquedaCompleta();
+                if (request != null)
+                {
+                    response = RisService.getSugerenciasCita(request);
+                    if (response != null)
+                    {
+                        lstSug = response;
+                        grvSugerencia.DataSource = response;
+                    }
+                    grvSugerencia.DataBind();
+                }
+            }
+            catch(Exception eoS)
+            {
+                Log.EscribeLog("Existe un error en obtenerSugerenciasDefault: " + eoS.Message, 3, Usuario.vchUsuario);
             }
         }
 
@@ -1031,6 +1090,10 @@ namespace Fuji.RISLite.Site
                         ShowMessage("Verificar la informacion. ", MessageType.Advertencia, "alert_container");
                     }
                 }
+                else
+                {
+                    ShowMessage("Verificar la informacion. ", MessageType.Advertencia, "alert_container");
+                }
             }
             catch (Exception eAP)
             {
@@ -1107,6 +1170,35 @@ namespace Fuji.RISLite.Site
                 Log.EscribeLog("Existe un error en obtenerIdentificaciones: " + eOIden.Message, 3, Usuario.vchUsuario);
             }
             return lst;
+        }
+
+        public void getEstudioDetalle_citaNueva()
+        {
+            int contador_tabla = 0;
+
+            if (Lcontador.Text != "")
+            {
+                contador_tabla = Convert.ToInt32(Lcontador.Text);
+            }
+
+            try
+            {
+                AsignacionModalidadNuevaCita_Request request = new AsignacionModalidadNuevaCita_Request();
+                AsignacionModalidadNuevaCita_Response response = new AsignacionModalidadNuevaCita_Response();
+                request.mdlUser = Usuario;
+                //EstudioRequest request = new EstudioRequest();
+                //EstudioResponse response = new EstudioResponse();
+                //request.mdlUser = Usuario;
+
+                response = RisService.getEstudioDetalle_citaNueva(request, contador_tabla);
+
+                do_stEstudios.Add(response.mdlEstudio);
+            }
+
+            catch (Exception eCP)
+            {
+                Log.EscribeLog("Existe un error en getEstudioDetalle_citaNueva: " + eCP.Message, 3, Usuario.vchUsuario);
+            }
         }
 
 
@@ -1258,6 +1350,7 @@ namespace Fuji.RISLite.Site
             clsPaciente mdl = new clsPaciente();
             try
             {
+                Log.EscribeLog("Fecha nacimiento: " + txtFecNacDet.Text, 2, Usuario.vchUsuario);
                 mdl.datFechaNac = Convert.ToDateTime(txtFecNacDet.Text);
                 mdl.intGeneroID = Convert.ToInt32(ddlGeneroDet.SelectedValue.ToString());
                 //mdl.intPacienteID
@@ -1336,6 +1429,7 @@ namespace Fuji.RISLite.Site
                 id = paciente[0];
                 txtBusquedaPaciente.Text = "";
                 cargarDetallePaciente(Convert.ToInt32(id));
+                txtBusquedaEstudio.Enabled = true;
             }
             catch (Exception etC)
             {
@@ -1366,7 +1460,13 @@ namespace Fuji.RISLite.Site
                 string[] estudio = txtBusquedaEstudio.Text.ToString().Split('|');
                 id = estudio[0];
                 txtBusquedaEstudio.Text = "";
+                //cargarEstudioGrid(Convert.ToInt32(id));
+                //HFcargacalendario.Value = "1";
+
+                HFIDModalidad_calendario.Value = id;
                 cargarEstudioGrid(Convert.ToInt32(id));
+                txtBusquedaEstudio.Text = "";
+                grvEstudios.Visible = true;
             }
             catch (Exception etC)
             {
@@ -1376,28 +1476,42 @@ namespace Fuji.RISLite.Site
 
         private void cargarEstudioGrid(int v)
         {
-            try
+            int contador_tabla = 1;
+
+            if (Lcontador.Text != "")
             {
-                EstudioRequest request = new EstudioRequest();
-                EstudioResponse response = new EstudioResponse();
-                request.mdlUser = Usuario;
-                clsEstudio mdlEstudio = new clsEstudio();
-                mdlEstudio.intRelModPres = v;
-                request.mdlEstudio = mdlEstudio;
-                response = RisService.getEstudioDetalle(request);
+                contador_tabla = Convert.ToInt32(Lcontador.Text);
+            }            
+
+                try
+                {
+                    AsignacionModalidadNuevaCita_Request request = new AsignacionModalidadNuevaCita_Request();
+                    AsignacionModalidadNuevaCita_Response response = new AsignacionModalidadNuevaCita_Response();
+                    request.mdlUser = Usuario;
+                    clsEstudioNuevaCita mdlEstudio = new clsEstudioNuevaCita();
+                    mdlEstudio.intRelModPres = v;
+                    request.mdlEstudio = mdlEstudio;
+                    response = RisService.getEstudioDetalle_citaNueva(request, contador_tabla);
+                    
                 if (response != null)
                 {
-                    lstEstudios.Add(response.mdlEstudio);
-                    grvEstudios.DataSource = null;
-                    grvEstudios.DataBind();
-                    grvEstudios.DataSource = lstEstudios;
-                    grvEstudios.DataBind();
+                    contador_tabla++;
+                    //HF_contador_tabla_modalidad.Value = Convert.ToString(contador_tabla);
+                    Lcontador.Text = Convert.ToString(contador_tabla);
+
+                    HFIDModalidad_calendario.Value = Convert.ToString(v);
+                   
+                        do_stEstudios.Add(response.mdlEstudio);
+                        grvEstudios.DataSource = null;
+                        grvEstudios.DataBind();
+                        grvEstudios.DataSource = do_stEstudios;
+                        grvEstudios.DataBind();                        
+                    }
                 }
-            }
-            catch (Exception ecEG)
-            {
-                Log.EscribeLog("Existe un error en cargarEstudioGrid: " + ecEG.Message, 3, Usuario.vchUsuario);
-            }
+                catch (Exception ecEG)
+                {
+                    Log.EscribeLog("Existe un error en cargarEstudioGrid: " + ecEG.Message, 3, Usuario.vchUsuario);
+                }                     
         }
 
         protected void btnAddCita_Click(object sender, EventArgs e)
@@ -1689,72 +1803,727 @@ namespace Fuji.RISLite.Site
 
         protected void Button2_Click(object sender, EventArgs e)
         {
-            carga_citas_("1");
+            //carga_citas_("1");
 
         }
 
-        private void carga_citas_(string id)
+        private void carga_tabla_citas(string id, DateTime fecha, string IDMODALIDAD, string id_modalidad_seleccionada, int idsitio)
         {
-
-            int id_mod = Convert.ToInt32(id);
-
             try
             {
-                RS_Agenda.DataSource = null;
+                L_modalidad_seleccion.Text = id_modalidad_seleccionada;
 
-                string descrip_modalidad = "";
+                int id_mod = Convert.ToInt32(id);
+                string HR_INICIO_DIA = "";
+                string HR_FIN_DIA = "";
+                int duracionGen = 0;
+
+                DataTable dt_hrs_muertas = new DataTable();
+
                 try
                 {
-                    AgendaRequest request_desc_mod = new AgendaRequest();
-                    request_desc_mod.mdlUser = Usuario;
-                    request_desc_mod.mdlagenda.intModalidadID = id_mod;
-                    descrip_modalidad = RisService.getDescripcionModalidad(request_desc_mod);
+                    string descrip_modalidad = "";
+                    try
+                    {
+                        AgendaRequest request_desc_mod = new AgendaRequest();
+                        request_desc_mod.mdlUser = Usuario;
+                        request_desc_mod.mdlagenda.intModalidadID = id_mod;
+                        request_desc_mod.mdlagenda.intSitioID = idsitio;
+                        descrip_modalidad = RisService.getDescripcionModalidad_sitio(request_desc_mod);
+                    }
 
+                    catch (Exception ecU)
+                    {
+                        Log.EscribeLog("Existe un error en la busqueda de el tipo de modadlidad: " + ecU.Message, 3, Usuario.vchUsuario);
+                    }
+
+                    try
+                    {
+                        CitaModalidad request_DuracionGen = new CitaModalidad();
+                        request_DuracionGen.mdlUser = Usuario;
+                        request_DuracionGen.mdlModalidad.intModalidadID = id_mod;
+                        request_DuracionGen.mdlModalidad.intSitioID = idsitio;
+                        duracionGen = RisService.getListDuracionGen_Sitio(request_DuracionGen);
+                    }
+
+                    catch (Exception ecU)
+                    {
+                        Log.EscribeLog("Existe un error en la busqueda duracion modadlidad: " + ecU.Message, 3, Usuario.vchUsuario);
+                    }
+                    IMG_encabezado.ImageUrl = "images/" + descrip_modalidad + ".png";
+                    Ltitulo.Text = descrip_modalidad;
+                    LIDModalidad.Text = IDMODALIDAD;
+
+                    string carga_color = "";
+                    try
+                    {
+                        AgendaRequest request_ = new AgendaRequest();
+                        request_.mdlUser = Usuario;
+                        request_.mdlagenda.vchCodigo = descrip_modalidad;
+                        request_.mdlagenda.intSitioID = idsitio;
+                        carga_color = RisService.getListColorModalidad_Sitio(request_);
+                        carga_color = carga_color.TrimEnd();
+                    }
+                    catch (Exception ecU)
+                    {
+                        Log.EscribeLog("Existe un error en la busqueda de color de la modalidad: " + ecU.Message, 3, Usuario.vchUsuario);
+                    }
+                    Image1.Style["Background"] = "linear-gradient(75deg, #CCCCCC, " + carga_color + " 10px, white);";
+
+                    List<clsEventoCita> lstTec = new List<clsEventoCita>();
+                    CitasRequest request = new CitasRequest();
+                    request.mdlUser = Usuario;
+                    request.mdlevento.intModalidadID = id_mod;
+                    request.mdlevento.intSitioID = idsitio;
+                    lstTec = RisService.getListCitas_Sitio(request);
                 }
                 catch (Exception ecU)
                 {
-                    Log.EscribeLog("Existe un error en la busqueda de el tipo de modadlidad: " + ecU.Message, 3, Usuario.vchUsuario);
+                    Log.EscribeLog("Existe un error en la carga de las citas: " + ecU.Message, 3, Usuario.vchUsuario);
                 }
 
-
-                IMG_encabezado.ImageUrl = "images/" + descrip_modalidad + ".png";
-
-
-                Ltitulo.Text = descrip_modalidad;
-
-                string carga_color = "";
                 try
                 {
-                    AgendaRequest request_ = new AgendaRequest();
-                    request_.mdlUser = Usuario;
-                    request_.mdlagenda.vchCodigo = descrip_modalidad;
-                    carga_color = RisService.getListColorModalidad(request_);
-                    carga_color = carga_color.TrimEnd();
+                    List<clsConfScheduler> lstTec = new List<clsConfScheduler>();
+                    ConfigSchedulerRequest request = new ConfigSchedulerRequest();
+                    request.mdlUser = Usuario;
+                    request.mdlConfScheduler.intSitioID = idsitio;
+                    lstTec = RisService.getConfScheduler_Sitio(request);
+
+                    TimeSpan dt_inicio = new TimeSpan();
+                    TimeSpan dt_fin = new TimeSpan();
+                    int intervalo_agenda = 0;
+
+                    foreach (var item in lstTec)
+                    {
+                        dt_inicio = item.tmeInicioDia;
+                        dt_fin = item.tmeFinDia;
+                    }
+
+                    var lista_HRSMuertas = new List<int>();
+
+                    try
+                    {
+                        List<clsHoraMuerta> _lstTec = new List<clsHoraMuerta>();
+                        ConfigScheduler_HoraMuertaRequest _request = new ConfigScheduler_HoraMuertaRequest();
+                        _request.mdlUser = Usuario;
+                        _request.mdlHMScheduler.intSitioID = idsitio;
+                        _lstTec = RisService.getHoraMuertaConfScheduler_Sitio(_request);
+
+                        TimeSpan HM_inicio = new TimeSpan();
+                        TimeSpan HM_FIn = new TimeSpan();
+                        TimeSpan HM_Periodo = new TimeSpan();
+
+                        List<string> lista_HM = new List<string>();
+                        dt_hrs_muertas.Columns.Add("HM_Inicio");
+                        dt_hrs_muertas.Columns.Add("HM_FIn");
+
+                        foreach (var _item in _lstTec)
+                        {
+
+                            HM_inicio = TimeSpan.Parse(_item.tmeInicio);
+                            HM_FIn = TimeSpan.Parse(_item.tmeFin);
+                            dt_hrs_muertas.Rows.Add(HM_inicio, HM_FIn);
+                            lista_HM.Add(HM_inicio.ToString() + "-" + HM_FIn.ToString());
+                            HM_Periodo = HM_FIn - HM_inicio;
+
+                            int horas_contenidas = Convert.ToInt32(HM_Periodo.TotalHours.ToString());
+                            lista_HRSMuertas.Add((Convert.ToInt32(HM_inicio.Hours.ToString())));
+
+                            TimeSpan H_Agregada = new TimeSpan();
+                            H_Agregada = HM_inicio;
+
+                            for (int i = 1; i <= horas_contenidas; i++)
+                            {
+                                TimeSpan duration_ = new TimeSpan(0, 1, 0, 0);
+
+                                H_Agregada = H_Agregada.Add(duration_);
+                                lista_HRSMuertas.Add(Convert.ToInt32(H_Agregada.Hours.ToString()));
+                            }
+                            lista_HRSMuertas.Sort();
+                        }
+                    }
+
+                    catch (Exception ex)
+                    {
+                        Log.EscribeLog("Existe un error en ConfigScheduler_HoraMuertaRequest: " + ex.Message, 3, Usuario.vchNombre);
+                    }
+
+
+                    DataTable dt_horas_agenda = new DataTable();
+                    dt_horas_agenda.Columns.Add("Horas");
+                    dt_horas_agenda.Columns.Add("Cupo");
+                    int horario = dt_fin.Hours - dt_inicio.Hours;
+                    horario = horario - 1;
+
+                    int numero_de_estudios_x_hr = 0;
+
+                    switch (duracionGen)
+                    {
+                        case 1:
+                            numero_de_estudios_x_hr = 12;
+                            break;
+                        case 2:
+                            numero_de_estudios_x_hr = 6;
+                            break;
+                        case 3:
+                            numero_de_estudios_x_hr = 5;
+                            break;
+                        case 4:
+                            numero_de_estudios_x_hr = 4;
+                            break;
+                        case 5:
+                            numero_de_estudios_x_hr = 3;
+                            break;
+                        case 6:
+                            numero_de_estudios_x_hr = 2;
+                            break;
+                        case 7:
+                            numero_de_estudios_x_hr = 1;
+                            break;
+                    }
+
+
+                    int numero_de_equipos = 0;
+                    try
+                    {
+                        List<clsEquipo> lst_CitaEquipo = new List<clsEquipo>();
+                        CitaNumEquipos request_CitaEquipo = new CitaNumEquipos();
+                        request_CitaEquipo.mdlUser = Usuario;
+                        request_CitaEquipo.mdlequipo.intModalidadID = id_mod;
+                        request_CitaEquipo.mdlequipo.intSitioID = idsitio;
+                        lst_CitaEquipo = RisService.getCitaEquipo_Sitio(request_CitaEquipo);
+
+                        numero_de_equipos = lst_CitaEquipo.Count();
+                    }
+
+                    catch (Exception ecU)
+                    {
+                        Log.EscribeLog("Existe un error en la busqueda de el tipo de modadlidad: " + ecU.Message, 3, Usuario.vchUsuario);
+                    }
+
+                    int estudios_posibles_x_modalidad = 0;
+                    int numero_De_Equipos = numero_de_equipos;
+                    estudios_posibles_x_modalidad = numero_De_Equipos * numero_de_estudios_x_hr;
+
+                    List<clsEventoCita> lstcitasagendadas = new List<clsEventoCita>();
+
+                    DataTable dt_citas_generadas = new DataTable();
+                    dt_citas_generadas.Columns.Add("ID_tabla");
+                    dt_citas_generadas.Columns.Add("Hr");
+                    dt_citas_generadas.Columns.Add("Capacidad");
+                    dt_citas_generadas.Columns.Add("Libres");
+                    dt_citas_generadas.Columns.Add("Rating");
+
+                    DataTable dt_dia2 = new DataTable();
+                    dt_dia2.Columns.Add("ID_tabla");
+                    dt_dia2.Columns.Add("Hr");
+                    dt_dia2.Columns.Add("Capacidad");
+                    dt_dia2.Columns.Add("Libres");
+                    dt_dia2.Columns.Add("Rating");
+
+                    DataTable dt_dia3 = new DataTable();
+                    dt_dia3.Columns.Add("ID_tabla");
+                    dt_dia3.Columns.Add("Hr");
+                    dt_dia3.Columns.Add("Capacidad");
+                    dt_dia3.Columns.Add("Libres");
+                    dt_dia3.Columns.Add("Rating");
+
+                    DataTable dt_dia4 = new DataTable();
+                    dt_dia4.Columns.Add("ID_tabla");
+                    dt_dia4.Columns.Add("Hr");
+                    dt_dia4.Columns.Add("Capacidad");
+                    dt_dia4.Columns.Add("Libres");
+                    dt_dia4.Columns.Add("Rating");
+
+                    DataTable dt_dia5 = new DataTable();
+                    dt_dia5.Columns.Add("ID_tabla");
+                    dt_dia5.Columns.Add("Hr");
+                    dt_dia5.Columns.Add("Capacidad");
+                    dt_dia5.Columns.Add("Libres");
+                    dt_dia5.Columns.Add("Rating");
+
+
+                    try
+                    {
+                        CitasRequest request_citasagendadas = new CitasRequest();
+                        request_citasagendadas.mdlUser = Usuario;
+                        request_citasagendadas.mdlevento.intModalidadID = id_mod;
+                        //request_citasagendadas.mdlevento.Start = DateTime.Today;
+                        request_citasagendadas.mdlevento.Start = fecha;
+                        request_citasagendadas.mdlevento.intSitioID = idsitio;
+                        lstcitasagendadas = RisService.getListCitas_en_agenda_Sitio(request_citasagendadas);
+
+                        for (int z = 0; z <= 4; z++)
+                        {
+                            DateTime fecha_revision = request_citasagendadas.mdlevento.Start;
+                            fecha_revision = fecha_revision.AddDays(z);
+
+                            for (int i = dt_inicio.Hours; i <= dt_fin.Hours; i++)
+                            {
+                                bool bandera_igual = false;
+                                foreach (var hr in lista_HRSMuertas)
+                                {
+                                    if (hr == i)
+                                    {
+                                        bandera_igual = true;
+                                    }
+                                }
+
+                                if (bandera_igual == false)
+                                {
+                                    int contador = lstcitasagendadas.Count(x => x.Start.Hour == i && x.Start.Day == fecha_revision.Day);
+                                    double porcen_Rating = 0;
+
+                                    if (contador != 0)
+                                    {
+                                        int revision_porcentaje = (contador * 100) / estudios_posibles_x_modalidad;
+
+                                        if (revision_porcentaje >= 0 && revision_porcentaje < 13)
+                                            porcen_Rating = 1;
+
+                                        if (revision_porcentaje >= 13 && revision_porcentaje < 26)
+                                            porcen_Rating = 1.5;
+
+                                        if (revision_porcentaje >= 26 && revision_porcentaje < 39)
+                                            porcen_Rating = 2;
+
+                                        if (revision_porcentaje >= 39 && revision_porcentaje < 52)
+                                            porcen_Rating = 2.5;
+
+                                        if (revision_porcentaje >= 52 && revision_porcentaje < 65)
+                                            porcen_Rating = 3;
+
+                                        if (revision_porcentaje >= 65 && revision_porcentaje < 78)
+                                            porcen_Rating = 3.5;
+
+                                        if (revision_porcentaje >= 78 && revision_porcentaje < 91)
+                                            porcen_Rating = 4;
+
+                                        if (revision_porcentaje >= 91 && revision_porcentaje < 99)
+                                            porcen_Rating = 4.5;
+
+                                        if (revision_porcentaje == 100)
+                                            porcen_Rating = 5;
+                                    }
+
+
+                                    int dia = z;
+                                    switch (z)
+                                    {
+                                        case 0:
+                                            LDia1.Text = fecha_revision.ToShortDateString();
+                                            dt_citas_generadas.Rows.Add(1, i, contador + " / " + estudios_posibles_x_modalidad, (estudios_posibles_x_modalidad - contador), porcen_Rating);
+                                            break;
+                                        case 1:
+                                            LDia2.Text = fecha_revision.ToShortDateString();
+                                            dt_dia2.Rows.Add(2, i, contador + " / " + estudios_posibles_x_modalidad, (estudios_posibles_x_modalidad - contador), porcen_Rating);
+                                            break;
+                                        case 2:
+                                            LDia3.Text = fecha_revision.ToShortDateString();
+                                            dt_dia3.Rows.Add(3, i, contador + " / " + estudios_posibles_x_modalidad, (estudios_posibles_x_modalidad - contador), porcen_Rating);
+                                            break;
+                                        case 3:
+                                            LDia4.Text = fecha_revision.ToShortDateString();
+                                            dt_dia4.Rows.Add(4, i, contador + " / " + estudios_posibles_x_modalidad, (estudios_posibles_x_modalidad - contador), porcen_Rating);
+                                            break;
+                                        case 4:
+                                            LDia5.Text = fecha_revision.ToShortDateString();
+                                            dt_dia5.Rows.Add(5, i, contador + " / " + estudios_posibles_x_modalidad, (estudios_posibles_x_modalidad - contador), porcen_Rating);
+                                            break;
+                                    }
+                                }
+                            }
+                        }
+
+                        RG_Dia1.DataSource = dt_citas_generadas;
+                        RG_Dia1.DataBind();
+
+                        RG_Dia2.DataSource = dt_dia2;
+                        RG_Dia2.DataBind();
+
+                        RG_Dia3.DataSource = dt_dia3;
+                        RG_Dia3.DataBind();
+
+                        RG_Dia4.DataSource = dt_dia4;
+                        RG_Dia4.DataBind();
+
+                        RG_Dia5.DataSource = dt_dia5;
+                        RG_Dia5.DataBind();
+                    }
+                    catch (Exception ecU)
+                    {
+                        Log.EscribeLog("Existe un error en la carga de las citas ya generadas: " + ecU.Message, 3, Usuario.vchUsuario);
+                    }
                 }
-                catch (Exception ecU)
+
+                catch (Exception ex)
                 {
-                    Log.EscribeLog("Existe un error en la busqueda de color de la modalidad: " + ecU.Message, 3, Usuario.vchUsuario);
+                    Log.EscribeLog("Existe un error en cargaConfigScheduler: " + ex.Message, 3, Usuario.vchNombre);
                 }
-
-                encabezado_agenda.Style["Background"] = "linear-gradient(75deg, #CCCCCC, " + carga_color + " 10px, white);";
-
-
-                List<clsEventoCita> lstTec = new List<clsEventoCita>();
-                CitasRequest request = new CitasRequest();
-                request.mdlUser = Usuario;
-                request.mdlevento.intModalidadID = id_mod;
-                lstTec = RisService.getListCitas(request);
-                RS_Agenda.DataSource = lstTec;
-                RS_Agenda.DataBind();
             }
-            catch (Exception ecU)
+            catch(Exception Global)
             {
-                Log.EscribeLog("Existe un error en la carga de las citas: " + ecU.Message, 3, Usuario.vchUsuario);
+                Log.EscribeLog("Existe un error en la tabla: " + Global.Message, 3, Usuario.vchUsuario);
             }
-
-
         }
 
         #endregion CargaAgenda
+
+        protected void btnCargarSug_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                List<stp_getCitaDisponible_Result> response = new List<stp_getCitaDisponible_Result>();
+                SugerenciasRequest request = new SugerenciasRequest();
+                request = obtenerBusquedaSug();
+                if(request != null)
+                {
+                    response = RisService.getSugerenciasCita(request);
+                    if(response != null)
+                    {
+                        lstSug = response;
+                        grvSugerencia.DataSource = response;
+                        grvSugerencia.DataBind();
+                    }
+                }
+            }
+            catch(Exception eCS)
+            {
+                ShowMessage("No se pudieron cargar las sugerencias: " + eCS.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error al cargar las sugerencias: " + eCS.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private SugerenciasRequest obtenerBusquedaSug()
+        {
+            SugerenciasRequest sug = new SugerenciasRequest();
+            try
+            {
+                sug.mdlUser = Usuario;
+                clsSugerencia mdl = new clsSugerencia();
+                mdl.datFechaInicio = calFecIni.SelectedDate == null ? DateTime.Now : (DateTime)calFecIni.SelectedDate;
+                mdl.datFechaFinal = calFecFin.SelectedDate == null ? DateTime.Now.AddDays(7): (DateTime)calFecFin.SelectedDate;
+                mdl.intModalidad = Convert.ToInt32(Session["intModSug"].ToString());
+                string lunes = chkLunes.Checked ? "1," : "";
+                string martes = chkMartes.Checked ? "2," : "";
+                string miercoles = chkMiercoles.Checked ? "3," : "";
+                string jueves = chkJueves.Checked ? "4," : "";
+                string viernes = chkViernes.Checked ? "5," : "";
+                string sabado = chkSabado.Checked ? "6," : "";
+                string domingo = chkDomingo.Checked ? "7," : "";
+                string dias = lunes + martes + miercoles + jueves + viernes + sabado + domingo;
+                mdl.vchDias = dias;
+                string manana = chkOpManana.Checked ? "1," : "";
+                string tarde = chkOpTarde.Checked ? "2," : "";
+                string noche = chkOpNoche.Checked ? "3," : "";
+                string horas = manana + tarde + noche;
+                mdl.vchHoras = horas;
+                if (mdl != null)
+                    sug.mdlSug = mdl;
+            }
+            catch(Exception eoBS)
+            {
+                sug = null;
+                Log.EscribeLog("Existe un error en obtenerBusquedaSug: " + eoBS.Message, 3, Usuario.vchUsuario);
+            }
+            return sug;
+        }
+
+        private SugerenciasRequest obtenerBusquedaCompleta()
+        {
+            SugerenciasRequest sug = new SugerenciasRequest();
+            try
+            {
+                sug.mdlUser = Usuario;
+                clsSugerencia mdl = new clsSugerencia();
+                mdl.datFechaInicio = DateTime.Now;
+                mdl.datFechaFinal = DateTime.Now.AddDays(7);
+                mdl.intModalidad = Convert.ToInt32(Session["intModSug"].ToString());
+                mdl.vchDias = "1,2,3,4,5,6,7,";
+                mdl.vchHoras = "1,2,3,";
+                mdl.intSitioID = Usuario.intSitioID;
+                sug.mdlSug = mdl;
+            }
+            catch (Exception eoBS)
+            {
+                sug = null;
+                Log.EscribeLog("Existe un error en obtenerBusquedaCompleta: " + eoBS.Message, 3, Usuario.vchUsuario);
+            }
+            return sug;
+        }
+
+        protected void grvSugerencia_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            try
+            {
+                if (e.Row.RowType == DataControlRowType.Pager)
+                {
+                    Label lblTotalNumDePaginas = (Label)e.Row.FindControl("lblBandejaTotal");
+                    lblTotalNumDePaginas.Text = grvSugerencia.PageCount.ToString();
+
+                    TextBox txtIrAlaPagina = (TextBox)e.Row.FindControl("txtBandejaS");
+                    txtIrAlaPagina.Text = (grvSugerencia.PageIndex + 1).ToString();
+
+                    DropDownList ddlTamPagina = (DropDownList)e.Row.FindControl("ddlBandejaS");
+                    ddlTamPagina.SelectedValue = grvSugerencia.PageSize.ToString();
+                }
+
+                if (e.Row.RowType != DataControlRowType.DataRow)
+                {
+                    return;
+                }
+
+                if (e.Row.DataItem != null)
+                {
+                    stp_getCitaDisponible_Result _mdl = (stp_getCitaDisponible_Result)e.Row.DataItem;
+                    if (_mdl.intHora > 0)
+                    {
+                        Label lblHora = (Label)e.Row.FindControl("lblHora");
+                        string horas = _mdl.intHora.ToString() + ":00 - " + (_mdl.intHora + 1).ToString() + ":00";
+                        lblHora.Text = horas;
+                    }
+                }
+            }
+            catch (Exception eEst)
+            {
+                Log.EscribeLog("Existe un error en grvEstudios_RowDataBound: " + eEst.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvSugerencia_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+
+        }
+
+        protected void grvSugerencia_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+
+        }
+
+        protected void grvSugerencia_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            try
+            {
+                int intSugerencia = 0;
+                switch (e.CommandName)
+                {
+                    case "Seleccionar":
+                        intSugerencia = Convert.ToInt32(e.CommandArgument.ToString());
+                        stp_getCitaDisponible_Result mdl = new stp_getCitaDisponible_Result();
+                        mdl = lstSug.First(x => x.intSugerenciaID == intSugerencia);
+                        TimeSpan horas = new TimeSpan(mdl.intHora, 0, 0);
+                        mdl.datFecha = mdl.datFecha + horas;
+                        DateTime datFechaFin = mdl.datFecha.AddHours(1);
+                        do_stEstudios.First(x => x.intRelModPres == Convert.ToInt32(Session["inrRelModPres"])).fechaInicio = mdl.datFecha;
+                        do_stEstudios.First(x => x.intRelModPres == Convert.ToInt32(Session["inrRelModPres"])).fechaFin = datFechaFin;
+                        grvEstudios.DataSource = null;
+                        grvEstudios.DataSource = do_stEstudios;
+                        grvEstudios.DataBind();
+                        lstSug = null;
+                        grvSugerencia.DataSource = null;
+                        grvSugerencia.DataBind();
+                        break;
+                }
+            }
+            catch(Exception eS)
+            {
+                Log.EscribeLog("Existe un error en grvSugerencia_RowCommand: " + eS.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvSugerencia_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+
+        }
+
+        protected void grvSugerencia_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+
+        }
+
+        protected void grvSugerencia_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        {
+
+        }
+
+        protected void ddlBandejaS_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void txtBandejaS_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void RG_Dia1_ItemCommand(object sender, GridCommandEventArgs e)
+        {
+            if (e.CommandName == "Agregar_cita")
+            {
+
+                string IDMOD = HFIDModalidad_calendario.Value;
+                GridDataItem item = (GridDataItem)e.Item;
+                string strtxt = item["ID_tabla"].Text;
+                string Hora_seleccionada = item["Hr"].Text;
+
+                int dia = Convert.ToInt32(strtxt);
+                string dia_cita = "";
+
+                switch (dia)
+                {
+                    case (1):
+                        dia_cita = LDia1.Text;
+                        break;
+                    case (2):
+                        dia_cita = LDia2.Text;
+                        break;
+                    case (3):
+                        dia_cita = LDia3.Text;
+                        break;
+                    case (4):
+                        dia_cita = LDia4.Text;
+                        break;
+                    case (5):
+                        dia_cita = LDia5.Text;
+                        break;
+                }
+
+
+                foreach (var x in do_stEstudios)
+                {
+
+                    if (L_modalidad_seleccion.Text == Convert.ToString(x.intconsecutivo_Modalidad))
+                    {
+                        x.fechaInicio = Convert.ToDateTime(dia_cita + " " + Hora_seleccionada + ":00");
+                        x.fechaFin = Convert.ToDateTime(dia_cita + " " + Hora_seleccionada + ":00");
+                    }
+                    //response.mdlEstudio.fechaInicio = Convert.ToDateTime("10/08/2017");
+
+                    //lstEstudios.
+
+                    grvEstudios.DataSource = null;
+                    grvEstudios.DataBind();
+                    grvEstudios.DataSource = do_stEstudios;
+                    grvEstudios.DataBind();
+
+                    RG_Dia1.DataSource = null;
+                    RG_Dia1.DataSourceID = null;
+                    RG_Dia1.DataBind();
+                    LDia1.Text = "";
+                    RG_Dia2.DataSource = null;
+                    RG_Dia2.DataSourceID = null;
+                    RG_Dia2.DataBind();
+                    LDia2.Text = "";
+                    RG_Dia3.DataSource = null;
+                    RG_Dia3.DataSourceID = null;
+                    RG_Dia3.DataBind();
+                    LDia3.Text = "";
+                    RG_Dia4.DataSource = null;
+                    RG_Dia4.DataSourceID = null;
+                    RG_Dia4.DataBind();
+                    LDia4.Text = "";
+                    RG_Dia5.DataSource = null;
+                    RG_Dia5.DataSourceID = null;
+                    RG_Dia5.DataBind();
+                    LDia5.Text = "";
+
+                    Ltitulo.Text = "";
+                    IMG_encabezado.ImageUrl = "";
+                    Image1.Style["Background"] = "White";
+
+                    RB_antes_fecha.Enabled = false;
+                    RB_despues_feha.Enabled = false;
+
+                    //string z = "";
+                }
+
+            }
+        }
+
+        protected void RB_antes_fecha_Click(object sender, EventArgs e)
+        {
+
+            if (Convert.ToDateTime(LDia1.Text) > DateTime.Today)
+            {
+                RG_Dia1.DataSource = null;
+                RG_Dia1.DataSourceID = null;
+                RG_Dia1.DataBind();
+                RG_Dia2.DataSource = null;
+                RG_Dia2.DataSourceID = null;
+                RG_Dia2.DataBind();
+                RG_Dia3.DataSource = null;
+                RG_Dia3.DataSourceID = null;
+                RG_Dia3.DataBind();
+                RG_Dia4.DataSource = null;
+                RG_Dia4.DataSourceID = null;
+                RG_Dia4.DataBind();
+                RG_Dia5.DataSource = null;
+                RG_Dia5.DataSourceID = null;
+                RG_Dia5.DataBind();
+
+                DateTime FECHA = Convert.ToDateTime(LDia1.Text).AddDays(-5);
+
+                carga_tabla_citas(LIDModalidad.Text, FECHA, LIDModalidad.Text, L_modalidad_seleccion.Text, Usuario.intSitioID);
+            }
+        }
+
+        protected void RB_despues_feha_Click(object sender, EventArgs e)
+        {
+            RB_antes_fecha.Enabled = true;
+            RB_despues_feha.Enabled = true;
+            RG_Dia1.DataSource = null;
+            RG_Dia1.DataSourceID = null;
+            RG_Dia1.DataBind();
+            RG_Dia2.DataSource = null;
+            RG_Dia2.DataSourceID = null;
+            RG_Dia2.DataBind();
+            RG_Dia3.DataSource = null;
+            RG_Dia3.DataSourceID = null;
+            RG_Dia3.DataBind();
+            RG_Dia4.DataSource = null;
+            RG_Dia4.DataSourceID = null;
+            RG_Dia4.DataBind();
+            RG_Dia5.DataSource = null;
+            RG_Dia5.DataSourceID = null;
+            RG_Dia5.DataBind();
+
+            RG_Dia1.Dispose();
+            DateTime FECHA = Convert.ToDateTime(LDia1.Text).AddDays(5);
+            carga_tabla_citas(LIDModalidad.Text, FECHA, LIDModalidad.Text, L_modalidad_seleccion.Text, Usuario.intSitioID);
+        }
+
+        public void Busqueda_estudio()
+        {
+            //PacienteRequest request = new PacienteRequest();
+            //PacienteResponse response = new PacienteResponse();
+            //RisLiteService service = new RisLiteService();
+            //request.mdlUser = Usuario;
+            //request.busqueda = RadAutoCompleteBox1.Text;
+            //response = service.getBusquedaEstudio(request);
+
+
+
+            //RadAutoCompleteBox1.DataSource = response;
+            //RadAutoCompleteBox1.DataBind();
+
+        }
+
+        protected void RadAjaxPanel1_AjaxRequest(object sender, AjaxRequestEventArgs e)
+        {
+            try
+            {
+                //string id = txtBusquedaEstudio.Text;
+                //HFIDModalidad_calendario.Value = e.Argument;
+                //cargarEstudioGrid(Convert.ToInt32(e.Argument));
+                //txtBusquedaEstudio.Text = "";
+                //grvEstudios.Visible = true;
+                //int x = 0;
+            }
+            catch(Exception erPA)
+            {
+                Log.EscribeLog("Existe un error en RadAjaxPanel1_AjaxRequest: " + erPA.Message, 3, Usuario.vchUsuario);
+            }
+        }
     }
 }

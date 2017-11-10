@@ -15,9 +15,12 @@ namespace Fuji.RISLite.Entidades.DataBase
     public partial class tbl_CAT_DiaFeriado
     {
         public int intDiaFeriadoID { get; set; }
-        public System.DateTime datDia { get; set; }
-        public System.DateTime datFecha { get; set; }
-        public bool bitActivo { get; set; }
+        public Nullable<System.DateTime> datDia { get; set; }
+        public Nullable<System.DateTime> datFecha { get; set; }
+        public Nullable<bool> bitActivo { get; set; }
         public string vchUserAdmin { get; set; }
+        public Nullable<int> intSitioID { get; set; }
+    
+        public virtual tbl_CAT_Sitio tbl_CAT_Sitio { get; set; }
     }
 }

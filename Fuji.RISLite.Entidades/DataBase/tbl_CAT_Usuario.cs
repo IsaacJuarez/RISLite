@@ -16,12 +16,15 @@ namespace Fuji.RISLite.Entidades.DataBase
     {
         public int intUsuarioID { get; set; }
         public Nullable<int> intTipoUsuario { get; set; }
+        public Nullable<int> intSitioID { get; set; }
         public string vchUsuario { get; set; }
         public string vchNombre { get; set; }
+        public string vchEmail { get; set; }
         public Nullable<bool> bitActivo { get; set; }
         public Nullable<System.DateTime> datFecha { get; set; }
         public string vchUserAdmin { get; set; }
     
+        public virtual tbl_CAT_Sitio tbl_CAT_Sitio { get; set; }
         public virtual tbl_CAT_TipoUsuario tbl_CAT_TipoUsuario { get; set; }
     }
 }

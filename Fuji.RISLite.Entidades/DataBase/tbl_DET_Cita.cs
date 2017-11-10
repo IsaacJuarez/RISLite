@@ -24,7 +24,6 @@ namespace Fuji.RISLite.Entidades.DataBase
         public Nullable<System.DateTime> datFecha { get; set; }
         public string vchUserAdmin { get; set; }
     
-        public virtual tbl_MST_Adicionales tbl_MST_Adicionales { get; set; }
         public virtual tbl_MST_Cita tbl_MST_Cita { get; set; }
     }
 }

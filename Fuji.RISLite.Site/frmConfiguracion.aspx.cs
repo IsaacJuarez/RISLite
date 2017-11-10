@@ -6,10 +6,12 @@ using Fuji.RISLite.Site.Services.DataContract;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Telerik.Web.UI;
 
 namespace Fuji.RISLite.Site
 {
@@ -24,7 +26,6 @@ namespace Fuji.RISLite.Site
         }
         RisLiteService RisService = new RisLiteService();
         public static clsUsuario Usuario = new clsUsuario();
-        public static bool bitActualiza = false;
         public static bool bitActualizaEmail = false;
         public static List<clsUsuario> lstUsuarios = new List<clsUsuario>();
         public static List<stp_getListCatalogo_Result> lstCat = new List<stp_getListCatalogo_Result>();
@@ -49,6 +50,8 @@ namespace Fuji.RISLite.Site
                             Session["idActializa"] = 0;
                             Session["idActializaEmail"] = 0;
                             Session["logo"] = null;
+                            cargarSitios();
+                            cargaSitiosList();
                             cargarForma();
                         }
                         else
@@ -71,21 +74,102 @@ namespace Fuji.RISLite.Site
             }
         }
 
+
+
+        private void cargaSitiosList()
+        {
+            try
+            {
+                ddlSitioSistema.DataSource = null;
+                ddlSitioCorreo.DataSource = null;
+                ddlSitioVarAdi.DataSource = null;
+                radCbxSitioCatalogo.DataSource = null;
+                ddlSitioMod.DataSource = null;
+                ddlSitioModEquipo.DataSource = null;
+                ddlSitioAdicionales.DataSource = null;
+                ddlSitioSistema.Items.Clear();
+                ddlSitioCorreo.Items.Clear();
+                ddlSitioVarAdi.Items.Clear();
+                radCbxSitioCatalogo.Items.Clear();
+                ddlSitioMod.Items.Clear();
+                ddlSitioModEquipo.Items.Clear();
+                ddlSitioAdicionales.Items.Clear();
+                List<tbl_CAT_Sitio> lstSitio = new List<tbl_CAT_Sitio>();
+                SitioRequest request = new SitioRequest();
+                request.mdlUser = Usuario;
+                lstSitio = RisService.getListSitios(request);
+                if (lstSitio != null)
+                {
+                    if (lstSitio.Count > 0)
+                    {
+                        ddlSitioSistema.DataSource = lstSitio;
+                        ddlSitioSistema.DataTextField = "vchNombreSitio";
+                        ddlSitioSistema.DataValueField = "intSitioID";
+                        ddlSitioCorreo.DataSource = lstSitio;
+                        ddlSitioCorreo.DataTextField = "vchNombreSitio";
+                        ddlSitioCorreo.DataValueField = "intSitioID";
+                        ddlSitioVarAdi.DataSource = lstSitio;
+                        ddlSitioVarAdi.DataTextField = "vchNombreSitio";
+                        ddlSitioVarAdi.DataValueField = "intSitioID";
+                        radCbxSitioCatalogo.DataSource = lstSitio;
+                        radCbxSitioCatalogo.DataTextField = "vchNombreSitio";
+                        radCbxSitioCatalogo.DataValueField = "intSitioID";
+                        ddlSitioMod.DataSource = lstSitio;
+                        ddlSitioMod.DataTextField = "vchNombreSitio";
+                        ddlSitioMod.DataValueField = "intSitioID";
+                        ddlSitioModEquipo.DataSource = lstSitio;
+                        ddlSitioModEquipo.DataTextField = "vchNombreSitio";
+                        ddlSitioModEquipo.DataValueField = "intSitioID";
+                        ddlSitioAdicionales.DataSource = lstSitio;
+                        ddlSitioAdicionales.DataTextField = "vchNombreSitio";
+                        ddlSitioAdicionales.DataValueField = "intSitioID";
+                    }
+                }
+                ddlSitioSistema.DataBind();
+                ddlSitioSistema.Items.Insert(0, new ListItem("Seleccionar...", "0"));
+                ddlSitioCorreo.DataBind();
+                ddlSitioCorreo.Items.Insert(0, new ListItem("Seleccionar...", "0"));
+                ddlSitioVarAdi.DataBind();
+                ddlSitioVarAdi.Items.Insert(0, new ListItem("Seleccionar...", "0"));
+                radCbxSitioCatalogo.DataBind();
+                ddlSitioMod.DataBind();
+                ddlSitioModEquipo.DataBind();
+                ddlSitioAdicionales.DataBind();
+                //                ddlSitioMod.Items.Insert(0, new RadComboBoxItem("Seleccionar...", "0"));
+            }
+            catch (Exception ecU)
+            {
+                Log.EscribeLog("Existe un error en cargaSitiosList: " + ecU.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
         private void cargarForma()
         {
             try
             {
                 cargarTipoUsuario();
                 cargarUsuarios();
-                cargarVarAdicionales();
-                cargaConfigSistema();
+                if (Convert.ToInt32(ddlSitioVarAdi.SelectedValue) > 0)
+                {
+                    cargarVarAdicionales();
+                }
                 cargaConfigEmail();
                 cargaCatalogo();
                 cargaPrestaciones();
                 cargaEquipo();
                 cargarAdicionales();
+                clearConfigSistema();
+                if (Convert.ToInt32(ddlSitioSistema.SelectedValue) > 0)
+                {
+                    cargaConfigSistema();
+                    //btnSaveConfig.Enabled = true;
+                }
+                //else
+                //{
+                //    btnSaveConfig.Enabled = false;
+                //}
             }
-            catch(Exception ecF)
+            catch (Exception ecF)
             {
                 Log.EscribeLog("Existe un error en cargarForma: " + ecF.Message, 3, "");
             }
@@ -112,10 +196,11 @@ namespace Fuji.RISLite.Site
                 List<clsAdicionales> response = new List<clsAdicionales>();
                 AdicionalesRequest request = new AdicionalesRequest();
                 request.mdlUser = Usuario;
+                request.intSitioID = Convert.ToInt32(ddlSitioAdicionales.SelectedValue);
                 request.intTipoAdicional = Convert.ToInt32(ddlTipoVariable.SelectedValue);
                 response = RisService.getAdicionales(request);
                 grvAdicional.DataSource = null;
-                if (response!= null)
+                if (response != null)
                 {
                     if (response.Count > 0)
                     {
@@ -124,7 +209,7 @@ namespace Fuji.RISLite.Site
                 }
                 grvAdicional.DataBind();
             }
-            catch(Exception ecA)
+            catch (Exception ecA)
             {
                 Log.EscribeLog("Existe un error en cargarAdicional: " + ecA.Message, 3, Usuario.vchUsuario);
             }
@@ -149,7 +234,7 @@ namespace Fuji.RISLite.Site
                         ddlTipoControl.DataTextField = "vchTipoBoton";
                         ddlTipoControl.DataValueField = "intTipoBotonID";
                         ddlTipoControl.DataBind();
-                        ddlTipoControl.Items.Insert(0, new ListItem("Seleccionar Tipo de Control...", "0"));
+                        //ddlTipoControl.Items.Insert(0, new RadComboBoxItem("Seleccionar Tipo de Control...", "0"));
                     }
                 }
             }
@@ -178,7 +263,7 @@ namespace Fuji.RISLite.Site
                         ddlTipoVariable.DataTextField = "vchNombre";
                         ddlTipoVariable.DataValueField = "intTipoAdicional";
                         ddlTipoVariable.DataBind();
-                        ddlTipoVariable.Items.Insert(0, new ListItem("Seleccionar Tipo de Variable...", "0"));
+                        //ddlTipoVariable.Items.Insert(0, new RadComboBoxItem("Seleccionar Tipo de Variable...", "0"));
                     }
                 }
             }
@@ -205,12 +290,15 @@ namespace Fuji.RISLite.Site
         {
             try
             {
-                if (ddlModalidadEquipo.SelectedItem.Value != "" && ddlModalidadEquipo.SelectedItem.Value != "0")
+                grvEquipo.DataSource = null;
+                grvEquipo.DataBind();
+                if (ddlModalidadEquipo.SelectedValue != "" && ddlModalidadEquipo.SelectedValue != "0" && ddlSitioMod.SelectedValue != "" && ddlSitioMod.SelectedValue != "0")
                 {
                     List<tbl_CAT_Equipo> lst = new List<tbl_CAT_Equipo>();
                     EquipoRequest request = new EquipoRequest();
                     request.mdlUser = Usuario;
                     request.intModalidadID = Convert.ToInt32(ddlModalidadEquipo.SelectedValue);
+                    request.intSitioID = Convert.ToInt32(ddlSitioModEquipo.SelectedValue);
                     lst = RisService.getListEquipo(request);
                     if (lst != null)
                     {
@@ -263,7 +351,7 @@ namespace Fuji.RISLite.Site
                         ddlModalidadEquipo.DataTextField = "vchModalidad";
                         ddlModalidadEquipo.DataValueField = "intModalidadID";
                         ddlModalidadEquipo.DataBind();
-                        ddlModalidadEquipo.Items.Insert(0, new ListItem("Seleccionar Modalidad...", "0"));
+                        //ddlModalidadEquipo.Items.Insert(0, new RadComboBoxItem("Seleccionar Modalidad...", "0"));
                     }
                 }
             }
@@ -280,7 +368,7 @@ namespace Fuji.RISLite.Site
                 cargaListaModalidad();
                 cargarPrestacion();
             }
-            catch(Exception ecP)
+            catch (Exception ecP)
             {
                 Log.EscribeLog("Existe un error en cargaPrestaciones: " + ecP.Message, 3, Usuario.vchUsuario);
             }
@@ -304,8 +392,8 @@ namespace Fuji.RISLite.Site
                         ddlModalidad.DataTextField = "vchModalidad";
                         ddlModalidad.DataValueField = "intModalidadID";
                         ddlModalidad.DataBind();
-                        ddlModalidad.Items.Insert(0, new ListItem("Seleccionar Modalidad...", "0"));
                     }
+                    //ddlModalidad.Items.Insert(0, new RadComboBoxItem("Seleccionar Modalidad...", "0"));
                 }
             }
             catch (Exception eFC)
@@ -318,12 +406,15 @@ namespace Fuji.RISLite.Site
         {
             try
             {
-                if (ddlModalidad.SelectedItem.Value != "" && ddlModalidad.SelectedItem.Value != "0")
+                grvPrestaciones.DataSource = null;
+                grvPrestaciones.DataBind();
+                if (ddlModalidad.SelectedValue != "" && ddlModalidad.SelectedValue != "0" && ddlSitioMod.SelectedValue != "" && ddlSitioMod.SelectedValue != "0")
                 {
                     List<clsPrestacion> lst = new List<clsPrestacion>();
                     PrestacionRequest request = new PrestacionRequest();
                     request.mdlUser = Usuario;
                     request.intModalidad = Convert.ToInt32(ddlModalidad.SelectedValue);
+                    request.intSitioID = Convert.ToInt32(ddlSitioMod.SelectedValue);
                     lst = RisService.getListPrestacion(request);
                     if (lst != null)
                     {
@@ -385,11 +476,10 @@ namespace Fuji.RISLite.Site
                 {
                     if (response.Count > 0)
                     {
-                        ddlCatalogo.DataSource = response;
-                        ddlCatalogo.DataTextField = "vchNombreCat";
-                        ddlCatalogo.DataValueField = "intCatalogoID";
-                        ddlCatalogo.DataBind();
-                        ddlCatalogo.Items.Insert(0, new ListItem("Seleccionar...", "0"));
+                        radCbxCatalogo.DataSource = response;
+                        radCbxCatalogo.DataTextField = "vchNombreCat";
+                        radCbxCatalogo.DataValueField = "intCatalogoID";
+                        radCbxCatalogo.DataBind();
                     }
                 }
             }
@@ -403,7 +493,9 @@ namespace Fuji.RISLite.Site
         {
             try
             {
-                if (ddlCatalogo.SelectedItem.Value != "" && ddlCatalogo.SelectedItem.Value != "0")
+                grvCatalogos.DataSource = null;
+                grvCatalogos.DataBind();
+                if (radCbxCatalogo.SelectedItem.Value != "" && radCbxCatalogo.SelectedItem.Value != "0" && radCbxSitioCatalogo.SelectedItem.Value != "" && radCbxSitioCatalogo.SelectedItem.Value != "0")
                 {
                     List<stp_getListCatalogo_Result> lst = new List<stp_getListCatalogo_Result>();
                     CatalogoRequest request = new CatalogoRequest();
@@ -411,7 +503,8 @@ namespace Fuji.RISLite.Site
                     clsCatalogo cat = new clsCatalogo();
                     user = Usuario;
                     request.mdlUser = user;
-                    cat.intCatalogoID = Convert.ToInt32(ddlCatalogo.SelectedValue);
+                    cat.intCatalogoID = Convert.ToInt32(radCbxCatalogo.SelectedValue);
+                    cat.intSitioID = Convert.ToInt32(radCbxSitioCatalogo.SelectedValue);
                     request.mdlCat = cat;
                     lst = RisService.getListCatalogo(request);
                     if (lst != null)
@@ -454,17 +547,13 @@ namespace Fuji.RISLite.Site
                 ConfigEmailRequest request = new ConfigEmailRequest();
                 ConfigEmailResponse response = new ConfigEmailResponse();
                 request.mdlUser = Usuario;
+                request.intSitioID = Convert.ToInt32(ddlSitioCorreo.SelectedValue);
                 response = RisService.getConfigEmail(request);
                 if (response != null)
                 {
                     if (response.Success)
                     {
-                        bitActualizaEmail = true;
                         fillConfigEmail(response.mldConfigEmail);
-                    }
-                    else
-                    {
-                        bitActualizaEmail = false;
                     }
                 }
             }
@@ -498,17 +587,13 @@ namespace Fuji.RISLite.Site
                 ConfigSitioRequest request = new ConfigSitioRequest();
                 ConfigSitioResponse response = new ConfigSitioResponse();
                 request.mdlUser = Usuario;
+                request.intSitioId = Convert.ToInt32(ddlSitioSistema.SelectedValue);
                 response = RisService.getConfigSitio(request);
                 if (response != null)
                 {
                     if (response.Success)
                     {
-                        bitActualiza = true;
                         fillConfigSistema(response.mdlConfig);
-                    }
-                    else
-                    {
-                        bitActualiza = false;
                     }
                 }
             }
@@ -518,12 +603,28 @@ namespace Fuji.RISLite.Site
             }
         }
 
+        private void clearConfigSistema()
+        {
+            try
+            {
+                txtNombreSitio.Text = "";
+                txtDireccionSitio.Text = "";
+                imgLogo.ImageUrl = "";
+                txtPathRepositorio.Text = "";
+                Session["logo"] = null;
+            }
+            catch (Exception ecCS)
+            {
+                Log.EscribeLog("Existe un error en clearConfigSistema: " + ecCS.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
         private void fillConfigSistema(tbl_MST_ConfiguracionSistema mdlConfig)
         {
             try
             {
                 Session["idActializa"] = mdlConfig.intConfigID;
-                txtNombreSitio.Text = mdlConfig.vchNombreSitio;
+                txtNombreSitio.Text = ddlSitioSistema.SelectedItem.Text;
                 txtDireccionSitio.Text = mdlConfig.vchDominio;
                 if (mdlConfig.vbLogoSitio != null)
                 {
@@ -531,6 +632,14 @@ namespace Fuji.RISLite.Site
                     string base64String = Convert.ToBase64String(mdlConfig.vbLogoSitio, 0, mdlConfig.vbLogoSitio.Length);
                     imgLogo.ImageUrl = "data:image/png;base64," + base64String;
                     imgLogo.Visible = true;
+                    if (mdlConfig.intWidthImage < 250 && mdlConfig.intWidthImage > 0)
+                        imgLogo.Width = (int)mdlConfig.intWidthImage;
+                    else
+                        imgLogo.Width = 250;
+                    if (mdlConfig.intHeigthImage < 150 && mdlConfig.intHeigthImage > 0)
+                        imgLogo.Height = (int)mdlConfig.intHeigthImage;
+                    else
+                        imgLogo.Height = 150;
                 }
                 txtPathRepositorio.Text = mdlConfig.vchVersion;
 
@@ -549,7 +658,7 @@ namespace Fuji.RISLite.Site
                 cargarCita();
                 cargarIds();
             }
-            catch(Exception ecva)
+            catch (Exception ecva)
             {
                 Log.EscribeLog("Existe un error en cargarVarAdicioles: " + ecva.Message, 3, Usuario.vchUsuario);
             }
@@ -561,6 +670,7 @@ namespace Fuji.RISLite.Site
             {
                 VarAdicionalRequest request = new VarAdicionalRequest();
                 request.mdlUser = Usuario;
+                request.intSitioID = Convert.ToInt32(ddlSitioVarAdi.SelectedValue);
                 List<tbl_CAT_Identificacion> lst = new List<tbl_CAT_Identificacion>();
                 lst = RisService.getVariablesAdicionalID(request);
                 grvVarID.DataSource = null;
@@ -585,10 +695,11 @@ namespace Fuji.RISLite.Site
             {
                 VarAdicionalRequest request = new VarAdicionalRequest();
                 request.mdlUser = Usuario;
+                request.intSitioID = Convert.ToInt32(ddlSitioVarAdi.SelectedValue);
                 List<clsVarAcicionales> lst = new List<clsVarAcicionales>();
                 lst = RisService.getVariablesAdicionalPaciente(request);
                 grvAddPaciente.DataSource = null;
-                if (lst!= null)
+                if (lst != null)
                 {
                     if (lst.Count > 0)
                     {
@@ -597,7 +708,7 @@ namespace Fuji.RISLite.Site
                 }
                 grvAddPaciente.DataBind();
             }
-            catch(Exception ecP)
+            catch (Exception ecP)
             {
                 Log.EscribeLog("Existe un error en cargarPaciente: " + ecP.Message, 3, Usuario.vchUsuario);
             }
@@ -609,6 +720,7 @@ namespace Fuji.RISLite.Site
             {
                 VarAdicionalRequest request = new VarAdicionalRequest();
                 request.mdlUser = Usuario;
+                request.intSitioID = Convert.ToInt32(ddlSitioVarAdi.SelectedValue);
                 List<clsVarAcicionales> lst = new List<clsVarAcicionales>();
                 lst = RisService.getVariablesAdicionalCita(request);
                 grvAddCita.DataSource = null;
@@ -643,7 +755,7 @@ namespace Fuji.RISLite.Site
                         ddlTipoUsuario.DataSource = lstReponse;
                         ddlTipoUsuario.DataValueField = "intCatalogoID";
                         ddlTipoUsuario.DataTextField = "vchNombre";
-                        ddlTipoUsuario.Items.Insert(0, new ListItem("Seleccionar Tipp de Usuario...", "0"));
+                        ddlTipoUsuario.Items.Insert(0, new ListItem("Seleccionar Tipo de Usuario...", "0"));
                     }
                 }
                 ddlTipoUsuario.DataBind();
@@ -704,6 +816,9 @@ namespace Fuji.RISLite.Site
                                 txtNombre.Text = "";
                                 txtUsuario.Text = "";
                                 ddlTipoUsuario.SelectedIndex = 0;
+                                ddlSitioSistema.Items.Clear();
+                                ddlSitioSistema.Enabled = false;
+                                txtEmailUser.Text = "";
                                 cargarUsuarios();
                             }
                             else
@@ -716,13 +831,17 @@ namespace Fuji.RISLite.Site
                             ShowMessage("Existe un error, favor de verificar. ", MessageType.Error, "alert_container");
                         }
                     }
+                    else
+                    {
+                        ShowMessage("Existe un error, favor de verificar. ", MessageType.Error, "alert_container");
+                    }
                 }
                 else
                 {
                     ShowMessage("Verificar la información: ", MessageType.Advertencia, "alert_container");
                 }
             }
-            catch(Exception eAddUser)
+            catch (Exception eAddUser)
             {
                 Log.EscribeLog("Existe un error en btnAgregar_Click: " + eAddUser.Message, 3, Usuario.vchUsuario);
             }
@@ -736,13 +855,16 @@ namespace Fuji.RISLite.Site
                 user.bitActivo = true;
                 user.datFecha = DateTime.Now;
                 user.intTipoUsuario = Convert.ToInt32(ddlTipoUsuario.SelectedValue.ToString());
-                //user.intUsuarioID = 
+                user.vchEmail = txtEmailUser.Text;
+                if (user.intTipoUsuario > 1)
+                    user.intSitioID = Convert.ToInt32(ddlSitioUser.SelectedValue.ToString());
                 user.vchNombre = txtNombre.Text.ToUpper();
                 user.vchUserAdmin = Usuario.vchUsuario.ToUpper();
                 user.vchUsuario = txtUsuario.Text.ToUpper();
             }
-            catch(Exception eODUA)
+            catch (Exception eODUA)
             {
+                user = null;
                 Log.EscribeLog("Existe un error en ObtenerDatosUserAdmin: " + eODUA.Message, 3, Usuario.vchUsuario);
             }
             return user;
@@ -770,7 +892,7 @@ namespace Fuji.RISLite.Site
             }
             catch (Exception eGU)
             {
-                Log.EscribeLog("Existe un error en grvUsuario_RowEditing : " + eGU.Message,3,Usuario.vchUsuario);
+                Log.EscribeLog("Existe un error en grvUsuario_RowEditing : " + eGU.Message, 3, Usuario.vchUsuario);
             }
         }
 
@@ -786,8 +908,10 @@ namespace Fuji.RISLite.Site
                 mdlVar.datFecha = DateTime.Now;
                 TextBox txtNameUser = (TextBox)grvUsuario.Rows[e.RowIndex].FindControl("txtNombreUsuario");
                 TextBox txtUser = (TextBox)grvUsuario.Rows[e.RowIndex].FindControl("txtUsuario");
+                TextBox txtEmail = (TextBox)grvUsuario.Rows[e.RowIndex].FindControl("txtEmailUser");
                 mdlVar.vchNombre = txtNameUser.Text.ToUpper();
                 mdlVar.vchUsuario = txtUser.Text.ToUpper();
+                mdlVar.vchEmail = txtEmail.Text;
                 mdlVar.intUsuarioID = Convert.ToInt16(grvUsuario.DataKeys[e.RowIndex].Values["intUsuarioID"].ToString());
                 if (mdlVar != null)
                 {
@@ -853,7 +977,7 @@ namespace Fuji.RISLite.Site
             catch (Exception eGUP)
             {
                 Log.EscribeLog("Existe un error en grvUsuario_RowDataBound: " + eGUP.Message, 3, Usuario.vchUsuario);
-            } 
+            }
         }
 
         protected void grvUsuario_PageIndexChanging(object sender, GridViewPageEventArgs e)
@@ -881,7 +1005,7 @@ namespace Fuji.RISLite.Site
                 switch (e.CommandName)
                 {
                     case "Estatus":
-                        intUsuarioId =Convert.ToInt32(e.CommandArgument.ToString());
+                        intUsuarioId = Convert.ToInt32(e.CommandArgument.ToString());
                         AdminUserRequest request = new AdminUserRequest();
                         AdminUserResponse response = new AdminUserResponse();
                         request.mdlUser = Usuario;
@@ -965,55 +1089,36 @@ namespace Fuji.RISLite.Site
             {
                 tbl_MST_ConfiguracionSistema mdlConfig = new tbl_MST_ConfiguracionSistema();
                 mdlConfig = obtenerDatosSitio();
-                if(mdlConfig!= null)
+                if (mdlConfig != null)
                 {
                     ConfigSitioRequest request = new ConfigSitioRequest();
                     ConfigSitioResponse response = new ConfigSitioResponse();
                     request.mdlUser = Usuario;
                     request.mdlConfig = mdlConfig;
-                    if (bitActualiza)
+                    response = RisService.setActualizarConfigSitio(request);
+                    if (response != null)
                     {
-                        response = RisService.setActualizarConfigSitio(request);
-                        if(response!= null)
+                        if (response.Success)
                         {
-                            if (response.Success)
-                            {
-                                ShowMessage("Cambios correctos.", MessageType.Correcto, "alert_container");
-                                cargaConfigSistema();
-                            }
-                            else
-                            {
-                                ShowMessage("Existe un error: " + response.Mensaje, MessageType.Correcto, "alert_container");
-                            }
+                            ShowMessage("Cambios correctos.", MessageType.Correcto, "alert_container");
+                            cargaConfigSistema();
                         }
                         else
                         {
-                            ShowMessage("Verificar la información.", MessageType.Correcto, "alert_container");
+                            ShowMessage("Existe un error: " + response.Mensaje, MessageType.Correcto, "alert_container");
                         }
                     }
                     else
                     {
-                        response = RisService.setConfigSitio(request);
-                        if (response != null)
-                        {
-                            if (response.Success)
-                            {
-                                ShowMessage("Cambios correctos.", MessageType.Correcto, "alert_container");
-                                cargaConfigSistema();
-                            }
-                            else
-                            {
-                                ShowMessage("Existe un error: " + response.Mensaje, MessageType.Correcto, "alert_container");
-                            }
-                        }
-                        else
-                        {
-                            ShowMessage("Verificar la información.", MessageType.Correcto, "alert_container");
-                        }
+                        ShowMessage("Verificar la información.", MessageType.Correcto, "alert_container");
                     }
                 }
+                else
+                {
+                    ShowMessage("Verificar la información.", MessageType.Correcto, "alert_container");
+                }
             }
-            catch(Exception eSC)
+            catch (Exception eSC)
             {
                 Log.EscribeLog("Existe un error en btnSaveConfig_Click: " + eSC.Message, 3, Usuario.vchUsuario);
             }
@@ -1026,25 +1131,68 @@ namespace Fuji.RISLite.Site
             {
                 mdl.bitActivo = true;
                 mdl.datFecha = DateTime.Now;
-                mdl.intConfigID = bitActualiza ? Convert.ToInt32(Session["idActializa"].ToString()) : 0;
+                mdl.intConfigID = Session["idActializa"] != null ? Convert.ToInt32(Session["idActializa"].ToString()) : 0;
+                mdl.intSitioID = Convert.ToInt32(ddlSitioSistema.SelectedValue);
                 Byte[] bytes = null;
+                int height = 0;
+                int width = 0;
                 if (fuLogo.HasFile)
                 {
                     Stream fs = fuLogo.PostedFile.InputStream;
+
                     BinaryReader br = new BinaryReader(fs);
                     bytes = br.ReadBytes((Int32)fs.Length);
+                    using (System.Drawing.Image myImage = System.Drawing.Image.FromStream(fs))
+                    {
+                        height = myImage.Height;
+                        width = myImage.Width;
+                    }
+                    mdl.intWidthImage = width > 0 ? width : 0;
+                    mdl.intHeigthImage = height > 0 ? height : 0;
+                }
+                else
+                {
+                    if (Session["logo"] != null)
+                    {
+                        Stream stream = new MemoryStream((Byte[])Session["logo"]);
+                        using (System.Drawing.Image myImage = System.Drawing.Image.FromStream(stream))
+                        {
+                            height = myImage.Height;
+                            width = myImage.Width;
+                        }
+                        mdl.intWidthImage = width > 0 ? width : 0;
+                        mdl.intHeigthImage = height > 0 ? height : 0;
+                    }
                 }
                 mdl.vbLogoSitio = fuLogo.HasFile ? bytes : (Byte[])Session["logo"];
-                mdl.vchNombreSitio = txtNombreSitio.Text;
+                //mdl.vchNombreSitio = txtNombreSitio.Text;
                 mdl.vchDominio = txtDireccionSitio.Text;
                 mdl.vchUserAdmin = Usuario.vchUsuario;
                 mdl.vchVersion = txtPathRepositorio.Text;
             }
-            catch(Exception eODS)
+            catch (Exception eODS)
             {
                 Log.EscribeLog("Existe un error en obtenerDatosSitio: " + eODS.Message, 3, Usuario.vchUsuario);
             }
             return mdl;
+        }
+
+        public Bitmap ResizeImage(Stream stream)
+        {
+            System.Drawing.Image originalImage = Bitmap.FromStream(stream);
+
+            int height = 331;
+            int width = 495;
+
+            Bitmap scaledImage = new Bitmap(width, height);
+
+            using (Graphics g = Graphics.FromImage(scaledImage))
+            {
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                g.DrawImage(originalImage, 0, 0, width, height);
+                return scaledImage;
+            }
+
         }
         #endregion sistema
 
@@ -1103,7 +1251,7 @@ namespace Fuji.RISLite.Site
                     }
                 }
             }
-            catch(Exception eSEmail)
+            catch (Exception eSEmail)
             {
                 Log.EscribeLog("Existe un error en btnSaveEmailSistema_Click: " + eSEmail.Message, 3, Usuario.vchUsuario);
             }
@@ -1124,8 +1272,9 @@ namespace Fuji.RISLite.Site
                 mdlConfig.vchPassword = txtPasswordSistema.Text;
                 mdlConfig.vchUserAdmin = Usuario.vchUsuario;
                 mdlConfig.vchUsuarioCorreo = "";
+                mdlConfig.intSitioID = Convert.ToInt32(ddlSitioCorreo.SelectedValue);
             }
-            catch(Exception eOCE)
+            catch (Exception eOCE)
             {
                 Log.EscribeLog("Existe un error en obtenerConfigEmail: " + eOCE.Message, 3, Usuario.vchUsuario);
             }
@@ -1142,6 +1291,7 @@ namespace Fuji.RISLite.Site
                 VarAdicionalRequest request = new VarAdicionalRequest();
                 VarAdicionalResponse response = new VarAdicionalResponse();
                 request.mdlUser = Usuario;
+                request.intSitioID = Convert.ToInt32(ddlSitioVarAdi.SelectedValue);
                 clsVarAcicionales mdlVar = new clsVarAcicionales();
                 mdlVar = obtenerVarAdicionalPaciente();
                 if (mdlVar != null)
@@ -1149,7 +1299,7 @@ namespace Fuji.RISLite.Site
                     request.mdlVariable = mdlVar;
                     request.intTipoVariable = 1;//Paciente
                     response = RisService.setAgregarVariable(request);
-                    if(response!= null)
+                    if (response != null)
                     {
                         if (response.Success)
                         {
@@ -1179,10 +1329,11 @@ namespace Fuji.RISLite.Site
             try
             {
                 mdl.bitActivo = true;
-                mdl.vchNombreVarAdi = txtNombreVarCita.Text.ToUpper();
+                mdl.vchNombreVarAdi = txtAddVarPac.Text.ToUpper();
                 mdl.datFecha = DateTime.Now;
+                mdl.intSitioID = Convert.ToInt32(ddlSitioVarAdi.SelectedValue);
             }
-            catch(Exception eoVP)
+            catch (Exception eoVP)
             {
                 Log.EscribeLog("Existe un error en obtenerVarAdicionalPaciente: " + eoVP.Message, 3, Usuario.vchUsuario);
             }
@@ -1195,8 +1346,9 @@ namespace Fuji.RISLite.Site
             try
             {
                 mdl.bitActivo = true;
-                mdl.vchNombreVarAdi = txtAddVarPac.Text.ToUpper();
+                mdl.vchNombreVarAdi = txtNombreVarCita.Text.ToUpper();
                 mdl.datFecha = DateTime.Now;
+                mdl.intSitioID = Convert.ToInt32(ddlSitioVarAdi.SelectedValue);
             }
             catch (Exception eoVP)
             {
@@ -1241,7 +1393,7 @@ namespace Fuji.RISLite.Site
                         {
                             request.mdlVariable = mdlVar;
                             response = RisService.setEstatusVariable(request);
-                            if(response!= null)
+                            if (response != null)
                             {
                                 if (response.Success)
                                 {
@@ -1414,6 +1566,7 @@ namespace Fuji.RISLite.Site
                 VarAdicionalRequest request = new VarAdicionalRequest();
                 VarAdicionalResponse response = new VarAdicionalResponse();
                 request.mdlUser = Usuario;
+                request.intSitioID = Convert.ToInt32(ddlSitioVarAdi.SelectedValue);
                 clsVarAcicionales mdlVar = new clsVarAcicionales();
                 mdlVar = obtenerVarAdicionalCita();
                 if (mdlVar != null)
@@ -1562,7 +1715,7 @@ namespace Fuji.RISLite.Site
                 grvAddCita.EditIndex = e.NewEditIndex;
                 cargarCita();
             }
-            catch(Exception eRED)
+            catch (Exception eRED)
             {
                 Log.EscribeLog("Existe un error en grvAddCita_RowEditing: " + eRED.Message, 3, Usuario.vchUsuario);
             }
@@ -1671,7 +1824,7 @@ namespace Fuji.RISLite.Site
         }
 
         #region Catalogos
-        protected void ddlCatalogo_SelectedIndexChanged(object sender, EventArgs e)
+        protected void ddlCatalogo_SelectedIndexChanged(object sender, EventArgs e)//Telerik
         {
             try
             {
@@ -1690,34 +1843,38 @@ namespace Fuji.RISLite.Site
                 CatalogoRequest request = new CatalogoRequest();
                 clsUsuario user = new clsUsuario();
                 clsCatalogo cat = new clsCatalogo();
-                if (ddlCatalogo.SelectedItem.Value != "" && ddlCatalogo.SelectedItem.Value != "0")
+                if (radCbxCatalogo.SelectedItem.Value != "" && radCbxCatalogo.SelectedItem.Value != "0" && radCbxSitioCatalogo.SelectedItem.Value != "" && radCbxSitioCatalogo.SelectedItem.Value != "0")
                 {
-
-                        user = Usuario;
-                        cat.vchUserAdmin = user.vchUsuario;
-                        cat.intCatalogoID = Convert.ToInt32(ddlCatalogo.SelectedValue.ToString());
-                        cat.vchValor = txtItemCat.Text.ToUpper();
-                        request.mdlCat = cat;
-                        request.mdlUser = user;
-                        stp_setItemCatalogo_Result response = new stp_setItemCatalogo_Result();
-                        response = RisService.setItemCatalogo(request);
-                        if (response != null)
+                    user = Usuario;
+                    cat.vchUserAdmin = user.vchUsuario;
+                    cat.intCatalogoID = Convert.ToInt32(radCbxCatalogo.SelectedValue.ToString());
+                    cat.intSitioID = Convert.ToInt32(radCbxSitioCatalogo.SelectedValue.ToString());
+                    cat.vchValor = txtItemCat.Text.ToUpper();
+                    request.mdlCat = cat;
+                    request.mdlUser = user;
+                    stp_setItemCatalogo_Result response = new stp_setItemCatalogo_Result();
+                    response = RisService.setItemCatalogo(request);
+                    if (response != null)
+                    {
+                        if (response.vchMensaje == "OK")
                         {
-                            if (response.vchMensaje == "OK")
-                            {
-                                txtItemCat.Text = "";
-                                cargaCatalogos();
-                                ShowMessage("Cambios correctos.", MessageType.Correcto, "alert_container");
-                            }
-                            else
-                            {
-                                ShowMessage("Existe un error al guardar: " + response.vchDescripcion, MessageType.Error, "alert_container");
-                            }
+                            txtItemCat.Text = "";
+                            cargaCatalogos();
+                            ShowMessage("Cambios correctos.", MessageType.Correcto, "alert_container");
                         }
+                        else
+                        {
+                            ShowMessage("Existe un error al guardar: " + response.vchDescripcion, MessageType.Error, "alert_container");
+                        }
+                    }
+                    else
+                    {
+                        ShowMessage("Verificar la información.", MessageType.Error, "alert_container");
+                    }
                 }
                 else
                 {
-                    ShowMessage("Seleccionar el tipo de catálogo.", MessageType.Error, "alert_container");
+                    ShowMessage("Seleccionar el tipo de catálogo o el sitio.", MessageType.Error, "alert_container");
                 }
             }
             catch (Exception eCat)
@@ -1796,7 +1953,7 @@ namespace Fuji.RISLite.Site
                         CatalogoRequest request = new CatalogoRequest();
                         clsCatalogo cat = new clsCatalogo();
                         request.mdlUser = Usuario;
-                        cat.intCatalogoID = Convert.ToInt32(ddlCatalogo.SelectedValue.ToString());
+                        cat.intCatalogoID = Convert.ToInt32(radCbxCatalogo.SelectedValue.ToString());
                         cat.intPrimaryKey = Convert.ToInt32(intPrimaryCatalogoID);
                         cat.bitActivo = (bool)mdl.bitActivo;
                         request.mdlCat = cat;
@@ -1851,7 +2008,7 @@ namespace Fuji.RISLite.Site
                 clsUsuario mdlVar = new clsUsuario();
                 TextBox txtItemNombre = (TextBox)grvCatalogos.Rows[e.RowIndex].FindControl("txtItemNombre");
                 mdlVar.vchNombre = txtItemNombre.Text.ToUpper();
-                cat.intCatalogoID = Convert.ToInt32(ddlCatalogo.SelectedValue.ToString());
+                cat.intCatalogoID = Convert.ToInt32(radCbxCatalogo.SelectedValue.ToString());
                 cat.intPrimaryKey = Convert.ToInt32(grvCatalogos.DataKeys[e.RowIndex].Values["vchCatalogoID"].ToString());
                 cat.vchValor = txtItemNombre.Text.ToUpper();
                 request.mdlCat = cat;
@@ -1937,10 +2094,11 @@ namespace Fuji.RISLite.Site
             {
                 PrestacionRequest request = new PrestacionRequest();
                 clsPrestacion prestacion = new clsPrestacion();
-                if (ddlModalidad.SelectedItem.Value != "" && ddlModalidad.SelectedItem.Value != "0")
+                if (ddlModalidad.SelectedItem.Value != "" && ddlModalidad.SelectedItem.Value != "0" && ddlSitioMod.SelectedItem.Value != "" && ddlSitioMod.SelectedItem.Value != "0")
                 {
                     prestacion.bitActivo = true;
                     prestacion.intModalidadID = Convert.ToInt32(ddlModalidad.SelectedValue.ToString());
+                    prestacion.intSitioId = Convert.ToInt32(ddlSitioMod.SelectedValue);
                     prestacion.intDuracionMin = Convert.ToInt32(txtDuracionPres.Text);
                     prestacion.vchPrestacion = txtPrestacion.Text.ToUpper();
                     request.mdlPres = prestacion;
@@ -1964,7 +2122,7 @@ namespace Fuji.RISLite.Site
                 }
                 else
                 {
-                    ShowMessage("Seleccionar el tipo de modalidad.", MessageType.Error, "alert_container");
+                    ShowMessage("Seleccionar el tipo de modalidad y el Sitio para la prestación.", MessageType.Error, "alert_container");
                 }
             }
             catch (Exception eCat)
@@ -2141,6 +2299,7 @@ namespace Fuji.RISLite.Site
                 prestacion.vchPrestacion = txtItemNombre.Text;
                 prestacion.intDuracionMin = Convert.ToInt32(txtDuracionItm.Text);
                 prestacion.intPrestacionID = Convert.ToInt32(grvPrestaciones.DataKeys[e.RowIndex].Values["intPrestacionID"].ToString());
+                prestacion.intSitioId = Convert.ToInt32(ddlSitioMod.SelectedValue);
                 request.mdlPres = prestacion;
                 PrestacionResponse response = new PrestacionResponse();
                 response = RisService.setActualizaPrestacion(request);
@@ -2148,14 +2307,15 @@ namespace Fuji.RISLite.Site
                 {
                     if (response.Success)
                     {
+                        limpiarCotrolesPrestaciones();
                         ShowMessage("Cambios correctos.", MessageType.Correcto, "alert_container");
-                        grvPrestaciones.EditIndex = -1;
-                        cargarPrestacion();
                     }
                     else
                     {
                         ShowMessage("Existe un error al guardar: " + response.Mensaje, MessageType.Error, "alert_container");
                     }
+                    grvPrestaciones.EditIndex = -1;
+                    cargarPrestacion();
                 }
                 else
                 {
@@ -2166,6 +2326,19 @@ namespace Fuji.RISLite.Site
             {
                 ShowMessage("Existe un error: " + eUpdating.Message, MessageType.Error, "alert_container");
                 Log.EscribeLog("Exiete un error: " + eUpdating.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void limpiarCotrolesPrestaciones()
+        {
+            try
+            {
+                txtPrestacion.Text = "";
+                txtDuracionPres.Text = "";
+            }
+            catch (Exception eLCP)
+            {
+                Log.EscribeLog("Existe un error en limpiarCotrolesPrestaciones: " + eLCP.Message, 3, Usuario.vchUsuario);
             }
         }
 
@@ -2215,10 +2388,11 @@ namespace Fuji.RISLite.Site
             {
                 EquipoRequest request = new EquipoRequest();
                 tbl_CAT_Equipo equipo = new tbl_CAT_Equipo();
-                if (ddlModalidadEquipo.SelectedItem.Value != "" && ddlModalidadEquipo.SelectedItem.Value != "0")
+                if (ddlModalidadEquipo.SelectedItem.Value != "" && ddlModalidadEquipo.SelectedItem.Value != "0" && ddlSitioModEquipo.SelectedValue != "" && ddlSitioModEquipo.SelectedValue != "0")
                 {
                     equipo.bitActivo = true;
                     equipo.intModalidadID = Convert.ToInt32(ddlModalidadEquipo.SelectedValue.ToString());
+                    equipo.intSitioID = Convert.ToInt32(ddlSitioModEquipo.SelectedValue);
                     equipo.datFecha = DateTime.Now;
                     equipo.vchAETitle = txtAEtitle.Text.ToUpper();
                     equipo.vchCodigoEquipo = txtCodeequipo.Text.ToUpper();
@@ -2247,7 +2421,7 @@ namespace Fuji.RISLite.Site
                 }
                 else
                 {
-                    ShowMessage("Seleccionar el tipo de modalidad.", MessageType.Error, "alert_container");
+                    ShowMessage("Seleccionar el tipo de modalidad y el sitio para el equipo.", MessageType.Error, "alert_container");
                 }
             }
             catch (Exception eCat)
@@ -2408,6 +2582,7 @@ namespace Fuji.RISLite.Site
                 equipo.vchCodigoEquipo = txtCodeequipo.Text;
                 equipo.vchAETitle = txtAEtitleItem.Text;
                 equipo.intModalidadID = Convert.ToInt32(grvEquipo.DataKeys[e.RowIndex].Values["intModalidadID"].ToString());
+                equipo.intSitioID = Convert.ToInt32(ddlSitioModEquipo.SelectedValue);
                 request.mdlEquipo = equipo;
                 EquipoResponse response = new EquipoResponse();
                 response = RisService.setActualizaEquipo(request);
@@ -2415,14 +2590,15 @@ namespace Fuji.RISLite.Site
                 {
                     if (response.Success)
                     {
+                        limpiarControlesEquipos();
                         ShowMessage("Cambios correctos.", MessageType.Correcto, "alert_container");
-                        grvPrestaciones.EditIndex = -1;
-                        cargarPrestacion();
                     }
                     else
                     {
                         ShowMessage("Existe un error al guardar: " + response.Mensaje, MessageType.Error, "alert_container");
                     }
+                    grvPrestaciones.EditIndex = -1;
+                    cargarPrestacion();
                 }
                 else
                 {
@@ -2433,6 +2609,20 @@ namespace Fuji.RISLite.Site
             {
                 ShowMessage("Existe un error: " + eUpdating.Message, MessageType.Error, "alert_container");
                 Log.EscribeLog("Exiete un error en grvEquipo_RowUpdating: " + eUpdating.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void limpiarControlesEquipos()
+        {
+            try
+            {
+                txtNomEquipo.Text = "";
+                txtCodeequipo.Text = "";
+                txtAEtitle.Text = "";
+            }
+            catch (Exception elCE)
+            {
+                Log.EscribeLog("Existe un error en limpiarControlesEquipos: " + elCE.Message, 3, Usuario.vchUsuario);
             }
         }
 
@@ -2483,6 +2673,7 @@ namespace Fuji.RISLite.Site
                 VarAdicionalRequest request = new VarAdicionalRequest();
                 VarAdicionalResponse response = new VarAdicionalResponse();
                 request.mdlUser = Usuario;
+                request.intSitioID = Convert.ToInt32(ddlSitioVarAdi.SelectedValue);
                 clsVarAcicionales mdlVar = new clsVarAcicionales();
                 mdlVar.bitActivo = true;
                 mdlVar.datFecha = DateTime.Now;
@@ -2637,7 +2828,7 @@ namespace Fuji.RISLite.Site
                 grvVarID.EditIndex = e.NewEditIndex;
                 cargarIds();
             }
-            catch(Exception eRW)
+            catch (Exception eRW)
             {
                 Log.EscribeLog("Existe un error en grvVarID_RowEditing: " + eRW.Message, 3, Usuario.vchUsuario);
             }
@@ -3005,7 +3196,7 @@ namespace Fuji.RISLite.Site
                 }
                 grvIndicaciones.DataBind();
             }
-            catch(Exception ecI)
+            catch (Exception ecI)
             {
                 Log.EscribeLog("Existe un error en cargarIndicaciones: " + ecI.Message, 3, Usuario.vchUsuario);
             }
@@ -3592,37 +3783,55 @@ namespace Fuji.RISLite.Site
         {
             try
             {
-                AdicionalesResponse response = new AdicionalesResponse();
-                AdicionalesRequest request = new AdicionalesRequest();
-                request.mdlUser = Usuario;
-                clsAdicionales mdlAdi = new clsAdicionales();
-                mdlAdi = obtenerAdicional();
-                if (mdlAdi != null)
+                if (ddlSitioAdicionales.SelectedValue != "" && ddlSitioAdicionales.SelectedValue != "0" && ddlTipoControl.SelectedValue != "" && ddlTipoControl.SelectedValue != "0" && ddlTipoVariable.SelectedValue != "" && ddlTipoVariable.SelectedValue != "0")
                 {
-                    request.mdlAdicional = mdlAdi;
-                    response = RisService.setAdicionales(request);
-                    if(response != null)
+                    AdicionalesResponse response = new AdicionalesResponse();
+                    AdicionalesRequest request = new AdicionalesRequest();
+                    request.mdlUser = Usuario;
+                    clsAdicionales mdlAdi = new clsAdicionales();
+                    if (RadFileUp.UploadedFiles[0].GetName() != "")
                     {
-                        if (response.Success)
+                        mdlAdi = obtenerAdicional();
+                        if (mdlAdi != null)
                         {
-                            ShowMessage("Se guardó correctamente.", MessageType.Correcto, "alert_container");
-                            limpiarControlesAdicional();
-                            cargarAdicional();
+                            request.mdlAdicional = mdlAdi;
+                            response = RisService.setAdicionales(request);
+                            if (response != null)
+                            {
+                                if (response.Success)
+                                {
+                                    ShowMessage("Se guardó correctamente.", MessageType.Correcto, "alert_container");
+                                    limpiarControlesAdicional();
+                                    cargarAdicional();
+                                }
+                                else
+                                {
+                                    ShowMessage("Verificar la información: " + response.Mensaje, MessageType.Error, "alert_container");
+                                }
+                            }
+                            else
+                            {
+                                ShowMessage("Verificar la información", MessageType.Error, "alert_container");
+                            }
                         }
                         else
                         {
-                            ShowMessage("Verificar la información: " + response.Mensaje, MessageType.Error, "alert_container");
+                            ShowMessage("Verificar la información.", MessageType.Error, "alert_container");
                         }
                     }
                     else
                     {
-                        ShowMessage("Verificar la información", MessageType.Error, "alert_container");
+                        ShowMessage("Se requiere una imagen para el control.", MessageType.Error, "alert_container");
                     }
                 }
+                else
+                {
+                    ShowMessage("Favor de verificar la información.", MessageType.Error, "alert_container");
+                }
             }
-            catch(Exception ebA)
+            catch (Exception ebA)
             {
-                ShowMessage("Existe un error al guardar la información: " + ebA.Message,MessageType.Error,"alert_container");
+                ShowMessage("Existe un error al guardar la información: " + ebA.Message, MessageType.Error, "alert_container");
                 Log.EscribeLog("Existe un error en btnAgregarAdicional_Click: " + ebA.Message, 3, Usuario.vchUsuario);
             }
         }
@@ -3632,11 +3841,12 @@ namespace Fuji.RISLite.Site
             try
             {
                 txtNomAdi.Text = "";
-                txtImagenAdi.Text = "";
+                //txtImagenAdi.Text = "";
                 chkObservaciones.Checked = false;
-                chkIcono.Checked = false;
+                RadFileUp.UploadedFiles.RemoveAt(0);
+                //chkIcono.Checked = false;
             }
-            catch(Exception elCOA)
+            catch (Exception elCOA)
             {
                 Log.EscribeLog("Existe un error en limpiarControlesAdicional: " + elCOA.Message, 3, Usuario.vchUsuario);
             }
@@ -3648,16 +3858,31 @@ namespace Fuji.RISLite.Site
             try
             {
                 mdl.bitActivo = true;
-                mdl.bitIconBootstrap = chkIcono.Checked;
+                //mdl.bitIconBootstrap = chkIcono.Checked;
+                mdl.intSitioID = Convert.ToInt32(ddlSitioAdicionales.SelectedValue);
                 mdl.bitObservaciones = chkObservaciones.Checked;
                 mdl.datFecha = DateTime.Now;
                 mdl.intTipoAdicionalID = Convert.ToInt32(ddlTipoVariable.SelectedValue);
                 mdl.intTipoBotonID = Convert.ToInt32(ddlTipoControl.SelectedValue);
                 mdl.vchNombreAdicional = txtNomAdi.Text;
-                mdl.vchURLImagen = txtImagenAdi.Text;
+                string folderPath = Server.MapPath("~/Iconos/" + "/" + ddlSitioAdicionales.SelectedValue + "/");
+                foreach (UploadedFile f in RadFileUp.UploadedFiles)
+                {
+                    if (!Directory.Exists(folderPath))
+                    {
+                        //If Directory (Folder) does not exists. Create it.
+                        Directory.CreateDirectory(folderPath);
+                    }
+                    if (File.Exists(folderPath + f.GetName()))
+                    {
+                        File.Delete(folderPath + f.GetName());
+                    }
+                    f.SaveAs(folderPath + f.GetName(), true);
+                }
+                mdl.vchURLImagen = RadFileUp.UploadedFiles[0].GetName();
                 mdl.vchUserAdmin = Usuario.vchUsuario;
             }
-            catch(Exception eOA)
+            catch (Exception eOA)
             {
                 Log.EscribeLog("Existe un error en obtenerAdicional: " + eOA.Message, 3, Usuario.vchUsuario);
             }
@@ -3671,7 +3896,7 @@ namespace Fuji.RISLite.Site
                 Session["ddlSelectedTipoVariable"] = ddlTipoVariable.SelectedValue;
                 cargarAdicional();
             }
-            catch(Exception edd)
+            catch (Exception edd)
             {
                 Log.EscribeLog("Existe un error en ddlTipoVariable_SelectedIndexChanged: " + edd.Message, 3, Usuario.vchUsuario);
             }
@@ -3834,12 +4059,36 @@ namespace Fuji.RISLite.Site
                 mdlRes.datFecha = DateTime.Now;
                 TextBox txtNamevar = (TextBox)grvAdicional.Rows[e.RowIndex].FindControl("txtItemNombre");
                 mdlRes.vchNombreAdicional = txtNamevar.Text;
-                TextBox txtImagen = (TextBox)grvAdicional.Rows[e.RowIndex].FindControl("txtImagenItem");
-                mdlRes.vchURLImagen = txtImagen.Text;
+                mdlRes.intAdicionalesID = Convert.ToInt32(grvAdicional.DataKeys[e.RowIndex].Values["intAdicionalesID"].ToString());
+                Label txtImagen = (Label)grvAdicional.Rows[e.RowIndex].FindControl("txtImagenItem");
+                RadAsyncUpload fileup = (RadAsyncUpload)grvAdicional.Rows[e.RowIndex].FindControl("RadFileUpItem");
+                string folderPath = Server.MapPath("~/Iconos/" + "/" + ddlSitioAdicionales.SelectedValue + "/");
+
+                if (fileup.UploadedFiles.Count == 0)
+                {
+                    mdlRes.vchURLImagen = txtImagen.Text;
+                }
+                else
+                {
+                    foreach (UploadedFile f in fileup.UploadedFiles)
+                    {
+                        if (!Directory.Exists(folderPath))
+                        {
+                            //If Directory (Folder) does not exists. Create it.
+                            Directory.CreateDirectory(folderPath);
+                        }
+                        if (File.Exists(folderPath + f.GetName()))
+                        {
+                            File.Delete(folderPath + f.GetName());
+                        }
+                        f.SaveAs(folderPath + f.GetName(), true);
+                    }
+                    mdlRes.vchURLImagen = fileup.UploadedFiles[0].GetName();
+                }
+                //mdlRes.vchURLImagen = txtImagen.Text;
                 mdlRes.intTipoAdicionalID = Convert.ToInt32((grvAdicional.Rows[e.RowIndex].FindControl("ddlTipoAdicionalItem") as DropDownList).SelectedItem.Value);
                 mdlRes.intTipoBotonID = Convert.ToInt32((grvAdicional.Rows[e.RowIndex].FindControl("ddlTipoControlITem") as DropDownList).SelectedItem.Value);
                 mdlRes.bitObservaciones = (grvAdicional.Rows[e.RowIndex].FindControl("chkObsItem") as CheckBox).Checked;
-                mdlRes.bitIconBootstrap = (grvAdicional.Rows[e.RowIndex].FindControl("chkObsItem") as CheckBox).Checked;
                 mdlRes.vchUserAdmin = Usuario.vchUsuario;
                 if (mdlRes != null)
                 {
@@ -3850,12 +4099,13 @@ namespace Fuji.RISLite.Site
                         if (response.Success)
                         {
                             ShowMessage("Se actualizo correctamente.", MessageType.Correcto, "alert_container");
+                            limpiarControlesAdicional();
                             grvAdicional.EditIndex = -1;
                             cargarAdicional();
                         }
                         else
                         {
-                            ShowMessage("Existe un error: " + response.Success, MessageType.Error, "alert_container");
+                            ShowMessage("Existe un error: " + response.Mensaje, MessageType.Error, "alert_container");
                         }
                     }
                     else
@@ -3868,7 +4118,7 @@ namespace Fuji.RISLite.Site
             {
                 ShowMessage("Existe un error: " + eUpdating.Message, MessageType.Error, "alert_container");
                 Log.EscribeLog("Existe un error en grvAdicional_RowUpdating: " + eUpdating.Message, 3, Usuario.vchUsuario);
-            } 
+            }
         }
 
         protected void txtBandejaAdi_TextChanged(object sender, EventArgs e)
@@ -3906,6 +4156,502 @@ namespace Fuji.RISLite.Site
             catch (Exception eddS)
             {
                 Log.EscribeLog("Existe un error ddlBandejaAdi_SelectedIndexChanged de frmConfiguracion: " + eddS.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        #region sitio
+        private void cargarSitios()
+        {
+            try
+            {
+                grvSitio.DataSource = null;
+                List<tbl_CAT_Sitio> lstSitio = new List<tbl_CAT_Sitio>();
+                SitioRequest request = new SitioRequest();
+                request.mdlUser = Usuario;
+                lstSitio = RisService.getListSitios(request);
+                if (lstSitio != null)
+                {
+                    if (lstSitio.Count > 0)
+                    {
+                        grvSitio.DataSource = lstSitio;
+                    }
+                }
+                grvSitio.DataBind();
+            }
+            catch (Exception ecU)
+            {
+                Log.EscribeLog("Existe un error en cargarSitios: " + ecU.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void btnAddSitio_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                tbl_CAT_Sitio sitio = new tbl_CAT_Sitio();
+                sitio.vchNombreSitio = txtAddSitio.Text;
+                sitio.bitActivo = true;
+                sitio.datFecha = DateTime.Now;
+                sitio.vchUserAdmin = Usuario.vchUserAdmin;
+                if (sitio != null)
+                {
+                    SitioRequest request = new SitioRequest();
+                    SitioResponse response = new SitioResponse();
+                    request.mdlUser = Usuario;
+                    request.mdlSitio = sitio;
+                    if (request != null)
+                    {
+                        response = RisService.setSitio(request);
+                        if (response != null)
+                        {
+                            if (response.Success)
+                            {
+                                ShowMessage("Se agregó correctamente. " + response.Mensaje, MessageType.Correcto, "alert_container");
+                                txtAddSitio.Text = "";
+                                cargarSitios();
+                                cargarListaSitios();
+                                cargaSitiosList();
+                            }
+                            else
+                            {
+                                ShowMessage("Existe un error, favor de verificar: " + response.Mensaje, MessageType.Advertencia, "alert_container");
+                            }
+                        }
+                        else
+                        {
+                            ShowMessage("Existe un error, favor de verificar. ", MessageType.Error, "alert_container");
+                        }
+                    }
+                    else
+                    {
+                        ShowMessage("Existe un error, favor de verificar. ", MessageType.Error, "alert_container");
+                    }
+                }
+                else
+                {
+                    ShowMessage("Verificar la información: ", MessageType.Advertencia, "alert_container");
+                }
+            }
+            catch (Exception eAddUser)
+            {
+                ShowMessage("Existe un error: " + eAddUser.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error en btnAddSitio_Click: " + eAddUser.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvSitio_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            try
+            {
+                if (e.Row.RowType == DataControlRowType.Pager)
+                {
+                    Label lblTotalNumDePaginas = (Label)e.Row.FindControl("lblBandejaTotal");
+                    lblTotalNumDePaginas.Text = grvSitio.PageCount.ToString();
+
+                    TextBox txtIrAlaPagina = (TextBox)e.Row.FindControl("txtBandejaSitio");
+                    txtIrAlaPagina.Text = (grvSitio.PageIndex + 1).ToString();
+
+                    DropDownList ddlTamPagina = (DropDownList)e.Row.FindControl("ddlBandejaSitio");
+                    ddlTamPagina.SelectedValue = grvSitio.PageSize.ToString();
+                }
+
+                if (e.Row.RowType != DataControlRowType.DataRow)
+                {
+                    return;
+                }
+
+                if (e.Row.DataItem != null)
+                {
+                    tbl_CAT_Sitio _mdl = (tbl_CAT_Sitio)e.Row.DataItem;
+                    ImageButton ibtEstatus = (ImageButton)e.Row.FindControl("imbEstatus");
+                    ibtEstatus.Attributes.Add("onclick", "javascript:return confirm('¿Desea realizar el cambio de estatus del item seleccionado?');");
+                    if ((bool)_mdl.bitActivo)
+                        ibtEstatus.ImageUrl = @"~/Images/ic_action_tick.png";
+                    else
+                        ibtEstatus.ImageUrl = @"~/Images/ic_action_cancel.png";
+                }
+            }
+            catch (Exception eGUP)
+            {
+                Log.EscribeLog("Existe un error en grvSitio_RowDataBound: " + eGUP.Message, 3, Usuario.vchUserAdmin);
+            }
+        }
+
+        protected void grvSitio_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            try
+            {
+                if (e.NewPageIndex >= 0)
+                {
+                    this.grvSitio.PageIndex = e.NewPageIndex;
+                    cargarSitios();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.EscribeLog("Existe un error grvSitio_PageIndexChanging: " + ex.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvSitio_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            try
+            {
+                string intUsuarioId = "";
+                clsUsuario mdl = new clsUsuario();
+                switch (e.CommandName)
+                {
+                    case "Estatus":
+                        intUsuarioId = e.CommandArgument.ToString();
+                        break;
+                    case "viewEditar":
+                        intUsuarioId = e.CommandArgument.ToString();
+                        //ScriptManager.RegisterStartupScript(Page, Page.GetType(), "myModal", "$('#myModal').modal();", true);
+                        break;
+                }
+            }
+            catch (Exception eRU)
+            {
+                Log.EscribeLog("Existe un error grvSitio_RowCommand: " + eRU.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvSitio_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            try
+            {
+                grvSitio.EditIndex = e.NewEditIndex;
+                cargarSitios();
+            }
+            catch (Exception eGU)
+            {
+                Log.EscribeLog("Existe un error en grvSitio_RowEditing : " + eGU.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvSitio_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+            try
+            {
+                SitioRequest request = new SitioRequest();
+                SitioResponse response = new SitioResponse();
+                request.mdlUser = Usuario;
+                tbl_CAT_Sitio mdlVar = new tbl_CAT_Sitio();
+                mdlVar.bitActivo = true;
+                mdlVar.datFecha = DateTime.Now;
+                TextBox txtNameSitio = (TextBox)grvSitio.Rows[e.RowIndex].FindControl("txtNombreSitio");
+                mdlVar.vchNombreSitio = txtNameSitio.Text.ToUpper();
+                mdlVar.intSitioID = Convert.ToInt16(grvSitio.DataKeys[e.RowIndex].Values["intSitioID"].ToString());
+                if (mdlVar != null)
+                {
+                    request.mdlUser = Usuario;
+                    request.mdlSitio = mdlVar;
+                    response = RisService.setActualizaSitio(request);
+                    if (response != null)
+                    {
+                        if (response.Success)
+                        {
+                            ShowMessage("Se actualizo correctamente el sitio", MessageType.Correcto, "alert_container");
+                            grvSitio.EditIndex = -1;
+                            cargarSitios();
+                        }
+                        else
+                        {
+                            ShowMessage("Existe un error: " + response.Success, MessageType.Error, "alert_container");
+                        }
+                    }
+                    else
+                    {
+                        ShowMessage("Favor de revisar la información.", MessageType.Error, "alert_container");
+                    }
+                }
+            }
+            catch (Exception eUpdating)
+            {
+                Log.EscribeLog("Existe un error en grvSitio_RowUpdating" + eUpdating, 3, Usuario.vchUserAdmin);
+                ShowMessage("Existe un error: " + eUpdating.Message, MessageType.Error, "alert_container");
+            }
+        }
+
+        protected void grvSitio_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+            try
+            {
+                grvSitio.EditIndex = -1;
+                cargarSitios();
+            }
+            catch (Exception eCE)
+            {
+                Log.EscribeLog("Existe un error en grvSitio_RowCancelingEdit: " + eCE.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void ddlBandejaSitio_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                DropDownList dropDownList = (DropDownList)sender;
+                if (int.Parse(dropDownList.SelectedValue) != 0)
+                {
+                    this.grvSitio.AllowPaging = true;
+                    this.grvSitio.PageSize = int.Parse(dropDownList.SelectedValue);
+                }
+                else
+                    this.grvSitio.AllowPaging = false;
+                this.cargarSitios();
+            }
+            catch (Exception eddS)
+            {
+                Log.EscribeLog("Existe un error ddlBandejaSitio_SelectedIndexChanged de frmAdminUser: " + eddS.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void txtBandejaSitio_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                TextBox txtBandejaAvaluosGoToPage = (TextBox)sender;
+                int numeroPagina;
+                if (int.TryParse(txtBandejaAvaluosGoToPage.Text.Trim(), out numeroPagina))
+                    this.grvSitio.PageIndex = numeroPagina - 1;
+                else
+                    this.grvSitio.PageIndex = 0;
+                this.cargarSitios();
+            }
+            catch (Exception ex)
+            {
+                Log.EscribeLog("Existe un error txtBandejaSitio_TextChanged de frmAdminUser: " + ex.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void ddlTipoUsuario_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Convert.ToInt32(ddlTipoUsuario.SelectedValue) > 1)
+                {
+                    ddlSitioUser.Enabled = true;
+                    rfvSitioUser.Enabled = true;
+                    cargarListaSitios();
+                }
+                else
+                {
+                    ddlSitioUser.Enabled = false;
+                    rfvSitioUser.Enabled = false;
+                    ddlSitioUser.DataSource = null;
+                    ddlSitioUser.Items.Clear();
+                    ddlSitioUser.DataBind();
+                }
+            }
+            catch (Exception eTIPo)
+            {
+                Log.EscribeLog("Existe un error en ddlTipoUsuario_SelectedIndexChanged: " + eTIPo.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargarListaSitios()
+        {
+            try
+            {
+                ddlSitioUser.DataSource = null;
+                List<tbl_CAT_Sitio> lstSitio = new List<tbl_CAT_Sitio>();
+                SitioRequest request = new SitioRequest();
+                request.mdlUser = Usuario;
+                lstSitio = RisService.getListSitios(request);
+                if (lstSitio != null)
+                {
+                    if (lstSitio.Count > 0)
+                    {
+                        ddlSitioUser.DataSource = lstSitio;
+                        ddlSitioUser.DataTextField = "vchNombreSitio";
+                        ddlSitioUser.DataValueField = "intSitioID";
+                        ddlSitioUser.Items.Insert(0, new ListItem("Seleccionar Sitio...", "0"));
+                    }
+                }
+                ddlSitioUser.DataBind();
+            }
+            catch (Exception eclS)
+            {
+                Log.EscribeLog("Existe un error en cargarListaSitios: " + eclS.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        #endregion sitio
+
+        protected void ddlSitioSistema_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                clearConfigSistema();
+                if (Convert.ToInt32(ddlSitioSistema.SelectedValue) > 0)
+                {
+                    cargaConfigSistema();
+                    //btnSaveConfig.Enabled = true;
+                }
+                //else
+                //{
+                //    btnSaveConfig.Enabled = false;
+                //}
+            }
+            catch (Exception eddS)
+            {
+                Log.EscribeLog("Existe un error en ddlSitioSistema_SelectedIndexChanged: " + eddS.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void ddlSitioCorreo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                clearEmailSistema();
+                if (Convert.ToInt32(ddlSitioCorreo.SelectedValue) > 0)
+                {
+                    cargaConfigEmail();
+                    btnSaveEmailSistema.Enabled = true;
+                }
+                else
+                {
+                    btnSaveEmailSistema.Enabled = false;
+                }
+            }
+            catch (Exception eddS)
+            {
+                Log.EscribeLog("Existe un error en ddlSitioCorreo_SelectedIndexChanged: " + eddS.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void clearEmailSistema()
+        {
+            try
+            {
+                txtEmailSistema.Text = "";
+                txtPasswordSistema.Text = "";
+                txtHost.Text = "";
+                txtPortCorreo.Text = "";
+                chkSSL.Checked = false;
+            }
+            catch (Exception ecCS)
+            {
+                Log.EscribeLog("Existe un error en clearEmailSistema: " + ecCS.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void ddlSitioVarAdi_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                cleanAdminVarAdi();
+                if (Convert.ToInt32(ddlSitioVarAdi.SelectedValue) > 0)
+                {
+                    cargarVarAdicionales();
+                }
+            }
+            catch (Exception edsvA)
+            {
+                Log.EscribeLog("Existe un errro en ddlSitioVarAdi_SelectedIndexChanged:" + edsvA.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cleanAdminVarAdi()
+        {
+            try
+            {
+                grvAddPaciente.DataSource = null;
+                grvAddPaciente.DataBind();
+                grvAddCita.DataSource = null;
+                grvAddCita.DataBind();
+                grvVarID.DataSource = null;
+                grvVarID.DataBind();
+            }
+            catch (Exception ecAVA)
+            {
+                Log.EscribeLog("Existe un error en cleanAdminVarAdi: " + ecAVA.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void radCbxSitioCatalogo_SelectedIndexChanged(object sender, RadComboBoxSelectedIndexChangedEventArgs e)
+        {
+            try
+            {
+                cargaCatalogos();
+            }
+            catch (Exception eCat)
+            {
+                Log.EscribeLog("Existe un error en radCbxSitioCatalogo_SelectedIndexChanged: " + eCat.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void radCbxCatalogo_SelectedIndexChanged(object sender, RadComboBoxSelectedIndexChangedEventArgs e)
+        {
+            try
+            {
+                cargaCatalogos();
+            }
+            catch (Exception eCat)
+            {
+                Log.EscribeLog("Existe un error en radCbxCatalogo_SelectedIndexChanged: " + eCat.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void ajxPanelAdminCat_AjaxRequest(object sender, AjaxRequestEventArgs e)
+        {
+            try
+            {
+                cargaCatalogos();
+            }
+            catch (Exception eCat)
+            {
+                Log.EscribeLog("Existe un error en ajxPanelAdminCat_AjaxRequest: " + eCat.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void ddlSitioMod_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                cargarPrestacion();
+            }
+            catch (Exception eCat)
+            {
+                Log.EscribeLog("Existe un error en ddlSitioMod_SelectedIndexChanged: " + eCat.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void radAjaxPanel2_AjaxRequest(object sender, AjaxRequestEventArgs e)
+        {
+            try
+            {
+                cargarPrestacion();
+            }
+            catch (Exception eCat)
+            {
+                Log.EscribeLog("Existe un error en radAjaxPanel2_AjaxRequest: " + eCat.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void AjaxPanelEquipo_AjaxRequest(object sender, AjaxRequestEventArgs e)
+        {
+            try
+            {
+                cargarEquipo();
+            }
+            catch (Exception eCat)
+            {
+                Log.EscribeLog("Existe un error en AjaxPanelEquipo_AjaxRequest: " + eCat.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void radAjaxPanelAdicionales_AjaxRequest(object sender, AjaxRequestEventArgs e)
+        {
+            try
+            {
+                Session["ddlSelectedTipoVariable"] = ddlTipoVariable.SelectedValue;
+                grvAdicional.EditIndex = -1;
+                cargarAdicional();
+            }
+            catch (Exception edd)
+            {
+                Log.EscribeLog("Existe un error en ddlTipoVariable_SelectedIndexChanged: " + edd.Message, 3, Usuario.vchUsuario);
             }
         }
     }

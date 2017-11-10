@@ -25,6 +25,8 @@ namespace Fuji.RISLite.DataAccess
                     {
                         var query = (from _user in dbRisDA.tbl_CAT_Usuario
                                      join catTipo in dbRisDA.tbl_CAT_TipoUsuario on _user.intTipoUsuario equals catTipo.intTipoUsuario
+                                     join sitio in dbRisDA.tbl_CAT_Sitio on _user.intSitioID equals sitio.intSitioID into sitioDef
+                                     from x in sitioDef.DefaultIfEmpty()
                                      where _user.vchUsuario.Trim().ToUpper() == user.Trim().ToUpper() && (bool)_user.bitActivo
                                      select new
                                      {
@@ -34,8 +36,11 @@ namespace Fuji.RISLite.DataAccess
                                          vchUsuario = _user.vchUsuario,
                                          vchTipoUsuario = catTipo.vchTipoUsuario,
                                          bitActivo = _user.bitActivo,
+                                         vchEmail = _user.vchEmail == null ? "" : _user.vchEmail,
                                          datFecha = _user.datFecha,
-                                         vchUserAdmin = _user.vchUserAdmin
+                                         vchUserAdmin = _user.vchUserAdmin,
+                                         intSitioId = _user.intSitioID == null ? 0: _user.intSitioID,
+                                         vchSitio = x.vchNombreSitio == null ? "" : x.vchNombreSitio
                                      }
                            ).First();
                         if (query != null)
@@ -47,9 +52,12 @@ namespace Fuji.RISLite.DataAccess
                                 Usuario.vchTipoUsuario = query.vchTipoUsuario;
                                 Usuario.vchNombre = query.vchNombre;
                                 Usuario.vchUsuario = query.vchUsuario;
+                                Usuario.vchEmail = query.vchEmail;
                                 Usuario.bitActivo = (bool)query.bitActivo;
                                 Usuario.datFecha = (DateTime)query.datFecha;
                                 Usuario.vchUserAdmin = query.vchUserAdmin;
+                                Usuario.intSitioID = (int)query.intSitioId;
+                                Usuario.vchSitio = query.vchSitio;
                                 Usuario.Token = Security.Encrypt(query.intUsuarioID + "-" + query.vchUsuario);
                                 lstVistas = getListVistas(Usuario.intTipoUsuario);
                             }
@@ -59,6 +67,7 @@ namespace Fuji.RISLite.DataAccess
             }
             catch (Exception egU)
             {
+                Success = false;
                 Log.EscribeLog("Existe un error en getUser: " + egU.Message, 3, user);
             }
             return Success;
@@ -137,14 +146,14 @@ namespace Fuji.RISLite.DataAccess
             return lst;
         }
 
-        public List<stp_getListCatalogo_Result> getListCatalogo(int intCatalogoId, string user)
+        public List<stp_getListCatalogo_Result> getListCatalogo(int intCatalogoId, int intSitioID, string user)
         {
             List<stp_getListCatalogo_Result> list = new List<stp_getListCatalogo_Result>();
             try
             {
                 using (dbRisDA = new RISLiteEntities())
                 {
-                    var query = dbRisDA.stp_getListCatalogo(intCatalogoId).ToList();
+                    var query = dbRisDA.stp_getListCatalogo(intCatalogoId, intSitioID).ToList();
                     if (query != null)
                     {
                         if (query.Count > 0)
@@ -205,14 +214,14 @@ namespace Fuji.RISLite.DataAccess
             return response;
         }
 
-        public stp_setItemCatalogo_Result setItemCatalogo(int intCatalogoID, string vchValor, string user)
+        public stp_setItemCatalogo_Result setItemCatalogo(int intCatalogoID, int intSitioID, string vchValor, string user)
         {
             stp_setItemCatalogo_Result response = new stp_setItemCatalogo_Result();
             try
             {
                 using (dbRisDA = new RISLiteEntities())
                 {
-                    var query = dbRisDA.stp_setItemCatalogo(intCatalogoID, vchValor, user);
+                    var query = dbRisDA.stp_setItemCatalogo(intCatalogoID, intSitioID, vchValor, user);
                     if (query != null)
                     {
                         response = query.First();
@@ -448,8 +457,157 @@ namespace Fuji.RISLite.DataAccess
         }
         #endregion tecnicos
 
+        #region sitios
+        public List<tbl_CAT_Sitio> getListSitios(string user)
+        {
+            List<tbl_CAT_Sitio> lst = new List<tbl_CAT_Sitio>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Sitio.Any())
+                    {
+                        var query = dbRisDA.tbl_CAT_Sitio.ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    tbl_CAT_Sitio mdl = new tbl_CAT_Sitio();
+                                    mdl.intSitioID = (int)item.intSitioID;
+                                    mdl.vchNombreSitio = item.vchNombreSitio;
+                                    mdl.vchUserAdmin = item.vchUserAdmin;
+                                    mdl.datFecha = (DateTime)item.datFecha;
+                                    mdl.bitActivo = item.bitActivo;
+                                    lst.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getListSitios: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }
+
+        public bool setSitio(tbl_CAT_Sitio sitio, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                tbl_CAT_Sitio mdlSit = new tbl_CAT_Sitio();
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    //Primero en cat
+                    if (!dbRisDA.tbl_CAT_Sitio.Any(x => x.vchNombreSitio.ToUpper() == sitio.vchNombreSitio.ToUpper()))
+                    {
+                        mdlSit.bitActivo = sitio.bitActivo;
+                        mdlSit.datFecha = DateTime.Now;
+                        mdlSit.vchNombreSitio = sitio.vchNombreSitio;
+                        mdlSit.vchUserAdmin = user;
+                        dbRisDA.tbl_CAT_Sitio.Add(mdlSit);
+                        dbRisDA.SaveChanges();
+                        valido = true;
+                    }
+                    else
+                    {
+                        mensaje += " Ya existe el sitio.";
+                        valido = false;
+                    }
+                }
+            }
+            catch (Exception eSU)
+            {
+                valido = false;
+                mensaje += eSU.Message;
+                Log.EscribeLog("Existe un error en setSitio: " + eSU.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public bool setActualizaSitio(tbl_CAT_Sitio sitio, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Sitio.Any(x => x.intSitioID == sitio.intSitioID))
+                    {
+                        if (!dbRisDA.tbl_CAT_Sitio.Any(x => x.vchNombreSitio == sitio.vchNombreSitio))
+                        {
+                            tbl_CAT_Sitio mdlSit = new tbl_CAT_Sitio();
+                            mdlSit = dbRisDA.tbl_CAT_Sitio.First(x => x.intSitioID == sitio.intSitioID);
+                            mdlSit.bitActivo = sitio.bitActivo;
+                            mdlSit.datFecha = DateTime.Now;
+                            mdlSit.vchUserAdmin = user;
+                            mdlSit.vchNombreSitio = sitio.vchNombreSitio;
+                            dbRisDA.SaveChanges();
+                            valido = true;
+                        }
+                        else
+                        {
+                            mensaje = "El nombre del sitio ya existe.";
+                            valido = false;
+                        }
+                    }
+                    else
+                    {
+                        mensaje = "No existe el sitio.";
+                        valido = false;
+                    }
+                }
+            }
+            catch (Exception eSU)
+            {
+                valido = false;
+                mensaje = eSU.Message;
+                Log.EscribeLog("Existe un error en setActualizaSitio: " + eSU.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public bool setEstatusSitio(int intSitioID, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Sitio.Any(x => x.intSitioID == intSitioID))
+                    {
+                        tbl_CAT_Sitio mdlUser = new tbl_CAT_Sitio();
+                        mdlUser = dbRisDA.tbl_CAT_Sitio.First(x => x.intSitioID == intSitioID);
+                        mdlUser.bitActivo = !mdlUser.bitActivo;
+                        mdlUser.datFecha = DateTime.Today;
+                        mdlUser.vchUserAdmin = user;
+                        dbRisDA.SaveChanges();
+                        valido = true;
+                    }
+                    else
+                    {
+                        mensaje = "El sitio no existe.";
+                        valido = false;
+                    }
+                }
+            }
+            catch (Exception eSU)
+            {
+                valido = false;
+                mensaje = eSU.Message;
+                Log.EscribeLog("Existe un error en setEstatusSitio: " + eSU.Message, 3, user);
+            }
+            return valido;
+        }
+
+        #endregion sitios
+
         #region configSitio
-        public bool getConfigSitio(string user, ref tbl_MST_ConfiguracionSistema mdl, ref string mensaje)
+        public bool getConfigSitio(int intSitioID, string user, ref tbl_MST_ConfiguracionSistema mdl, ref string mensaje)
         {
             bool valido = false;
             tbl_MST_ConfiguracionSistema mdlConfig = new tbl_MST_ConfiguracionSistema();
@@ -457,9 +615,42 @@ namespace Fuji.RISLite.DataAccess
             {
                 using (dbRisDA = new RISLiteEntities())
                 {
-                    if (dbRisDA.tbl_MST_ConfiguracionSistema.Any())
+                    if (dbRisDA.tbl_CAT_Sitio.Any(x => x.intSitioID == intSitioID))
                     {
-                        mdl = dbRisDA.tbl_MST_ConfiguracionSistema.First();
+                        var mdlConsulta = (from sitio in dbRisDA.tbl_CAT_Sitio
+                                           join config in dbRisDA.tbl_MST_ConfiguracionSistema on sitio.intSitioID equals config.intSitioID into sitioDef
+                                           from x in sitioDef.DefaultIfEmpty()
+                                           where sitio.intSitioID == intSitioID
+                                           select new
+                                           {
+                                               intConfigID = x.intConfigID == null ? 0 : x.intConfigID,
+                                               intSitioID = sitio.intSitioID,
+                                               bitActivo = x.bitActivo == null ? false : true,
+                                               datFecha = x.datFecha == null ? DateTime.MinValue : x.datFecha,
+                                               vbLogoSitio = x.vbLogoSitio == null ? null : x.vbLogoSitio,
+                                               intWidthImage = x.intWidthImage == null ? 0 : x.intWidthImage,
+                                               intHeigthImage = x.intHeigthImage == null ? 0 : x.intHeigthImage,
+                                               vchDominio = x.vchDominio == null ? "" : x.vchDominio,
+                                               vchPrefijo = x.vchPrefijo == null ? "" : x.vchPrefijo,
+                                               vchUserAdmin = x.vchUserAdmin == null ? "" : x.vchUserAdmin,
+                                               vchVersion = x.vchVersion == null ? "" : x.vchVersion,
+                                               vchNombreSitio = sitio.vchNombreSitio == null ? "" : sitio.vchNombreSitio
+                                           }
+                           ).First();
+                        if (mdlConsulta != null)
+                        {
+                            mdl.bitActivo = mdlConsulta.bitActivo;
+                            mdl.datFecha = mdlConsulta.datFecha;
+                            mdl.intConfigID = mdlConsulta.intConfigID;
+                            mdl.intSitioID = mdlConsulta.intSitioID;
+                            mdl.vbLogoSitio = mdlConsulta.vbLogoSitio;
+                            mdl.intHeigthImage = mdlConsulta.intHeigthImage;
+                            mdl.intWidthImage = mdlConsulta.intWidthImage;
+                            mdl.vchDominio = mdlConsulta.vchDominio;
+                            mdl.vchPrefijo = mdlConsulta.vchPrefijo;
+                            mdl.vchUserAdmin = mdlConsulta.vchUserAdmin;
+                            mdl.vchVersion = mdlConsulta.vchVersion;
+                        }
                         valido = true;
                     }
                     else
@@ -508,22 +699,41 @@ namespace Fuji.RISLite.DataAccess
             {
                 using (dbRisDA = new RISLiteEntities())
                 {
+                    tbl_MST_ConfiguracionSistema mdl = new tbl_MST_ConfiguracionSistema();
                     if (dbRisDA.tbl_MST_ConfiguracionSistema.Any(x => x.intConfigID == mdlConfigSistem.intConfigID))
                     {
-                        tbl_MST_ConfiguracionSistema mdl = new tbl_MST_ConfiguracionSistema();
                         mdl = dbRisDA.tbl_MST_ConfiguracionSistema.First(x => x.intConfigID == mdlConfigSistem.intConfigID);
                         if (mdl != null)
                         {
                             mdl.datFecha = DateTime.Now;
                             mdl.vbLogoSitio = mdlConfigSistem.vbLogoSitio;
+                            mdl.intWidthImage = mdlConfigSistem.intWidthImage;
+                            mdl.intHeigthImage = mdlConfigSistem.intHeigthImage;
                             mdl.vchDominio = mdlConfigSistem.vchDominio;
-                            mdl.vchNombreSitio = mdlConfigSistem.vchNombreSitio;
+                            //mdl.vchNombreSitio = mdlConfigSistem.vchNombreSitio;
                             mdl.vchPrefijo = mdlConfigSistem.vchPrefijo;
                             mdl.vchUserAdmin = user;
                             mdl.vchVersion = mdlConfigSistem.vchVersion;
                             dbRisDA.SaveChanges();
                             valido = true;
                         }
+                    }
+                    else
+                    {
+                        mdl.bitActivo = true;
+                        mdl.datFecha = DateTime.Now;
+                        mdl.intSitioID = mdlConfigSistem.intSitioID;
+                        mdl.vbLogoSitio = mdlConfigSistem.vbLogoSitio;
+                        mdl.intWidthImage = mdlConfigSistem.intWidthImage;
+                        mdl.intHeigthImage = mdlConfigSistem.intHeigthImage;
+                        mdl.vchDominio = mdlConfigSistem.vchDominio;
+                        //mdl.vchNombreSitio = mdlConfigSistem.vchNombreSitio;
+                        mdl.vchPrefijo = mdlConfigSistem.vchPrefijo;
+                        mdl.vchUserAdmin = user;
+                        mdl.vchVersion = mdlConfigSistem.vchVersion;
+                        dbRisDA.tbl_MST_ConfiguracionSistema.Add(mdl);
+                        dbRisDA.SaveChanges();
+                        valido = true;
                     }
                 }
             }
@@ -538,7 +748,7 @@ namespace Fuji.RISLite.DataAccess
         #endregion configSitio
 
         #region ConfigEmail
-        public bool getConfigEmail(string user, ref tbl_Conf_CorreoSitio mdl, ref string mensaje)
+        public bool getConfigEmail(int intSitioID, string user, ref tbl_Conf_CorreoSitio mdl, ref string mensaje)
         {
             bool valido = false;
             tbl_Conf_CorreoSitio mdlConfig = new tbl_Conf_CorreoSitio();
@@ -546,7 +756,7 @@ namespace Fuji.RISLite.DataAccess
             {
                 using (dbRisDA = new RISLiteEntities())
                 {
-                    if (dbRisDA.tbl_Conf_CorreoSitio.Any())
+                    if (dbRisDA.tbl_Conf_CorreoSitio.Any(x=>x.intSitioID == intSitioID))
                     {
                         mdl = dbRisDA.tbl_Conf_CorreoSitio.First();
                         valido = true;
@@ -597,9 +807,9 @@ namespace Fuji.RISLite.DataAccess
             {
                 using (dbRisDA = new RISLiteEntities())
                 {
+                    tbl_Conf_CorreoSitio mdl = new tbl_Conf_CorreoSitio();
                     if (dbRisDA.tbl_Conf_CorreoSitio.Any(x => x.intConfigCorreoID == mdlConfigSistem.intConfigCorreoID))
                     {
-                        tbl_Conf_CorreoSitio mdl = new tbl_Conf_CorreoSitio();
                         mdl = dbRisDA.tbl_Conf_CorreoSitio.First(x => x.intConfigCorreoID == mdlConfigSistem.intConfigCorreoID);
                         if (mdl != null)
                         {
@@ -615,6 +825,22 @@ namespace Fuji.RISLite.DataAccess
                             dbRisDA.SaveChanges();
                             valido = true;
                         }
+                    }
+                    else
+                    {
+                        mdl.bitActivo = mdlConfigSistem.bitActivo;
+                        mdl.BitEnableSsl = mdlConfigSistem.BitEnableSsl;
+                        mdl.datFecha = mdlConfigSistem.datFecha;
+                        //mdl.intConfigCorreoID = mdlConfigSistem.intConfigCorreoID;
+                        mdl.intPort = mdlConfigSistem.intPort;
+                        mdl.intSitioID = mdlConfigSistem.intSitioID;
+                        mdl.vchCorreo = mdlConfigSistem.vchCorreo;
+                        mdl.vchHost = mdlConfigSistem.vchHost;
+                        mdl.vchPassword = mdlConfigSistem.vchPassword;
+                        mdl.vchUserAdmin = user;
+                        mdl.vchUsuarioCorreo = mdlConfigSistem.vchUsuarioCorreo;
+                        dbRisDA.tbl_Conf_CorreoSitio.Add(mdl);
+                        dbRisDA.SaveChanges();
                     }
                 }
             }
@@ -640,6 +866,8 @@ namespace Fuji.RISLite.DataAccess
                     {
                         var query = (from _user in dbRisDA.tbl_CAT_Usuario
                                      join cat in dbRisDA.tbl_CAT_TipoUsuario on _user.intTipoUsuario equals cat.intTipoUsuario
+                                     join sitio in dbRisDA.tbl_CAT_Sitio on _user.intSitioID equals sitio.intSitioID into sitioDef
+                                     from x in sitioDef.DefaultIfEmpty()
                                      select new
                                      {
                                          intTipoUsuario = _user.intTipoUsuario,
@@ -648,8 +876,11 @@ namespace Fuji.RISLite.DataAccess
                                          datFecha = _user.datFecha,
                                          vchNombre = _user.vchNombre,
                                          vchUserAdmin = _user.vchUserAdmin,
+                                         vchEmail = _user.vchEmail,
                                          vchUsuario = _user.vchUsuario,
-                                         vchTipoUsuario = cat.vchTipoUsuario
+                                         vchTipoUsuario = cat.vchTipoUsuario,
+                                         intSitioId = _user.intSitioID == null ? 0 : _user.intSitioID,
+                                         vchSitio = x.vchNombreSitio == null ? "" : x.vchNombreSitio
                                      }).ToList();
                         if (query != null)
                         {
@@ -663,9 +894,12 @@ namespace Fuji.RISLite.DataAccess
                                     mdl.bitActivo = (bool)item.bitActivo;
                                     mdl.datFecha = (DateTime)item.datFecha;
                                     mdl.vchNombre = item.vchNombre;
+                                    mdl.vchEmail = item.vchEmail;
                                     mdl.vchUserAdmin = item.vchUserAdmin;
                                     mdl.vchUsuario = item.vchUsuario;
                                     mdl.vchTipoUsuario = item.vchTipoUsuario;
+                                    mdl.intSitioID = (int)item.intSitioId;
+                                    mdl.vchSitio = item.vchSitio;
                                     lst.Add(mdl);
                                 }
                             }
@@ -689,13 +923,17 @@ namespace Fuji.RISLite.DataAccess
                 {
                     if (!dbRisDA.tbl_CAT_Usuario.Any(x => x.vchUsuario.ToUpper() == usuario.vchUsuario.ToUpper() && (bool)x.bitActivo))
                     {
+
                         tbl_CAT_Usuario mdlUser = new tbl_CAT_Usuario();
                         mdlUser.bitActivo = usuario.bitActivo;
                         mdlUser.datFecha = usuario.datFecha;
                         mdlUser.intTipoUsuario = usuario.intTipoUsuario;
+                        mdlUser.vchEmail = usuario.vchEmail;
                         mdlUser.vchNombre = usuario.vchNombre;
                         mdlUser.vchUserAdmin = user;
                         mdlUser.vchUsuario = usuario.vchUsuario;
+                        if (usuario.intSitioID > 0)
+                            mdlUser.intSitioID = usuario.intSitioID;
                         dbRisDA.tbl_CAT_Usuario.Add(mdlUser);
                         dbRisDA.SaveChanges();
                         valido = true;
@@ -731,6 +969,8 @@ namespace Fuji.RISLite.DataAccess
                         mdlUser.datFecha = usuario.datFecha;
                         mdlUser.vchNombre = usuario.vchNombre;
                         mdlUser.vchUserAdmin = user;
+                        //mdlUser.intSitioID = usuario.intSitioID;
+                        mdlUser.vchEmail = usuario.vchEmail;
                         mdlUser.vchUsuario = usuario.vchUsuario;
                         dbRisDA.SaveChanges();
                         valido = true;
@@ -786,16 +1026,16 @@ namespace Fuji.RISLite.DataAccess
         #endregion AdminUsers
 
         #region varadicionales
-        public List<clsVarAcicionales> getVariablesAdicionalPaciente(string user)
+        public List<clsVarAcicionales> getVariablesAdicionalPaciente(string user, int intSitioID)
         {
             List<clsVarAcicionales> lstreturn = new List<clsVarAcicionales>();
             try
             {
                 using (dbRisDA = new RISLiteEntities())
                 {
-                    if (dbRisDA.tbl_CONFIG_VariablesAdiPaciente.Any())
+                    if (dbRisDA.tbl_CONFIG_VariablesAdiPaciente.Any(x => x.intSitioID == intSitioID))
                     {
-                        var query = dbRisDA.tbl_CONFIG_VariablesAdiPaciente.ToList();
+                        var query = dbRisDA.tbl_CONFIG_VariablesAdiPaciente.Where(x => x.intSitioID == intSitioID).ToList();
                         if (query != null)
                         {
                             if (query.Count > 0)
@@ -822,16 +1062,16 @@ namespace Fuji.RISLite.DataAccess
             return lstreturn;
         }
 
-        public List<clsVarAcicionales> getVariablesAdicionalCita(string user)
+        public List<clsVarAcicionales> getVariablesAdicionalCita(string user, int intSitioID)
         {
             List<clsVarAcicionales> lstreturn = new List<clsVarAcicionales>();
             try
             {
                 using (dbRisDA = new RISLiteEntities())
                 {
-                    if (dbRisDA.tbl_CONFIG_VariablesAdiCita.Any())
+                    if (dbRisDA.tbl_CONFIG_VariablesAdiCita.Any(x => x.intSitioID == intSitioID))
                     {
-                        var query = dbRisDA.tbl_CONFIG_VariablesAdiCita.ToList();
+                        var query = dbRisDA.tbl_CONFIG_VariablesAdiCita.Where(x => x.intSitioID == intSitioID).ToList();
                         if (query != null)
                         {
                             if (query.Count > 0)
@@ -858,16 +1098,16 @@ namespace Fuji.RISLite.DataAccess
             return lstreturn;
         }
 
-        public List<tbl_CAT_Identificacion> getVariablesAdicionalID(string user)
+        public List<tbl_CAT_Identificacion> getVariablesAdicionalID(string user, int intSitioID)
         {
             List<tbl_CAT_Identificacion> lstreturn = new List<tbl_CAT_Identificacion>();
             try
             {
                 using (dbRisDA = new RISLiteEntities())
                 {
-                    if (dbRisDA.tbl_CAT_Identificacion.Any())
+                    if (dbRisDA.tbl_CAT_Identificacion.Any(x => x.intSitioID == intSitioID))
                     {
-                        var query = dbRisDA.tbl_CAT_Identificacion.ToList();
+                        var query = dbRisDA.tbl_CAT_Identificacion.Where(x => x.intSitioID == intSitioID).ToList();
                         if (query != null)
                         {
                             if (query.Count > 0)
@@ -885,7 +1125,7 @@ namespace Fuji.RISLite.DataAccess
             return lstreturn;
         }
 
-        public bool setAgregarVariable(int iTipoVariable, string vchVarible, string user, ref string mensaje)
+        public bool setAgregarVariable(int iTipoVariable, string vchVarible, int intSitioID, string user, ref string mensaje)
         {
             bool valido = false;
             try
@@ -895,13 +1135,14 @@ namespace Fuji.RISLite.DataAccess
                     case 1: //Variable adicional Paciente
                         using (dbRisDA = new RISLiteEntities())
                         {
-                            if (!dbRisDA.tbl_CONFIG_VariablesAdiPaciente.Any(x => x.vchNombreVariable.ToUpper() == vchVarible))
+                            if (!dbRisDA.tbl_CONFIG_VariablesAdiPaciente.Any(x => x.vchNombreVariable.ToUpper() == vchVarible && x.intSitioID == intSitioID))
                             {
                                 tbl_CONFIG_VariablesAdiPaciente mdl = new tbl_CONFIG_VariablesAdiPaciente();
                                 mdl.vchNombreVariable = vchVarible;
                                 mdl.datFecha = DateTime.Now;
                                 mdl.bitActivo = true;
                                 mdl.vchUserAdmin = user;
+                                mdl.intSitioID = intSitioID;
                                 dbRisDA.tbl_CONFIG_VariablesAdiPaciente.Add(mdl);
                                 dbRisDA.SaveChanges();
                                 valido = true;
@@ -915,13 +1156,14 @@ namespace Fuji.RISLite.DataAccess
                     case 2: //Variable adicional Cita
                         using (dbRisDA = new RISLiteEntities())
                         {
-                            if (!dbRisDA.tbl_CONFIG_VariablesAdiCita.Any(x => x.vchNombreVariable.ToUpper() == vchVarible))
+                            if (!dbRisDA.tbl_CONFIG_VariablesAdiCita.Any(x => x.vchNombreVariable.ToUpper() == vchVarible && x.intSitioID == intSitioID))
                             {
                                 tbl_CONFIG_VariablesAdiCita mdl = new tbl_CONFIG_VariablesAdiCita();
                                 mdl.vchNombreVariable = vchVarible;
                                 mdl.datFecha = DateTime.Now;
                                 mdl.bitActivo = true;
                                 mdl.vchUserAdmin = user;
+                                mdl.intSitioID = intSitioID;
                                 dbRisDA.tbl_CONFIG_VariablesAdiCita.Add(mdl);
                                 dbRisDA.SaveChanges();
                                 valido = true;
@@ -935,13 +1177,14 @@ namespace Fuji.RISLite.DataAccess
                     case 3: //Variable adicional Identificaciones
                         using (dbRisDA = new RISLiteEntities())
                         {
-                            if (!dbRisDA.tbl_CAT_Identificacion.Any(x => x.vchNombreId.ToUpper() == vchVarible))
+                            if (!dbRisDA.tbl_CAT_Identificacion.Any(x => x.vchNombreId.ToUpper() == vchVarible && x.intSitioID == intSitioID))
                             {
                                 tbl_CAT_Identificacion mdl = new tbl_CAT_Identificacion();
                                 mdl.vchNombreId = vchVarible;
                                 mdl.datFecha = DateTime.Now;
                                 mdl.bitActivo = true;
                                 mdl.vchUserAdmin = user;
+                                mdl.intSitioID = intSitioID;
                                 dbRisDA.tbl_CAT_Identificacion.Add(mdl);
                                 dbRisDA.SaveChanges();
                                 valido = true;
@@ -1143,14 +1386,14 @@ namespace Fuji.RISLite.DataAccess
             return lst;
         }
 
-        public List<clsPrestacion> getListPrestacion(int intModalidadID, string user)
+        public List<clsPrestacion> getListPrestacion(int intModalidadID, int intSitioID, string user)
         {
             List<clsPrestacion> list = new List<clsPrestacion>();
             try
             {
                 using (dbRisDA = new RISLiteEntities())
                 {
-                    var query = dbRisDA.stp_getPrestacionModalidad(intModalidadID).ToList();
+                    var query = dbRisDA.stp_getPrestacionModalidad(intModalidadID, intSitioID).ToList();
                     if (query != null)
                     {
                         if (query.Count > 0)
@@ -1250,7 +1493,7 @@ namespace Fuji.RISLite.DataAccess
                 {
                     if (dbRisDA.tbl_CAT_Prestacion.Any(x => x.intPrestacionID == prestacion.intPrestacionID))
                     {
-                        if (!dbRisDA.tbl_CAT_Prestacion.Any(x => x.intPrestacionID == prestacion.intPrestacionID))
+                        if (!dbRisDA.tbl_CAT_Prestacion.Any(x => x.vchPrestacion == prestacion.vchPrestacion && x.intSitioID == prestacion.intSitioId && x.intDuracionMin == prestacion.intDuracionMin))
                         {
                             tbl_CAT_Prestacion mdlCat = new tbl_CAT_Prestacion();
                             mdlCat = dbRisDA.tbl_CAT_Prestacion.First(x => x.intPrestacionID == prestacion.intPrestacionID);
@@ -1279,7 +1522,7 @@ namespace Fuji.RISLite.DataAccess
             {
                 valido = false;
                 mensaje = eSU.Message;
-                Log.EscribeLog("Existe un error en setActualizaUsuario: " + eSU.Message, 3, user);
+                Log.EscribeLog("Existe un error en setActualizaPrestacion: " + eSU.Message, 3, user);
             }
             return valido;
         }
@@ -1525,7 +1768,7 @@ namespace Fuji.RISLite.DataAccess
             }
             catch (Exception eLT)
             {
-                Log.EscribeLog("Existe un error en getModalidadAgenda: " + eLT.Message, 3, user);
+                Log.EscribeLog("Existe un error en getListEventoCita: " + eLT.Message, 3, user);
             }
             return lst;
         }
@@ -1662,14 +1905,14 @@ namespace Fuji.RISLite.DataAccess
         #endregion AgendaDashboard
 
         #region Equipo
-        public List<tbl_CAT_Equipo> getListEquipo(int intModalidadID, string user)
+        public List<tbl_CAT_Equipo> getListEquipo(int intModalidadID, int intSitioID, string user)
         {
             List<tbl_CAT_Equipo> list = new List<tbl_CAT_Equipo>();
             try
             {
                 using (dbRisDA = new RISLiteEntities())
                 {
-                    var query = dbRisDA.tbl_CAT_Equipo.Where(x => x.intModalidadID == intModalidadID).ToList();
+                    var query = dbRisDA.tbl_CAT_Equipo.Where(x => x.intModalidadID == intModalidadID && x.intSitioID == intSitioID).ToList();
                     if (query != null)
                     {
                         if (query.Count > 0)
@@ -1695,10 +1938,11 @@ namespace Fuji.RISLite.DataAccess
                 using (dbRisDA = new RISLiteEntities())
                 {
                     //Primero en cat
-                    if (!dbRisDA.tbl_CAT_Equipo.Any(x => x.vchNombreEquipo.ToUpper() == equipo.vchNombreEquipo.ToUpper()))
+                    if (!dbRisDA.tbl_CAT_Equipo.Any(x => x.vchNombreEquipo.ToUpper() == equipo.vchNombreEquipo.ToUpper() && x.intSitioID == equipo.intSitioID))
                     {
                         mdlCat.bitActivo = equipo.bitActivo;
                         mdlCat.datFecha = DateTime.Now;
+                        mdlCat.intSitioID = equipo.intSitioID;
                         mdlCat.intModalidadID = equipo.intModalidadID;
                         mdlCat.vchAETitle = equipo.vchAETitle;
                         mdlCat.vchCodigoEquipo = equipo.vchCodigoEquipo;
@@ -1712,7 +1956,7 @@ namespace Fuji.RISLite.DataAccess
                     }
                     else
                     {
-                        mensaje += " Ya existe la prestación.";
+                        mensaje += " Ya existe el equipo.";
                         valido = false;
                     }
                 }
@@ -1735,7 +1979,7 @@ namespace Fuji.RISLite.DataAccess
                 {
                     if (dbRisDA.tbl_CAT_Equipo.Any(x => x.intEquipoID == equipo.intEquipoID))
                     {
-                        if (!dbRisDA.tbl_CAT_Equipo.Any(x => x.vchNombreEquipo == equipo.vchNombreEquipo))
+                        if (!dbRisDA.tbl_CAT_Equipo.Any(x => x.vchNombreEquipo == equipo.vchNombreEquipo && x.intSitioID == equipo.intSitioID && x.vchAETitle == equipo.vchAETitle && x.vchCodigoEquipo == equipo.vchCodigoEquipo))
                         {
                             tbl_CAT_Equipo mdlCat = new tbl_CAT_Equipo();
                             mdlCat = dbRisDA.tbl_CAT_Equipo.First(x => x.intEquipoID == equipo.intEquipoID);
@@ -1752,13 +1996,13 @@ namespace Fuji.RISLite.DataAccess
                         }
                         else
                         {
-                            mensaje = "El nombre de la prestación ya existe.";
+                            mensaje = "El nombre del equipo ya existe.";
                             valido = false;
                         }
                     }
                     else
                     {
-                        mensaje = "No existe la prestación.";
+                        mensaje = "No existe el equipo.";
                         valido = false;
                     }
                 }
@@ -2310,13 +2554,58 @@ namespace Fuji.RISLite.DataAccess
                             estudio.vchModalidad = query.vchModalidad;
                             estudio.intDuracionMin = (int)query.intDuracionMin;
                             estudio.vchPrestacion = query.vchPrestacion;
-                        } 
+                        }
                     }
                 }
             }
             catch (Exception egBP)
             {
                 Log.EscribeLog("Existe un error en getEstudioDetalle: " + egBP.Message, 3, user);
+            }
+            return estudio;
+        }
+
+        public clsEstudioNuevaCita getEstudioDetalle_citaNueva(int intRELModPres, string user, int idtablacita)
+        {
+            clsEstudioNuevaCita estudio = new clsEstudioNuevaCita();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_REL_ModalidadPrestacion.Any(x => x.intRELModPres == intRELModPres && (bool)x.bitActivo))
+                    {
+                        var query = (from item in dbRisDA.tbl_REL_ModalidadPrestacion
+                                     join mod in dbRisDA.tbl_CAT_Modalidad on item.intModalidadID equals mod.intModalidadID
+                                     join pres in dbRisDA.tbl_CAT_Prestacion on item.intPrestacionID equals pres.intPrestacionID
+                                     where item.intRELModPres == intRELModPres && (bool)item.bitActivo
+                                     select new
+                                     {
+                                         intRELModPres = item.intRELModPres,
+                                         intModalidadID = item.intModalidadID,
+                                         intPrestacionID = item.intPrestacionID,
+                                         vchCodigo = mod.vchCodigo,
+                                         vchModalidad = mod.vchModalidad,
+                                         intDuracionMin = pres.intDuracionMin,
+                                         vchPrestacion = pres.vchPrestacion
+                                     }).ToList().First();
+                        if (query != null)
+                        {
+                            estudio.intconsecutivo_Modalidad = idtablacita;
+                            estudio.cadena = query.vchCodigo + " - " + query.vchPrestacion;
+                            estudio.intRelModPres = query.intRELModPres;
+                            estudio.intModalidadID = (int)query.intModalidadID;
+                            estudio.intPrestacionID = (int)query.intPrestacionID;
+                            estudio.vchCodigo = query.vchCodigo;
+                            estudio.vchModalidad = query.vchModalidad;
+                            estudio.intDuracionMin = (int)query.intDuracionMin;
+                            estudio.vchPrestacion = query.vchPrestacion;
+                        }
+                    }
+                }
+            }
+            catch (Exception egBP)
+            {
+                Log.EscribeLog("Existe un error en getEstudioDetalle_citaNueva: " + egBP.Message, 3, user);
             }
             return estudio;
         }
@@ -2585,6 +2874,7 @@ namespace Fuji.RISLite.DataAccess
                                     mdl.intConfiguracionAgendaID = (int)item.intConfiguracionAgendaID;
                                     mdl.tmeInicioDia = (TimeSpan)item.tmeInicioDia;
                                     mdl.tmeFinDia = (TimeSpan)item.tmeFinDia;
+                                    mdl.intIntervalo = (int)item.intIntervalo;
 
                                     lst.Add(mdl);
                                 }
@@ -2621,7 +2911,7 @@ namespace Fuji.RISLite.DataAccess
                                     clsDiaSemana mdl = new clsDiaSemana();
                                     mdl.intSemanaID = (int)item.intDiaSemanaInt;
                                     mdl.vchDiaSemana = item.vchDiaSemana;
-                                    mdl.bitActivo = item.bitActivo;
+                                    mdl.bitActivo = (bool)item.bitActivo;
 
                                     lst.Add(mdl);
                                 }
@@ -2768,6 +3058,32 @@ namespace Fuji.RISLite.DataAccess
             return bandera_Actualizar;
         }
 
+        public bool Update_Intervalo(string user, int intervalo)
+        {
+            bool bandera_Actualizar = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    tbl_CONFIG_Agenda mdlCOnf = new tbl_CONFIG_Agenda();
+
+                    mdlCOnf = dbRisDA.tbl_CONFIG_Agenda.First();
+                    mdlCOnf.intIntervalo = intervalo;
+           
+
+                    //dbCstInfo.vchUserAdmin = user;
+                    //dbCstInfo.datFecha = DateTime.Now;
+                    dbRisDA.SaveChanges();
+                    bandera_Actualizar = true;
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en Update_Intervalo: " + eLT.Message, 3, user);
+            }
+            return bandera_Actualizar;
+        }
+
         public bool Set_DiaFeriado(string user, DateTime dia)
         {
             bool bandera_insert = false;
@@ -2898,6 +3214,35 @@ namespace Fuji.RISLite.DataAccess
             return bandera_Actualizar;
         }
 
+        public bool Set_HoraMuerta(string user, string HM1, string HM2)
+        {
+            bool bandera_insert = false;
+            TimeSpan vv = TimeSpan.Parse(HM1);
+            TimeSpan v2 = TimeSpan.Parse(HM2);
+
+
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    tbl_CAT_HoraMuerta mdlDF = new tbl_CAT_HoraMuerta();
+                    mdlDF.tmeInicio = vv;
+                    mdlDF.tmeFin = v2;
+                    mdlDF.datFecha = DateTime.Today;
+                    mdlDF.vchUserAdmin = user;
+
+                    dbRisDA.tbl_CAT_HoraMuerta.Add(mdlDF);
+                    dbRisDA.SaveChanges();
+
+                    bandera_insert = true;
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en Set_HoraMuerta: " + eLT.Message, 3, user);
+            }
+            return bandera_insert;
+        }
 
         #endregion ConfigAgenda
 
@@ -3351,7 +3696,7 @@ namespace Fuji.RISLite.DataAccess
                     }
                 }
             }
-            catch(Exception egeP)
+            catch (Exception egeP)
             {
                 Log.EscribeLog("Existe un error en getEstudiosPaciente: " + egeP.Message, 3, user);
             }
@@ -3360,7 +3705,7 @@ namespace Fuji.RISLite.DataAccess
         #endregion Estudios
 
         #region Adicionales
-        public List<clsAdicionales> getAdicionales(int intTipoAdicional,string user)
+        public List<clsAdicionales> getAdicionales(int intTipoAdicional, int intSitioID, string user)
         {
             List<clsAdicionales> lstreturn = new List<clsAdicionales>();
             try
@@ -3370,24 +3715,23 @@ namespace Fuji.RISLite.DataAccess
                     if (dbRisDA.tbl_MST_Adicionales.Any(x => x.intTipoAdicional == intTipoAdicional))
                     {
                         var query = (from adi in dbRisDA.tbl_MST_Adicionales
-                            join catBoton in dbRisDA.tbl_CAT_TipoBoton on adi.intTipoBotonID equals catBoton.intTipoBotonID
-                            join catAdi in dbRisDA.tbl_CAT_TipoAdicional on adi.intTipoAdicional equals catAdi.intTipoAdicional
-                            where adi.intTipoAdicional == intTipoAdicional
-                            select new {
-                                bitActivo = adi.bitActivo,
-                                datFecha = adi.datFecha,
-                                bitIconBootstrap = adi.bitIconBoostrap,
-                                bitObservaciones = adi.bitObservaciones,
-                                intAdicionalesID = adi.intAdicionalesID,
-                                intTipoAdicionalID = adi.intTipoAdicional,
-                                intTipoBotonID = adi.intTipoBotonID,
-                                vchNombreAdicional = adi.vchNombre,
-                                vchTipoAdicional = catAdi.vchNombre,
-                                vchTipoBoton = catBoton.vchTipoBoton,
-                                vchURLImagen = adi.vchURLImagen,
-                                vchHtmlControl = adi.vchHtmlControl,
-                                vchUserAdmin = adi.vchUserAdmin
-                            }).ToList();
+                                     join catBoton in dbRisDA.tbl_CAT_TipoBoton on adi.intTipoBotonID equals catBoton.intTipoBotonID
+                                     join catAdi in dbRisDA.tbl_CAT_TipoAdicional on adi.intTipoAdicional equals catAdi.intTipoAdicional
+                                     where adi.intTipoAdicional == intTipoAdicional && adi.intSitioID == intSitioID
+                                     select new
+                                     {
+                                         bitActivo = adi.bitActivo,
+                                         datFecha = adi.datFecha,
+                                         bitObservaciones = adi.bitObservaciones,
+                                         intAdicionalesID = adi.intAdicionalesID,
+                                         intTipoAdicionalID = adi.intTipoAdicional,
+                                         intTipoBotonID = adi.intTipoBotonID,
+                                         vchNombreAdicional = adi.vchNombre,
+                                         vchTipoAdicional = catAdi.vchNombre,
+                                         vchTipoBoton = catBoton.vchTipoBoton,
+                                         vchURLImagen = adi.vchURLImagen,
+                                         vchUserAdmin = adi.vchUserAdmin
+                                     }).ToList();
                         if (query != null)
                         {
                             if (query.Count > 0)
@@ -3397,7 +3741,6 @@ namespace Fuji.RISLite.DataAccess
                                     clsAdicionales mdl = new clsAdicionales();
                                     mdl.bitActivo = (bool)item.bitActivo;
                                     mdl.datFecha = (DateTime)item.datFecha;
-                                    mdl.bitIconBootstrap = (bool)item.bitIconBootstrap;
                                     mdl.bitObservaciones = (bool)item.bitObservaciones;
                                     mdl.intAdicionalesID = item.intAdicionalesID;
                                     mdl.intTipoAdicionalID = (int)item.intTipoAdicionalID;
@@ -3407,7 +3750,6 @@ namespace Fuji.RISLite.DataAccess
                                     mdl.vchTipoAdicional = item.vchTipoAdicional;
                                     mdl.vchTipoBoton = item.vchTipoBoton;
                                     mdl.vchURLImagen = item.vchURLImagen;
-                                    mdl.vchHtmlControl = item.vchHtmlControl;
                                     lstreturn.Add(mdl);
                                 }
                             }
@@ -3429,18 +3771,17 @@ namespace Fuji.RISLite.DataAccess
             {
                 using (dbRisDA = new RISLiteEntities())
                 {
-                    if (!dbRisDA.tbl_MST_Adicionales.Any(x => x.vchNombre.ToUpper() == adicionales.vchNombreAdicional))
+                    if (!dbRisDA.tbl_MST_Adicionales.Any(x => x.vchNombre.ToUpper() == adicionales.vchNombreAdicional && x.intSitioID == adicionales.intSitioID))
                     {
                         tbl_MST_Adicionales mdl = new tbl_MST_Adicionales();
                         mdl.bitActivo = adicionales.bitActivo;
-                        mdl.bitIconBoostrap = adicionales.bitIconBootstrap;
                         mdl.bitObservaciones = adicionales.bitObservaciones;
                         mdl.datFecha = adicionales.datFecha;
                         mdl.intTipoAdicional = adicionales.intTipoAdicionalID;
                         mdl.intTipoBotonID = adicionales.intTipoBotonID;
+                        mdl.intSitioID = adicionales.intSitioID;
                         mdl.vchNombre = adicionales.vchNombreAdicional;
                         mdl.vchURLImagen = adicionales.vchURLImagen;
-                        mdl.vchHtmlControl = adicionales.vchHtmlControl;
                         mdl.vchUserAdmin = user;
                         dbRisDA.tbl_MST_Adicionales.Add(mdl);
                         dbRisDA.SaveChanges();
@@ -3470,20 +3811,25 @@ namespace Fuji.RISLite.DataAccess
                 {
                     if (dbRisDA.tbl_MST_Adicionales.Any(x => x.intAdicionalesID == adicional.intAdicionalesID))
                     {
-                        tbl_MST_Adicionales mdl = new tbl_MST_Adicionales();
-                        mdl = dbRisDA.tbl_MST_Adicionales.First(x => x.intAdicionalesID == adicional.intAdicionalesID);
-                        mdl.bitActivo = adicional.bitActivo;
-                        mdl.bitIconBoostrap = adicional.bitIconBootstrap;
-                        mdl.bitObservaciones = adicional.bitObservaciones;
-                        mdl.datFecha = DateTime.Now;
-                        mdl.intTipoAdicional = adicional.intTipoAdicionalID;
-                        mdl.intTipoBotonID = adicional.intTipoBotonID;
-                        mdl.vchNombre = adicional.vchNombreAdicional;
-                        mdl.vchURLImagen = adicional.vchURLImagen;
-                        mdl.vchHtmlControl = adicional.vchHtmlControl;
-                        mdl.vchUserAdmin = user;
-                        dbRisDA.SaveChanges();
-                        valido = true;
+                        if (!dbRisDA.tbl_MST_Adicionales.Any(x => x.vchNombre == adicional.vchNombreAdicional && x.intSitioID == adicional.intSitioID && x.vchURLImagen == adicional.vchURLImagen && x.intTipoAdicional == adicional.intTipoAdicionalID && x.intTipoBotonID == adicional.intTipoBotonID))
+                        {
+                            tbl_MST_Adicionales mdl = new tbl_MST_Adicionales();
+                            mdl = dbRisDA.tbl_MST_Adicionales.First(x => x.intAdicionalesID == adicional.intAdicionalesID);
+                            mdl.bitActivo = adicional.bitActivo;
+                            mdl.bitObservaciones = adicional.bitObservaciones;
+                            mdl.datFecha = DateTime.Now;
+                            mdl.intTipoAdicional = adicional.intTipoAdicionalID;
+                            mdl.intTipoBotonID = adicional.intTipoBotonID;
+                            mdl.vchNombre = adicional.vchNombreAdicional;
+                            mdl.vchURLImagen = adicional.vchURLImagen;
+                            mdl.vchUserAdmin = user;
+                            dbRisDA.SaveChanges();
+                            valido = true;
+                        }
+                        else
+                        {
+                            mensaje = "La variable ya existe para el sitio";
+                        }
                     }
                     else
                     {
@@ -3510,9 +3856,9 @@ namespace Fuji.RISLite.DataAccess
                     if (dbRisDA.tbl_CAT_TipoBoton.Any())
                     {
                         var query = dbRisDA.tbl_CAT_TipoBoton.ToList();
-                        if(query!=null)
+                        if (query != null)
                         {
-                            if(query.Count>0)
+                            if (query.Count > 0)
                             {
                                 lstResponse.AddRange(query);
                             }
@@ -3520,7 +3866,7 @@ namespace Fuji.RISLite.DataAccess
                     }
                 }
             }
-            catch(Exception egTC)
+            catch (Exception egTC)
             {
                 Log.EscribeLog("Existe un error en getCATTipoBoton: " + egTC.Message, 3, user);
             }
@@ -3589,5 +3935,336 @@ namespace Fuji.RISLite.DataAccess
         #endregion Adicionales
 
 
+        #region SugerenciasCita
+        public List<stp_getCitaDisponible_Result> getSugerenciasCita(clsSugerencia mdlSug, String user)
+        {
+            List<stp_getCitaDisponible_Result> result = new List<stp_getCitaDisponible_Result>();
+            try
+            {
+                using(dbRisDA = new RISLiteEntities())
+                {
+                    var query = dbRisDA.stp_getCitaDisponible(mdlSug.datFechaInicio, mdlSug.datFechaFinal, mdlSug.intModalidad, mdlSug.vchDias, mdlSug.vchHoras, mdlSug.intSitioID).ToList();
+                    if(query != null)
+                    {
+                        if(query.Count > 0)
+                        {
+                            result.AddRange(query);
+                        }
+                    }
+                }
+            }
+            catch(Exception egS)
+            {
+                result = null;
+                Log.EscribeLog("Existe un error en getSugerenciasCita: " + egS.Message, 3, user);
+            }
+            return result;
+        }
+        #endregion SugerenciasCita
+
+
+        public List<clsEquipo> getCitaEquipos_Sitio(string user, int idmodalidad, int idsitio)
+        {
+            List<clsEquipo> lst = new List<clsEquipo>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Equipo.Any())
+                    {
+                        var query = dbRisDA.tbl_CAT_Equipo
+                                    .Where(w => w.intModalidadID == idmodalidad && w.intSitioID == idsitio).ToList();
+
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsEquipo mdl = new clsEquipo();
+                                    mdl.intEquipoID = (int)item.intEquipoID;
+                                    mdl.intModalidadID = (int)item.intModalidadID;
+                                    mdl.vchNombreEquipo = item.vchNombreEquipo;
+                                    mdl.vchCodigoEquipo = item.vchCodigoEquipo;
+                                    lst.Add(mdl);
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getCitaEquipos: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }
+
+        public string getDescripcionModalidad_Sitio(string user, int modalidad, int idsitio)
+        {
+            string modalidad_descripcion = "";
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Modalidad.Any())
+                    {
+                        //var query = dbRisDA.tbl_CAT_Modalidad.Where(x => x.vchCodigo.Contains(modalidad)).ToString();                        
+
+                        var query = (from tblmod in dbRisDA.tbl_CAT_Modalidad
+                                     where tblmod.intModalidadID == modalidad && tblmod.intSitioID == idsitio
+                                     select tblmod.vchCodigo).First();
+
+                        if (query != null)
+                        {
+                            modalidad_descripcion = query;
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getModalidadAgenda: " + eLT.Message, 3, user);
+            }
+            return modalidad_descripcion;
+        }
+
+        public int getListDuracionGen_Sitio(string user, int modalidad, int idsitio)
+        {
+            int duracion = 0;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Modalidad.Any())
+                    {
+                        //var query = dbRisDA.tbl_CAT_Modalidad.Where(x => x.vchCodigo.Contains(modalidad)).ToString();
+
+
+                        var query = (from tblmod in dbRisDA.tbl_CAT_Modalidad
+                                     where tblmod.intModalidadID == modalidad && tblmod.intSitioID == idsitio
+                                     select tblmod.intDuracionGen).First();
+
+                        if (query != null)
+                        {
+                            duracion = Convert.ToInt32(query);
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getListDuracionGen: " + eLT.Message, 3, user);
+            }
+            return duracion;
+        }
+
+        public string getListColorModalidad_Sitio(string user, string modalidad, int idsitio)
+        {
+            string color = "";
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Modalidad.Any())
+                    {
+                        //var query = dbRisDA.tbl_CAT_Modalidad.Where(x => x.vchCodigo.Contains(modalidad)).ToString();
+
+
+                        var query = (from tblmod in dbRisDA.tbl_CAT_Modalidad
+                                     where tblmod.vchCodigo == modalidad && tblmod.intSitioID == idsitio
+                                     select tblmod.vchColor).First();
+
+                        if (query != null)
+                        {
+                            color = query;
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getModalidadAgenda: " + eLT.Message, 3, user);
+            }
+            return color;
+        }
+
+        public List<clsEventoCita> getListCitas_Sitio(string user, int idmodalidad, int idsitio)
+        {
+            List<clsEventoCita> lst = new List<clsEventoCita>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Modalidad.Any())
+                    {
+
+                        //var query = dbRisDA.tbl_CAT_Eventos
+                        //            .Where(w => w.intModalidadID == idmodalidad).ToList();
+
+                        var query = dbRisDA.stp_getBusquedaCita_Sitio(idmodalidad, idsitio).ToList();
+
+
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsEventoCita mdl = new clsEventoCita();
+                                    mdl.TaskID = (int)item.intEstudioID;
+                                    mdl.Start = (DateTime)item.datFecha;
+                                    mdl.End = (DateTime)item.datFechaFin;
+                                    mdl.Title = item.vchTitulo;
+                                    mdl.Description = item.vchDescripcion;
+                                    mdl.intModalidadID = (int)item.intModalidadID;
+                                    lst.Add(mdl);
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getListCitas_Sitio: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }
+
+
+        public List<clsEventoCita> getListCitas_en_agenda_Sitio(string user, int idmodalidad, DateTime fecha_Revision, int idsitio)
+        {
+            DateTime dt_fecha_sumada = fecha_Revision.AddDays(+3);
+            //DateTime dt_fecha_restada = fecha_Revision.AddDays(-3);
+
+            List<clsEventoCita> lst = new List<clsEventoCita>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Modalidad.Any())
+                    {
+                        //var query = dbRisDA.tbl_CAT_Eventos.OrderBy(x => x.Start).Where(x => (x.intModalidadID == idmodalidad && (x.Start >= fecha_Revision && x.Start < dt_fecha_sumada))).ToList();
+
+                        //var query = dbRisDA.stp_getBusquedaCita_Sitio(idmodalidad, idsitio).OrderBy(x => x.datFechaInicio).Where(y => y.intModalidadID == idmodalidad &&
+                        //                                                                                                         y.intEstudioID == idsitio && 
+                        //                                                                                                         y.datFechaInicio >= fecha_Revision
+                        //                                                                                                         && y.datFechaInicio < dt_fecha_sumada).ToList();
+
+                        var query = dbRisDA.stp_getBusquedaCita_Sitio(idmodalidad, idsitio).OrderBy(x => x.datFechaInicio).Where(y => y.datFechaInicio >= fecha_Revision
+                                                                                                                                   && y.datFechaInicio < dt_fecha_sumada).ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsEventoCita mdl = new clsEventoCita();
+                                    mdl.TaskID = (int)item.intEstudioID;
+                                    mdl.Start = (DateTime)item.datFechaInicio;
+                                    mdl.End = (DateTime)item.datFechaFin;
+                                    mdl.Title = item.vchTitulo;
+                                    mdl.Description = item.vchDescripcion;
+                                    mdl.intModalidadID = (int)item.intModalidadID;
+                                    lst.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getListCitas_en_agenda: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }
+
+        public List<clsConfScheduler> getListConfigScheduler_Sito(string user, int idsitio)
+        {
+            List<clsConfScheduler> lst = new List<clsConfScheduler>();
+            try
+            {
+                clsConfScheduler mdl = new clsConfScheduler();
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CONFIG_Agenda.Any())
+                    {
+                        var query = (from x in dbRisDA.tbl_CONFIG_Agenda
+                                     where x.intSitioID == idsitio
+                                     select new
+                                     {
+                                         x.intConfiguracionAgendaID,
+                                         x.intSitioID,
+                                         x.vchConfiguracionAgenda,
+                                         x.tmeInicioDia,
+                                         x.tmeFinDia,
+                                         x.intIntervalo,
+                                         x.datFecha,
+                                         x.vchUserAdmin
+                                     }).ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    mdl.intConfiguracionAgendaID = (int)item.intConfiguracionAgendaID;
+                                    mdl.tmeInicioDia = (TimeSpan)item.tmeInicioDia;
+                                    mdl.tmeFinDia = (TimeSpan)item.tmeFinDia;
+                                    mdl.intIntervalo = (int)item.intIntervalo;
+                                    lst.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getListConfigScheduler: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }
+
+        public List<clsHoraMuerta> getListHorasMuertas_Sitio(string user, int idsitio)
+        {
+            List<clsHoraMuerta> lst = new List<clsHoraMuerta>();
+            try
+            {
+
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_HoraMuerta.Any())
+                    {
+                        var query = dbRisDA.tbl_CAT_HoraMuerta.Where(x => (x.bitActivo == true) && x.intSitioID == idsitio).ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsHoraMuerta mdl = new clsHoraMuerta();
+                                    mdl.intHorasMuertasID = (int)item.intHorasMuertasID;
+                                    mdl.tmeInicio = item.tmeInicio.ToString();
+                                    mdl.tmeFin = item.tmeFin.ToString();
+                                    //mdl.bitRepetir = item.bitRepetir;
+
+                                    lst.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getListHorasMuertas: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }
     }
 }

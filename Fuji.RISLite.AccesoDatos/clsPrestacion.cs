@@ -4,6 +4,7 @@
     {
         public int intRELModPres { get; set; }
         public int intModalidadID { get; set; }
+        public int intSitioId { get; set; }
         public string vchModalidad { get; set; }
         public int intPrestacionID { get; set; }
         public string vchPrestacion { get; set; }
@@ -14,6 +15,7 @@
         {
             intRELModPres = int.MinValue;
             intModalidadID = int.MinValue;
+            intSitioId = int.MinValue;
             vchModalidad = string.Empty;
             intPrestacionID = int.MinValue;
             vchPrestacion = string.Empty;

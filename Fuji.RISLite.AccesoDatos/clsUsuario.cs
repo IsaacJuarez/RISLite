@@ -13,6 +13,9 @@ namespace Fuji.RISLite.Entities
         public bool bitActivo { get; set; }
         public string vchUserAdmin { get; set; }
         public string Token { get; set; }
+        public int intSitioID { get; set; }
+        public string vchSitio { get; set; }
+        public string vchEmail { get; set; }
 
         public clsUsuario()
         {
@@ -24,6 +27,9 @@ namespace Fuji.RISLite.Entities
             bitActivo = false;
             vchUserAdmin = string.Empty;
             Token = string.Empty;
+            intSitioID = int.MinValue;
+            vchSitio = string.Empty;
+            vchEmail = string.Empty;
         }
     }
 }

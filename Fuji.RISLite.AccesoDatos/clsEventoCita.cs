@@ -9,6 +9,7 @@ namespace Fuji.RISLite.Entities
    public class clsEventoCita
     {
         public int TaskID { get; set; }
+        public int intSitioID { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
         public string Title { get; set; }
@@ -25,6 +26,7 @@ namespace Fuji.RISLite.Entities
         public clsEventoCita()
         {
             TaskID = int.MinValue;
+            intSitioID = int.MinValue;
             Start = DateTime.MinValue;
             End = DateTime.MinValue;
             Title = string.Empty;

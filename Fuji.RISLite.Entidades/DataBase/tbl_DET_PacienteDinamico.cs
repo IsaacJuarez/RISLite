@@ -23,7 +23,6 @@ namespace Fuji.RISLite.Entidades.DataBase
         public Nullable<System.DateTime> datFecha { get; set; }
         public string vchUserAdmin { get; set; }
     
-        public virtual tbl_CONFIG_VariablesAdiPaciente tbl_CONFIG_VariablesAdiPaciente { get; set; }
         public virtual tbl_MST_Paciente tbl_MST_Paciente { get; set; }
     }
 }

@@ -21,6 +21,7 @@ namespace Fuji.RISLite.Entidades.DataBase
             this.tbl_DET_Paciente = new HashSet<tbl_DET_Paciente>();
             this.tbl_REL_PacienteCita = new HashSet<tbl_REL_PacienteCita>();
             this.tbl_REL_IdentificacionPaciente = new HashSet<tbl_REL_IdentificacionPaciente>();
+            this.tbl_REL_SitioPaciente = new HashSet<tbl_REL_SitioPaciente>();
         }
     
         public long intPacienteID { get; set; }
@@ -38,5 +39,6 @@ namespace Fuji.RISLite.Entidades.DataBase
         public virtual ICollection<tbl_DET_Paciente> tbl_DET_Paciente { get; set; }
         public virtual ICollection<tbl_REL_PacienteCita> tbl_REL_PacienteCita { get; set; }
         public virtual ICollection<tbl_REL_IdentificacionPaciente> tbl_REL_IdentificacionPaciente { get; set; }
+        public virtual ICollection<tbl_REL_SitioPaciente> tbl_REL_SitioPaciente { get; set; }
     }
 }

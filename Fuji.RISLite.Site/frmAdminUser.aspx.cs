@@ -1,4 +1,5 @@
-﻿using Fuji.RISLite.Entidades.Extensions;
+﻿using Fuji.RISLite.Entidades.DataBase;
+using Fuji.RISLite.Entidades.Extensions;
 using Fuji.RISLite.Entities;
 using Fuji.RISLite.Site.Services;
 using Fuji.RISLite.Site.Services.DataContract;
@@ -36,6 +37,7 @@ namespace Fuji.RISLite.Site
                         Usuario = (clsUsuario)Session["User"];
                         if (Usuario != null)
                         {
+                            cargarTipoUsuario();
                             cargarUsuarios();
                         }
                         else
@@ -56,6 +58,8 @@ namespace Fuji.RISLite.Site
                 Log.EscribeLog("Existe un error en Page_Load de frmAdminUser: " + ePL.Message, 3, "");
             }
         }
+
+        
 
         private void cargarUsuarios()
         {
@@ -78,6 +82,60 @@ namespace Fuji.RISLite.Site
             catch(Exception ecU)
             {
                 Log.EscribeLog("Existe un error en cargarUsuarios: " + ecU.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargarTipoUsuario()
+        {
+            try
+            {
+                ddlTipoUsuario.DataSource = null;
+                CatalogoRequest request = new CatalogoRequest();
+                List<clsCatalogo> lstReponse = new List<clsCatalogo>();
+                request.mdlUser = Usuario;
+                lstReponse = RisService.getTipoUsuario(request);
+                if (lstReponse != null)
+                {
+                    if (lstReponse.Count > 0)
+                    {
+                        ddlTipoUsuario.DataSource = lstReponse;
+                        ddlTipoUsuario.DataValueField = "intCatalogoID";
+                        ddlTipoUsuario.DataTextField = "vchNombre";
+                        ddlTipoUsuario.Items.Insert(0, new ListItem("Seleccionar Tipo de Usuario...", "0"));
+                    }
+                }
+                ddlTipoUsuario.DataBind();
+            }
+            catch (Exception ecTU)
+            {
+                Log.EscribeLog("Existe un error en cargarTipoUsuario de frmConfiguracion: " + ecTU.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargarListaSitios()
+        {
+            try
+            {
+                ddlSitioUser.DataSource = null;
+                List<tbl_CAT_Sitio> lstSitio = new List<tbl_CAT_Sitio>();
+                SitioRequest request = new SitioRequest();
+                request.mdlUser = Usuario;
+                lstSitio = RisService.getListSitios(request);
+                if (lstSitio != null)
+                {
+                    if (lstSitio.Count > 0)
+                    {
+                        ddlSitioUser.DataSource = lstSitio;
+                        ddlSitioUser.DataTextField = "vchNombreSitio";
+                        ddlSitioUser.DataValueField = "intSitioID";
+                        ddlSitioUser.Items.Insert(0, new ListItem("Seleccionar Sitio...", "0"));
+                    }
+                }
+                ddlSitioUser.DataBind();
+            }
+            catch (Exception eclS)
+            {
+                Log.EscribeLog("Existe un error en cargarListaSitios: " + eclS.Message, 3, Usuario.vchUsuario);
             }
         }
 
@@ -204,6 +262,98 @@ namespace Fuji.RISLite.Site
             {
                 Log.EscribeLog("Existe un error txtBandeja_TextChanged de frmConfiguraciones: " + ex.Message, 3, Usuario.vchUsuario);
             }
+        }
+
+        protected void ddlTipoUsuario_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Convert.ToInt32(ddlTipoUsuario.SelectedValue) > 1)
+                {
+                    ddlSitioUser.Enabled = true;
+                    cargarListaSitios();
+                }
+                else
+                {
+                    ddlSitioUser.Enabled = false;
+                    ddlSitioUser.DataSource = null;
+                    ddlSitioUser.DataBind();
+                }
+            }
+            catch (Exception eTIPo)
+            {
+                Log.EscribeLog("Existe un error en ddlTipoUsuario_SelectedIndexChanged: " + eTIPo.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvUsuario_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+            try
+            {
+                grvUsuario.EditIndex = -1;
+                cargarUsuarios();
+            }
+            catch (Exception eCE)
+            {
+                Log.EscribeLog("Existe un error en grvUsuario_RowCancelingEdit: " + eCE.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvUsuario_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            try
+            {
+                grvUsuario.EditIndex = e.NewEditIndex;
+                cargarUsuarios();
+            }
+            catch (Exception eGU)
+            {
+                Log.EscribeLog("Existe un error en grvUsuario_RowEditing : " + eGU.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvUsuario_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+            //try
+            //{
+            //    AdminUserRequest request = new AdminUserRequest();
+            //    AdminUserResponse response = new AdminUserResponse();
+            //    request.mdlUser = Usuario;
+            //    clsUsuario mdlVar = new clsUsuario();
+            //    mdlVar.bitActivo = true;
+            //    mdlVar.datFecha = DateTime.Now;
+            //    TextBox txtNameUser = (TextBox)grvUsuario.Rows[e.RowIndex].FindControl("txtNombreUsuario");
+            //    TextBox txtUser = (TextBox)grvUsuario.Rows[e.RowIndex].FindControl("txtUsuario");
+            //    mdlVar.vchNombre = txtNameUser.Text.ToUpper();
+            //    mdlVar.vchUsuario = txtUser.Text.ToUpper();
+            //    mdlVar.intUsuarioID = Convert.ToInt16(grvUsuario.DataKeys[e.RowIndex].Values["intUsuarioID"].ToString());
+            //    if (mdlVar != null)
+            //    {
+            //        request.mdlAdminUser = mdlVar;
+            //        response = RisService.setActualizaUsuario(request);
+            //        if (response != null)
+            //        {
+            //            if (response.Success)
+            //            {
+            //                ShowMessage("Se actualizo correctamente el usuario", MessageType.Correcto, "alert_container");
+            //                grvUsuario.EditIndex = -1;
+            //                cargarUsuarios();
+            //            }
+            //            else
+            //            {
+            //                ShowMessage("Existe un error: " + response.Success, MessageType.Error, "alert_container");
+            //            }
+            //        }
+            //        else
+            //        {
+            //            ShowMessage("Favor de revisar la información.", MessageType.Error, "alert_container");
+            //        }
+            //    }
+            //}
+            //catch (Exception eUpdating)
+            //{
+            //    ShowMessage("Existe un error: " + eUpdating.Message, MessageType.Error, "alert_container");
+            //}
         }
     }
 }

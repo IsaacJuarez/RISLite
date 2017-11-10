@@ -6,6 +6,7 @@ namespace Fuji.RISLite.Entities
     {
         public int intCatalogoID { get; set; }
         public int intPrimaryKey { get; set; }
+        public int intSitioID { get; set; }
         public string vchValor { get; set; }
         public string vchNombre { get; set; }
         public bool bitActivo { get; set; }
@@ -16,6 +17,7 @@ namespace Fuji.RISLite.Entities
         {
             intCatalogoID = int.MinValue;
             intPrimaryKey = int.MinValue;
+            intSitioID = int.MinValue;
             vchNombre = string.Empty;
             vchValor = string.Empty;
             bitActivo = false;

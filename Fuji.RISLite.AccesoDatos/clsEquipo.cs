@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Fuji.RISLite.Entities
 {
     public class clsEquipo
     {
         public int intEquipoID { get; set; }
+        public int intSitioID { get; set; }
         public int intModalidadID { get; set; }
         public string vchModalidad { get; set; }
         public string vchNombreEquipo { get; set; }
@@ -21,6 +18,7 @@ namespace Fuji.RISLite.Entities
         {
             intEquipoID = int.MinValue;
             intModalidadID = int.MinValue;
+            intSitioID = int.MinValue;
             vchModalidad = string.Empty;
             vchNombreEquipo = string.Empty;
             vchCodigoEquipo = string.Empty;

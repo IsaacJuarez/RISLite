@@ -14,17 +14,13 @@ namespace Fuji.RISLite.Entidades.DataBase
     
     public partial class tbl_CONFIG_VariablesAdiPaciente
     {
-        public tbl_CONFIG_VariablesAdiPaciente()
-        {
-            this.tbl_DET_PacienteDinamico = new HashSet<tbl_DET_PacienteDinamico>();
-        }
-    
         public int intVarAdiPacienteID { get; set; }
+        public Nullable<int> intSitioID { get; set; }
         public string vchNombreVariable { get; set; }
         public Nullable<bool> bitActivo { get; set; }
         public Nullable<System.DateTime> datFecha { get; set; }
         public string vchUserAdmin { get; set; }
     
-        public virtual ICollection<tbl_DET_PacienteDinamico> tbl_DET_PacienteDinamico { get; set; }
+        public virtual tbl_CAT_Sitio tbl_CAT_Sitio { get; set; }
     }
 }
