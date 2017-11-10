@@ -106,6 +106,10 @@
         <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_HoraMuerta" Width="1.5" PointX="3" PointY="42.125" />
         <AssociationConnector Association="RISLiteModel.FK_CAT_HoraMuerta_CAT_Sitio" />
         <AssociationConnector Association="RISLiteModel.FK_CAT_DiaFeriado_CAT_Sitio" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_DuracionModalidad" Width="1.5" PointX="7.375" PointY="4.75" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_REL_DiaSemana" Width="1.5" PointX="19.625" PointY="19.75" />
+        <AssociationConnector Association="RISLiteModel.FK_TBL_REL__REFERENCE_TBL_CAT_" />
+        <AssociationConnector Association="RISLiteModel.FK_REL_DiaSemana_CAT_Sitio" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

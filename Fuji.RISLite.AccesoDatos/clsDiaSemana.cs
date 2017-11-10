@@ -8,6 +8,7 @@ namespace Fuji.RISLite.Entities
 {
     public class clsDiaSemana
     {
+        public int intSitioID { get; set; }
         public int intSemanaID { get; set; }
         public string vchDiaSemana { get; set; }
         public bool bitActivo { get; set; }
@@ -15,7 +16,8 @@ namespace Fuji.RISLite.Entities
         public string vchUserAdmin { get; set; }
 
         public clsDiaSemana()
-        {   
+        {
+            intSitioID = int.MinValue;
             intSemanaID = int.MinValue;
             vchDiaSemana = string.Empty;
             bitActivo = false;

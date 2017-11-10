@@ -79,6 +79,8 @@ namespace Fuji.RISLite.Entidades.DataBase
         public DbSet<tbl_REL_SitioPaciente> tbl_REL_SitioPaciente { get; set; }
         public DbSet<tbl_CONFIG_Agenda> tbl_CONFIG_Agenda { get; set; }
         public DbSet<tbl_CAT_HoraMuerta> tbl_CAT_HoraMuerta { get; set; }
+        public DbSet<tbl_CAT_DuracionModalidad> tbl_CAT_DuracionModalidad { get; set; }
+        public DbSet<tbl_REL_DiaSemana> tbl_REL_DiaSemana { get; set; }
     
         public virtual ObjectResult<stp_updateCatEstatus_Result> stp_updateCatEstatus(Nullable<int> intCatalogoID, Nullable<bool> bitActivo, Nullable<int> intPrimaryKey)
         {

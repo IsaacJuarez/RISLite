@@ -53,8 +53,16 @@
                 <UpdatedControls>
                     <telerik:AjaxUpdatedControl ControlID="Ltitulo" />
                 </UpdatedControls>
+                <UpdatedControls>
+                    <telerik:AjaxUpdatedControl ControlID="grvSugerencia" />
+                </UpdatedControls>
             </telerik:AjaxSetting>
 
+            <telerik:AjaxSetting AjaxControlID="grvSugerencia">
+                <UpdatedControls>
+                    <telerik:AjaxUpdatedControl ControlID="grvEstudios" />
+                </UpdatedControls>
+            </telerik:AjaxSetting>
             <telerik:AjaxSetting AjaxControlID="RS_Agenda">
                 <UpdatedControls>
                     <telerik:AjaxUpdatedControl ControlID="RS_Agenda" />
@@ -702,7 +710,7 @@
                                             <i class="fa fa-print -o" aria-hidden="true"  title="Imprimir Cita" style="font-size:25px;"></i>
                                         </asp:LinkButton>
                                         <asp:LinkButton runat="server" ID="lnkReEnviarCorreo" CssClass="btn btn-app btn-primary radius-4" ToolTip="Re-enviar cita por correo" OnClick="lnkReEnviarCorreo_Click" Enabled="false">
-                                            <i class="fa fa-envelope-o -o" aria-hidden="true"  title="Re-enviar cita por correo" style="font-size:25px;"></i>
+                                            <i class="fa fa-envelope-o -o" aria-hidden="true"  title="Re-enviar cita por correo" style="font-size:25px;" ></i>
                                         </asp:LinkButton>
                                         <asp:LinkButton runat="server" ID="lnkInterpretacion" CssClass="btn btn-app btn-purple radius-4" ToolTip="Interpretación" OnClick="lnkInterpretacion_Click" Enabled="false">
                                             <i class="fa fa-user-md -o" aria-hidden="true"  title="Interpretación" style="font-size:25px;"></i>
@@ -881,60 +889,32 @@
                                                         <table style="width: 100%">
                                                             <tr>
                                                                 <td style="width: 14%">
-                                                                    <telerik:RadButton runat="server" ID="chkLunes" ToolTip="Lunes" ButtonType="ToggleButton" ToggleType="CheckBox" RenderMode="Lightweight" CssClass="btn btn-primary" Text="Lunes">
-                                                                        <ToggleStates>
-                                                                            <telerik:RadButtonToggleState Text="Lunes" />
-                                                                            <telerik:RadButtonToggleState Text="Lunes" CssClass="btn btn-empty" />
-                                                                        </ToggleStates>
-                                                                    </telerik:RadButton>
+                                                                    <telerik:RadCheckBox runat="server" ID="chkLunes" ToolTip="Lunes" Text="Lunes">
+                                                                    </telerik:RadCheckBox>
                                                                 </td>
                                                                 <td style="width: 14%">
-                                                                    <telerik:RadButton runat="server" ID="chkMartes" ToolTip="Martes" ButtonType="ToggleButton" ToggleType="CheckBox" RenderMode="Lightweight" CssClass="btn btn-primary" Text="Martes">
-                                                                        <ToggleStates>
-                                                                            <telerik:RadButtonToggleState Text="Martes" />
-                                                                            <telerik:RadButtonToggleState Text="Martes" CssClass="btn btn-empty" />
-                                                                        </ToggleStates>
-                                                                    </telerik:RadButton>
+                                                                    <telerik:RadCheckBox runat="server" ID="chkMartes" ToolTip="Martes" Text="Martes">
+                                                                    </telerik:RadCheckBox>
                                                                 </td>
                                                                 <td style="width: 14%">
-                                                                    <telerik:RadButton runat="server" ID="chkMiercoles" ToolTip="Miercoles" ButtonType="ToggleButton" ToggleType="CheckBox" RenderMode="Lightweight" CssClass="btn btn-primary" Text="Miercoles">
-                                                                        <ToggleStates>
-                                                                            <telerik:RadButtonToggleState Text="Miercoles" />
-                                                                            <telerik:RadButtonToggleState Text="Miercoles" CssClass="btn btn-empty" />
-                                                                        </ToggleStates>
-                                                                    </telerik:RadButton>
+                                                                    <telerik:RadCheckBox runat="server" ID="chkMiercoles" ToolTip="Miercoles" Text="Miercoles">
+                                                                    </telerik:RadCheckBox>
                                                                 </td>
                                                                 <td style="width: 14%">
-                                                                    <telerik:RadButton runat="server" ID="chkJueves" ToolTip="Jueves" ButtonType="ToggleButton" ToggleType="CheckBox" RenderMode="Lightweight" CssClass="btn btn-primary" Text="Jueves">
-                                                                        <ToggleStates>
-                                                                            <telerik:RadButtonToggleState Text="Jueves" />
-                                                                            <telerik:RadButtonToggleState Text="Jueves" CssClass="btn btn-empty" />
-                                                                        </ToggleStates>
-                                                                    </telerik:RadButton>
+                                                                    <telerik:RadCheckBox runat="server" ID="chkJueves" ToolTip="Jueves" Text="Jueves">
+                                                                    </telerik:RadCheckBox>
                                                                 </td>
                                                                 <td style="width: 14%">
-                                                                    <telerik:RadButton runat="server" ID="chkViernes" ToolTip="Viernes" ButtonType="ToggleButton" ToggleType="CheckBox" RenderMode="Lightweight" CssClass="btn btn-primary" Text="Viernes">
-                                                                        <ToggleStates>
-                                                                            <telerik:RadButtonToggleState Text="Viernes" />
-                                                                            <telerik:RadButtonToggleState Text="Viernes" CssClass="btn btn-empty" />
-                                                                        </ToggleStates>
-                                                                    </telerik:RadButton>
+                                                                    <telerik:RadCheckBox runat="server" ID="chkViernes" ToolTip="Viernes" Text="Viernes">
+                                                                    </telerik:RadCheckBox>
                                                                 </td>
                                                                 <td style="width: 14%">
-                                                                    <telerik:RadButton runat="server" ID="chkSabado" ToolTip="Sábado" ButtonType="ToggleButton" ToggleType="CheckBox" RenderMode="Lightweight" CssClass="btn btn-primary" Text="Sábado">
-                                                                        <ToggleStates>
-                                                                            <telerik:RadButtonToggleState Text="Sábado" />
-                                                                            <telerik:RadButtonToggleState Text="Sábado" CssClass="btn btn-empty" />
-                                                                        </ToggleStates>
-                                                                    </telerik:RadButton>
+                                                                    <telerik:RadCheckBox runat="server" ID="chkSabado" ToolTip="Sábado" Text="Sábado">
+                                                                    </telerik:RadCheckBox>
                                                                 </td>
                                                                 <td style="width: 14%">
-                                                                    <telerik:RadButton runat="server" ID="chkDomingo" ToolTip="Domingo" ButtonType="ToggleButton" ToggleType="CheckBox" RenderMode="Lightweight" CssClass="btn btn-primary" Text="Domingo">
-                                                                        <ToggleStates>
-                                                                            <telerik:RadButtonToggleState Text="Domingo" />
-                                                                            <telerik:RadButtonToggleState Text="Domingo" CssClass="btn btn-empty" />
-                                                                        </ToggleStates>
-                                                                    </telerik:RadButton>
+                                                                    <telerik:RadCheckBox runat="server" ID="chkDomingo" ToolTip="Domingo" Text="Domingo">
+                                                                    </telerik:RadCheckBox>
                                                                 </td>
                                                             </tr>
                                                         </table>
@@ -951,59 +931,55 @@
                                                 </asp:UpdatePanel>
                                                 <div class="row form-group">
                                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right">
-                                                        <asp:UpdatePanel runat="server">
-                                                            <ContentTemplate>
-                                                                <asp:Panel runat="server">
-                                                                    <asp:GridView ID="grvSugerencia" runat="server" AllowPaging="true" CssClass="table table-striped table-bordered"
-                                                                        PageSize="10" AutoGenerateColumns="false" OnRowDataBound="grvSugerencia_RowDataBound" Font-Size="10px"
-                                                                        OnPageIndexChanging="grvSugerencia_PageIndexChanging" DataKeyNames="intSugerenciaID" OnRowCancelingEdit="grvSugerencia_RowCancelingEdit"
-                                                                        OnRowCommand="grvSugerencia_RowCommand" OnRowEditing="grvSugerencia_RowEditing" OnRowUpdating="grvSugerencia_RowUpdating"
-                                                                        OnRowDeleting="grvSugerencia_RowDeleting" EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
-                                                                        <Columns>
-                                                                            <asp:TemplateField HeaderText="Fecha" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                                                                                <ItemTemplate>
-                                                                                    <asp:Label ID="lblFecha" runat="server" Text='<%# String.Format("{0:dd/MM/yyyy}", Eval("datFecha")) %>' ForeColor="DarkGreen" />
-                                                                                </ItemTemplate>
-                                                                            </asp:TemplateField>
-                                                                            <asp:TemplateField HeaderText="Hora" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                                                                                <ItemTemplate>
-                                                                                    <asp:Label ID="lblHora" runat="server" ForeColor="DarkGreen" />
-                                                                                </ItemTemplate>
-                                                                            </asp:TemplateField>
-                                                                            <asp:TemplateField HeaderText="Seleccionar" ItemStyle-HorizontalAlign="Center">
-                                                                                <ItemTemplate>
-                                                                                    <asp:LinkButton ID="btnVisualizar" CausesValidation="false" CommandName="Seleccionar" CommandArgument='<%#Eval("intSugerenciaID") %>' runat="server">
-                                                                                        <i class="fa fa-calendar-check-o" aria-hidden="true" title="Buscar horario" style="font-size:25px;"></i>
-                                                                                    </asp:LinkButton>
-                                                                                </ItemTemplate>
-                                                                            </asp:TemplateField>
-                                                                        </Columns>
-                                                                        <PagerTemplate>
-                                                                            <asp:Label ID="lblTemplate" runat="server" Text="Muestra Filas: " CssClass="Label" />
-                                                                            <asp:DropDownList ID="ddlBandejaS" runat="server" AutoPostBack="true" CausesValidation="false"
-                                                                                Enabled="true" OnSelectedIndexChanged="ddlBandejaS_SelectedIndexChanged">
-                                                                                <asp:ListItem Value="10" />
-                                                                                <asp:ListItem Value="15" />
-                                                                                <asp:ListItem Value="20" />
-                                                                            </asp:DropDownList>
-                                                                            &nbsp;Página
-                                                                            <asp:TextBox ID="txtBandejaS" runat="server" AutoPostBack="true" OnTextChanged="txtBandejaS_TextChanged"
-                                                                                Width="40" MaxLength="10" />
-                                                                            de
-                                                                            <asp:Label ID="lblBandejaTotal" runat="server" />
-                                                                            &nbsp;
-                                                                            <asp:Button ID="btnBandeja_I" runat="server" CommandName="Page" CausesValidation="false"
-                                                                                ToolTip="Página Anterior" CommandArgument="Prev" CssClass="previous" />
-                                                                            <asp:Button ID="btnBandeja_II" runat="server" CommandName="Page" CausesValidation="false"
-                                                                                ToolTip="Página Siguiente" CommandArgument="Next" CssClass="next" />
-                                                                        </PagerTemplate>
-                                                                        <HeaderStyle CssClass="headerstyle" />
-                                                                        <FooterStyle CssClass="text-center" />
-                                                                        <PagerStyle CssClass="text-center" />
-                                                                    </asp:GridView>
-                                                                </asp:Panel>
-                                                            </ContentTemplate>
-                                                        </asp:UpdatePanel>
+                                                        <telerik:RadAjaxPanel runat="server" ID="radAjaxPanelSugerencia" OnAjaxRequest="radAjaxPanelSugerencia_AjaxRequest">
+                                                            <asp:GridView ID="grvSugerencia" runat="server" AllowPaging="true" CssClass="table table-striped table-bordered"
+                                                                PageSize="10" AutoGenerateColumns="false" OnRowDataBound="grvSugerencia_RowDataBound" Font-Size="10px"
+                                                                OnPageIndexChanging="grvSugerencia_PageIndexChanging" DataKeyNames="intSugerenciaID" OnRowCancelingEdit="grvSugerencia_RowCancelingEdit"
+                                                                OnRowCommand="grvSugerencia_RowCommand" OnRowEditing="grvSugerencia_RowEditing" OnRowUpdating="grvSugerencia_RowUpdating"
+                                                                OnRowDeleting="grvSugerencia_RowDeleting" EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
+                                                                <Columns>
+                                                                    <asp:TemplateField HeaderText="Fecha" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                                                                        <ItemTemplate>
+                                                                            <asp:Label ID="lblFecha" runat="server" Text='<%# String.Format("{0:dd/MM/yyyy}", Eval("datFecha")) %>' ForeColor="DarkGreen" />
+                                                                        </ItemTemplate>
+                                                                    </asp:TemplateField>
+                                                                    <asp:TemplateField HeaderText="Hora" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                                                                        <ItemTemplate>
+                                                                            <asp:Label ID="lblHora" runat="server" ForeColor="DarkGreen" />
+                                                                        </ItemTemplate>
+                                                                    </asp:TemplateField>
+                                                                    <asp:TemplateField HeaderText="Seleccionar" ItemStyle-HorizontalAlign="Center">
+                                                                        <ItemTemplate>
+                                                                            <asp:LinkButton ID="btnVisualizar" CausesValidation="false" CommandName="Seleccionar" CommandArgument='<%#Eval("intSugerenciaID") %>' runat="server">
+                                                                                <i class="fa fa-calendar-check-o" aria-hidden="true" title="Buscar horario" style="font-size:25px;"></i>
+                                                                            </asp:LinkButton>
+                                                                        </ItemTemplate>
+                                                                    </asp:TemplateField>
+                                                                </Columns>
+                                                                <PagerTemplate>
+                                                                    <asp:Label ID="lblTemplate" runat="server" Text="Muestra Filas: " CssClass="Label" />
+                                                                    <asp:DropDownList ID="ddlBandejaS" runat="server" AutoPostBack="true" CausesValidation="false"
+                                                                        Enabled="true" OnSelectedIndexChanged="ddlBandejaS_SelectedIndexChanged">
+                                                                        <asp:ListItem Value="10" />
+                                                                        <asp:ListItem Value="15" />
+                                                                        <asp:ListItem Value="20" />
+                                                                    </asp:DropDownList>
+                                                                    &nbsp;Página
+                                                                    <asp:TextBox ID="txtBandejaS" runat="server" AutoPostBack="true" OnTextChanged="txtBandejaS_TextChanged"
+                                                                        Width="40" MaxLength="10" />
+                                                                    de
+                                                                    <asp:Label ID="lblBandejaTotal" runat="server" />
+                                                                    &nbsp;
+                                                                    <asp:Button ID="btnBandeja_I" runat="server" CommandName="Page" CausesValidation="false"
+                                                                        ToolTip="Página Anterior" CommandArgument="Prev" CssClass="previous" />
+                                                                    <asp:Button ID="btnBandeja_II" runat="server" CommandName="Page" CausesValidation="false"
+                                                                        ToolTip="Página Siguiente" CommandArgument="Next" CssClass="next" />
+                                                                </PagerTemplate>
+                                                                <HeaderStyle CssClass="headerstyle" />
+                                                                <FooterStyle CssClass="text-center" />
+                                                                <PagerStyle CssClass="text-center" />
+                                                            </asp:GridView>
+                                                        </telerik:RadAjaxPanel>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1013,7 +989,7 @@
                                 <div id="AgendaManual" class="tab-pane fade">
                                     <div id="botones" runat="server" class="row">
                                         <div class="col-md-4">
-                                            <telerik:RadButton ID="RB_antes_fecha" runat="server" Text="Fecha Anterior" CssClass="icon-next btn btn-success" OnClick="RB_antes_fecha_Click" Enabled="false">
+                                            <telerik:RadButton ID="RB_antes_fecha" runat="server" Text="Fecha Anterior" CssClass="btn btn-success" OnClick="RB_antes_fecha_Click" Enabled="false">
                                             </telerik:RadButton>
                                         </div>
 
@@ -1504,9 +1480,7 @@
             });
         }
 
-        function autoCompleteEx_ItemSelected(sender, args) {
-            __doPostBack(sender.get_element().name, "");
-        }
+       
     </script>
 
 </asp:Content>

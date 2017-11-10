@@ -12,19 +12,12 @@ namespace Fuji.RISLite.Entidades.DataBase
     using System;
     using System.Collections.Generic;
     
-    public partial class tbl_CAT_DiaSemana
+    public partial class tbl_CAT_DuracionModalidad
     {
-        public tbl_CAT_DiaSemana()
-        {
-            this.tbl_REL_DiaSemana = new HashSet<tbl_REL_DiaSemana>();
-        }
-    
-        public int intDiaSemanaInt { get; set; }
-        public string vchDiaSemana { get; set; }
-        public Nullable<bool> bitActivo { get; set; }
-        public Nullable<System.DateTime> datFecha { get; set; }
+        public int intDuracionModalidadID { get; set; }
+        public int intDuracion { get; set; }
+        public bool bitActivo { get; set; }
+        public System.DateTime datFecha { get; set; }
         public string vchUserAdmin { get; set; }
-    
-        public virtual ICollection<tbl_REL_DiaSemana> tbl_REL_DiaSemana { get; set; }
     }
 }

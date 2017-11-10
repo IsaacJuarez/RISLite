@@ -352,7 +352,7 @@ namespace Fuji.RISLite.Site {
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadButton chkLunes;
+        protected global::Telerik.Web.UI.RadCheckBox chkLunes;
         
         /// <summary>
         /// Control chkMartes.
@@ -361,7 +361,7 @@ namespace Fuji.RISLite.Site {
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadButton chkMartes;
+        protected global::Telerik.Web.UI.RadCheckBox chkMartes;
         
         /// <summary>
         /// Control chkMiercoles.
@@ -370,7 +370,7 @@ namespace Fuji.RISLite.Site {
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadButton chkMiercoles;
+        protected global::Telerik.Web.UI.RadCheckBox chkMiercoles;
         
         /// <summary>
         /// Control chkJueves.
@@ -379,7 +379,7 @@ namespace Fuji.RISLite.Site {
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadButton chkJueves;
+        protected global::Telerik.Web.UI.RadCheckBox chkJueves;
         
         /// <summary>
         /// Control chkViernes.
@@ -388,7 +388,7 @@ namespace Fuji.RISLite.Site {
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadButton chkViernes;
+        protected global::Telerik.Web.UI.RadCheckBox chkViernes;
         
         /// <summary>
         /// Control chkSabado.
@@ -397,7 +397,7 @@ namespace Fuji.RISLite.Site {
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadButton chkSabado;
+        protected global::Telerik.Web.UI.RadCheckBox chkSabado;
         
         /// <summary>
         /// Control chkDomingo.
@@ -406,7 +406,7 @@ namespace Fuji.RISLite.Site {
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadButton chkDomingo;
+        protected global::Telerik.Web.UI.RadCheckBox chkDomingo;
         
         /// <summary>
         /// Control btnCargarSug.
@@ -416,6 +416,15 @@ namespace Fuji.RISLite.Site {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnCargarSug;
+        
+        /// <summary>
+        /// Control radAjaxPanelSugerencia.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadAjaxPanel radAjaxPanelSugerencia;
         
         /// <summary>
         /// Control grvSugerencia.

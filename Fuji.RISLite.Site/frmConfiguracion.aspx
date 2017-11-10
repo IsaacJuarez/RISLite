@@ -75,7 +75,7 @@
             </telerik:AjaxSetting>
             <telerik:AjaxSetting AjaxControlID="ddlSitioMod">
                 <UpdatedControls>
-                    <telerik:AjaxUpdatedControl ControlID="grvPrestaciones" />
+                    <telerik:AjaxUpdatedControl ControlID="ddlModalidad" />
                 </UpdatedControls>
             </telerik:AjaxSetting>
             <telerik:AjaxSetting AjaxControlID="grvPrestaciones">
@@ -90,6 +90,12 @@
             </telerik:AjaxSetting>
 
             <telerik:AjaxSetting AjaxControlID="ddlSitioModEquipo">
+                <UpdatedControls>
+                    <telerik:AjaxUpdatedControl ControlID="AjaxPanelModalidadEquipo" />
+                    <telerik:AjaxUpdatedControl ControlID="AjaxPanelEquipo" />
+                </UpdatedControls>
+            </telerik:AjaxSetting>
+            <telerik:AjaxSetting AjaxControlID="btnSearchEquipo">
                 <UpdatedControls>
                     <telerik:AjaxUpdatedControl ControlID="grvEquipo" />
                 </UpdatedControls>
@@ -1161,6 +1167,18 @@
                                                                 <div class="col-lg-3 col-sm-12 text-left">
                                                                     <div class="row">
                                                                         <div class="col-lg-12 col-md-12 col-sm-12">
+                                                                            <asp:Label runat="server" ID="Label3" Text="Sitio: " ForeColor="DarkGreen" AssociatedControlID="ddlSitioMod"></asp:Label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                                                            <telerik:RadComboBox runat="server" ID="ddlSitioMod" OnClientSelectedIndexChanged="Combo_SitioMod" RenderMode="Lightweight" ForeColor="DarkGreen" Width="100%"></telerik:RadComboBox>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-3 col-sm-12 text-left">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12 col-md-12 col-sm-12">
                                                                             <asp:Label runat="server" Text="Modalidad" AssociatedControlID="ddlModalidad" Width="100%"></asp:Label>
                                                                             <asp:RequiredFieldValidator ID="RequiredFieldValidator6" runat="server" Text="* Seleccionar modalidad." ForeColor="Red" InitialValue="0" ControlToValidate="ddlModalidad" ValidationGroup="vgAddPres"></asp:RequiredFieldValidator>
                                                                         </div>
@@ -1168,18 +1186,6 @@
                                                                     <div class="row">
                                                                         <div class="col-lg-12 col-md-12 col-sm-12">
                                                                             <telerik:RadComboBox ID="ddlModalidad" runat="server" RenderMode="Lightweight" ForeColor="DarkGreen" Width="100%" OnClientSelectedIndexChanged="Combo_Modalidad"></telerik:RadComboBox>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-3 col-sm-12 text-left">
-                                                                    <div class="row">
-                                                                        <div class="col-lg-12 col-md-12 col-sm-12">
-                                                                            <asp:Label runat="server" ID="Label3" Text="Sitio: " ForeColor="DarkGreen" AssociatedControlID="ddlSitioMod"></asp:Label>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-lg-12 col-md-12 col-sm-12">
-                                                                            <telerik:RadComboBox runat="server" ID="ddlSitioMod" OnClientSelectedIndexChanged="Combo_SitioMod" RenderMode="Lightweight" ForeColor="DarkGreen" Width="100%"></telerik:RadComboBox>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1346,30 +1352,33 @@
                                                                 <div class="col-lg-2 col-sm-12 text-left">
                                                                     <div class="row">
                                                                         <div class="col-lg-12 col-md-12 col-sm-12">
-                                                                            <asp:Label runat="server" Text="Modalidad" AssociatedControlID="ddlModalidadEquipo" Width="100%"></asp:Label>
-                                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator9" runat="server" Text="* Seleccionar modalidad." ForeColor="Red" InitialValue="0" ControlToValidate="ddlModalidadEquipo" ValidationGroup="vgAddEquipo"></asp:RequiredFieldValidator>
+                                                                            <asp:Label runat="server" ID="Label4" Text="Sitio: " ForeColor="DarkGreen" AssociatedControlID="ddlSitioModEquipo"></asp:Label>
                                                                         </div>
                                                                     </div>
                                                                     <div class="row">
                                                                         <div class="col-lg-12 col-md-12 col-sm-12">
-                                                                            <telerik:RadComboBox ID="ddlModalidadEquipo" runat="server" RenderMode="Lightweight" ForeColor="DarkGreen" Width="100%" OnClientSelectedIndexChanged="ComboMod_Equipo"></telerik:RadComboBox>
+                                                                            <telerik:RadComboBox runat="server" ID="ddlSitioModEquipo" OnClientSelectedIndexChanged="ddlSitioModEquipo_SelectedIndexChanged" RenderMode="Lightweight" ForeColor="DarkGreen" Width="100%"></telerik:RadComboBox>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-lg-2 col-sm-12 text-left">
                                                                     <div class="row">
                                                                         <div class="col-lg-12 col-md-12 col-sm-12">
-                                                                            <asp:Label runat="server" ID="Label4" Text="Sitio: " ForeColor="DarkGreen" AssociatedControlID="ddlSitioModEquipo"></asp:Label>
+                                                                            <asp:Label runat="server" Text="Modalidad" AssociatedControlID="ddlModalidadEquipo" Width="100%"></asp:Label>
+                                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator9" runat="server" Text="* Seleccionar modalidad." ForeColor="Red" InitialValue="0" ControlToValidate="ddlModalidadEquipo" ValidationGroup="vgAddEquipo"></asp:RequiredFieldValidator>
                                                                         </div>
                                                                     </div>
                                                                     <div class="row">
                                                                         <div class="col-lg-12 col-md-12 col-sm-12">
-                                                                            <telerik:RadComboBox runat="server" ID="ddlSitioModEquipo" OnClientSelectedIndexChanged="Combo_SitioModEquipo" RenderMode="Lightweight" ForeColor="DarkGreen" Width="100%"></telerik:RadComboBox>
+                                                                            <telerik:RadAjaxPanel runat="server" ID="AjaxPanelModalidadEquipo" OnAjaxRequest="AjaxPanelModalidadEquipo_AjaxRequest">
+                                                                                <telerik:RadComboBox ID="ddlModalidadEquipo" runat="server" RenderMode="Lightweight" ForeColor="DarkGreen" Width="100%" OnClientSelectedIndexChanged="ComboMod_Equipo"></telerik:RadComboBox>
+                                                                            </telerik:RadAjaxPanel>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-lg-2 col-sm-12  text-center">
                                                                     <asp:Button runat="server" ID="btnAddEquipo" Text="Agregar" OnClick="btnAddEquipo_Click" CssClass="btn btn-success" ValidationGroup="vgAddEquipo" />
+                                                                    <asp:Button runat="server" ID="btnSearchEquipo" Text="Buscar" OnClick="btnSearchEquipo_Click" CssClass="btn btn-info" />
                                                                 </div>
                                                             </div>
                                                             <div class="row">
@@ -2027,13 +2036,13 @@
             function Combo_Modalidad(sender, eventArgs) {
                 //var evento = eventArgs.Command.get_name();
                 var idsitio = sender._value;
-                $find('<%= radAjaxPanel2.ClientID%>').ajaxRequestWithTarget('<%= radAjaxPanel2.UniqueID %>', idsitio);
+                $find('<%= radAjaxPanel2.ClientID%>').ajaxRequestWithTarget('<%= radAjaxPanel2.UniqueID %>', 'modalidad');
             }
 
             function Combo_SitioMod(sender, eventArgs) {
                 //var evento = eventArgs.Command.get_name();
                 var idsitio = sender._value;
-                $find('<%= radAjaxPanel2.ClientID%>').ajaxRequestWithTarget('<%= radAjaxPanel2.UniqueID %>', idsitio);
+                $find('<%= radAjaxPanel2.ClientID%>').ajaxRequestWithTarget('<%= radAjaxPanel2.UniqueID %>', 'sitio');
             }
 
             function ComboMod_Equipo(sender, eventArgs) {
@@ -2045,7 +2054,7 @@
             function Combo_SitioModEquipo(sender, eventArgs) {
                 //var evento = eventArgs.Command.get_name();
                 var idsitio = sender._value;
-                $find('<%= AjaxPanelEquipo.ClientID%>').ajaxRequestWithTarget('<%= AjaxPanelEquipo.UniqueID %>', idsitio);
+                $find('<%= AjaxPanelEquipo.ClientID%>').ajaxRequestWithTarget('<%= AjaxPanelEquipo.UniqueID %>', 'sitio');
             }
 
             function ComboTipoVar(sender, eventArgs) {
@@ -2058,6 +2067,10 @@
                 //var evento = eventArgs.Command.get_name();
                 var idsitio = sender._value;
                 $find('<%= radAjaxPanelAdicionales.ClientID%>').ajaxRequestWithTarget('<%= radAjaxPanelAdicionales.UniqueID %>', idsitio);
+            }
+
+            function ddlSitioModEquipo_SelectedIndexChanged(sender, eventArgs) {
+                $find('<%= AjaxPanelModalidadEquipo.ClientID%>').ajaxRequestWithTarget('<%= AjaxPanelModalidadEquipo.UniqueID %>', '');
             }
         </script>
     </telerik:RadScriptBlock>

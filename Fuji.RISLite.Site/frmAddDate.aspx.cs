@@ -250,6 +250,7 @@ namespace Fuji.RISLite.Site
                 AdicionalesRequest request = new AdicionalesRequest();
                 request.mdlUser = Usuario;
                 request.intTipoAdicional = 2;//Operativo
+                request.intSitioID = Usuario.intSitioID;
                 lstresponse = RisService.getAdicionales(request).Where(x => x.bitActivo).ToList();
                 if (lstresponse != null)
                 {
@@ -314,6 +315,7 @@ namespace Fuji.RISLite.Site
                 AdicionalesRequest request = new AdicionalesRequest();
                 request.mdlUser = Usuario;
                 request.intTipoAdicional = 1;//Clinico
+                request.intSitioID = Usuario.intSitioID;
                 lstresponse = RisService.getAdicionales(request);
                 if (lstresponse != null)
                 {
@@ -327,31 +329,55 @@ namespace Fuji.RISLite.Site
                                 case 1:
                                     break;
                                 case 2:
-                                    RadButton btn = new RadButton();
-                                    btn.RenderMode = RenderMode.Lightweight;
-                                    btn.ToggleType = ButtonToggleType.CheckBox;
-                                    btn.CssClass = "btn btn-primary";
-                                    Literal radButtonContent = new Literal();
-                                    radButtonContent.ID = "radButtonContent";
-                                    string img = "<i class='fa /imagen/ fa-lg'></i>";
-                                    radButtonContent.Text = img.Replace("/imagen/", item.vchURLImagen);
-                                    btn.Controls.Add(radButtonContent);
-                                    RadButtonToggleState st0 = new RadButtonToggleState();
-                                    st0.CssClass = "";
-                                    btn.ToggleStates.Add(st0);
-                                    RadButtonToggleState st1 = new RadButtonToggleState();
-                                    st1.CssClass = "btn btn-empty";
-                                    btn.ToggleStates.Add(st1);
-                                    btn.ID = "radBtn" + item.intAdicionalesID;
-                                    btn.ToolTip = item.vchNombreAdicional;
-                                    btn.ClientIDMode = ClientIDMode.Static;
-                                    btn.CommandArgument = item.intAdicionalesID.ToString();
-                                    btn.Checked = false;
-                                    if (item.bitObservaciones)
-                                    {
-                                        btn.Click += cargarObservaciones;
-                                    }
-                                    pnlAdiClin.Controls.Add(btn);
+
+                                    LinkButton lnkbtn = new LinkButton();
+                                    lnkbtn.CssClass = "btn btn-empty";
+                                    lnkbtn.ID = "radBtn" + item.intAdicionalesID;
+                                    lnkbtn.BackColor = System.Drawing.Color.Transparent;
+                                    lnkbtn.ToolTip = item.vchNombreAdicional;
+                                    lnkbtn.ClientIDMode = ClientIDMode.Static;
+                                    lnkbtn.CommandArgument = item.intAdicionalesID.ToString();
+                                    Image imgTest = new Image();
+                                    imgTest.ImageUrl = "Iconos/" + Usuario.intSitioID + "/" + item.vchURLImagen;
+                                    imgTest.Width = 25;
+                                    imgTest.Height = 25;
+                                    CheckBox chk = new CheckBox();
+                                    chk.Enabled = false;
+                                    chk.ID = "chk" + item.intAdicionalesID;
+                                    chk.ClientIDMode = ClientIDMode.Static;
+                                    lnkbtn.Controls.Add(imgTest);
+                                    lnkbtn.Controls.Add(chk);
+
+
+                                    //RadButton btn = new RadButton();
+                                    //btn.RenderMode = RenderMode.Lightweight;
+                                    //btn.ToggleType = ButtonToggleType.CheckBox;
+                                    //btn.CssClass = "btn btn-primary";
+                                    //Literal radButtonContent = new Literal();
+                                    //radButtonContent.ID = "radButtonContent";
+                                    //string img = "<img src='/imagen/' />";
+                                    //radButtonContent.Text = img.Replace("/imagen/", "Iconos/" + item.vchURLImagen);
+
+
+                                    //btn.Controls.Add(imgTest);
+                                    //RadButtonToggleState st0 = new RadButtonToggleState();
+                                    //st0.CssClass = "";
+                                    //btn.ToggleStates.Add(st0);
+                                    //RadButtonToggleState st1 = new RadButtonToggleState();
+                                    //st1.CssClass = "btn btn-empty";
+                                    //btn.ToggleStates.Add(st1);
+                                    //btn.ID = "radBtn" + item.intAdicionalesID;
+                                    //btn.ToolTip = item.vchNombreAdicional;
+                                    //btn.ClientIDMode = ClientIDMode.Static;
+                                    //btn.CommandArgument = item.intAdicionalesID.ToString();
+                                    //btn.Checked = false;
+                                    //if (item.bitObservaciones)
+                                    //{
+                                    //lnkbtn.Click += cargarObservaciones;
+                                    //}
+                                    //pnlAdiClin.Controls.Add(btn);
+                                    lnkbtn.Click += new EventHandler(linkButton_Click);
+                                    pnlAdiClin.Controls.Add(lnkbtn);
                                     break;
                                 case 3:
                                     break;
@@ -368,28 +394,64 @@ namespace Fuji.RISLite.Site
             }
         }
 
+        private void linkButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                LinkButton rbt = (LinkButton)sender;
+                lblTitObs.Text = rbt.ToolTip;
+                hfintAdicionalID.Value = rbt.CommandArgument;
+                CheckBox chk = new CheckBox();
+                chk = (CheckBox)rbt.FindControl("chk" + rbt.CommandArgument);
+                if (chk != null)
+                {
+                    chk.Checked = !chk.Checked;
+                }
+                //if (rbt.Checked)
+                //{
+                //    ScriptManager.RegisterStartupScript(Page, Page.GetType(), "modalObs", "$('#modalObs').modal();", true);
+                //}
+                //else
+                //{
+                //    string intAdicionalID = hfintAdicionalID.Value;
+                //    intAdicionalID = "lblAdicionalID" + intAdicionalID;
+                //    Label obs = (Label)pnlObservaciones.FindControl(intAdicionalID);
+                //    if (obs != null)
+                //    {
+                //        pnlObservaciones.Controls.Remove(obs);
+                //    }
+                //    lstObser.RemoveAll(x => x.intAdicionalesID == Convert.ToInt32(hfintAdicionalID.Value));
+                //}
+            }
+            catch (Exception eObs)
+            {
+                Log.EscribeLog("Existe un error en cargarObservaciones: " + eObs.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
         private void cargarObservaciones(object sender, EventArgs e)
         {
             try
             {
-                RadButton rbt = (RadButton)sender;
+                LinkButton rbt = (LinkButton)sender;
                 lblTitObs.Text = rbt.ToolTip;
                 hfintAdicionalID.Value = rbt.CommandArgument;
-                if (rbt.Checked)
-                {
-                    ScriptManager.RegisterStartupScript(Page, Page.GetType(), "modalObs", "$('#modalObs').modal();", true);
-                }
-                else
-                {
-                    string intAdicionalID = hfintAdicionalID.Value;
-                    intAdicionalID = "lblAdicionalID" + intAdicionalID;
-                    Label obs = (Label)pnlObservaciones.FindControl(intAdicionalID);
-                    if (obs != null)
-                    {
-                        pnlObservaciones.Controls.Remove(obs);
-                    }
-                    lstObser.RemoveAll(x => x.intAdicionalesID == Convert.ToInt32(hfintAdicionalID.Value));
-                }
+                //rbt.Controls.Contains
+                //if (rbt.Checked)
+                //{
+                //    ScriptManager.RegisterStartupScript(Page, Page.GetType(), "modalObs", "$('#modalObs').modal();", true);
+                //}
+                //else
+                //{
+                //    string intAdicionalID = hfintAdicionalID.Value;
+                //    intAdicionalID = "lblAdicionalID" + intAdicionalID;
+                //    Label obs = (Label)pnlObservaciones.FindControl(intAdicionalID);
+                //    if (obs != null)
+                //    {
+                //        pnlObservaciones.Controls.Remove(obs);
+                //    }
+                //    lstObser.RemoveAll(x => x.intAdicionalesID == Convert.ToInt32(hfintAdicionalID.Value));
+                //}
             }
             catch (Exception eObs)
             {
@@ -1463,10 +1525,10 @@ namespace Fuji.RISLite.Site
                 //cargarEstudioGrid(Convert.ToInt32(id));
                 //HFcargacalendario.Value = "1";
 
-                HFIDModalidad_calendario.Value = id;
-                cargarEstudioGrid(Convert.ToInt32(id));
-                txtBusquedaEstudio.Text = "";
-                grvEstudios.Visible = true;
+                //HFIDModalidad_calendario.Value = id;
+                //cargarEstudioGrid(Convert.ToInt32(id));
+                //txtBusquedaEstudio.Text = "";
+                //grvEstudios.Visible = true;
             }
             catch (Exception etC)
             {
@@ -2205,13 +2267,13 @@ namespace Fuji.RISLite.Site
                 mdl.datFechaInicio = calFecIni.SelectedDate == null ? DateTime.Now : (DateTime)calFecIni.SelectedDate;
                 mdl.datFechaFinal = calFecFin.SelectedDate == null ? DateTime.Now.AddDays(7): (DateTime)calFecFin.SelectedDate;
                 mdl.intModalidad = Convert.ToInt32(Session["intModSug"].ToString());
-                string lunes = chkLunes.Checked ? "1," : "";
-                string martes = chkMartes.Checked ? "2," : "";
-                string miercoles = chkMiercoles.Checked ? "3," : "";
-                string jueves = chkJueves.Checked ? "4," : "";
-                string viernes = chkViernes.Checked ? "5," : "";
-                string sabado = chkSabado.Checked ? "6," : "";
-                string domingo = chkDomingo.Checked ? "7," : "";
+                string lunes = (bool)chkLunes.Checked ? "1," : "";
+                string martes = (bool)chkMartes.Checked ? "2," : "";
+                string miercoles = (bool)chkMiercoles.Checked ? "3," : "";
+                string jueves = (bool)chkJueves.Checked ? "4," : "";
+                string viernes = (bool)chkViernes.Checked ? "5," : "";
+                string sabado = (bool)chkSabado.Checked ? "6," : "";
+                string domingo = (bool)chkDomingo.Checked ? "7," : "";
                 string dias = lunes + martes + miercoles + jueves + viernes + sabado + domingo;
                 mdl.vchDias = dias;
                 string manana = chkOpManana.Checked ? "1," : "";
@@ -2514,16 +2576,21 @@ namespace Fuji.RISLite.Site
             try
             {
                 //string id = txtBusquedaEstudio.Text;
-                //HFIDModalidad_calendario.Value = e.Argument;
-                //cargarEstudioGrid(Convert.ToInt32(e.Argument));
-                //txtBusquedaEstudio.Text = "";
-                //grvEstudios.Visible = true;
+                HFIDModalidad_calendario.Value = e.Argument;
+                cargarEstudioGrid(Convert.ToInt32(e.Argument));
+                txtBusquedaEstudio.Text = "";
+                grvEstudios.Visible = true;
                 //int x = 0;
             }
             catch(Exception erPA)
             {
                 Log.EscribeLog("Existe un error en RadAjaxPanel1_AjaxRequest: " + erPA.Message, 3, Usuario.vchUsuario);
             }
+        }
+
+        protected void radAjaxPanelSugerencia_AjaxRequest(object sender, AjaxRequestEventArgs e)
+        {
+
         }
     }
 }

@@ -99,6 +99,9 @@
     <Compile Include="DataBase\tbl_CAT_DiaSemana.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
+    <Compile Include="DataBase\tbl_CAT_DuracionModalidad.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
     <Compile Include="DataBase\tbl_CAT_Equipo.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
@@ -208,6 +211,9 @@
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\tbl_REL_CitaEstudio.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataBase\tbl_REL_DiaSemana.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\tbl_REL_IdentificacionPaciente.cs">

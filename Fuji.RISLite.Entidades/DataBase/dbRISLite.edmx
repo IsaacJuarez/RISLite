@@ -64,6 +64,22 @@
           <Property Name="datFecha" Type="datetime" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
         </EntityType>
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'RISLite.dbo.tbl_CAT_DuracionModalidad' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <EntityType Name="tbl_CAT_DuracionModalidad">
+          <Key>
+            <PropertyRef Name="intDuracionModalidadID" />
+            <PropertyRef Name="intDuracion" />
+            <PropertyRef Name="bitActivo" />
+            <PropertyRef Name="datFecha" />
+            <PropertyRef Name="vchUserAdmin" />
+          </Key>
+          <Property Name="intDuracionModalidadID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="intDuracion" Type="int" Nullable="false" />
+          <Property Name="bitActivo" Type="bit" Nullable="false" />
+          <Property Name="datFecha" Type="datetime" Nullable="false" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
         <EntityType Name="tbl_CAT_Equipo">
           <Key>
             <PropertyRef Name="intEquipoID" />
@@ -565,6 +581,17 @@
           <Property Name="datFecha" Type="datetime" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
         </EntityType>
+        <EntityType Name="tbl_REL_DiaSemana">
+          <Key>
+            <PropertyRef Name="intRELDiaSemanaID" />
+          </Key>
+          <Property Name="intRELDiaSemanaID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="intDiaSemanaInt" Type="int" />
+          <Property Name="intSitioID" Type="int" />
+          <Property Name="bitActivo" Type="bit" />
+          <Property Name="datFecha" Type="datetime" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
+        </EntityType>
         <EntityType Name="tbl_REL_IdentificacionPaciente">
           <Key>
             <PropertyRef Name="intRELIdenPacienteID" />
@@ -1029,6 +1056,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_REL_DiaSemana_CAT_Sitio">
+          <End Role="tbl_CAT_Sitio" Type="Self.tbl_CAT_Sitio" Multiplicity="0..1" />
+          <End Role="tbl_REL_DiaSemana" Type="Self.tbl_REL_DiaSemana" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_Sitio">
+              <PropertyRef Name="intSitioID" />
+            </Principal>
+            <Dependent Role="tbl_REL_DiaSemana">
+              <PropertyRef Name="intSitioID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_REL_PacienteCita_MST_Cita">
           <End Role="tbl_MST_Cita" Type="Self.tbl_MST_Cita" Multiplicity="0..1" />
           <End Role="tbl_REL_PacienteCita" Type="Self.tbl_REL_PacienteCita" Multiplicity="*" />
@@ -1098,6 +1137,18 @@
             </Principal>
             <Dependent Role="tbl_REL_TipoUsuarioBoton">
               <PropertyRef Name="intTipoUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TBL_REL__REFERENCE_TBL_CAT_">
+          <End Role="tbl_CAT_DiaSemana" Type="Self.tbl_CAT_DiaSemana" Multiplicity="0..1" />
+          <End Role="tbl_REL_DiaSemana" Type="Self.tbl_REL_DiaSemana" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_DiaSemana">
+              <PropertyRef Name="intDiaSemanaInt" />
+            </Principal>
+            <Dependent Role="tbl_REL_DiaSemana">
+              <PropertyRef Name="intDiaSemanaInt" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1211,11 +1262,21 @@
           <EntitySet Name="tbl_MST_Paciente" EntityType="Self.tbl_MST_Paciente" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_REL_BotonVista" EntityType="Self.tbl_REL_BotonVista" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_REL_CitaEstudio" EntityType="Self.tbl_REL_CitaEstudio" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_REL_DiaSemana" EntityType="Self.tbl_REL_DiaSemana" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_REL_IdentificacionPaciente" EntityType="Self.tbl_REL_IdentificacionPaciente" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_REL_ModalidadPrestacion" EntityType="Self.tbl_REL_ModalidadPrestacion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_REL_PacienteCita" EntityType="Self.tbl_REL_PacienteCita" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_REL_SitioPaciente" EntityType="Self.tbl_REL_SitioPaciente" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_REL_TipoUsuarioBoton" EntityType="Self.tbl_REL_TipoUsuarioBoton" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_CAT_DuracionModalidad" EntityType="Self.tbl_CAT_DuracionModalidad" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+[tbl_CAT_DuracionModalidad].[intDuracionModalidadID] AS [intDuracionModalidadID], 
+[tbl_CAT_DuracionModalidad].[intDuracion] AS [intDuracion], 
+[tbl_CAT_DuracionModalidad].[bitActivo] AS [bitActivo], 
+[tbl_CAT_DuracionModalidad].[datFecha] AS [datFecha], 
+[tbl_CAT_DuracionModalidad].[vchUserAdmin] AS [vchUserAdmin]
+FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_CAT_CodigoPostal_CAT_Municipio" Association="Self.FK_CAT_CodigoPostal_CAT_Municipio">
             <End Role="tbl_CAT_Municipio" EntitySet="tbl_CAT_Municipio" />
             <End Role="tbl_CAT_CodigoPostal" EntitySet="tbl_CAT_CodigoPostal" />
@@ -1352,6 +1413,10 @@
             <End Role="tbl_MST_Estudio" EntitySet="tbl_MST_Estudio" />
             <End Role="tbl_REL_CitaEstudio" EntitySet="tbl_REL_CitaEstudio" />
           </AssociationSet>
+          <AssociationSet Name="FK_REL_DiaSemana_CAT_Sitio" Association="Self.FK_REL_DiaSemana_CAT_Sitio">
+            <End Role="tbl_CAT_Sitio" EntitySet="tbl_CAT_Sitio" />
+            <End Role="tbl_REL_DiaSemana" EntitySet="tbl_REL_DiaSemana" />
+          </AssociationSet>
           <AssociationSet Name="FK_REL_PacienteCita_MST_Cita" Association="Self.FK_REL_PacienteCita_MST_Cita">
             <End Role="tbl_MST_Cita" EntitySet="tbl_MST_Cita" />
             <End Role="tbl_REL_PacienteCita" EntitySet="tbl_REL_PacienteCita" />
@@ -1375,6 +1440,10 @@
           <AssociationSet Name="FK_REL_TipoUsuarioBoton_CAT_TipoUsuario" Association="Self.FK_REL_TipoUsuarioBoton_CAT_TipoUsuario">
             <End Role="tbl_CAT_TipoUsuario" EntitySet="tbl_CAT_TipoUsuario" />
             <End Role="tbl_REL_TipoUsuarioBoton" EntitySet="tbl_REL_TipoUsuarioBoton" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TBL_REL__REFERENCE_TBL_CAT_" Association="Self.FK_TBL_REL__REFERENCE_TBL_CAT_">
+            <End Role="tbl_CAT_DiaSemana" EntitySet="tbl_CAT_DiaSemana" />
+            <End Role="tbl_REL_DiaSemana" EntitySet="tbl_REL_DiaSemana" />
           </AssociationSet>
           <AssociationSet Name="FK_TBL_REL__REFERENCE_TBL_MST_" Association="Self.FK_TBL_REL__REFERENCE_TBL_MST_">
             <End Role="tbl_MST_Paciente" EntitySet="tbl_MST_Paciente" />
@@ -1688,6 +1757,16 @@
             <Parameter Name="vchHoras" Mode="In" Type="String" />
             <Parameter Name="intSitioID" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="tbl_CAT_DuracionModalidad" EntityType="RISLiteModel.tbl_CAT_DuracionModalidad" />
+          <EntitySet Name="tbl_REL_DiaSemana" EntityType="RISLiteModel.tbl_REL_DiaSemana" />
+          <AssociationSet Name="FK_TBL_REL__REFERENCE_TBL_CAT_" Association="RISLiteModel.FK_TBL_REL__REFERENCE_TBL_CAT_">
+            <End Role="tbl_CAT_DiaSemana" EntitySet="tbl_CAT_DiaSemana" />
+            <End Role="tbl_REL_DiaSemana" EntitySet="tbl_REL_DiaSemana" />
+          </AssociationSet>
+          <AssociationSet Name="FK_REL_DiaSemana_CAT_Sitio" Association="RISLiteModel.FK_REL_DiaSemana_CAT_Sitio">
+            <End Role="tbl_CAT_Sitio" EntitySet="tbl_CAT_Sitio" />
+            <End Role="tbl_REL_DiaSemana" EntitySet="tbl_REL_DiaSemana" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="tbl_CAT_TipoMensaje">
           <Key>
@@ -2594,6 +2673,7 @@
           <Property Name="bitActivo" Type="Boolean" />
           <Property Name="datFecha" Type="DateTime" Precision="3" />
           <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_REL_DiaSemana" Relationship="RISLiteModel.FK_TBL_REL__REFERENCE_TBL_CAT_" FromRole="tbl_CAT_DiaSemana" ToRole="tbl_REL_DiaSemana" />
         </EntityType>
         <EntityType Name="tbl_CAT_Eventos">
           <Key>
@@ -2650,6 +2730,7 @@
           <NavigationProperty Name="tbl_CONFIG_Agenda" Relationship="RISLiteModel.FK_CONFIG_Agenda_CAT_Sitio" FromRole="tbl_CAT_Sitio" ToRole="tbl_CONFIG_Agenda" />
           <NavigationProperty Name="tbl_CAT_HoraMuerta" Relationship="RISLiteModel.FK_CAT_HoraMuerta_CAT_Sitio" FromRole="tbl_CAT_Sitio" ToRole="tbl_CAT_HoraMuerta" />
           <NavigationProperty Name="tbl_CAT_DiaFeriado" Relationship="RISLiteModel.FK_CAT_DiaFeriado_CAT_Sitio" FromRole="tbl_CAT_Sitio" ToRole="tbl_CAT_DiaFeriado" />
+          <NavigationProperty Name="tbl_REL_DiaSemana" Relationship="RISLiteModel.FK_REL_DiaSemana_CAT_Sitio" FromRole="tbl_CAT_Sitio" ToRole="tbl_REL_DiaSemana" />
         </EntityType>
         <EntityType Name="tbl_CONFIG_VariablesAdiPaciente">
           <Key>
@@ -3091,6 +3172,57 @@
               <PropertyRef Name="intSitioID" />
             </Principal>
             <Dependent Role="tbl_CAT_DiaFeriado">
+              <PropertyRef Name="intSitioID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tbl_CAT_DuracionModalidad">
+          <Key>
+            <PropertyRef Name="intDuracionModalidadID" />
+            <PropertyRef Name="intDuracion" />
+            <PropertyRef Name="bitActivo" />
+            <PropertyRef Name="datFecha" />
+            <PropertyRef Name="vchUserAdmin" />
+          </Key>
+          <Property Name="intDuracionModalidadID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="intDuracion" Type="Int32" Nullable="false" />
+          <Property Name="bitActivo" Type="Boolean" Nullable="false" />
+          <Property Name="datFecha" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tbl_REL_DiaSemana">
+          <Key>
+            <PropertyRef Name="intRELDiaSemanaID" />
+          </Key>
+          <Property Name="intRELDiaSemanaID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="intDiaSemanaInt" Type="Int32" />
+          <Property Name="intSitioID" Type="Int32" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_CAT_DiaSemana" Relationship="RISLiteModel.FK_TBL_REL__REFERENCE_TBL_CAT_" FromRole="tbl_REL_DiaSemana" ToRole="tbl_CAT_DiaSemana" />
+          <NavigationProperty Name="tbl_CAT_Sitio" Relationship="RISLiteModel.FK_REL_DiaSemana_CAT_Sitio" FromRole="tbl_REL_DiaSemana" ToRole="tbl_CAT_Sitio" />
+        </EntityType>
+        <Association Name="FK_TBL_REL__REFERENCE_TBL_CAT_">
+          <End Type="RISLiteModel.tbl_CAT_DiaSemana" Role="tbl_CAT_DiaSemana" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_REL_DiaSemana" Role="tbl_REL_DiaSemana" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_DiaSemana">
+              <PropertyRef Name="intDiaSemanaInt" />
+            </Principal>
+            <Dependent Role="tbl_REL_DiaSemana">
+              <PropertyRef Name="intDiaSemanaInt" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_REL_DiaSemana_CAT_Sitio">
+          <End Type="RISLiteModel.tbl_CAT_Sitio" Role="tbl_CAT_Sitio" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_REL_DiaSemana" Role="tbl_REL_DiaSemana" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_Sitio">
+              <PropertyRef Name="intSitioID" />
+            </Principal>
+            <Dependent Role="tbl_REL_DiaSemana">
               <PropertyRef Name="intSitioID" />
             </Dependent>
           </ReferentialConstraint>
@@ -3881,6 +4013,29 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="tbl_CAT_DuracionModalidad">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_DuracionModalidad">
+              <MappingFragment StoreEntitySet="tbl_CAT_DuracionModalidad">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="intDuracion" ColumnName="intDuracion" />
+                <ScalarProperty Name="intDuracionModalidadID" ColumnName="intDuracionModalidadID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_REL_DiaSemana">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_REL_DiaSemana">
+              <MappingFragment StoreEntitySet="tbl_REL_DiaSemana">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="intSitioID" ColumnName="intSitioID" />
+                <ScalarProperty Name="intDiaSemanaInt" ColumnName="intDiaSemanaInt" />
+                <ScalarProperty Name="intRELDiaSemanaID" ColumnName="intRELDiaSemanaID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -4,7 +4,6 @@ namespace Fuji.RISLite.Entities
 {
     public class clsEstudio
     {
-
         public int intEstudioID { get; set; }
         public int intRelModPres { get; set; }
         public DateTime fechaInicio { get; set; }

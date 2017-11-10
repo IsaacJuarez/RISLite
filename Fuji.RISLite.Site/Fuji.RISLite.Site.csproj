@@ -101,6 +101,8 @@
     <Content Include="frmRepEstadisticas.aspx" />
     <Content Include="frmSalir.aspx" />
     <Content Include="frmTest.aspx" />
+    <Content Include="Iconos\01VIP_VERDE.png" />
+    <Content Include="Iconos\01_HOSPITALIZACION_VERDE.png" />
     <Content Include="Images\CR.png" />
     <Content Include="Images\CT.png" />
     <Content Include="Images\HD.png" />
@@ -1841,7 +1843,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Iconos\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>

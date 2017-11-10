@@ -6,31 +6,25 @@ using System.Threading.Tasks;
 
 namespace Fuji.RISLite.Entities
 {
-   public class clsGeneralConfigAgenda
-    {
-        public int intSitioID { get; set; }
+    public class clsconfscheduler_addcita
+    {     
         public int intConfiguracionAgendaID { get; set; }
-        public string vchConfiguracionAgenda { get; set; }    
-        public TimeSpan tmeInicioDia { get; set; }
-        public TimeSpan tmeFinDia { get; set; }
-        public DateTime datFecha { get; set; }        
+        public string vchConfiguracionAgenda { get; set; }
+        public DateTime tmeInicioDia { get; set; }
+        public DateTime tmeFinDia { get; set; }
+        public DateTime datFecha { get; set; }
         public string vchUserAdmin { get; set; }
         public int intIntervalo { get; set; }
 
-        public clsGeneralConfigAgenda()
+        public clsconfscheduler_addcita()
         {
-            intSitioID = int.MinValue;
             intConfiguracionAgendaID = int.MinValue;
             vchConfiguracionAgenda = string.Empty;
-            tmeInicioDia = TimeSpan.Zero;
-            tmeFinDia = TimeSpan.Zero;
+            tmeInicioDia = DateTime.MinValue;
+            tmeFinDia = DateTime.MinValue;
             datFecha = DateTime.MinValue;
-            vchUserAdmin = string.Empty;         
+            vchUserAdmin = string.Empty;
             intIntervalo = int.MinValue;
         }
     }
 }
-
-
-
-

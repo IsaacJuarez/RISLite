@@ -28,7 +28,7 @@ namespace Fuji.RISLite.Site.Services
                 response.mdlUser = mdlUser;
                 response.lstVistas = lstVistas;
             }
-            catch(Exception egU)
+            catch (Exception egU)
             {
                 Log.EscribeLog("Existe un error en getUser: " + egU.Message, 3, "");
             }
@@ -41,7 +41,7 @@ namespace Fuji.RISLite.Site.Services
             List<tbl_CAT_Catalogo> response = new List<tbl_CAT_Catalogo>();
             try
             {
-                if(Security.ValidateToken(request.mdlUser.Token,request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
                 {
                     RISLiteDataAccess controller = new RISLiteDataAccess();
                     response = controller.getListCatalogos(request.mdlUser.vchUsuario);
@@ -80,7 +80,7 @@ namespace Fuji.RISLite.Site.Services
                 if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
                 {
                     RISLiteDataAccess controller = new RISLiteDataAccess();
-                    response = controller.updateCatalogoEstatus(request.mdlCat.intCatalogoID, request.mdlCat.bitActivo,request.mdlCat.intPrimaryKey, request.mdlUser.vchUsuario);
+                    response = controller.updateCatalogoEstatus(request.mdlCat.intCatalogoID, request.mdlCat.bitActivo, request.mdlCat.intPrimaryKey, request.mdlUser.vchUsuario);
                 }
             }
             catch (Exception egU)
@@ -188,7 +188,7 @@ namespace Fuji.RISLite.Site.Services
                 if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
                 {
                     RISLiteDataAccess controller = new RISLiteDataAccess();
-                    response = controller.getListVistas(request.mdlUser.intTipoUsuario,request.mdlUser.vchUsuario);
+                    response = controller.getListVistas(request.mdlUser.intTipoUsuario, request.mdlUser.vchUsuario);
                 }
             }
             catch (Exception egtU)
@@ -198,7 +198,7 @@ namespace Fuji.RISLite.Site.Services
             return response;
         }
 
-        
+
         #endregion catalogo
 
         #region equipo
@@ -536,7 +536,7 @@ namespace Fuji.RISLite.Site.Services
                 {
                     RISLiteDataAccess controller = new RISLiteDataAccess();
                     string mensaje = "";
-                    response.Success = controller.setActualizarVariable(request.intTipoVariable,request.mdlVariable.intVariableAdiID,request.mdlVariable.vchNombreVarAdi,request.mdlUser.vchUsuario, ref mensaje);
+                    response.Success = controller.setActualizarVariable(request.intTipoVariable, request.mdlVariable.intVariableAdiID, request.mdlVariable.vchNombreVarAdi, request.mdlUser.vchUsuario, ref mensaje);
                     response.Mensaje = mensaje;
                 }
             }
@@ -596,7 +596,7 @@ namespace Fuji.RISLite.Site.Services
                 {
                     RISLiteDataAccess controller = new RISLiteDataAccess();
                     string mensaje = "";
-                    response.Success = controller.setUsuario(request.mdlAdminUser,request.mdlUser.vchUsuario, ref mensaje);
+                    response.Success = controller.setUsuario(request.mdlAdminUser, request.mdlUser.vchUsuario, ref mensaje);
                     response.Mensaje = mensaje;
                 }
             }
@@ -757,7 +757,7 @@ namespace Fuji.RISLite.Site.Services
                 if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
                 {
                     RISLiteDataAccess controller = new RISLiteDataAccess();
-                    response = controller.getListAgenda(request.mdlUser.vchUsuario);
+                    response = controller.getListAgenda(request.mdlUser.vchUsuario, request.mdlagenda.intSitioID);
                 }
             }
             catch (Exception egU)
@@ -775,7 +775,7 @@ namespace Fuji.RISLite.Site.Services
                 if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
                 {
                     RISLiteDataAccess controller = new RISLiteDataAccess();
-                    bandera_update_agenda = controller.UpdateAgenda(request.mdlUser.vchUsuario, request.mdlagenda.intModalidadID, request.mdlagenda.vchCodigo, request.mdlagenda.vchModalidad, request.mdlagenda.vchColor);
+                    bandera_update_agenda = controller.UpdateAgenda(request.mdlUser.vchUsuario, request.mdlagenda.intModalidadID, request.mdlagenda.vchCodigo, request.mdlagenda.vchModalidad, request.mdlagenda.vchColor, request.mdlagenda.intDuracionGen, request.mdlagenda.intSitioID);
                 }
             }
             catch (Exception egU)
@@ -825,6 +825,24 @@ namespace Fuji.RISLite.Site.Services
             return response;
         }
 
+        public string getListColorModalidad_Sitio(AgendaRequest request)
+        {
+            string response = "";
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListColorModalidad_Sitio(request.mdlUser.vchUsuario, request.mdlagenda.vchCodigo, request.mdlagenda.intSitioID);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getAgenda: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
         public string getListColorModalidad(AgendaRequest request)
         {
             string response = "";
@@ -834,6 +852,63 @@ namespace Fuji.RISLite.Site.Services
                 {
                     RISLiteDataAccess controller = new RISLiteDataAccess();
                     response = controller.getListColorModalidad(request.mdlUser.vchUsuario, request.mdlagenda.vchCodigo);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getAgenda: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public int getListDuracionGen_Sitio(CitaModalidad request)
+        {
+            int response = 0;
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListDuracionGen_Sitio(request.mdlUser.vchUsuario, request.mdlModalidad.intModalidadID, request.mdlModalidad.intSitioID);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getAgenda: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public int getListDuracionGen(CitaModalidad request)
+        {
+            int response = 0;
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListDuracionGen(request.mdlUser.vchUsuario, request.mdlModalidad.intModalidadID);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getAgenda: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public string getDescripcionModalidad_sitio(AgendaRequest request)
+        {
+            string response = "";
+
+            int id_mod = Convert.ToInt32(request.mdlagenda.intModalidadID);
+
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getDescripcionModalidad_Sitio(request.mdlUser.vchUsuario, id_mod, request.mdlagenda.intSitioID);
                 }
             }
             catch (Exception egU)
@@ -868,6 +943,26 @@ namespace Fuji.RISLite.Site.Services
 
         #region scheduler
 
+        public List<clsConfScheduler> getConfScheduler_Sitio(ConfigSchedulerRequest request)
+        {
+            List<clsConfScheduler> response = new List<clsConfScheduler>();
+
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListConfigScheduler_Sito(request.mdlUser.vchUsuario, request.mdlConfScheduler.intSitioID);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getScheduler: " + egU.Message, 3, "");
+            }
+            return response;
+
+        }
+
         public List<clsConfScheduler> getConfScheduler(ConfigSchedulerRequest request)
         {
             List<clsConfScheduler> response = new List<clsConfScheduler>();
@@ -878,6 +973,26 @@ namespace Fuji.RISLite.Site.Services
                 {
                     RISLiteDataAccess controller = new RISLiteDataAccess();
                     response = controller.getListConfigScheduler(request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getScheduler: " + egU.Message, 3, "");
+            }
+            return response;
+
+        }
+
+        public List<clsDiaSemana> getDiaSemanaConfScheduler_Sitio(ConfigScheduler_DiaSemanaRequest request, int idsitio)
+        {
+            List<clsDiaSemana> response = new List<clsDiaSemana>();
+
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListDiaSemana_sitio(request.mdlUser.vchUsuario, idsitio);
                 }
             }
             catch (Exception egU)
@@ -908,6 +1023,26 @@ namespace Fuji.RISLite.Site.Services
 
         }
 
+        public List<clsDiaFeriado> getDiaFeriadoConfScheduler_Sitio(ConfigScheduler_DiaFeriado request)
+        {
+            List<clsDiaFeriado> response = new List<clsDiaFeriado>();
+
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListDiaFeriado_Sitio(request.mdlUser.vchUsuario, request.mdlDiaFeriado.intSitioID);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getDiaFeriadoConfScheduler: " + egU.Message, 3, "");
+            }
+            return response;
+
+        }
+
         public List<clsDiaFeriado> getDiaFeriadoConfScheduler(ConfigScheduler_DiaFeriado request)
         {
             List<clsDiaFeriado> response = new List<clsDiaFeriado>();
@@ -923,6 +1058,26 @@ namespace Fuji.RISLite.Site.Services
             catch (Exception egU)
             {
                 Log.EscribeLog("Existe un error en getDiaFeriadoConfScheduler: " + egU.Message, 3, "");
+            }
+            return response;
+
+        }
+
+        public List<clsHoraMuerta> getHoraMuertaConfScheduler_Sitio(ConfigScheduler_HoraMuertaRequest request)
+        {
+            List<clsHoraMuerta> response = new List<clsHoraMuerta>();
+
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListHorasMuertas_Sitio(request.mdlUser.vchUsuario, request.mdlHMScheduler.intSitioID);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getHoraMuertaConfScheduler: " + egU.Message, 3, "");
             }
             return response;
 
@@ -946,6 +1101,25 @@ namespace Fuji.RISLite.Site.Services
             }
             return response;
 
+        }
+      
+
+        public bool UpdateDiaSemana_Sitio(ConfigScheduler_DiaSemanaRequest request)
+        {
+            bool bandera_update_agenda = false;
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    bandera_update_agenda = controller.UpdateDiaSemana_Sitio(request.mdlUser.vchUsuario, request.mdlDiaSemana.intSemanaID, request.mdlDiaSemana.bitActivo, request.mdlDiaSemana.intSitioID);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getAgenda: " + egU.Message, 3, "");
+            }
+            return bandera_update_agenda;
         }
 
         public bool UpdateDiaSemana(ConfigScheduler_DiaSemanaRequest request)
@@ -974,7 +1148,7 @@ namespace Fuji.RISLite.Site.Services
                 if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
                 {
                     RISLiteDataAccess controller = new RISLiteDataAccess();
-                    bandera_update_agenda = controller.UpdateHR_Activo(request.mdlUser.vchUsuario, request.mdlgenconfagenda.tmeInicioDia, request.mdlgenconfagenda.tmeFinDia);
+                    bandera_update_agenda = controller.UpdateHR_Activo_Sitio(request.mdlUser.vchUsuario, request.mdlgenconfagenda.tmeInicioDia, request.mdlgenconfagenda.tmeFinDia, request.mdlgenconfagenda.intSitioID);
                 }
             }
             catch (Exception egU)
@@ -993,6 +1167,24 @@ namespace Fuji.RISLite.Site.Services
                 {
                     RISLiteDataAccess controller = new RISLiteDataAccess();
                     bandera_update_agenda = controller.Update_Intervalo(request.mdlUser.vchUsuario, request.mdlgenconfagenda.intIntervalo);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getAgenda: " + egU.Message, 3, "");
+            }
+            return bandera_update_agenda;
+        }
+
+        public bool Set_DiaFeriado_Sitio(ConfigScheduler_DiaFeriado request)
+        {
+            bool bandera_update_agenda = false;
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    bandera_update_agenda = controller.Set_DiaFeriado_Sitio(request.mdlUser.vchUsuario, request.mdlDiaFeriado.datDia, request.mdlDiaFeriado.intSitioID);
                 }
             }
             catch (Exception egU)
@@ -1092,6 +1284,24 @@ namespace Fuji.RISLite.Site.Services
             return bandera_delete_HM;
         }
 
+        public bool Set_HoraMuerta_Sitio(ConfigScheduler_HoraMuertaRequest request)
+        {
+            bool bandera_update_agenda = false;
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    bandera_update_agenda = controller.Set_HoraMuerta_sitio(request.mdlUser.vchUsuario, request.mdlHMScheduler.tmeInicio, request.mdlHMScheduler.tmeFin, request.mdlHMScheduler.intSitioID);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en Set_HoraMuerta: " + egU.Message, 3, "");
+            }
+            return bandera_update_agenda;
+        }
+
         public bool Set_HoraMuerta(ConfigScheduler_HoraMuertaRequest request)
         {
             bool bandera_update_agenda = false;
@@ -1131,8 +1341,8 @@ namespace Fuji.RISLite.Site.Services
             }
             return response;
         }
-
-        public List<clsEventoCita> getListCitas(CitasRequest request)
+		
+		public List<clsEventoCita> getListCitas(CitasRequest request)
         {
             List<clsEventoCita> response = new List<clsEventoCita>();
             try
@@ -1149,6 +1359,115 @@ namespace Fuji.RISLite.Site.Services
             }
             return response;
         }
+
+        public List<clsEventoCita> getListCitas_Sitio(CitasRequest request)
+        {
+            List<clsEventoCita> response = new List<clsEventoCita>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListCitas_Sitio(request.mdlUser.vchUsuario, request.mdlevento.intModalidadID, request.mdlevento.intSitioID);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getAgenda: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public List<clsEquipo> getCitaEquipo_Sitio(CitaNumEquipos request)
+        {
+            List<clsEquipo> response = new List<clsEquipo>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getCitaEquipos_Sitio(request.mdlUser.vchUsuario, request.mdlequipo.intModalidadID, request.mdlequipo.intSitioID);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getAgenda: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public List<clsEquipo> getCitaEquipo(CitaNumEquipos request)
+        {
+            List<clsEquipo> response = new List<clsEquipo>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getCitaEquipos(request.mdlUser.vchUsuario, request.mdlequipo.intModalidadID);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getAgenda: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public List<clsEventoCita> getListCitas_en_agenda_Sitio(CitasRequest request)
+        {
+            List<clsEventoCita> response = new List<clsEventoCita>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListCitas_en_agenda_Sitio(request.mdlUser.vchUsuario, request.mdlevento.intModalidadID, request.mdlevento.Start, request.mdlevento.intSitioID);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getAgenda: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public List<clsEventoCita> getListCitas_en_agenda(CitasRequest request)
+        {
+            List<clsEventoCita> response = new List<clsEventoCita>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListCitas_en_agenda(request.mdlUser.vchUsuario, request.mdlevento.intModalidadID, request.mdlevento.Start);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getAgenda: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        //public EstudioResponse getEstudioDetalle_citaNueva(EstudioRequest request)
+        //{
+        //    EstudioResponse response = new EstudioResponse();
+        //    try
+        //    {
+        //        if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+        //        {
+        //            RISLiteDataAccess controller = new RISLiteDataAccess();
+        //            response.mdlEstudio = controller.getEstudioDetalle_citaNueva(request.mdlUser.vchUsuario);
+        //        }
+        //    }
+        //    catch (Exception egU)
+        //    {
+        //        Log.EscribeLog("Existe un error en getEstudioDetalle: " + egU.Message, 3, "");
+        //    }
+        //    return response;
+        //}
+
 
         #endregion EventoCita
 
@@ -1514,7 +1833,6 @@ namespace Fuji.RISLite.Site.Services
         }
         #endregion Indicacion
 
-
         #region Restriccion
         public List<tbl_DET_Restriccion> getListRestriccion(RestriccionRequest request)
         {
@@ -1811,8 +2129,8 @@ namespace Fuji.RISLite.Site.Services
         }
 
         #endregion Adicionales
-
-        #region SugerenciasCita
+		
+		#region SugerenciasCita
         public List<stp_getCitaDisponible_Result> getSugerenciasCita(SugerenciasRequest request)
         {
             List<stp_getCitaDisponible_Result> response = new List<stp_getCitaDisponible_Result>();
@@ -1832,157 +2150,48 @@ namespace Fuji.RISLite.Site.Services
         }
         #endregion SugerenciasCita
 
-        public List<clsEquipo> getCitaEquipo_Sitio(CitaNumEquipos request)
+        #region Import
+        public EquipoResponse Set_Equipo_Import(EquipoRequest request)
         {
-            List<clsEquipo> response = new List<clsEquipo>();
+            EquipoResponse response = new EquipoResponse();
             try
             {
                 if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
                 {
                     RISLiteDataAccess controller = new RISLiteDataAccess();
-                    response = controller.getCitaEquipos_Sitio(request.mdlUser.vchUsuario, request.mdlequipo.intModalidadID, request.mdlequipo.intSitioID);
+                    string mensaje = "";
+                    response.Success = controller.Set_Equipo_Import(request.mdlEquipo, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
                 }
             }
             catch (Exception egU)
             {
-                Log.EscribeLog("Existe un error en getAgenda: " + egU.Message, 3, "");
+                Log.EscribeLog("Existe un error en setEquipo: " + egU.Message, 3, "");
             }
             return response;
+        
         }
-
-        public string getDescripcionModalidad_sitio(AgendaRequest request)
+        
+        public PrestacionResponse Set_Prestacion_Import(PrestacionRequest request)
         {
-            string response = "";
-
-            int id_mod = Convert.ToInt32(request.mdlagenda.intModalidadID);
-
+            PrestacionResponse response = new PrestacionResponse();
             try
             {
                 if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
                 {
                     RISLiteDataAccess controller = new RISLiteDataAccess();
-                    response = controller.getDescripcionModalidad_Sitio(request.mdlUser.vchUsuario, id_mod, request.mdlagenda.intSitioID);
+                    string mensaje = "";
+                    response.Success = controller.Set_Prestacion_Import(request.mdlPres, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
                 }
             }
             catch (Exception egU)
             {
-                Log.EscribeLog("Existe un error en getAgenda: " + egU.Message, 3, "");
+                Log.EscribeLog("Existe un error en Set_Prestacion_Import: " + egU.Message, 3, "");
             }
             return response;
         }
 
-        public int getListDuracionGen_Sitio(CitaModalidad request)
-        {
-            int response = 0;
-            try
-            {
-                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
-                {
-                    RISLiteDataAccess controller = new RISLiteDataAccess();
-                    response = controller.getListDuracionGen_Sitio(request.mdlUser.vchUsuario, request.mdlModalidad.intModalidadID, request.mdlModalidad.intSitioID);
-                }
-            }
-            catch (Exception egU)
-            {
-                Log.EscribeLog("Existe un error en getAgenda: " + egU.Message, 3, "");
-            }
-            return response;
-        }
-
-        public string getListColorModalidad_Sitio(AgendaRequest request)
-        {
-            string response = "";
-            try
-            {
-                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
-                {
-                    RISLiteDataAccess controller = new RISLiteDataAccess();
-                    response = controller.getListColorModalidad_Sitio(request.mdlUser.vchUsuario, request.mdlagenda.vchCodigo, request.mdlagenda.intSitioID);
-                }
-            }
-            catch (Exception egU)
-            {
-                Log.EscribeLog("Existe un error en getAgenda: " + egU.Message, 3, "");
-            }
-            return response;
-        }
-
-        public List<clsEventoCita> getListCitas_Sitio(CitasRequest request)
-        {
-            List<clsEventoCita> response = new List<clsEventoCita>();
-            try
-            {
-                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
-                {
-                    RISLiteDataAccess controller = new RISLiteDataAccess();
-                    response = controller.getListCitas_Sitio(request.mdlUser.vchUsuario, request.mdlevento.intModalidadID, request.mdlevento.intSitioID);
-                }
-            }
-            catch (Exception egU)
-            {
-                Log.EscribeLog("Existe un error en getAgenda: " + egU.Message, 3, "");
-            }
-            return response;
-        }
-
-        public List<clsEventoCita> getListCitas_en_agenda_Sitio(CitasRequest request)
-        {
-            List<clsEventoCita> response = new List<clsEventoCita>();
-            try
-            {
-                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
-                {
-                    RISLiteDataAccess controller = new RISLiteDataAccess();
-                    response = controller.getListCitas_en_agenda_Sitio(request.mdlUser.vchUsuario, request.mdlevento.intModalidadID, request.mdlevento.Start, request.mdlevento.intSitioID);
-                }
-            }
-            catch (Exception egU)
-            {
-                Log.EscribeLog("Existe un error en getAgenda: " + egU.Message, 3, "");
-            }
-            return response;
-        }
-
-
-        public List<clsConfScheduler> getConfScheduler_Sitio(ConfigSchedulerRequest request)
-        {
-            List<clsConfScheduler> response = new List<clsConfScheduler>();
-
-            try
-            {
-                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
-                {
-                    RISLiteDataAccess controller = new RISLiteDataAccess();
-                    response = controller.getListConfigScheduler_Sito(request.mdlUser.vchUsuario, request.mdlConfScheduler.intSitioID);
-                }
-            }
-            catch (Exception egU)
-            {
-                Log.EscribeLog("Existe un error en getScheduler: " + egU.Message, 3, "");
-            }
-            return response;
-
-        }
-
-        public List<clsHoraMuerta> getHoraMuertaConfScheduler_Sitio(ConfigScheduler_HoraMuertaRequest request)
-        {
-            List<clsHoraMuerta> response = new List<clsHoraMuerta>();
-
-            try
-            {
-                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
-                {
-                    RISLiteDataAccess controller = new RISLiteDataAccess();
-                    response = controller.getListHorasMuertas_Sitio(request.mdlUser.vchUsuario, request.mdlHMScheduler.intSitioID);
-                }
-            }
-            catch (Exception egU)
-            {
-                Log.EscribeLog("Existe un error en getHoraMuertaConfScheduler: " + egU.Message, 3, "");
-            }
-            return response;
-
-        }
-
+        #endregion
     }
 }

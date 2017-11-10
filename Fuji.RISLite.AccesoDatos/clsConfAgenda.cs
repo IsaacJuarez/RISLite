@@ -13,6 +13,7 @@ namespace Fuji.RISLite.Entities
         public DateTime datFecha { get; set; }       
         public string vchUserAdmin { get; set; }
         public string vchColor { get; set; }
+        public int intDuracionGen { get; set; }
         public int intintervalo { get; set; }
 
         public clsConfAgenda()
@@ -25,6 +26,7 @@ namespace Fuji.RISLite.Entities
             datFecha = DateTime.MinValue;          
             vchUserAdmin = string.Empty;
             vchColor = string.Empty;
+            intDuracionGen = int.MinValue;
             intintervalo = int.MinValue;
         }
     }

@@ -9,6 +9,7 @@ namespace Fuji.RISLite.Entities
     public class clsDiaFeriado
     {
         public int intDiaFeriadoID { get; set; }
+        public int intSitioID { get; set; }
         public DateTime datDia { get; set; }
         public DateTime datFecha { get; set; }
         public string vchUserAdmin { get; set; }
@@ -16,7 +17,7 @@ namespace Fuji.RISLite.Entities
 
         public clsDiaFeriado()
         {
-
+            intSitioID = int.MinValue;
         intDiaFeriadoID = int.MinValue;
         datDia = DateTime.MinValue;
         datFecha = DateTime.MinValue;

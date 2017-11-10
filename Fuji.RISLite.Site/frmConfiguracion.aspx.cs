@@ -343,17 +343,19 @@ namespace Fuji.RISLite.Site
                 request.mdlUser = _user;
                 List<tbl_CAT_Modalidad> response = new List<tbl_CAT_Modalidad>();
                 response = RisService.getListModalidades(request);
+                ddlModalidadEquipo.DataSource = null;
+                ddlModalidadEquipo.Items.Clear();
                 if (response != null)
                 {
                     if (response.Count > 0)
                     {
-                        ddlModalidadEquipo.DataSource = response;
+                        ddlModalidadEquipo.DataSource = response.Where(x => x.intSitioID == Convert.ToInt32(ddlSitioModEquipo.SelectedValue));
                         ddlModalidadEquipo.DataTextField = "vchModalidad";
                         ddlModalidadEquipo.DataValueField = "intModalidadID";
-                        ddlModalidadEquipo.DataBind();
                         //ddlModalidadEquipo.Items.Insert(0, new RadComboBoxItem("Seleccionar Modalidad...", "0"));
                     }
                 }
+                ddlModalidadEquipo.DataBind();
             }
             catch (Exception eFC)
             {
@@ -384,17 +386,20 @@ namespace Fuji.RISLite.Site
                 request.mdlUser = _user;
                 List<tbl_CAT_Modalidad> response = new List<tbl_CAT_Modalidad>();
                 response = RisService.getListModalidades(request);
+                ddlModalidad.DataSource = null;
+                ddlModalidad.Items.Clear();
                 if (response != null)
                 {
                     if (response.Count > 0)
                     {
-                        ddlModalidad.DataSource = response;
+                        ddlModalidad.DataSource = response.Where(x => x.intSitioID == Convert.ToInt32(ddlSitioMod.SelectedValue));
                         ddlModalidad.DataTextField = "vchModalidad";
                         ddlModalidad.DataValueField = "intModalidadID";
-                        ddlModalidad.DataBind();
+
                     }
                     //ddlModalidad.Items.Insert(0, new RadComboBoxItem("Seleccionar Modalidad...", "0"));
                 }
+                ddlModalidad.DataBind();
             }
             catch (Exception eFC)
             {
@@ -4652,6 +4657,31 @@ namespace Fuji.RISLite.Site
             catch (Exception edd)
             {
                 Log.EscribeLog("Existe un error en ddlTipoVariable_SelectedIndexChanged: " + edd.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void btnSearchEquipo_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                cargarEquipo();
+            }
+            catch(Exception ebS)
+            {
+                Log.EscribeLog("Existe un error en btnSearchEquipo_Click: " + ebS.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void AjaxPanelModalidadEquipo_AjaxRequest(object sender, AjaxRequestEventArgs e)
+        {
+            try
+            {
+                cargaListaModalidadEquipo();
+                //cargarEquipo();
+            }
+            catch (Exception eCat)
+            {
+                Log.EscribeLog("Existe un error en AjaxPanelModalidadEquipo_AjaxRequest: " + eCat.Message, 3, Usuario.vchUsuario);
             }
         }
     }

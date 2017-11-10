@@ -14,6 +14,10 @@ using Fuji.RISLite.Entidades.DataBase;
 using System.Linq;
 using System.Globalization;
 
+
+using System.Web;
+
+
 namespace Fuji.RISLite.Site
 {
     public partial class frmConfigAgenda : System.Web.UI.Page
@@ -40,12 +44,12 @@ namespace Fuji.RISLite.Site
                         Usuario = (clsUsuario)Session["User"];
                         if (Usuario != null)
                         {
-                            cargarAgenda();
-                            cargaConfigScheduler();
-                            carga_dias_feriados();
-                            carga_Horas_muertas();
-                            HF_validacion_HM.Value = "false";
-                            cargarChecks();
+                            cargarAgenda(1);
+                            cargaConfigScheduler(1);
+                            carga_dias_feriados(1);
+                            carga_Horas_muertas(1);
+                            HF_validacion_HM.Value = "false";                            
+                           
                         }
                         else
                         {
@@ -66,48 +70,7 @@ namespace Fuji.RISLite.Site
             }
         }
 
-        private void cargarChecks()
-        {
-            try
-            {
-                //string htmAdd = "<label class='btn btn-success '>" +
-                //                    "<input type='checkbox' autocomplete='off' > L" +
-                //                    "<span class='glyphicon glyphicon-ok'></span>" +
-                //                "</label>" +
-                //                "<label class='btn btn-primary '>" +
-                //                    "<input type='checkbox' autocomplete='off' > M" +
-                //                    "<span class='glyphicon glyphicon-ok'></span>" +
-                //                "</label>" +
-                //                "<label class='btn btn-info '>" +
-                //                    " <input type='checkbox' autocomplete='off' > Mi" +
-                //                    "  <span class='glyphicon glyphicon-ok'></span>" +
-                //                "</label>" +
-                //                "<label class='btn btn-default '>" +
-                //                    "<input type='checkbox' autocomplete='off' > J" +
-                //                    "<span class='glyphicon glyphicon-ok'></span>" +
-                //                "</label>" +
-                //                "<label class='btn btn-warning '>" +
-                //                    "<input type='checkbox' autocomplete='off' > V" +
-                //                    "<span class='glyphicon glyphicon-ok'></span>" +
-                //                "</label>" +
-                //                "<label class='btn btn-danger '>" +
-                //                    "<input type='checkbox' autocomplete='off' > S" +
-                //                    "<span class='glyphicon glyphicon-ok'></span>" +
-                //                "</label>" +
-                //                "<label class='btn btn-success '>" +
-                //                    "<input type='checkbox' autocomplete='off' > D" +
-                //                    "<span class='glyphicon glyphicon-ok'></span>" +
-                //                "</label>";
-
-                //divCheks.Controls.Add(new System.Web.UI.LiteralControl(htmAdd));
-
-
-            }
-            catch (Exception ecC)
-            {
-                Log.EscribeLog("Existe un error en cargarChecks: " + ecC.Message, 3, Usuario.vchNombre);
-            }
-        }
+    
 
         private void cargarAgenda()
         {
@@ -117,6 +80,7 @@ namespace Fuji.RISLite.Site
                 List<clsConfAgenda> lstTec = new List<clsConfAgenda>();
                 AgendaRequest request = new AgendaRequest();
                 request.mdlUser = Usuario;
+                request.mdlagenda.intSitioID = 1;
                 lstTec = RisService.getListAgenda(request);
                 if (lstTec != null)
                 {
@@ -133,14 +97,42 @@ namespace Fuji.RISLite.Site
             }
         }
 
-        private void cargaConfigScheduler()
+        private void cargarAgenda(int idsitio)
+        {
+            try
+            {
+                GV_Agenda.DataSource = null;
+                List<clsConfAgenda> lstTec = new List<clsConfAgenda>();
+                AgendaRequest request = new AgendaRequest();
+                request.mdlUser = Usuario;
+                request.mdlagenda.intSitioID = idsitio;
+                lstTec = RisService.getListAgenda(request);
+                if (lstTec != null)
+                {
+                    if (lstTec.Count > 0)
+                    {
+                        GV_Agenda.DataSource = lstTec;
+                    }
+                }
+                GV_Agenda.DataBind();
+            }
+            catch (Exception ecU)
+            {
+                Log.EscribeLog("Existe un error en cargarAgenda: " + ecU.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+
+        private void cargaConfigScheduler(int idsitio)
         {
             try
             {
                 List<clsConfScheduler> lstTec = new List<clsConfScheduler>();
                 ConfigSchedulerRequest request = new ConfigSchedulerRequest();
                 request.mdlUser = Usuario;
-                lstTec = RisService.getConfScheduler(request);
+                //request.mdlConfScheduler.intSitioID = Convert.ToInt32(RCB_Sitio_confiagenda.SelectedValue
+                request.mdlConfScheduler.intSitioID = idsitio;
+                lstTec = RisService.getConfScheduler_Sitio(request);
 
                 foreach (var item in lstTec)
                 {
@@ -160,7 +152,117 @@ namespace Fuji.RISLite.Site
                 List<clsDiaSemana> lstTec = new List<clsDiaSemana>();
                 ConfigScheduler_DiaSemanaRequest request = new ConfigScheduler_DiaSemanaRequest();
                 request.mdlUser = Usuario;
-                lstTec = RisService.getDiaSemanaConfScheduler(request);
+                //int idsitio = Convert.ToInt32(RCB_Sitio_confiagenda.SelectedValue);
+                lstTec = RisService.getDiaSemanaConfScheduler_Sitio(request, idsitio);
+
+                //int contador_semana = 0;
+
+                RB_Lunes.Checked = false;
+                RBMartes.Checked = false;
+                RBMiercoles.Checked = false;
+                RBJueves.Checked = false;
+                RBViernes.Checked = false;
+                RBSabado.Checked = false;
+                RB_Domingo.Checked = false;
+
+                foreach (var item in lstTec)
+                {
+
+                    if (item.vchDiaSemana == "Lunes")
+                    {
+                        RB_Lunes.Checked = item.bitActivo;
+                    }
+
+                    if (item.vchDiaSemana == "Martes")
+                    {
+                        RBMartes.Checked = item.bitActivo;
+                    }
+
+                    if (item.vchDiaSemana == "Miercoles")
+                    {
+                        RBMiercoles.Checked = item.bitActivo;
+                    }
+
+                    if (item.vchDiaSemana == "Jueves")
+                    {
+                        RBJueves.Checked = item.bitActivo;
+                    }
+
+                    if (item.vchDiaSemana == "Viernes")
+                    {
+                        RBViernes.Checked = item.bitActivo;
+                    }
+
+                    if (item.vchDiaSemana == "Sabado")
+                    {
+                        RBSabado.Checked = item.bitActivo;
+                    }
+
+                    if (item.vchDiaSemana == "Domingo")
+                    {
+                        RB_Domingo.Checked = item.bitActivo;
+                    }
+                    
+                }
+            }
+
+            catch (Exception ex)
+            {
+                Log.EscribeLog("Existe un error en CargaDiaSemanaRequest: " + ex.Message, 3, Usuario.vchNombre);
+            }         
+
+            try
+            {
+                List<clsHoraMuerta> lstTec = new List<clsHoraMuerta>();
+                ConfigScheduler_HoraMuertaRequest request = new ConfigScheduler_HoraMuertaRequest();
+                request.mdlUser = Usuario;
+                request.mdlHMScheduler.intSitioID = idsitio;
+                lstTec = RisService.getHoraMuertaConfScheduler(request);
+
+                foreach (var item in lstTec)
+                {
+                    RTP_HM_Inicio.SelectedTime = TimeSpan.Parse(item.tmeInicio);
+                    RTP_HM_Fin.SelectedTime = TimeSpan.Parse(item.tmeFin);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                Log.EscribeLog("Existe un error en ConfigScheduler_HoraMuertaRequest: " + ex.Message, 3, Usuario.vchNombre);
+            }
+
+        }
+
+        private void cargaConfigScheduler()
+        {
+            try
+            {
+                List<clsConfScheduler> lstTec = new List<clsConfScheduler>();
+                ConfigSchedulerRequest request = new ConfigSchedulerRequest();
+                request.mdlUser = Usuario;
+                request.mdlConfScheduler.intSitioID = Convert.ToInt32(RCB_Sitio_confiagenda.SelectedValue);
+                lstTec = RisService.getConfScheduler_Sitio(request);
+
+                foreach (var item in lstTec)
+                {
+                    RTP_Inicio.SelectedTime = item.tmeInicioDia;
+                    RTP_Fin.SelectedTime = item.tmeFinDia;
+                    TB_intervalo.Text = item.intIntervalo.ToString();
+                }
+            }
+
+            catch (Exception ex)
+            {
+                Log.EscribeLog("Existe un error en cargaConfigScheduler: " + ex.Message, 3, Usuario.vchNombre);
+            }
+
+            try
+            {
+                List<clsDiaSemana> lstTec = new List<clsDiaSemana>();
+                ConfigScheduler_DiaSemanaRequest request = new ConfigScheduler_DiaSemanaRequest();
+                request.mdlUser = Usuario;
+                int idsitio = Convert.ToInt32(RCB_Sitio_confiagenda.SelectedValue);
+                lstTec = RisService.getDiaSemanaConfScheduler_Sitio(request, idsitio);
 
                 int contador_semana = 0;
 
@@ -200,24 +302,24 @@ namespace Fuji.RISLite.Site
                 Log.EscribeLog("Existe un error en CargaDiaSemanaRequest: " + ex.Message, 3, Usuario.vchNombre);
             }
 
-            try
-            {
-                List<clsDiaFeriado> lstTec = new List<clsDiaFeriado>();
-                ConfigScheduler_DiaFeriado request = new ConfigScheduler_DiaFeriado();
-                request.mdlUser = Usuario;
-                lstTec = RisService.getDiaFeriadoConfScheduler(request);
+            //try
+            //{
+            //    List<clsDiaFeriado> lstTec = new List<clsDiaFeriado>();
+            //    ConfigScheduler_DiaFeriado request = new ConfigScheduler_DiaFeriado();
+            //    request.mdlUser = Usuario;
+            //    lstTec = RisService.getDiaFeriadoConfScheduler(request);
 
-                foreach (var item in lstTec)
-                {
-                    //RTP_HM_Inicio.SelectedTime = item.tmeInicio;
-                    //RTP_HM_Fin.SelectedTime = item.tmeFin;
-                }
-            }
+            //    //foreach (var item in lstTec)
+            //    //{
+            //    //    //RTP_HM_Inicio.SelectedTime = item.tmeInicio;
+            //    //    //RTP_HM_Fin.SelectedTime = item.tmeFin;
+            //    //}
+            //}
 
-            catch (Exception ex)
-            {
-                Log.EscribeLog("Existe un error en ConfigScheduler_DiaFeriado: " + ex.Message, 3, Usuario.vchNombre);
-            }
+            //catch (Exception ex)
+            //{
+            //    Log.EscribeLog("Existe un error en ConfigScheduler_DiaFeriado: " + ex.Message, 3, Usuario.vchNombre);
+            //}
 
             try
             {
@@ -277,7 +379,7 @@ namespace Fuji.RISLite.Site
         protected void GV_Agenda_RowEditing(object sender, System.Web.UI.WebControls.GridViewEditEventArgs e)
         {
             GV_Agenda.EditIndex = e.NewEditIndex;
-            cargarAgenda();
+            cargarAgenda(Convert.ToInt32(RCB_SItio.SelectedValue));
         }
 
         protected void GV_Agenda_RowCommand(object sender, System.Web.UI.WebControls.GridViewCommandEventArgs e)
@@ -303,18 +405,18 @@ namespace Fuji.RISLite.Site
                             {
                                 if (response.Success)
                                 {
-                                    //ShowMessage("Se actualizo correctamente la variable", MessageType.Correcto, "alert_container");
+                                    ShowMessage("Se actualizo correctamente la modalidad", MessageType.Correcto, "alert_container");
                                     //grvAddPaciente.EditIndex = -1;
                                     cargarAgenda();
                                 }
                                 else
                                 {
-                                    //ShowMessage("Existe un error: " + response.Success, MessageType.Error, "alert_container");
+                                    ShowMessage("Existe un error: " + response.Success, MessageType.Error, "alert_container");
                                 }
                             }
                             else
                             {
-                                //ShowMessage("Favor de revisar la información.", MessageType.Error, "alert_container");
+                                ShowMessage("Favor de revisar la información.", MessageType.Error, "alert_container");
                             }
                         }
                         break;
@@ -366,16 +468,13 @@ namespace Fuji.RISLite.Site
 
         protected void GV_Agenda_PageIndexChanging(object sender, System.Web.UI.WebControls.GridViewPageEventArgs e)
         {
-        }
-
-        //protected void GV_Agenda_RowUpdated(object sender, System.Web.UI.WebControls.GridViewUpdatedEventArgs e)
-        //{
-        //}
+            
+        }       
 
         protected void GV_Agenda_RowUpdating(object sender, GridViewUpdateEventArgs e)
         {
             bool bandera_update_agenda = false;
-
+            
             try
             {
                 AgendaRequest request = new AgendaRequest();
@@ -386,6 +485,7 @@ namespace Fuji.RISLite.Site
                 TextBox idmodalidad = (TextBox)GV_Agenda.Rows[e.RowIndex].FindControl("TxtIDModalidad");
                 TextBox modalidad = (TextBox)GV_Agenda.Rows[e.RowIndex].FindControl("Txtmodalidad");
                 TextBox codigo = (TextBox)GV_Agenda.Rows[e.RowIndex].FindControl("Txtcodigo");
+                DropDownList duracion = (DropDownList)GV_Agenda.Rows[e.RowIndex].FindControl("DDL_duracion");
 
                 Control colorRCP = (Control)GV_Agenda.Rows[e.RowIndex].FindControl("ucRadColorPicker1");
                 string color_seleccionado = ((Fuji.RISLite.Site.WebUserControl2)colorRCP).DBSelectedColor;
@@ -395,21 +495,25 @@ namespace Fuji.RISLite.Site
                 agenda.intModalidadID = Convert.ToInt32(idmodalidad.Text);
                 agenda.vchCodigo = codigo.Text;
                 agenda.vchModalidad = modalidad.Text;
+                agenda.intDuracionGen = Convert.ToInt32(duracion.SelectedValue);
                 agenda.vchColor = color_seleccionado;
+                agenda.intSitioID = Convert.ToInt32(RCB_SItio.SelectedValue);
 
-
+                
                 //System.Drawing.ColorTranslator.ToHtml(RadColorPicker1.SelectedColor);
                 request.mdlagenda = agenda;
 
                 bandera_update_agenda = RisService.UpdateAgenda(request);
 
                 GV_Agenda.EditIndex = -1;
-                cargarAgenda();
+                cargarAgenda(Convert.ToInt32(RCB_SItio.SelectedValue));
 
+                ShowMessage("Se actualizo correctamente la modalidad", MessageType.Correcto, "alert_container");
             }
-            catch
+            catch(Exception eRU)
             {
-
+                ShowMessage("Favor de revisar la información.", MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error GV_Agenda_RowUpdating: " + eRU.Message, 3, Usuario.vchUsuario);
             }
         }
 
@@ -418,14 +522,15 @@ namespace Fuji.RISLite.Site
             clsConfAgenda modalidad = new clsConfAgenda();
             try
             {
-
                 modalidad.vchCodigo = txt_Modalidad.Text;
                 modalidad.vchModalidad = txtDescripcion.Text;
                 //modalidad.vchColor = RCP_add_modadlidad.SelectedColor.ToString();
                 modalidad.vchColor = System.Drawing.ColorTranslator.ToHtml(RCP_add_modadlidad.SelectedColor);
                 modalidad.datFecha = DateTime.Today;
+                modalidad.intDuracionGen = Convert.ToInt32(DDL_duracion_Nuevo.SelectedValue);
                 modalidad.vchUserAdmin = Usuario.vchUsuario.ToUpper();
-
+                modalidad.intSitioID = Convert.ToInt32(RCB_SItio.SelectedValue);
+                modalidad.bitActivo = true;
             }
             catch (Exception eODUA)
             {
@@ -466,30 +571,36 @@ namespace Fuji.RISLite.Site
                         if (response != null)
                         {
                             if (response.Success)
-                            {
-                                //ShowMessage("Se agregó correctamente. " + response.Mensaje, MessageType.Correcto, "alert_container");
+                            {                               
                                 txtDescripcion.Text = "";
                                 txt_Modalidad.Text = "";
-                                cargarAgenda();
+                                DDL_duracion_Nuevo.SelectedValue = "1";
+                                RCP_add_modadlidad.SelectedColor = Color.White;
+                                cargarAgenda(Convert.ToInt32(RCB_SItio.SelectedValue));
+                                ShowMessage("Se agregó correctamente la modalidad. " + response.Mensaje, MessageType.Correcto, "alert_container");
                             }
                             else
                             {
-                                //ShowMessage("Existe un error, favor de verificar: " + response.Mensaje, MessageType.Advertencia, "alert_container");
+                                ShowMessage("Existe un error, favor de verificar: " + response.Mensaje, MessageType.Advertencia, "alert_container");
+                                Log.EscribeLog("Existe un error en btnAgregar_Click insert error:", 3, Usuario.vchUsuario);
                             }
                         }
                         else
                         {
-                            //  ShowMessage("Existe un error, favor de verificar. ", MessageType.Error, "alert_container");
+                            ShowMessage("Existe un error, favor de verificar. ", MessageType.Error, "alert_container");
+                            Log.EscribeLog("Existe un error en btnAgregar_Click datos null:", 3, Usuario.vchUsuario);
                         }
                     }
                 }
                 else
                 {
-                    //  ShowMessage("Verificar la información: ", MessageType.Advertencia, "alert_container");
+                      ShowMessage("Verificar la información: ", MessageType.Advertencia, "alert_container");
+                    Log.EscribeLog("Existe un error en btnAgregar_Click Modalidad null:", 3, Usuario.vchUsuario);
                 }
             }
             catch (Exception eAddUser)
             {
+                ShowMessage("Verificar la información: ", MessageType.Advertencia, "alert_container");
                 Log.EscribeLog("Existe un error en btnAgregar_Click: " + eAddUser.Message, 3, Usuario.vchUsuario);
             }
         }
@@ -584,100 +695,152 @@ namespace Fuji.RISLite.Site
 
                                     conf_DiaFeriado.datDia = RDP_DiaFeriado.SelectedDate.Value;
                                     request.mdlDiaFeriado = conf_DiaFeriado;
-                                    bandera_actualizar_DFeriado = RisService.Set_DiaFeriado(request);
+                                    request.mdlDiaFeriado.intSitioID = Convert.ToInt32(RCB_Sitio_confiagenda.SelectedValue);
+                                    bandera_actualizar_DFeriado = RisService.Set_DiaFeriado_Sitio(request);
                                 }
                             }
 
                             catch (Exception eAddUser)
                             {
+                                ShowMessage("Existe un error, favor de verificar. ", MessageType.Error, "alert_container");
                                 Log.EscribeLog("Existe un error en InsertarDiaFeriado: " + eAddUser.Message, 3, Usuario.vchUsuario);
                             }
                         }
                     }                       
                     }
-                }
+                ShowMessage("Se agregó correctamente el día feriado. " + fecha_nueva, MessageType.Correcto, "alert_container");
+            }
 
                 else
                 {
 
-                try
-                {
-                    bool bandera_actualizar_DFeriado = false;
-                    ConfigScheduler_DiaFeriado request = new ConfigScheduler_DiaFeriado();
+                    try
+                    {
+                        bool bandera_actualizar_DFeriado = false;
+                        ConfigScheduler_DiaFeriado request = new ConfigScheduler_DiaFeriado();
 
-                    request.mdlUser = Usuario;
+                        request.mdlUser = Usuario;
 
-                    clsDiaFeriado conf_DiaFeriado = new clsDiaFeriado();
+                        clsDiaFeriado conf_DiaFeriado = new clsDiaFeriado();
 
-                    conf_DiaFeriado.datDia = RDP_DiaFeriado.SelectedDate.Value;                  
-                    request.mdlDiaFeriado = conf_DiaFeriado;
-                    bandera_actualizar_DFeriado = RisService.Set_DiaFeriado(request);
+                        conf_DiaFeriado.datDia = RDP_DiaFeriado.SelectedDate.Value;                  
+                        request.mdlDiaFeriado = conf_DiaFeriado;
+                        request.mdlDiaFeriado.intSitioID = Convert.ToInt32(RCB_Sitio_confiagenda.SelectedValue);
+                        bandera_actualizar_DFeriado = RisService.Set_DiaFeriado_Sitio(request);
 
-                    RadDock RD_Dia_Feriado = new RadDock();
-                    RD_Dia_Feriado.ID = fecha_nueva;
-                    RD_Dia_Feriado.EnableDrag = false;
-                    RD_Dia_Feriado.Resizable = false;
-                    RD_Dia_Feriado.Collapsed = false;
+                        RadDock RD_Dia_Feriado = new RadDock();
+                        RD_Dia_Feriado.ID = fecha_nueva;
+                        RD_Dia_Feriado.EnableDrag = false;
+                        RD_Dia_Feriado.Resizable = false;
+                        RD_Dia_Feriado.Collapsed = false;
 
-                    RD_Dia_Feriado.DefaultCommands = Telerik.Web.UI.Dock.DefaultCommands.None;
-                    RD_Dia_Feriado.DefaultCommands = Telerik.Web.UI.Dock.DefaultCommands.Close;
+                        RD_Dia_Feriado.DefaultCommands = Telerik.Web.UI.Dock.DefaultCommands.None;
+                        RD_Dia_Feriado.DefaultCommands = Telerik.Web.UI.Dock.DefaultCommands.Close;
 
-                    RD_Dia_Feriado.OnClientCommand = "cerrar_ventana";
-
-
-                    RD_Dia_Feriado.Width = Unit.Pixel(140);
+                        RD_Dia_Feriado.OnClientCommand = "cerrar_ventana";
 
 
-                    RD_Dia_Feriado.TitlebarContainer.BackColor = Color.AliceBlue;
-                    RD_Dia_Feriado.BackColor = Color.AliceBlue;
+                        RD_Dia_Feriado.Width = Unit.Pixel(140);
+
+
+                        RD_Dia_Feriado.TitlebarContainer.BackColor = Color.AliceBlue;
+                        RD_Dia_Feriado.BackColor = Color.AliceBlue;
          
-                    RD_Dia_Feriado.Title = fecha_nueva;
+                        RD_Dia_Feriado.Title = fecha_nueva;
 
-                    RDZ_DiaFeriado.Controls.Add(RD_Dia_Feriado);               
+                        RDZ_DiaFeriado.Controls.Add(RD_Dia_Feriado);
+                        ShowMessage("Se agregó correctamente el día feriado. " + fecha_nueva, MessageType.Correcto, "alert_container");
                 }
 
-                catch (Exception eAddUser)
-                {
-                    Log.EscribeLog("Existe un error en el primer DiaFeriado  al insertar: " + eAddUser.Message, 3, Usuario.vchUsuario);
-                }             
+                    catch (Exception eAddUser)
+                    {
+                        ShowMessage("Existe un error, favor de verificar. ", MessageType.Error, "alert_container");
+                        Log.EscribeLog("Existe un error en el primer DiaFeriado  al insertar: " + eAddUser.Message, 3, Usuario.vchUsuario);
+                    }             
                 }            
         }
 
         protected void RB_Agregar_HM_Click(object sender, EventArgs e)
         {
 
-            if (HF_validacion_HM.Value == "false")
+            try
             {
-                string hora_inicio = RTP_HM_Inicio.SelectedTime.ToString();
-                string hora_fin = RTP_HM_Fin.SelectedTime.ToString();
-          
-                string[] lista_horasmuesrtas = HD_HM.Value.Split('|');
 
-                if (lista_horasmuesrtas[0].ToString() == "")
+
+                if (HF_validacion_HM.Value == "false")
                 {
-                    HD_HM.Value = hora_inicio.Substring(0, 5) + "-" + hora_fin.Substring(0, 5);
-                }
+                    string hora_inicio = RTP_HM_Inicio.SelectedTime.ToString();
+                    string hora_fin = RTP_HM_Fin.SelectedTime.ToString();
 
-                else
-                {
-                    HD_HM.Value = HD_HM.Value + "|" + hora_inicio.Substring(0, 5) + "-" + hora_fin.Substring(0, 5);
-                }
+                    string[] lista_horasmuesrtas = HD_HM.Value.Split('|');
 
-                HD_HM.Value = HD_HM.Value.Replace("||", "|");
-                string[] lista_HM = HD_HM.Value.Split('|');
+                    if (lista_horasmuesrtas[0].ToString() == "")
+                    {
+                        HD_HM.Value = hora_inicio.Substring(0, 5) + "-" + hora_fin.Substring(0, 5);
+                    }
+
+                    else
+                    {
+                        HD_HM.Value = HD_HM.Value + "|" + hora_inicio.Substring(0, 5) + "-" + hora_fin.Substring(0, 5);
+                    }
+
+                    HD_HM.Value = HD_HM.Value.Replace("||", "|");
+                    string[] lista_HM = HD_HM.Value.Split('|');
 
 
-                int contador_nuevaHM = 0;
+                    int contador_nuevaHM = 0;
 
-                if (lista_HM.Count() > 1)
-                {
-                    foreach (var horas in lista_HM)
+                    if (lista_HM.Count() > 1)
+                    {
+                        foreach (var horas in lista_HM)
+                        {
+                            RadDock RD_HM = new RadDock();
+                            RDL_HM.ID = horas.ToString();
+                            RD_HM.EnableDrag = false;
+                            RD_HM.Collapsed = false;
+                            RD_HM.Resizable = false;
+
+                            RD_HM.DefaultCommands = Telerik.Web.UI.Dock.DefaultCommands.None;
+                            RD_HM.DefaultCommands = Telerik.Web.UI.Dock.DefaultCommands.Close;
+                            RD_HM.OnClientCommand = "eliminar_HM";
+
+                            RD_HM.Width = Unit.Pixel(150);
+
+                            RD_HM.TitlebarContainer.BackColor = Color.SteelBlue;
+                            RD_HM.BorderColor = Color.SteelBlue;
+
+                            RD_HM.Title = horas.ToString();
+                            RDZ_HM.Controls.Add(RD_HM);
+
+                            contador_nuevaHM++;
+
+                            if (lista_HM.Count() == contador_nuevaHM)
+                            {
+                                bool bandera_actualizar_DFeriado = false;
+                                ConfigScheduler_HoraMuertaRequest request = new ConfigScheduler_HoraMuertaRequest();
+
+                                request.mdlUser = Usuario;
+
+                                clsHoraMuerta conf_HM = new clsHoraMuerta();
+
+                                conf_HM.tmeInicio = RTP_HM_Inicio.SelectedTime.ToString();
+                                conf_HM.tmeFin = RTP_HM_Fin.SelectedTime.ToString();
+
+                                request.mdlHMScheduler = conf_HM;
+                                request.mdlHMScheduler.intSitioID = Convert.ToInt32(RCB_Sitio_confiagenda.SelectedValue);
+
+                                bandera_actualizar_DFeriado = RisService.Set_HoraMuerta_Sitio(request);
+                            }
+                        }
+                    }
+
+                    else
                     {
                         RadDock RD_HM = new RadDock();
-                        RDL_HM.ID = horas.ToString();
+                        RDL_HM.ID = hora_inicio.Substring(0, 5) + "-" + hora_fin.Substring(0, 5);
                         RD_HM.EnableDrag = false;
-                        RD_HM.Collapsed = false;
                         RD_HM.Resizable = false;
+                        RD_HM.Collapsed = false;
 
                         RD_HM.DefaultCommands = Telerik.Web.UI.Dock.DefaultCommands.None;
                         RD_HM.DefaultCommands = Telerik.Web.UI.Dock.DefaultCommands.Close;
@@ -688,100 +851,126 @@ namespace Fuji.RISLite.Site
                         RD_HM.TitlebarContainer.BackColor = Color.SteelBlue;
                         RD_HM.BorderColor = Color.SteelBlue;
 
-                        RD_HM.Title = horas.ToString();
+                        RD_HM.Title = hora_inicio.Substring(0, 5) + "-" + hora_fin.Substring(0, 5);
+
                         RDZ_HM.Controls.Add(RD_HM);
 
-                        contador_nuevaHM++;
+                        bool bandera_actualizar_DFeriado = false;
+                        ConfigScheduler_HoraMuertaRequest request = new ConfigScheduler_HoraMuertaRequest();
 
-                        if (lista_HM.Count() == contador_nuevaHM)
-                        {
-                            bool bandera_actualizar_DFeriado = false;
-                            ConfigScheduler_HoraMuertaRequest request = new ConfigScheduler_HoraMuertaRequest();
+                        request.mdlUser = Usuario;
 
-                            request.mdlUser = Usuario;
+                        clsHoraMuerta conf_HM = new clsHoraMuerta();
 
-                            clsHoraMuerta conf_HM = new clsHoraMuerta();
+                        conf_HM.tmeInicio = RTP_HM_Inicio.SelectedTime.ToString();
+                        conf_HM.tmeFin = RTP_HM_Fin.SelectedTime.ToString();
 
-                            conf_HM.tmeInicio = RTP_HM_Inicio.SelectedTime.ToString();
-                            conf_HM.tmeFin = RTP_HM_Fin.SelectedTime.ToString();
+                        request.mdlHMScheduler = conf_HM;
+                        request.mdlHMScheduler.intSitioID = Convert.ToInt32(RCB_Sitio_confiagenda.SelectedValue);
 
-                            request.mdlHMScheduler = conf_HM;
+                        bandera_actualizar_DFeriado = RisService.Set_HoraMuerta_Sitio(request);
 
-                            bandera_actualizar_DFeriado = RisService.Set_HoraMuerta(request);
-                        }
                     }
                 }
-
                 else
                 {
-                    RadDock RD_HM = new RadDock();
-                    RDL_HM.ID = hora_inicio.Substring(0, 5) + "-" + hora_fin.Substring(0, 5);
-                    RD_HM.EnableDrag = false;
-                    RD_HM.Resizable = false;
-                    RD_HM.Collapsed = false;
+                    HD_HM.Value = HD_HM.Value.Replace("||", "|");
 
-                    RD_HM.DefaultCommands = Telerik.Web.UI.Dock.DefaultCommands.None;
-                    RD_HM.DefaultCommands = Telerik.Web.UI.Dock.DefaultCommands.Close;
-                    RD_HM.OnClientCommand = "eliminar_HM";
+                    string[] lista_HM = HD_HM.Value.Split('|');
 
-                    RD_HM.Width = Unit.Pixel(150);
-
-                    RD_HM.TitlebarContainer.BackColor = Color.SteelBlue;
-                    RD_HM.BorderColor = Color.SteelBlue;
-
-                    RD_HM.Title = hora_inicio.Substring(0, 5) + "-" + hora_fin.Substring(0, 5);
-
-                    RDZ_HM.Controls.Add(RD_HM);
-
-                    bool bandera_actualizar_DFeriado = false;
-                    ConfigScheduler_HoraMuertaRequest request = new ConfigScheduler_HoraMuertaRequest();
-
-                    request.mdlUser = Usuario;
-
-                    clsHoraMuerta conf_HM = new clsHoraMuerta();
-
-                    conf_HM.tmeInicio = RTP_HM_Inicio.SelectedTime.ToString();
-                    conf_HM.tmeFin = RTP_HM_Fin.SelectedTime.ToString();
-
-                    request.mdlHMScheduler = conf_HM;
-
-                    bandera_actualizar_DFeriado = RisService.Set_HoraMuerta(request);
-
-                }
-            }
-            else
-            {
-                HD_HM.Value = HD_HM.Value.Replace("||", "|");
-
-                string[] lista_HM = HD_HM.Value.Split('|');
-
-                if (lista_HM.Count() > 1)
-                {
-                    foreach (var horas in lista_HM)
+                    if (lista_HM.Count() > 1)
                     {
-                        if (horas != "")
+                        foreach (var horas in lista_HM)
                         {
-                            RadDock RD_HM = new RadDock();
-                            RDL_HM.ID = horas.ToString();
-                            RD_HM.EnableDrag = false;
-                            RD_HM.Collapsed = false;
-                            RD_HM.Resizable = false;
+                            if (horas != "")
+                            {
+                                RadDock RD_HM = new RadDock();
+                                RDL_HM.ID = horas.ToString();
+                                RD_HM.EnableDrag = false;
+                                RD_HM.Collapsed = false;
+                                RD_HM.Resizable = false;
 
-                            RD_HM.DefaultCommands = Telerik.Web.UI.Dock.DefaultCommands.None;
-                            RD_HM.DefaultCommands = Telerik.Web.UI.Dock.DefaultCommands.Close;
+                                RD_HM.DefaultCommands = Telerik.Web.UI.Dock.DefaultCommands.None;
+                                RD_HM.DefaultCommands = Telerik.Web.UI.Dock.DefaultCommands.Close;
 
-                            RD_HM.Width = Unit.Pixel(150);
+                                RD_HM.Width = Unit.Pixel(150);
 
-                            RD_HM.TitlebarContainer.BackColor = Color.SteelBlue;
-                            RD_HM.BorderColor = Color.SteelBlue;
-                            RD_HM.Title = horas.ToString();
-                            RDZ_HM.Controls.Add(RD_HM);
+                                RD_HM.TitlebarContainer.BackColor = Color.SteelBlue;
+                                RD_HM.BorderColor = Color.SteelBlue;
+                                RD_HM.Title = horas.ToString();
+                                RDZ_HM.Controls.Add(RD_HM);
+                            }
                         }
                     }
-                }               
+                }
+
+                HF_validacion_HM.Value = "True";
+                ShowMessage("Se agregó correctamente la hora muerta. ", MessageType.Correcto, "alert_container");
             }
 
-            HF_validacion_HM.Value = "True";
+            catch (Exception ex)
+            {
+                ShowMessage("Existe un error, favor de verificar. ", MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error en la hora muerta: " + ex.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        public void carga_dias_feriados(int idsitio)
+        {
+
+            try
+            {
+                List<clsDiaFeriado> lstTec = new List<clsDiaFeriado>();
+                ConfigScheduler_DiaFeriado request = new ConfigScheduler_DiaFeriado();
+                request.mdlUser = Usuario;
+                request.mdlDiaFeriado.intSitioID = idsitio;
+                lstTec = RisService.getDiaFeriadoConfScheduler_Sitio(request);
+                if (lstTec != null)
+                {
+                    HD_DiaFeriado.Value = "";
+
+                    foreach (var dia_ in lstTec)
+                    {
+                        RadDock RD_Dia_Feriado = new RadDock();
+                        RD_Dia_Feriado.ID = "DF" + dia_.intDiaFeriadoID.ToString();
+                        RD_Dia_Feriado.EnableDrag = false;
+                        RD_Dia_Feriado.Collapsed = false;
+                        RD_Dia_Feriado.Resizable = false;
+
+
+                        RD_Dia_Feriado.AutoPostBack = true;
+
+                        RD_Dia_Feriado.DefaultCommands = Telerik.Web.UI.Dock.DefaultCommands.None;
+                        RD_Dia_Feriado.DefaultCommands = Telerik.Web.UI.Dock.DefaultCommands.Close;
+                        RD_Dia_Feriado.OnClientCommand = "cerrar_ventana";
+
+                        RD_Dia_Feriado.Width = Unit.Pixel(140);
+
+                        RD_Dia_Feriado.TitlebarContainer.BackColor = Color.AliceBlue;
+                        RD_Dia_Feriado.BackColor = Color.AliceBlue;
+
+                        RD_Dia_Feriado.Title = dia_.datDia.ToShortDateString();
+                        RDZ_DiaFeriado.Controls.Add(RD_Dia_Feriado);
+
+                        if (HD_DiaFeriado.Value == "")
+                        {
+                            HD_DiaFeriado.Value = dia_.datDia.ToShortDateString() + "|";
+                        }
+
+                        else
+                        {
+                            HD_DiaFeriado.Value = HD_DiaFeriado.Value + dia_.datDia.ToShortDateString() + "|";
+                        }
+
+                    }
+                }
+            }
+
+            catch (Exception ecU)
+            {
+                Log.EscribeLog("Existe un error en cargarDiaFeriadoConfScheduler: " + ecU.Message, 3, Usuario.vchUsuario);
+            }
+
         }
 
         public void carga_dias_feriados()
@@ -839,6 +1028,65 @@ namespace Fuji.RISLite.Site
                 Log.EscribeLog("Existe un error en cargarDiaFeriadoConfScheduler: " + ecU.Message, 3, Usuario.vchUsuario);
             }
         
+        }
+
+        public void carga_Horas_muertas(int idsitio)
+        {
+            try
+            {
+                List<clsHoraMuerta> lstTec = new List<clsHoraMuerta>();
+                ConfigScheduler_HoraMuertaRequest request = new ConfigScheduler_HoraMuertaRequest();
+                request.mdlUser = Usuario;
+                request.mdlHMScheduler.intSitioID = idsitio;
+                lstTec = RisService.getHoraMuertaConfScheduler_Sitio(request);
+                if (lstTec != null)
+                {
+                    HD_HM.Value = "";
+
+                    foreach (var HorasMuertas in lstTec)
+                    {
+                        RadDock RD_HM = new RadDock();
+                        RD_HM.ID = "HM" + HorasMuertas.intHorasMuertasID.ToString();
+                        RD_HM.EnableDrag = false;
+                        RD_HM.Collapsed = false;
+                        RD_HM.Resizable = false;
+
+                        RD_HM.DefaultCommands = Telerik.Web.UI.Dock.DefaultCommands.None;
+                        RD_HM.DefaultCommands = Telerik.Web.UI.Dock.DefaultCommands.Close;
+                        RD_HM.OnClientCommand = "eliminar_HM";
+
+                        RD_HM.Width = Unit.Pixel(150);
+
+                        RD_HM.TitlebarContainer.BackColor = Color.SteelBlue;
+                        RD_HM.BorderColor = Color.SteelBlue;
+
+
+                        string HI = HorasMuertas.tmeInicio.ToString();
+                        string HF = HorasMuertas.tmeFin.ToString();
+
+                        string HM_limpias = HI.Substring(0, 5) + "-" + HF.Substring(0, 5);
+
+                        RD_HM.Title = HM_limpias;
+                        RDZ_HM.Controls.Add(RD_HM);
+
+                        if (HD_HM.Value == "")
+                        {
+                            HD_HM.Value = HM_limpias + "|";
+                        }
+
+                        else
+                        {
+                            HD_HM.Value = HD_HM.Value + HM_limpias + "|";
+                        }
+                    }
+                }
+            }
+
+            catch (Exception ecU)
+            {
+                Log.EscribeLog("Existe un error en cargarHoraMuertaConfScheduler: " + ecU.Message, 3, Usuario.vchUsuario);
+            }
+
         }
 
         public void carga_Horas_muertas()
@@ -920,37 +1168,40 @@ namespace Fuji.RISLite.Site
                         dia_Semana.bitActivo = RB_Lunes.Checked;
                         break;
                     case "Martes":
-                        dia_Semana.intSemanaID = 3;
+                        dia_Semana.intSemanaID = 2;
                         dia_Semana.bitActivo = RBMartes.Checked;
                         break;
                     case "Miercoles":
-                        dia_Semana.intSemanaID = 4;
+                        dia_Semana.intSemanaID = 3;
                         dia_Semana.bitActivo = RBMiercoles.Checked;
                         break;
                     case "Jueves":
-                        dia_Semana.intSemanaID = 5;
+                        dia_Semana.intSemanaID = 4;
                         dia_Semana.bitActivo = RBJueves.Checked;
                         break;
                     case "Viernes":
-                        dia_Semana.intSemanaID = 6;
+                        dia_Semana.intSemanaID = 5;
                         dia_Semana.bitActivo = RBViernes.Checked;
                         break;
-                    case "Sabado":
-                        dia_Semana.intSemanaID = 7;
+                    case "Sábado":
+                        dia_Semana.intSemanaID = 6;
                         dia_Semana.bitActivo = RBSabado.Checked;
                         break;
                     case "Domingo":
-                        dia_Semana.intSemanaID = 8;
+                        dia_Semana.intSemanaID = 7;
                         dia_Semana.bitActivo = RB_Domingo.Checked;
                         break;
                 }
 
                 request.mdlDiaSemana = dia_Semana;
+                request.mdlDiaSemana.intSitioID = Convert.ToInt32(RCB_Sitio_confiagenda.SelectedValue);
 
-                bandera_Lunes = RisService.UpdateDiaSemana(request);
+                bandera_Lunes = RisService.UpdateDiaSemana_Sitio(request);
+                ShowMessage("Se modificó correctamente el día de la semana. ", MessageType.Correcto, "alert_container");
             }
             catch (Exception eAddUser)
             {
+                ShowMessage("Existe un error al agregar el día de la semana, favor de verificar. ", MessageType.Error, "alert_container");
                 Log.EscribeLog("Existe un error en la actualizacion de los dias de la semana laborables: " + eAddUser.Message, 3, Usuario.vchUsuario);
             }
         }
@@ -1024,12 +1275,15 @@ namespace Fuji.RISLite.Site
                 config_agenda.tmeFinDia = RTP_Fin.SelectedTime.Value;
 
                 request.mdlgenconfagenda = config_agenda;
+                request.mdlgenconfagenda.intSitioID = Convert.ToInt32(RCB_Sitio_confiagenda.SelectedValue);
 
                 bandera_actualizar_HRT = RisService.UpdateHR_Activo(request);
+                ShowMessage("Se agrego el horario de atención. ", MessageType.Correcto, "alert_container");
             }
 
             catch (Exception eAddUser)
             {
+                ShowMessage("Existe un error cuando se establece el horario de atención. ", MessageType.Error, "alert_container");
                 Log.EscribeLog("Existe un error en BTHorarioTotal_Click: " + eAddUser.Message, 3, Usuario.vchUsuario);
             }
         }
@@ -1076,10 +1330,12 @@ namespace Fuji.RISLite.Site
                 }
 
                 carga_dias_feriados();
+                ShowMessage("Se eliminó el día feriado. ", MessageType.Correcto, "alert_container");
             }
 
             catch (Exception eAddUser)
             {
+                ShowMessage("Existe un error cuando se elimina el día feriado, favor de verificar. ", MessageType.Error, "alert_container");
                 Log.EscribeLog("Existe un error al eliminar un dia feriado: " + eAddUser.Message, 3, Usuario.vchUsuario);
             }
 
@@ -1133,10 +1389,12 @@ namespace Fuji.RISLite.Site
                 }
 
                 carga_Horas_muertas();
+                ShowMessage("Se eliminó la hora muerta. ", MessageType.Correcto, "alert_container");
             }
 
             catch (Exception eAddUser)
             {
+                ShowMessage("Existe un error cuando se elimina la hora muerta, favor de verificar. ", MessageType.Error, "alert_container");
                 Log.EscribeLog("Existe un error al eliminar un dia feriado: " + eAddUser.Message, 3, Usuario.vchUsuario);
             }
         }
@@ -1167,21 +1425,48 @@ namespace Fuji.RISLite.Site
             }
         }
 
+        public enum MessageType { Correcto, Error, Informacion, Advertencia };
 
+        protected void ShowMessage(string Message, MessageType type, String container)
+        {
+            try
+            {
+                Message = Message.Replace("'", " ");
+                ScriptManager.RegisterStartupScript(this, this.GetType(), System.Guid.NewGuid().ToString(), "ShowMessage('" + Message + "','" + type + "','" + container + "');", true);
+            }
+            catch (Exception eSM)
+            {
+                throw eSM;
+            }
+        }
 
-        //public enum MessageType { Correcto, Error, Info, Advertencia };
+        protected void RadAjaxPanel4_AjaxRequest(object sender, AjaxRequestEventArgs e)
+        {
+            GV_Agenda.DataSource = null;
+            GV_Agenda.DataBind();
+            cargarAgenda(Convert.ToInt32(e.Argument));                      
+        }
 
-        //protected void ShowMessage(string Message, MessageType type, String container)
-        //{
-        //    try
-        //    {
-        //        Message = Message.Replace("'", " ");
-        //        ScriptManager.RegisterStartupScript(this, this.GetType(), System.Guid.NewGuid().ToString(), "ShowMessage('" + Message + "','" + type + "','" + container + "');", true);
-        //    }
-        //    catch (Exception eSM)
-        //    {
-        //        throw eSM;
-        //    }
-        //}
+        protected void RadAjaxPanel5_AjaxRequest(object sender, AjaxRequestEventArgs e)
+        {
+
+            int x = 0;
+            //cargarAgenda(Convert.ToInt32(e.Argument));
+            //cargaConfigScheduler(Convert.ToInt32(e.Argument));
+            //carga_dias_feriados(Convert.ToInt32(e.Argument));
+            //carga_Horas_muertas(Convert.ToInt32(e.Argument));
+            //HF_validacion_HM.Value = "false";
+        }
+
+        protected void RCB_Sitio_confiagenda_SelectedIndexChanged(object sender, RadComboBoxSelectedIndexChangedEventArgs e)
+        {
+            //cargarAgenda(Convert.ToInt32(e.Value));
+            cargaConfigScheduler(Convert.ToInt32(e.Value));
+            carga_dias_feriados(Convert.ToInt32(e.Value));
+            carga_Horas_muertas(Convert.ToInt32(e.Value));
+            HF_validacion_HM.Value = "false";
+        }
+
+    
     }
 }

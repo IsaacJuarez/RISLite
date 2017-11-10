@@ -32,6 +32,7 @@ namespace Fuji.RISLite.Entidades.DataBase
             this.tbl_CONFIG_Agenda = new HashSet<tbl_CONFIG_Agenda>();
             this.tbl_CAT_HoraMuerta = new HashSet<tbl_CAT_HoraMuerta>();
             this.tbl_CAT_DiaFeriado = new HashSet<tbl_CAT_DiaFeriado>();
+            this.tbl_REL_DiaSemana = new HashSet<tbl_REL_DiaSemana>();
         }
     
         public int intSitioID { get; set; }
@@ -56,5 +57,6 @@ namespace Fuji.RISLite.Entidades.DataBase
         public virtual ICollection<tbl_CONFIG_Agenda> tbl_CONFIG_Agenda { get; set; }
         public virtual ICollection<tbl_CAT_HoraMuerta> tbl_CAT_HoraMuerta { get; set; }
         public virtual ICollection<tbl_CAT_DiaFeriado> tbl_CAT_DiaFeriado { get; set; }
+        public virtual ICollection<tbl_REL_DiaSemana> tbl_REL_DiaSemana { get; set; }
     }
 }

@@ -1563,7 +1563,7 @@ namespace Fuji.RISLite.DataAccess
         #endregion Prestacion
 
         #region Modalidadesagenda
-        public List<clsConfAgenda> getListAgenda(string user)
+        public List<clsConfAgenda> getListAgenda(string user, int idsitio)
         {
             List<clsConfAgenda> lst = new List<clsConfAgenda>();
             try
@@ -1572,9 +1572,15 @@ namespace Fuji.RISLite.DataAccess
                 {
                     if (dbRisDA.tbl_CAT_Modalidad.Any())
                     {
-                        var query = dbRisDA.tbl_CAT_Modalidad
-                           //.Where(x => (bool)x.bitActivo).ToList()
-                           .ToList();
+                        //var query = dbRisDA.tbl_CAT_Modalidad
+                        //   //.Where(x => (bool)x.bitActivo).ToList()
+                        //   .ToList();
+
+                        var query = (from x in dbRisDA.tbl_CAT_Modalidad
+                                     join dur_mod in dbRisDA.tbl_CAT_DuracionModalidad
+                                     on x.intDuracionGen equals dur_mod.intDuracionModalidadID
+                                     where x.intSitioID == idsitio
+                                     select new { x.intModalidadID, x.vchModalidad, x.vchCodigo, x.vchColor, x.bitActivo, x.datFecha, x.vchUserAdmin,  dur_mod.intDuracion } ).ToList();
 
                         if (query != null)
                         {
@@ -1590,6 +1596,7 @@ namespace Fuji.RISLite.DataAccess
                                     mdl.vchCodigo = item.vchCodigo;
                                     mdl.vchUserAdmin = item.vchUserAdmin;
                                     mdl.vchColor = item.vchColor;
+                                    mdl.intDuracionGen = (int)item.intDuracion;
                                     lst.Add(mdl);
                                 }
                             }
@@ -1604,7 +1611,7 @@ namespace Fuji.RISLite.DataAccess
             return lst;
         }
 
-        public bool UpdateAgenda(string user, int idmodalidad, string codigo, string modalidad, string color)
+        public bool UpdateAgenda(string user, int idmodalidad, string codigo, string modalidad, string color, int duracion, int idsitio)
         {
             bool bandera_Actualizar = false;
             try
@@ -1613,13 +1620,14 @@ namespace Fuji.RISLite.DataAccess
                 {
 
                     var dbCstInfo = dbRisDA.tbl_CAT_Modalidad
-                        .Where(w => w.intModalidadID == idmodalidad)
+                        .Where(w => w.intModalidadID == idmodalidad && w.intSitioID == idsitio)
                         .SingleOrDefault();
 
                     if (dbCstInfo != null)
                     {
                         dbCstInfo.vchCodigo = codigo;
                         dbCstInfo.vchModalidad = modalidad;
+                        dbCstInfo.intDuracionGen = duracion;
                         dbCstInfo.vchColor = color;
                         dbRisDA.SaveChanges();
                         bandera_Actualizar = true;
@@ -1675,7 +1683,7 @@ namespace Fuji.RISLite.DataAccess
                 using (dbRisDA = new RISLiteEntities())
                 {
                     if (!dbRisDA.tbl_CAT_Modalidad.Any(x => x.vchCodigo.ToUpper() == agenda.vchCodigo.ToUpper() && x.vchModalidad.ToUpper() == agenda.vchModalidad.ToUpper()
-                    && (bool)x.bitActivo))
+                    && (bool)x.bitActivo && x.intSitioID == agenda.intSitioID))
                     {
                         tbl_CAT_Modalidad mdlAgenda = new tbl_CAT_Modalidad();
                         mdlAgenda.bitActivo = agenda.bitActivo;
@@ -1684,7 +1692,8 @@ namespace Fuji.RISLite.DataAccess
                         mdlAgenda.vchColor = agenda.vchColor;
                         mdlAgenda.datFecha = DateTime.Today;
                         mdlAgenda.vchUserAdmin = user;
-
+                        mdlAgenda.intSitioID = agenda.intSitioID;
+                        mdlAgenda.intDuracionGen = agenda.intDuracionGen;
                         dbRisDA.tbl_CAT_Modalidad.Add(mdlAgenda);
                         dbRisDA.SaveChanges();
                         valido = true;
@@ -1717,8 +1726,7 @@ namespace Fuji.RISLite.DataAccess
                 using (dbRisDA = new RISLiteEntities())
                 {
                     if (dbRisDA.tbl_CAT_Modalidad.Any())
-                    {
-                        //var query = dbRisDA.tbl_CAT_Modalidad.Where(x => (bool)x.bitActivo).ToList();
+                    {                        
                         var query = dbRisDA.tbl_CAT_Eventos.ToList();
                         if (query != null)
                         {
@@ -1753,10 +1761,50 @@ namespace Fuji.RISLite.DataAccess
                                         mdl.RecurrenceID = (int)item.RecurrenceID;
                                     }
 
+                                    mdl.RecurrenceException = item.RecurrenceException;                                   
+                                    mdl.intModalidadID = (int)item.intModalidadID;
+                                    lst.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getListEventoCita: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }
 
-                                    mdl.RecurrenceException = item.RecurrenceException;
-                                    //mdl.StarTimezone = (DateTime)item.StarTimezone;
-                                    //mdl.EndTimezone = (DateTime)item.EndTimezone;
+        public List<clsEventoCita> getListCitas_Sitio(string user, int idmodalidad, int idsitio)
+        {
+            List<clsEventoCita> lst = new List<clsEventoCita>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Modalidad.Any())
+                    {
+
+                        //var query = dbRisDA.tbl_CAT_Eventos
+                        //            .Where(w => w.intModalidadID == idmodalidad).ToList();
+
+                        var query = dbRisDA.stp_getBusquedaCita_Sitio(idmodalidad, idsitio).ToList();
+                                    
+
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsEventoCita mdl = new clsEventoCita();
+                                    mdl.TaskID = (int)item.intEstudioID;
+                                    mdl.Start = (DateTime)item.datFecha;
+                                    mdl.End = (DateTime)item.datFechaFin;
+                                    mdl.Title = item.vchTitulo;
+                                    mdl.Description = item.vchDescripcion;                                                                      
                                     mdl.intModalidadID = (int)item.intModalidadID;
                                     lst.Add(mdl);
 
@@ -1768,7 +1816,7 @@ namespace Fuji.RISLite.DataAccess
             }
             catch (Exception eLT)
             {
-                Log.EscribeLog("Existe un error en getListEventoCita: " + eLT.Message, 3, user);
+                Log.EscribeLog("Existe un error en getListCitas_Sitio: " + eLT.Message, 3, user);
             }
             return lst;
         }
@@ -1843,6 +1891,112 @@ namespace Fuji.RISLite.DataAccess
             return lst;
         }
 
+        public List<clsEquipo> getCitaEquipos(string user, int idmodalidad)
+        {
+            List<clsEquipo> lst = new List<clsEquipo>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Equipo.Any())
+                    {                    
+                        var query = dbRisDA.tbl_CAT_Equipo
+                                    .Where(w => w.intModalidadID == idmodalidad).ToList();
+
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsEquipo mdl = new clsEquipo();
+                                    mdl.intEquipoID = (int)item.intEquipoID;
+                                    mdl.intModalidadID = (int)item.intModalidadID;
+                                    mdl.vchNombreEquipo = item.vchNombreEquipo;
+                                    mdl.vchCodigoEquipo = item.vchCodigoEquipo;                                                                                                      
+                                    lst.Add(mdl);
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getCitaEquipos: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }
+
+        public List<clsEquipo> getCitaEquipos_Sitio(string user, int idmodalidad, int idsitio)
+        {
+            List<clsEquipo> lst = new List<clsEquipo>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Equipo.Any())
+                    {
+                        var query = dbRisDA.tbl_CAT_Equipo
+                                    .Where(w => w.intModalidadID == idmodalidad && w.intSitioID == idsitio).ToList();
+
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsEquipo mdl = new clsEquipo();
+                                    mdl.intEquipoID = (int)item.intEquipoID;
+                                    mdl.intModalidadID = (int)item.intModalidadID;
+                                    mdl.vchNombreEquipo = item.vchNombreEquipo;
+                                    mdl.vchCodigoEquipo = item.vchCodigoEquipo;
+                                    lst.Add(mdl);
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getCitaEquipos: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }
+
+        public string getListColorModalidad_Sitio(string user, string modalidad, int idsitio)
+        {
+            string color = "";
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Modalidad.Any())
+                    {
+                        //var query = dbRisDA.tbl_CAT_Modalidad.Where(x => x.vchCodigo.Contains(modalidad)).ToString();
+
+
+                        var query = (from tblmod in dbRisDA.tbl_CAT_Modalidad
+                                     where tblmod.vchCodigo == modalidad && tblmod.intSitioID == idsitio
+                                     select tblmod.vchColor).First();
+
+                        if (query != null)
+                        {
+                            color = query;
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getModalidadAgenda: " + eLT.Message, 3, user);
+            }
+            return color;
+        }
+
         public string getListColorModalidad(string user, string modalidad)
         {
             string color = "";
@@ -1871,6 +2025,95 @@ namespace Fuji.RISLite.DataAccess
                 Log.EscribeLog("Existe un error en getModalidadAgenda: " + eLT.Message, 3, user);
             }
             return color;
+        }
+
+        public int getListDuracionGen_Sitio(string user, int modalidad, int idsitio)
+        {
+            int duracion = 0;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Modalidad.Any())
+                    {
+                        //var query = dbRisDA.tbl_CAT_Modalidad.Where(x => x.vchCodigo.Contains(modalidad)).ToString();
+
+
+                        var query = (from tblmod in dbRisDA.tbl_CAT_Modalidad
+                                     where tblmod.intModalidadID == modalidad && tblmod.intSitioID == idsitio
+                                     select tblmod.intDuracionGen).First();
+
+                        if (query != null)
+                        {
+                            duracion = Convert.ToInt32(query);
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getListDuracionGen: " + eLT.Message, 3, user);
+            }
+            return duracion;
+        }
+
+        public int getListDuracionGen(string user, int modalidad)
+        {
+            int duracion = 0;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Modalidad.Any())
+                    {
+                        //var query = dbRisDA.tbl_CAT_Modalidad.Where(x => x.vchCodigo.Contains(modalidad)).ToString();
+
+
+                        var query = (from tblmod in dbRisDA.tbl_CAT_Modalidad
+                                     where tblmod.intModalidadID == modalidad
+                                     select tblmod.intDuracionGen).First();
+
+                        if (query != null)
+                        {
+                            duracion = Convert.ToInt32(query);
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getListDuracionGen: " + eLT.Message, 3, user);
+            }
+            return duracion;
+        }
+
+        public string getDescripcionModalidad_Sitio(string user, int modalidad, int idsitio)
+        {
+            string modalidad_descripcion = "";
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Modalidad.Any())
+                    {
+                        //var query = dbRisDA.tbl_CAT_Modalidad.Where(x => x.vchCodigo.Contains(modalidad)).ToString();                        
+
+                        var query = (from tblmod in dbRisDA.tbl_CAT_Modalidad
+                                     where tblmod.intModalidadID == modalidad && tblmod.intSitioID == idsitio
+                                     select tblmod.vchCodigo).First();
+
+                        if (query != null)
+                        {
+                            modalidad_descripcion = query;
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getModalidadAgenda: " + eLT.Message, 3, user);
+            }
+            return modalidad_descripcion;
         }
 
         public string getDescripcionModalidad(string user, int modalidad)
@@ -2786,6 +3029,99 @@ namespace Fuji.RISLite.DataAccess
         #endregion Paciente
 
         #region NuevaCitaAgenda
+
+        public List<clsEventoCita> getListCitas_en_agenda(string user, int idmodalidad, DateTime fecha_Revision)
+        {
+            DateTime dt_fecha_sumada = fecha_Revision.AddDays(+3);
+            //DateTime dt_fecha_restada = fecha_Revision.AddDays(-3);
+
+            List<clsEventoCita> lst = new List<clsEventoCita>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Modalidad.Any())
+                    {
+                        var query = dbRisDA.tbl_CAT_Eventos.OrderBy(x => x.Start).Where(x => (x.intModalidadID == idmodalidad && (x.Start >= fecha_Revision && x.Start < dt_fecha_sumada))).ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsEventoCita mdl = new clsEventoCita();
+                                    mdl.TaskID = (int)item.TaskID;
+                                    mdl.Start = (DateTime)item.Start;
+                                    mdl.End = (DateTime)item.End;
+                                    mdl.Title = item.Title;
+                                    mdl.Description = item.Description;
+                                    mdl.OwnerID = (int)item.OwnerID;
+
+                                    mdl.RecurrenceException = item.RecurrenceException;
+                                    mdl.intModalidadID = (int)item.intModalidadID;
+                                    lst.Add(mdl);
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getListCitas_en_agenda: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }
+
+        public List<clsEventoCita> getListCitas_en_agenda_Sitio(string user, int idmodalidad, DateTime fecha_Revision, int idsitio)
+        {
+            DateTime dt_fecha_sumada = fecha_Revision.AddDays(+3);
+            //DateTime dt_fecha_restada = fecha_Revision.AddDays(-3);
+
+            List<clsEventoCita> lst = new List<clsEventoCita>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Modalidad.Any())
+                    {
+                        //var query = dbRisDA.tbl_CAT_Eventos.OrderBy(x => x.Start).Where(x => (x.intModalidadID == idmodalidad && (x.Start >= fecha_Revision && x.Start < dt_fecha_sumada))).ToList();
+
+                        //var query = dbRisDA.stp_getBusquedaCita_Sitio(idmodalidad, idsitio).OrderBy(x => x.datFechaInicio).Where(y => y.intModalidadID == idmodalidad &&
+                        //                                                                                                         y.intEstudioID == idsitio && 
+                        //                                                                                                         y.datFechaInicio >= fecha_Revision
+                        //                                                                                                         && y.datFechaInicio < dt_fecha_sumada).ToList();
+
+                        var query = dbRisDA.stp_getBusquedaCita_Sitio(idmodalidad, idsitio).OrderBy(x => x.datFechaInicio).Where(y => y.datFechaInicio >= fecha_Revision
+                                                                                                                                   && y.datFechaInicio < dt_fecha_sumada).ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsEventoCita mdl = new clsEventoCita();
+                                    mdl.TaskID = (int)item.intEstudioID;
+                                    mdl.Start = (DateTime)item.datFechaInicio;
+                                    mdl.End = (DateTime)item.datFechaFin;
+                                    mdl.Title = item.vchTitulo;
+                                    mdl.Description = item.vchDescripcion;
+                                    mdl.intModalidadID = (int)item.intModalidadID;
+                                    lst.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getListCitas_en_agenda: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }
+
         public List<clsEventoCita> getListCitaAgenda(string user)
         {
             List<clsEventoCita> lst = new List<clsEventoCita>();
@@ -2854,6 +3190,80 @@ namespace Fuji.RISLite.DataAccess
 
         #region ConfigAgenda
 
+        public List<clsConfScheduler> getListConfigScheduler_Sito(string user, int idsitio)
+        {
+            List<clsConfScheduler> lst = new List<clsConfScheduler>();
+            try
+            {
+                clsConfScheduler mdl = new clsConfScheduler();
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CONFIG_Agenda.Any())
+                    {
+                        var query = (from x in dbRisDA.tbl_CONFIG_Agenda                                                                         
+                                     where x.intSitioID == idsitio
+                                     select new {x.intConfiguracionAgendaID, x.intSitioID, x.vchConfiguracionAgenda, x.tmeInicioDia, x.tmeFinDia,
+                                                 x.intIntervalo, x.datFecha, x.vchUserAdmin }).ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    mdl.intConfiguracionAgendaID = (int)item.intConfiguracionAgendaID;
+                                    mdl.tmeInicioDia = (TimeSpan)item.tmeInicioDia;
+                                    mdl.tmeFinDia = (TimeSpan)item.tmeFinDia;
+                                    mdl.intIntervalo = (int)item.intIntervalo;
+                                    lst.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getListConfigScheduler: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }
+
+        public List<clsConfScheduler> getListConfigScheduler_Sitio(string user, int idsitio)
+        {
+            List<clsConfScheduler> lst = new List<clsConfScheduler>();
+            try
+            {
+                clsConfScheduler mdl = new clsConfScheduler();
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CONFIG_Agenda.Any())
+                    {
+                        var query = dbRisDA.tbl_CONFIG_Agenda.Where(x => x.intSitioID == idsitio).ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    mdl.intConfiguracionAgendaID = (int)item.intConfiguracionAgendaID;
+                                    mdl.tmeInicioDia = (TimeSpan)item.tmeInicioDia;
+                                    mdl.tmeFinDia = (TimeSpan)item.tmeFinDia;
+                                    mdl.intIntervalo = (int)item.intIntervalo;
+
+                                    lst.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getListConfigScheduler: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }
+
         public List<clsConfScheduler> getListConfigScheduler(string user)
         {
             List<clsConfScheduler> lst = new List<clsConfScheduler>();
@@ -2886,6 +3296,48 @@ namespace Fuji.RISLite.DataAccess
             catch (Exception eLT)
             {
                 Log.EscribeLog("Existe un error en getListConfigScheduler: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }
+
+        public List<clsDiaSemana> getListDiaSemana_sitio(string user, int idsitio)
+        {
+            List<clsDiaSemana> lst = new List<clsDiaSemana>();
+            try
+            {
+
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_DiaSemana.Any())
+                    {
+                        var query = (from x in dbRisDA.tbl_REL_DiaSemana
+                                     join semana in dbRisDA.tbl_CAT_DiaSemana
+                                     on x.intDiaSemanaInt equals semana.intDiaSemanaInt
+                                     where x.intSitioID == idsitio
+                                     select new {x.intDiaSemanaInt, x.bitActivo, semana.datFecha, semana.vchUserAdmin, semana.vchDiaSemana  }).ToList();
+
+
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsDiaSemana mdl = new clsDiaSemana();
+                                    mdl.intSemanaID = (int)item.intDiaSemanaInt;
+                                    mdl.vchDiaSemana = item.vchDiaSemana;
+                                    mdl.bitActivo = (bool)item.bitActivo;
+
+                                    lst.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getListDiaSemana: " + eLT.Message, 3, user);
             }
             return lst;
         }
@@ -2965,6 +3417,81 @@ namespace Fuji.RISLite.DataAccess
             return lst;
         }
 
+        public List<clsDiaFeriado> getListDiaFeriado_Sitio(string user, int idsitio)
+        {
+            List<clsDiaFeriado> lst = new List<clsDiaFeriado>();
+            try
+            {
+
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_DiaFeriado.Any())
+                    {
+                        var query = dbRisDA.tbl_CAT_DiaFeriado.Where(x => (x.bitActivo == true) && x.intSitioID == idsitio).ToList();
+
+
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsDiaFeriado mdl = new clsDiaFeriado();
+                                    mdl.intDiaFeriadoID = (int)item.intDiaFeriadoID;
+                                    mdl.datDia = (DateTime)item.datDia;
+
+
+                                    lst.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getListDiaFeriado: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }
+
+        public List<clsHoraMuerta> getListHorasMuertas_Sitio(string user, int idsitio)
+        {
+            List<clsHoraMuerta> lst = new List<clsHoraMuerta>();
+            try
+            {
+
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_HoraMuerta.Any())
+                    {
+                        var query = dbRisDA.tbl_CAT_HoraMuerta.Where(x => (x.bitActivo == true) && x.intSitioID == idsitio).ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsHoraMuerta mdl = new clsHoraMuerta();
+                                    mdl.intHorasMuertasID = (int)item.intHorasMuertasID;
+                                    mdl.tmeInicio = item.tmeInicio.ToString();
+                                    mdl.tmeFin = item.tmeFin.ToString();
+                                    //mdl.bitRepetir = item.bitRepetir;
+
+                                    lst.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getListHorasMuertas: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }      
+
         public List<clsHoraMuerta> getListHorasMuertas(string user)
         {
             List<clsHoraMuerta> lst = new List<clsHoraMuerta>();
@@ -3002,6 +3529,51 @@ namespace Fuji.RISLite.DataAccess
             return lst;
         }
 
+        public bool UpdateDiaSemana_Sitio(string user, int idsemana, bool estatus, int idsitio)
+        {
+            bool bandera_Actualizar = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+
+                    var dbCstInfo = dbRisDA.tbl_REL_DiaSemana
+                        .Where(w => w.intDiaSemanaInt == idsemana && w.intSitioID == idsitio)
+                        .SingleOrDefault();
+
+                    if (dbCstInfo != null)
+                    {
+                        dbCstInfo.bitActivo = estatus;
+                        dbCstInfo.vchUserAdmin = user;
+                        dbCstInfo.datFecha = DateTime.Now;
+                        dbRisDA.SaveChanges();
+                        bandera_Actualizar = true;
+                    }
+
+                    else
+                    {
+                        tbl_REL_DiaSemana mdlsemana = new tbl_REL_DiaSemana();
+
+                        mdlsemana.intDiaSemanaInt = idsemana;
+                        mdlsemana.intSitioID = idsitio;
+                        mdlsemana.bitActivo = estatus;
+                        mdlsemana.datFecha = DateTime.Now;
+                        mdlsemana.vchUserAdmin = user;                       
+                                             
+                        dbRisDA.tbl_REL_DiaSemana.Add(mdlsemana);
+                        dbRisDA.SaveChanges();
+                        bandera_Actualizar = true;                                          
+                    }
+
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en UpdateDiaSemana: " + eLT.Message, 3, user);
+            }
+            return bandera_Actualizar;
+        }
+
         public bool UpdateDiaSemana(string user, int idsemana, bool estatus)
         {
             bool bandera_Actualizar = false;
@@ -3028,6 +3600,32 @@ namespace Fuji.RISLite.DataAccess
             catch (Exception eLT)
             {
                 Log.EscribeLog("Existe un error en UpdateDiaSemana: " + eLT.Message, 3, user);
+            }
+            return bandera_Actualizar;
+        }
+
+        public bool UpdateHR_Activo_Sitio(string user, TimeSpan HRInicio, TimeSpan HRFin, int idsitio)
+        {
+            bool bandera_Actualizar = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    tbl_CONFIG_Agenda mdlCOnf = new tbl_CONFIG_Agenda();
+
+                    mdlCOnf = dbRisDA.tbl_CONFIG_Agenda.First(x => x.intSitioID == idsitio);
+                    mdlCOnf.tmeInicioDia = HRInicio;
+                    mdlCOnf.tmeFinDia = HRFin;
+
+                    //dbCstInfo.vchUserAdmin = user;
+                    //dbCstInfo.datFecha = DateTime.Now;
+                    dbRisDA.SaveChanges();
+                    bandera_Actualizar = true;
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en UpdateHorarioActivo: " + eLT.Message, 3, user);
             }
             return bandera_Actualizar;
         }
@@ -3082,6 +3680,33 @@ namespace Fuji.RISLite.DataAccess
                 Log.EscribeLog("Existe un error en Update_Intervalo: " + eLT.Message, 3, user);
             }
             return bandera_Actualizar;
+        }
+
+        public bool Set_DiaFeriado_Sitio(string user, DateTime dia, int idsitio)
+        {
+            bool bandera_insert = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    tbl_CAT_DiaFeriado mdlDF = new tbl_CAT_DiaFeriado();
+                    mdlDF.datDia = dia;
+                    mdlDF.bitActivo = true;
+                    mdlDF.datFecha = DateTime.Today;
+                    mdlDF.vchUserAdmin = user;
+                    mdlDF.intSitioID = idsitio;
+
+                    dbRisDA.tbl_CAT_DiaFeriado.Add(mdlDF);
+                    dbRisDA.SaveChanges();
+
+                    bandera_insert = true;
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en InsertDiaFeriado: " + eLT.Message, 3, user);
+            }
+            return bandera_insert;
         }
 
         public bool Set_DiaFeriado(string user, DateTime dia)
@@ -3214,6 +3839,38 @@ namespace Fuji.RISLite.DataAccess
             return bandera_Actualizar;
         }
 
+        public bool Set_HoraMuerta_sitio(string user, string HM1, string HM2, int idsitio)
+        {
+            bool bandera_insert = false;
+            TimeSpan vv = TimeSpan.Parse(HM1);
+            TimeSpan v2 = TimeSpan.Parse(HM2);
+
+
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    tbl_CAT_HoraMuerta mdlDF = new tbl_CAT_HoraMuerta();
+                    mdlDF.tmeInicio = vv;
+                    mdlDF.tmeFin = v2;
+                    mdlDF.datFecha = DateTime.Today;
+                    mdlDF.vchUserAdmin = user;
+                    mdlDF.bitActivo = true;
+                    mdlDF.intSitioID = idsitio;
+
+                    dbRisDA.tbl_CAT_HoraMuerta.Add(mdlDF);
+                    dbRisDA.SaveChanges();
+
+                    bandera_insert = true;
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en Set_HoraMuerta: " + eLT.Message, 3, user);
+            }
+            return bandera_insert;
+        }
+
         public bool Set_HoraMuerta(string user, string HM1, string HM2)
         {
             bool bandera_insert = false;
@@ -3230,6 +3887,7 @@ namespace Fuji.RISLite.DataAccess
                     mdlDF.tmeFin = v2;
                     mdlDF.datFecha = DateTime.Today;
                     mdlDF.vchUserAdmin = user;
+                    mdlDF.bitActivo =true;
 
                     dbRisDA.tbl_CAT_HoraMuerta.Add(mdlDF);
                     dbRisDA.SaveChanges();
@@ -3935,6 +4593,112 @@ namespace Fuji.RISLite.DataAccess
         #endregion Adicionales
 
 
+        #region Import
+
+        public bool Set_Equipo_Import(tbl_CAT_Equipo equipo, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                tbl_CAT_Equipo mdlCat = new tbl_CAT_Equipo();
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    //Primero en cat
+                    if (!dbRisDA.tbl_CAT_Equipo.Any(x => x.vchNombreEquipo.ToUpper() == equipo.vchNombreEquipo.ToUpper()))
+                    {
+                        mdlCat.bitActivo = equipo.bitActivo;
+                        mdlCat.datFecha = DateTime.Now;
+                        mdlCat.intModalidadID = equipo.intModalidadID;
+                        mdlCat.vchAETitle = equipo.vchAETitle;
+                        mdlCat.vchCodigoEquipo = equipo.vchCodigoEquipo;
+                        mdlCat.vchIPEquipo = equipo.vchIPEquipo;
+                        mdlCat.vchNombreEquipo = equipo.vchNombreEquipo;
+                        mdlCat.vchUserAdmin = user;
+                        dbRisDA.tbl_CAT_Equipo.Add(mdlCat);
+                        dbRisDA.SaveChanges();
+                        valido = true;
+                    }
+                    else
+                    {
+                        mensaje += " Ya existe el equipo Import.";
+                        valido = false;
+                    }
+                }
+            }
+            catch (Exception eSU)
+            {
+                valido = false;
+                mensaje += eSU.Message;
+                Log.EscribeLog("Existe un error en setEquipo Import: " + eSU.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public bool Set_Prestacion_Import(clsPrestacion prestacion, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                bool validoCat = false;
+                tbl_CAT_Prestacion mdlCat = new tbl_CAT_Prestacion();
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    //Primero en cat
+                    if (!dbRisDA.tbl_CAT_Prestacion.Any(x => x.vchPrestacion.ToUpper() == prestacion.vchPrestacion.ToUpper()))
+                    {
+                        validoCat = true;
+                        mdlCat.bitActivo = prestacion.bitActivo;
+                        mdlCat.datFecha = DateTime.Now;
+                        mdlCat.intDuracionMin = prestacion.intDuracionMin;
+                        mdlCat.vchPrestacion = prestacion.vchPrestacion;
+                        mdlCat.vchUserAdmin = user;
+                        dbRisDA.tbl_CAT_Prestacion.Add(mdlCat);
+                        dbRisDA.SaveChanges();
+                    }
+                    else
+                    {
+                        validoCat = false;
+                        mensaje += " Ya existe la prestación.";
+                        valido = false;
+                    }
+                }
+
+                if (validoCat && mdlCat.intPrestacionID > 0)
+                {
+                    using (dbRisDA = new RISLiteEntities())
+                    {
+                        //Luego en REL
+                        if (!dbRisDA.tbl_REL_ModalidadPrestacion.Any(x => x.intModalidadID == prestacion.intModalidadID && x.intPrestacionID == mdlCat.intPrestacionID))
+                        {
+                            tbl_REL_ModalidadPrestacion mdlMod = new tbl_REL_ModalidadPrestacion();
+                            mdlMod.bitActivo = prestacion.bitActivo;
+                            mdlMod.datFecha = DateTime.Now;
+                            mdlMod.intPrestacionID = mdlCat.intPrestacionID;
+                            mdlMod.intModalidadID = prestacion.intModalidadID;
+                            mdlMod.vchUserAdmin = user;
+                            dbRisDA.tbl_REL_ModalidadPrestacion.Add(mdlMod);
+                            dbRisDA.SaveChanges();
+                            valido = true;
+                        }
+                        else
+                        {
+                            mensaje += " La relación ya existe.";
+                            valido = false;
+                        }
+                    }
+                }
+            }
+            catch (Exception eSU)
+            {
+                valido = false;
+                mensaje += eSU.Message;
+                Log.EscribeLog("Existe un error en setUser: " + eSU.Message, 3, user);
+            }
+            return valido;
+        }
+
+        #endregion
+
         #region SugerenciasCita
         public List<stp_getCitaDisponible_Result> getSugerenciasCita(clsSugerencia mdlSug, String user)
         {
@@ -3961,310 +4725,5 @@ namespace Fuji.RISLite.DataAccess
             return result;
         }
         #endregion SugerenciasCita
-
-
-        public List<clsEquipo> getCitaEquipos_Sitio(string user, int idmodalidad, int idsitio)
-        {
-            List<clsEquipo> lst = new List<clsEquipo>();
-            try
-            {
-                using (dbRisDA = new RISLiteEntities())
-                {
-                    if (dbRisDA.tbl_CAT_Equipo.Any())
-                    {
-                        var query = dbRisDA.tbl_CAT_Equipo
-                                    .Where(w => w.intModalidadID == idmodalidad && w.intSitioID == idsitio).ToList();
-
-                        if (query != null)
-                        {
-                            if (query.Count > 0)
-                            {
-                                foreach (var item in query)
-                                {
-                                    clsEquipo mdl = new clsEquipo();
-                                    mdl.intEquipoID = (int)item.intEquipoID;
-                                    mdl.intModalidadID = (int)item.intModalidadID;
-                                    mdl.vchNombreEquipo = item.vchNombreEquipo;
-                                    mdl.vchCodigoEquipo = item.vchCodigoEquipo;
-                                    lst.Add(mdl);
-
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception eLT)
-            {
-                Log.EscribeLog("Existe un error en getCitaEquipos: " + eLT.Message, 3, user);
-            }
-            return lst;
-        }
-
-        public string getDescripcionModalidad_Sitio(string user, int modalidad, int idsitio)
-        {
-            string modalidad_descripcion = "";
-            try
-            {
-                using (dbRisDA = new RISLiteEntities())
-                {
-                    if (dbRisDA.tbl_CAT_Modalidad.Any())
-                    {
-                        //var query = dbRisDA.tbl_CAT_Modalidad.Where(x => x.vchCodigo.Contains(modalidad)).ToString();                        
-
-                        var query = (from tblmod in dbRisDA.tbl_CAT_Modalidad
-                                     where tblmod.intModalidadID == modalidad && tblmod.intSitioID == idsitio
-                                     select tblmod.vchCodigo).First();
-
-                        if (query != null)
-                        {
-                            modalidad_descripcion = query;
-                        }
-                    }
-                }
-            }
-            catch (Exception eLT)
-            {
-                Log.EscribeLog("Existe un error en getModalidadAgenda: " + eLT.Message, 3, user);
-            }
-            return modalidad_descripcion;
-        }
-
-        public int getListDuracionGen_Sitio(string user, int modalidad, int idsitio)
-        {
-            int duracion = 0;
-            try
-            {
-                using (dbRisDA = new RISLiteEntities())
-                {
-                    if (dbRisDA.tbl_CAT_Modalidad.Any())
-                    {
-                        //var query = dbRisDA.tbl_CAT_Modalidad.Where(x => x.vchCodigo.Contains(modalidad)).ToString();
-
-
-                        var query = (from tblmod in dbRisDA.tbl_CAT_Modalidad
-                                     where tblmod.intModalidadID == modalidad && tblmod.intSitioID == idsitio
-                                     select tblmod.intDuracionGen).First();
-
-                        if (query != null)
-                        {
-                            duracion = Convert.ToInt32(query);
-                        }
-                    }
-                }
-            }
-            catch (Exception eLT)
-            {
-                Log.EscribeLog("Existe un error en getListDuracionGen: " + eLT.Message, 3, user);
-            }
-            return duracion;
-        }
-
-        public string getListColorModalidad_Sitio(string user, string modalidad, int idsitio)
-        {
-            string color = "";
-            try
-            {
-                using (dbRisDA = new RISLiteEntities())
-                {
-                    if (dbRisDA.tbl_CAT_Modalidad.Any())
-                    {
-                        //var query = dbRisDA.tbl_CAT_Modalidad.Where(x => x.vchCodigo.Contains(modalidad)).ToString();
-
-
-                        var query = (from tblmod in dbRisDA.tbl_CAT_Modalidad
-                                     where tblmod.vchCodigo == modalidad && tblmod.intSitioID == idsitio
-                                     select tblmod.vchColor).First();
-
-                        if (query != null)
-                        {
-                            color = query;
-                        }
-                    }
-                }
-            }
-            catch (Exception eLT)
-            {
-                Log.EscribeLog("Existe un error en getModalidadAgenda: " + eLT.Message, 3, user);
-            }
-            return color;
-        }
-
-        public List<clsEventoCita> getListCitas_Sitio(string user, int idmodalidad, int idsitio)
-        {
-            List<clsEventoCita> lst = new List<clsEventoCita>();
-            try
-            {
-                using (dbRisDA = new RISLiteEntities())
-                {
-                    if (dbRisDA.tbl_CAT_Modalidad.Any())
-                    {
-
-                        //var query = dbRisDA.tbl_CAT_Eventos
-                        //            .Where(w => w.intModalidadID == idmodalidad).ToList();
-
-                        var query = dbRisDA.stp_getBusquedaCita_Sitio(idmodalidad, idsitio).ToList();
-
-
-                        if (query != null)
-                        {
-                            if (query.Count > 0)
-                            {
-                                foreach (var item in query)
-                                {
-                                    clsEventoCita mdl = new clsEventoCita();
-                                    mdl.TaskID = (int)item.intEstudioID;
-                                    mdl.Start = (DateTime)item.datFecha;
-                                    mdl.End = (DateTime)item.datFechaFin;
-                                    mdl.Title = item.vchTitulo;
-                                    mdl.Description = item.vchDescripcion;
-                                    mdl.intModalidadID = (int)item.intModalidadID;
-                                    lst.Add(mdl);
-
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception eLT)
-            {
-                Log.EscribeLog("Existe un error en getListCitas_Sitio: " + eLT.Message, 3, user);
-            }
-            return lst;
-        }
-
-
-        public List<clsEventoCita> getListCitas_en_agenda_Sitio(string user, int idmodalidad, DateTime fecha_Revision, int idsitio)
-        {
-            DateTime dt_fecha_sumada = fecha_Revision.AddDays(+3);
-            //DateTime dt_fecha_restada = fecha_Revision.AddDays(-3);
-
-            List<clsEventoCita> lst = new List<clsEventoCita>();
-            try
-            {
-                using (dbRisDA = new RISLiteEntities())
-                {
-                    if (dbRisDA.tbl_CAT_Modalidad.Any())
-                    {
-                        //var query = dbRisDA.tbl_CAT_Eventos.OrderBy(x => x.Start).Where(x => (x.intModalidadID == idmodalidad && (x.Start >= fecha_Revision && x.Start < dt_fecha_sumada))).ToList();
-
-                        //var query = dbRisDA.stp_getBusquedaCita_Sitio(idmodalidad, idsitio).OrderBy(x => x.datFechaInicio).Where(y => y.intModalidadID == idmodalidad &&
-                        //                                                                                                         y.intEstudioID == idsitio && 
-                        //                                                                                                         y.datFechaInicio >= fecha_Revision
-                        //                                                                                                         && y.datFechaInicio < dt_fecha_sumada).ToList();
-
-                        var query = dbRisDA.stp_getBusquedaCita_Sitio(idmodalidad, idsitio).OrderBy(x => x.datFechaInicio).Where(y => y.datFechaInicio >= fecha_Revision
-                                                                                                                                   && y.datFechaInicio < dt_fecha_sumada).ToList();
-                        if (query != null)
-                        {
-                            if (query.Count > 0)
-                            {
-                                foreach (var item in query)
-                                {
-                                    clsEventoCita mdl = new clsEventoCita();
-                                    mdl.TaskID = (int)item.intEstudioID;
-                                    mdl.Start = (DateTime)item.datFechaInicio;
-                                    mdl.End = (DateTime)item.datFechaFin;
-                                    mdl.Title = item.vchTitulo;
-                                    mdl.Description = item.vchDescripcion;
-                                    mdl.intModalidadID = (int)item.intModalidadID;
-                                    lst.Add(mdl);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception eLT)
-            {
-                Log.EscribeLog("Existe un error en getListCitas_en_agenda: " + eLT.Message, 3, user);
-            }
-            return lst;
-        }
-
-        public List<clsConfScheduler> getListConfigScheduler_Sito(string user, int idsitio)
-        {
-            List<clsConfScheduler> lst = new List<clsConfScheduler>();
-            try
-            {
-                clsConfScheduler mdl = new clsConfScheduler();
-                using (dbRisDA = new RISLiteEntities())
-                {
-                    if (dbRisDA.tbl_CONFIG_Agenda.Any())
-                    {
-                        var query = (from x in dbRisDA.tbl_CONFIG_Agenda
-                                     where x.intSitioID == idsitio
-                                     select new
-                                     {
-                                         x.intConfiguracionAgendaID,
-                                         x.intSitioID,
-                                         x.vchConfiguracionAgenda,
-                                         x.tmeInicioDia,
-                                         x.tmeFinDia,
-                                         x.intIntervalo,
-                                         x.datFecha,
-                                         x.vchUserAdmin
-                                     }).ToList();
-                        if (query != null)
-                        {
-                            if (query.Count > 0)
-                            {
-                                foreach (var item in query)
-                                {
-                                    mdl.intConfiguracionAgendaID = (int)item.intConfiguracionAgendaID;
-                                    mdl.tmeInicioDia = (TimeSpan)item.tmeInicioDia;
-                                    mdl.tmeFinDia = (TimeSpan)item.tmeFinDia;
-                                    mdl.intIntervalo = (int)item.intIntervalo;
-                                    lst.Add(mdl);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception eLT)
-            {
-                Log.EscribeLog("Existe un error en getListConfigScheduler: " + eLT.Message, 3, user);
-            }
-            return lst;
-        }
-
-        public List<clsHoraMuerta> getListHorasMuertas_Sitio(string user, int idsitio)
-        {
-            List<clsHoraMuerta> lst = new List<clsHoraMuerta>();
-            try
-            {
-
-                using (dbRisDA = new RISLiteEntities())
-                {
-                    if (dbRisDA.tbl_CAT_HoraMuerta.Any())
-                    {
-                        var query = dbRisDA.tbl_CAT_HoraMuerta.Where(x => (x.bitActivo == true) && x.intSitioID == idsitio).ToList();
-                        if (query != null)
-                        {
-                            if (query.Count > 0)
-                            {
-                                foreach (var item in query)
-                                {
-                                    clsHoraMuerta mdl = new clsHoraMuerta();
-                                    mdl.intHorasMuertasID = (int)item.intHorasMuertasID;
-                                    mdl.tmeInicio = item.tmeInicio.ToString();
-                                    mdl.tmeFin = item.tmeFin.ToString();
-                                    //mdl.bitRepetir = item.bitRepetir;
-
-                                    lst.Add(mdl);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception eLT)
-            {
-                Log.EscribeLog("Existe un error en getListHorasMuertas: " + eLT.Message, 3, user);
-            }
-            return lst;
-        }
     }
 }
