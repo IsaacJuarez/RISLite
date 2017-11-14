@@ -16,9 +16,7 @@ namespace Fuji.RISLite.Entidades.DataBase
     {
         public tbl_MST_Cita()
         {
-            this.tbl_REL_PacienteCita = new HashSet<tbl_REL_PacienteCita>();
             this.tbl_DET_CitaDinamico = new HashSet<tbl_DET_CitaDinamico>();
-            this.tbl_REL_CitaEstudio = new HashSet<tbl_REL_CitaEstudio>();
             this.tbl_DET_Cita = new HashSet<tbl_DET_Cita>();
         }
     
@@ -29,14 +27,12 @@ namespace Fuji.RISLite.Entidades.DataBase
         public Nullable<System.DateTime> datFechaCita { get; set; }
         public Nullable<bool> bitActivo { get; set; }
         public Nullable<System.DateTime> datFecha { get; set; }
-        public byte[] vchUserAdmin { get; set; }
+        public string vchUserAdmin { get; set; }
     
         public virtual tbl_CAT_EstatusCita tbl_CAT_EstatusCita { get; set; }
         public virtual tbl_CAT_InstitucionProcedencia tbl_CAT_InstitucionProcedencia { get; set; }
-        public virtual ICollection<tbl_REL_PacienteCita> tbl_REL_PacienteCita { get; set; }
         public virtual tbl_CAT_MedicoTratante tbl_CAT_MedicoTratante { get; set; }
         public virtual ICollection<tbl_DET_CitaDinamico> tbl_DET_CitaDinamico { get; set; }
-        public virtual ICollection<tbl_REL_CitaEstudio> tbl_REL_CitaEstudio { get; set; }
         public virtual ICollection<tbl_DET_Cita> tbl_DET_Cita { get; set; }
     }
 }

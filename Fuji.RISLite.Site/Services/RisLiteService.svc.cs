@@ -1648,7 +1648,7 @@ namespace Fuji.RISLite.Site.Services
                 if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
                 {
                     RISLiteDataAccess controller = new RISLiteDataAccess();
-                    response.lstCadenas = controller.getBusquedaPacientes(request.busqueda, request.mdlUser.vchUsuario);
+                    response.lstCadenas = controller.getBusquedaPacientes(request.busqueda, request.intSitioID, request.mdlUser.vchUsuario);
                 }
             }
             catch (Exception egU)
@@ -2193,5 +2193,126 @@ namespace Fuji.RISLite.Site.Services
         }
 
         #endregion
+
+        #region InsertCita
+        public CitaNuevaResponse setCitaNueva(CitaNuevaRequest request)
+        {
+            CitaNuevaResponse response = new CitaNuevaResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    tbl_MST_Cita cita = new tbl_MST_Cita();
+                    response.Success = controller.setCitaNueva(request.mdlPaciente, request.lstAdicionales, request.lstEstudios, request.mdlUser.vchUsuario, ref mensaje, ref cita);
+                    response.cita = cita;
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setCitaNueva: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+        #endregion InsertCita
+
+        #region CitaReporte
+        public List<stp_getCitaReporte_Result> getCitaReporte(CitaReporteRequest request)
+        {
+            List<stp_getCitaReporte_Result> response = new List<stp_getCitaReporte_Result>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getCitaReporte(request.intCitaId, request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egS)
+            {
+                Log.EscribeLog("Existe un error en getCitaReporte: " + egS.Message, 3, "");
+            }
+            return response;
+        }
+
+        public List<clsRepIndicacion> getIndicaciones(CitaReporteRequest request)
+        {
+            List<clsRepIndicacion> response = new List<clsRepIndicacion>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getIndicaciones(request.intPrestacionID, request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egS)
+            {
+                Log.EscribeLog("Existe un error en getIndicaciones: " + egS.Message, 3, "");
+            }
+            return response;
+        }
+
+        public List<clsRepRestriccion> getRestricciones(CitaReporteRequest request)
+        {
+            List<clsRepRestriccion> response = new List<clsRepRestriccion>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getRestricciones(request.intPrestacionID, request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egS)
+            {
+                Log.EscribeLog("Existe un error en getRestricciones: " + egS.Message, 3, "");
+            }
+            return response;
+        }
+        #endregion CitaReporte
+
+        #region CitasGrid
+        public List<stp_getCitas_Result> getCitas(CitaReporteRequest request)
+        {
+            List<stp_getCitas_Result> response = new List<stp_getCitas_Result>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getCitas(request.mdlEstudio,request.mdlUser.intSitioID, request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egS)
+            {
+                Log.EscribeLog("Existe un error en getCitas: " + egS.Message, 3, "");
+            }
+            return response;
+        }
+
+        public CitaReporteResponse setEstatusEstudio(CitaReporteRequest request)
+        {
+            CitaReporteResponse response = new CitaReporteResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setEstatusEstudio(request.intEstudioID, request.intEstatusID, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egS)
+            {
+                Log.EscribeLog("Existe un error en setEstatusEstudio: " + egS.Message, 3, "");
+            }
+            return response;
+        }
+        #endregion CitasGrid
+
     }
 }

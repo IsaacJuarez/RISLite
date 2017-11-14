@@ -19,11 +19,12 @@ namespace Fuji.RISLite.Entidades.DataBase
         public Nullable<int> intAdicionalesID { get; set; }
         public string vchValor { get; set; }
         public Nullable<bool> bitDato { get; set; }
-        public byte[] vchObservaciones { get; set; }
+        public string vchObservaciones { get; set; }
         public Nullable<bool> bitActivo { get; set; }
         public Nullable<System.DateTime> datFecha { get; set; }
         public string vchUserAdmin { get; set; }
     
+        public virtual tbl_MST_Adicionales tbl_MST_Adicionales { get; set; }
         public virtual tbl_MST_Cita tbl_MST_Cita { get; set; }
     }
 }

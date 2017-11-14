@@ -51,11 +51,9 @@ namespace Fuji.RISLite.Entidades.DataBase
         public DbSet<tbl_CAT_Municipio> tbl_CAT_Municipio { get; set; }
         public DbSet<tbl_DET_DireccionPaciente> tbl_DET_DireccionPaciente { get; set; }
         public DbSet<tbl_DET_Paciente> tbl_DET_Paciente { get; set; }
-        public DbSet<tbl_MST_Cita> tbl_MST_Cita { get; set; }
         public DbSet<tbl_REL_IdentificacionPaciente> tbl_REL_IdentificacionPaciente { get; set; }
         public DbSet<tbl_REL_PacienteCita> tbl_REL_PacienteCita { get; set; }
         public DbSet<tbl_CAT_MedicoTratante> tbl_CAT_MedicoTratante { get; set; }
-        public DbSet<tbl_DET_CitaDinamico> tbl_DET_CitaDinamico { get; set; }
         public DbSet<tbl_DET_Cuestionario> tbl_DET_Cuestionario { get; set; }
         public DbSet<tbl_DET_Restriccion> tbl_DET_Restriccion { get; set; }
         public DbSet<tbl_DET_IndicacionPrestacion> tbl_DET_IndicacionPrestacion { get; set; }
@@ -63,7 +61,6 @@ namespace Fuji.RISLite.Entidades.DataBase
         public DbSet<tbl_CAT_TipoBoton> tbl_CAT_TipoBoton { get; set; }
         public DbSet<tbl_MST_Estudio> tbl_MST_Estudio { get; set; }
         public DbSet<tbl_REL_CitaEstudio> tbl_REL_CitaEstudio { get; set; }
-        public DbSet<tbl_DET_Cita> tbl_DET_Cita { get; set; }
         public DbSet<tbl_CAT_DiaFeriado> tbl_CAT_DiaFeriado { get; set; }
         public DbSet<tbl_CAT_DiaSemana> tbl_CAT_DiaSemana { get; set; }
         public DbSet<tbl_CAT_Eventos> tbl_CAT_Eventos { get; set; }
@@ -81,6 +78,9 @@ namespace Fuji.RISLite.Entidades.DataBase
         public DbSet<tbl_CAT_HoraMuerta> tbl_CAT_HoraMuerta { get; set; }
         public DbSet<tbl_CAT_DuracionModalidad> tbl_CAT_DuracionModalidad { get; set; }
         public DbSet<tbl_REL_DiaSemana> tbl_REL_DiaSemana { get; set; }
+        public DbSet<tbl_MST_Cita> tbl_MST_Cita { get; set; }
+        public DbSet<tbl_DET_CitaDinamico> tbl_DET_CitaDinamico { get; set; }
+        public DbSet<tbl_DET_Cita> tbl_DET_Cita { get; set; }
     
         public virtual ObjectResult<stp_updateCatEstatus_Result> stp_updateCatEstatus(Nullable<int> intCatalogoID, Nullable<bool> bitActivo, Nullable<int> intPrimaryKey)
         {
@@ -123,15 +123,6 @@ namespace Fuji.RISLite.Entidades.DataBase
                 new ObjectParameter("intTipoUsuarioID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getListaPaginas_Result>("stp_getListaPaginas", intTipoUsuarioIDParameter);
-        }
-    
-        public virtual ObjectResult<stp_getBusquedaPaciente_Result> stp_getBusquedaPaciente(string vchCadena)
-        {
-            var vchCadenaParameter = vchCadena != null ?
-                new ObjectParameter("vchCadena", vchCadena) :
-                new ObjectParameter("vchCadena", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getBusquedaPaciente_Result>("stp_getBusquedaPaciente", vchCadenaParameter);
         }
     
         public virtual ObjectResult<stp_getBusquedaEstudio_Result> stp_getBusquedaEstudio(string estudio)
@@ -248,6 +239,53 @@ namespace Fuji.RISLite.Entidades.DataBase
                 new ObjectParameter("intSitioID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getCitaDisponible_Result>("stp_getCitaDisponible", datFechaInicioParameter, datFechaFinalParameter, intModalidadParameter, vchDiasParameter, vchHorasParameter, intSitioIDParameter);
+        }
+    
+        public virtual ObjectResult<stp_getBusquedaPaciente_Result> stp_getBusquedaPaciente(string vchCadena, Nullable<int> intSitioID)
+        {
+            var vchCadenaParameter = vchCadena != null ?
+                new ObjectParameter("vchCadena", vchCadena) :
+                new ObjectParameter("vchCadena", typeof(string));
+    
+            var intSitioIDParameter = intSitioID.HasValue ?
+                new ObjectParameter("intSitioID", intSitioID) :
+                new ObjectParameter("intSitioID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getBusquedaPaciente_Result>("stp_getBusquedaPaciente", vchCadenaParameter, intSitioIDParameter);
+        }
+    
+        public virtual ObjectResult<stp_getCitaReporte_Result> stp_getCitaReporte(Nullable<int> intCitaID)
+        {
+            var intCitaIDParameter = intCitaID.HasValue ?
+                new ObjectParameter("intCitaID", intCitaID) :
+                new ObjectParameter("intCitaID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getCitaReporte_Result>("stp_getCitaReporte", intCitaIDParameter);
+        }
+    
+        public virtual ObjectResult<stp_getCitas_Result> stp_getCitas(string vchNombre, Nullable<int> intModalidadID, Nullable<System.DateTime> datFechaInicio, Nullable<System.DateTime> datFechaFin, Nullable<int> intSitioID)
+        {
+            var vchNombreParameter = vchNombre != null ?
+                new ObjectParameter("vchNombre", vchNombre) :
+                new ObjectParameter("vchNombre", typeof(string));
+    
+            var intModalidadIDParameter = intModalidadID.HasValue ?
+                new ObjectParameter("intModalidadID", intModalidadID) :
+                new ObjectParameter("intModalidadID", typeof(int));
+    
+            var datFechaInicioParameter = datFechaInicio.HasValue ?
+                new ObjectParameter("datFechaInicio", datFechaInicio) :
+                new ObjectParameter("datFechaInicio", typeof(System.DateTime));
+    
+            var datFechaFinParameter = datFechaFin.HasValue ?
+                new ObjectParameter("datFechaFin", datFechaFin) :
+                new ObjectParameter("datFechaFin", typeof(System.DateTime));
+    
+            var intSitioIDParameter = intSitioID.HasValue ?
+                new ObjectParameter("intSitioID", intSitioID) :
+                new ObjectParameter("intSitioID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getCitas_Result>("stp_getCitas", vchNombreParameter, intModalidadIDParameter, datFechaInicioParameter, datFechaFinParameter, intSitioIDParameter);
         }
     }
 }

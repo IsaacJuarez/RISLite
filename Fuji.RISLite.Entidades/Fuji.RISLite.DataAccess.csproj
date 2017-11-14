@@ -63,6 +63,12 @@
     <Compile Include="DataBase\stp_getCitaDisponible_Result.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
+    <Compile Include="DataBase\stp_getCitaReporte_Result.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataBase\stp_getCitas_Result.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
     <Compile Include="DataBase\stp_getEstudiosPaciente_Result.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>

@@ -2382,8 +2382,40 @@ namespace Fuji.RISLite.DataAccess
                 tbl_MST_Paciente _paciente = new tbl_MST_Paciente();
                 using (dbRisDA = new RISLiteEntities())
                 {
-                    if (!dbRisDA.tbl_MST_Paciente.Any(x => x.vchNombre.ToUpper() == mdlPaciente.vchNombre.ToUpper() && x.vchApellidos.ToUpper() == mdlPaciente.vchApellidos.ToUpper()
-                     && x.intGeneroID == mdlPaciente.intGeneroID && x.datFechaNac == mdlPaciente.datFechaNac && (bool)x.bitActivo))
+                    var query = (from item in dbRisDA.tbl_REL_SitioPaciente
+                                 join pac in dbRisDA.tbl_MST_Paciente on item.intPacienteID equals pac.intPacienteID
+                                 where item.intSitioID == mdlPaciente.intSitioID && (bool)pac.bitActivo
+                                 select new
+                                 {
+                                     vchNombre = pac.vchNombre,
+                                     vchApellidos = pac.vchApellidos,
+                                     intGeneroID = pac.intGeneroID,
+                                     datFechaNac = pac.datFechaNac
+                                 }).ToList();
+                    if (query != null)
+                    {
+                        if (!query.Any(x => x.vchNombre.ToUpper() == mdlPaciente.vchNombre.ToUpper() && x.vchApellidos.ToUpper() == mdlPaciente.vchApellidos.ToUpper()
+                     && x.intGeneroID == mdlPaciente.intGeneroID && x.datFechaNac == mdlPaciente.datFechaNac))
+                        {
+                            _paciente.bitActivo = true;
+                            _paciente.datFecha = DateTime.Now;
+                            _paciente.datFechaNac = mdlPaciente.datFechaNac;
+                            _paciente.intGeneroID = mdlPaciente.intGeneroID;
+                            _paciente.vchApellidos = mdlPaciente.vchApellidos;
+                            _paciente.vchNombre = mdlPaciente.vchNombre;
+                            _paciente.vchUserAdmin = user;
+                            dbRisDA.tbl_MST_Paciente.Add(_paciente);
+                            dbRisDA.SaveChanges();
+                            validoPaciente = true;
+                        }
+                        else
+                        {
+                            validoPaciente = false;
+                            mensaje += " El paciente ya existe, favor de verificar.";
+                            valido = false;
+                        }
+                    }
+                    else
                     {
                         _paciente.bitActivo = true;
                         _paciente.datFecha = DateTime.Now;
@@ -2396,103 +2428,149 @@ namespace Fuji.RISLite.DataAccess
                         dbRisDA.SaveChanges();
                         validoPaciente = true;
                     }
-                    else
-                    {
-                        validoPaciente = false;
-                        mensaje += " El paciente ya existe, favor de verificar.";
-                        valido = false;
-                    }
                 }
 
                 if (validoPaciente && _paciente.intPacienteID > 0)
                 {
-                    //Direccion
-                    using (dbRisDA = new RISLiteEntities())
+                    //REl Sitio_Paciente
+                    try
                     {
-                        if (!dbRisDA.tbl_DET_DireccionPaciente.Any(x => x.intPacienteID == _paciente.intPacienteID))
+                        using (dbRisDA = new RISLiteEntities())
                         {
-                            tbl_DET_DireccionPaciente dir = new tbl_DET_DireccionPaciente();
-                            dir.bitActivo = true;
-                            dir.datFecha = DateTime.Now;
-                            dir.intCodigoPostalID = mdlDireccion.intCodigoPostalID;
-                            dir.intPacienteID = _paciente.intPacienteID;
-                            dir.vchCalle = mdlDireccion.vchCalle;
-                            dir.vchNumero = mdlDireccion.vchNumero;
-                            dir.vchUserAdmin = user;
-                            dbRisDA.tbl_DET_DireccionPaciente.Add(dir);
-                            dbRisDA.SaveChanges();
+                            tbl_REL_SitioPaciente relSitio = new tbl_REL_SitioPaciente();
+                            if (!dbRisDA.tbl_REL_SitioPaciente.Any(x => x.intSitioID == mdlPaciente.intSitioID && x.intPacienteID == _paciente.intPacienteID))
+                            {
+                                relSitio.bitActivo = true;
+                                relSitio.datFecha = DateTime.Now;
+                                relSitio.intPacienteID = _paciente.intPacienteID;
+                                relSitio.intSitioID = mdlPaciente.intSitioID;
+                                relSitio.vchUserAdmin = user;
+                                dbRisDA.tbl_REL_SitioPaciente.Add(relSitio);
+                                dbRisDA.SaveChanges();
+                            }
                         }
                     }
-                    //Detalle
-                    using (dbRisDA = new RISLiteEntities())
+                    catch (Exception eINsert)
                     {
-                        if (!dbRisDA.tbl_DET_Paciente.Any(x => x.intPacienteID == _paciente.intPacienteID))
+                        Log.EscribeLog("Existe un error al insertar en tbl_REL_SitioPaciente: " + eINsert.Message, 3, user);
+                    }
+
+
+                    //Direccion
+                    try
+                    {
+                        using (dbRisDA = new RISLiteEntities())
                         {
-                            tbl_DET_Paciente pac = new tbl_DET_Paciente();
-                            pac.bitActivo = true;
-                            pac.datFecha = DateTime.Now;
-                            pac.intPacienteID = _paciente.intPacienteID;
-                            pac.vchContactoAcompaniante = "";
-                            pac.vchEmail = mdlPaciente.vchEmail;
-                            pac.vchNombreAcompaniante = "";
-                            pac.vchNumeroContacto = mdlPaciente.vchNumeroContacto;
-                            pac.vchParentesco = "";
-                            pac.vchUserAdmin = user;
-                            dbRisDA.tbl_DET_Paciente.Add(pac);
-                            dbRisDA.SaveChanges();
+                            if (!dbRisDA.tbl_DET_DireccionPaciente.Any(x => x.intPacienteID == _paciente.intPacienteID))
+                            {
+                                tbl_DET_DireccionPaciente dir = new tbl_DET_DireccionPaciente();
+                                dir.bitActivo = true;
+                                dir.datFecha = DateTime.Now;
+                                dir.intCodigoPostalID = mdlDireccion.intCodigoPostalID;
+                                dir.intPacienteID = _paciente.intPacienteID;
+                                dir.vchCalle = mdlDireccion.vchCalle;
+                                dir.vchNumero = mdlDireccion.vchNumero;
+                                dir.vchUserAdmin = user;
+                                dbRisDA.tbl_DET_DireccionPaciente.Add(dir);
+                                dbRisDA.SaveChanges();
+                            }
                         }
+                    }
+                    catch (Exception eINsert)
+                    {
+                        Log.EscribeLog("Existe un error al insertar en tbl_DET_DireccionPaciente: " + eINsert.Message, 3, user);
+                    }
+                    //Detalle
+                    try
+                    {
+                        using (dbRisDA = new RISLiteEntities())
+                        {
+                            if (!dbRisDA.tbl_DET_Paciente.Any(x => x.intPacienteID == _paciente.intPacienteID))
+                            {
+                                tbl_DET_Paciente pac = new tbl_DET_Paciente();
+                                pac.bitActivo = true;
+                                pac.datFecha = DateTime.Now;
+                                pac.intPacienteID = _paciente.intPacienteID;
+                                pac.vchContactoAcompaniante = "";
+                                pac.vchEmail = mdlPaciente.vchEmail;
+                                pac.vchNombreAcompaniante = "";
+                                pac.vchNumeroContacto = mdlPaciente.vchNumeroContacto;
+                                pac.vchParentesco = "";
+                                pac.vchUserAdmin = user;
+                                dbRisDA.tbl_DET_Paciente.Add(pac);
+                                dbRisDA.SaveChanges();
+                            }
+                        }
+                    }
+                    catch (Exception eINsert)
+                    {
+                        Log.EscribeLog("Existe un error al insertar en tbl_DET_Paciente: " + eINsert.Message, 3, user);
                     }
 
                     //Identificaciones
-                    foreach (tbl_REL_IdentificacionPaciente mdlIdent in lstIdent)
+                    try
                     {
-                        if (mdlIdent != null)
+                        foreach (tbl_REL_IdentificacionPaciente mdlIdent in lstIdent)
                         {
-                            if (mdlIdent.intIdentificacionID != int.MinValue && mdlIdent.vchValor != "")
+                            if (mdlIdent != null)
                             {
-                                using (dbRisDA = new RISLiteEntities())
+                                if (mdlIdent.intIdentificacionID != int.MinValue && mdlIdent.vchValor != "")
                                 {
-                                    if (!dbRisDA.tbl_REL_IdentificacionPaciente.Any(x => x.intIdentificacionID == (int)mdlIdent.intIdentificacionID && x.vchValor == mdlIdent.vchValor))
+                                    using (dbRisDA = new RISLiteEntities())
                                     {
-                                        tbl_REL_IdentificacionPaciente mdl = new tbl_REL_IdentificacionPaciente();
-                                        mdl.bitActivo = true;
-                                        mdl.datFecha = DateTime.Now;
-                                        mdl.intIdentificacionID = mdlIdent.intIdentificacionID;
-                                        mdl.intPacienteID = _paciente.intPacienteID;
-                                        mdl.vchValor = mdlIdent.vchValor;
-                                        mdl.vchUserAdmin = user;
-                                        dbRisDA.tbl_REL_IdentificacionPaciente.Add(mdl);
-                                        dbRisDA.SaveChanges();
+                                        if (!dbRisDA.tbl_REL_IdentificacionPaciente.Any(x => x.intIdentificacionID == (int)mdlIdent.intIdentificacionID && x.vchValor == mdlIdent.vchValor))
+                                        {
+                                            tbl_REL_IdentificacionPaciente mdl = new tbl_REL_IdentificacionPaciente();
+                                            mdl.bitActivo = true;
+                                            mdl.datFecha = DateTime.Now;
+                                            mdl.intIdentificacionID = mdlIdent.intIdentificacionID;
+                                            mdl.intPacienteID = _paciente.intPacienteID;
+                                            mdl.vchValor = mdlIdent.vchValor;
+                                            mdl.vchUserAdmin = user;
+                                            dbRisDA.tbl_REL_IdentificacionPaciente.Add(mdl);
+                                            dbRisDA.SaveChanges();
+                                        }
                                     }
                                 }
                             }
                         }
                     }
+                    catch (Exception eINsert)
+                    {
+                        Log.EscribeLog("Existe un error al insertar en tbl_REL_IdentificacionPaciente: " + eINsert.Message, 3, user);
+                    }
 
                     //Variables Adicionales
-                    foreach (tbl_DET_PacienteDinamico mdlAdic in lstVarAdic)
+                    try
                     {
-                        if (mdlAdic != null)
+                        foreach (tbl_DET_PacienteDinamico mdlAdic in lstVarAdic)
                         {
-                            if (mdlAdic.intVarAdiPacienteID != int.MinValue && mdlAdic.vchValorVar != "")
+                            if (mdlAdic != null)
                             {
-                                using (dbRisDA = new RISLiteEntities())
+                                if (mdlAdic.intVarAdiPacienteID != int.MinValue && mdlAdic.vchValorVar != "")
                                 {
-                                    if (!dbRisDA.tbl_DET_PacienteDinamico.Any(x => x.intVarAdiPacienteID == (int)mdlAdic.intVarAdiPacienteID && x.vchValorVar == mdlAdic.vchValorVar))
+                                    using (dbRisDA = new RISLiteEntities())
                                     {
-                                        tbl_DET_PacienteDinamico mdl = new tbl_DET_PacienteDinamico();
-                                        mdl.bitActivo = true;
-                                        mdl.datFecha = DateTime.Now;
-                                        mdl.intPacienteID = _paciente.intPacienteID;
-                                        mdl.intVarAdiPacienteID = mdlAdic.intVarAdiPacienteID;
-                                        mdl.vchValorVar = mdlAdic.vchValorVar;
-                                        mdl.vchUserAdmin = user;
-                                        dbRisDA.tbl_DET_PacienteDinamico.Add(mdl);
-                                        dbRisDA.SaveChanges();
+                                        if (!dbRisDA.tbl_DET_PacienteDinamico.Any(x => x.intVarAdiPacienteID == (int)mdlAdic.intVarAdiPacienteID && x.vchValorVar == mdlAdic.vchValorVar))
+                                        {
+                                            tbl_DET_PacienteDinamico mdl = new tbl_DET_PacienteDinamico();
+                                            mdl.bitActivo = true;
+                                            mdl.datFecha = DateTime.Now;
+                                            mdl.intPacienteID = _paciente.intPacienteID;
+                                            mdl.intVarAdiPacienteID = mdlAdic.intVarAdiPacienteID;
+                                            mdl.vchValorVar = mdlAdic.vchValorVar;
+                                            mdl.vchUserAdmin = user;
+                                            dbRisDA.tbl_DET_PacienteDinamico.Add(mdl);
+                                            dbRisDA.SaveChanges();
+                                        }
                                     }
                                 }
                             }
                         }
+                    }
+                    catch (Exception eINsert)
+                    {
+                        Log.EscribeLog("Existe un error al insertar en tbl_DET_PacienteDinamico: " + eINsert.Message, 3, user);
                     }
 
                     intPacienteID = Convert.ToInt32(_paciente.intPacienteID);
@@ -2674,14 +2752,14 @@ namespace Fuji.RISLite.DataAccess
             return valido;
         }
 
-        public List<string> getBusquedaPacientes(string busqueda, string user)
+        public List<string> getBusquedaPacientes(string busqueda, int intSitioID, string user)
         {
             List<string> lst = new List<string>();
             try
             {
                 using (dbRisDA = new RISLiteEntities())
                 {
-                    var query = dbRisDA.stp_getBusquedaPaciente(busqueda.ToUpper()).ToList();
+                    var query = dbRisDA.stp_getBusquedaPaciente(busqueda.ToUpper(), intSitioID).ToList();
                     if (query != null)
                     {
                         if(query.Count> 0)
@@ -4370,7 +4448,7 @@ namespace Fuji.RISLite.DataAccess
             {
                 using (dbRisDA = new RISLiteEntities())
                 {
-                    if (dbRisDA.tbl_MST_Adicionales.Any(x => x.intTipoAdicional == intTipoAdicional))
+                    if (dbRisDA.tbl_MST_Adicionales.Any(x => x.intTipoAdicional == intTipoAdicional && x.intSitioID == intSitioID))
                     {
                         var query = (from adi in dbRisDA.tbl_MST_Adicionales
                                      join catBoton in dbRisDA.tbl_CAT_TipoBoton on adi.intTipoBotonID equals catBoton.intTipoBotonID
@@ -4563,7 +4641,6 @@ namespace Fuji.RISLite.DataAccess
             bool valido = false;
             try
             {
-
                 using (dbRisDA = new RISLiteEntities())
                 {
                     if (dbRisDA.tbl_MST_Adicionales.Any(x => x.intAdicionalesID == intAdicionalesID))
@@ -4725,5 +4802,347 @@ namespace Fuji.RISLite.DataAccess
             return result;
         }
         #endregion SugerenciasCita
+
+        #region InsertCita
+        public bool setCitaNueva(clsPaciente paciente, List<clsAdicionales> lstAdicionales, List<clsEstudioNuevaCita> lstEstudios, string user, ref string mensaje, ref tbl_MST_Cita cita)
+        {
+            bool valido = false;
+            bool validCita = false;
+            bool validRELPacienteCita = false;
+            bool validoDetCita = false;
+            bool validEstudioCita = false;
+            try
+            {
+                tbl_MST_Cita _cita = new tbl_MST_Cita();
+                //Cita
+                try
+                {
+                    using (dbRisDA = new RISLiteEntities())
+                    {
+                        _cita.bitActivo = true;
+                        _cita.datFecha = DateTime.Now;
+                        _cita.datFechaCita = DateTime.Now;
+                        _cita.intEstatusCita = 1;//Agendado
+                        _cita.vchUserAdmin = user;
+                        dbRisDA.tbl_MST_Cita.Add(_cita);
+                        dbRisDA.SaveChanges();
+                        validCita = true;
+                    }
+                }
+                catch (Exception eMSTCita)
+                {
+                    validCita = false;
+                    mensaje += eMSTCita.Message;
+                    Log.EscribeLog("Existe un error al insertar en tbl_MST_Cita: " + eMSTCita.Message, 3, user);
+                }
+
+                if (_cita.intCitaID > 0)
+                {
+                    cita = _cita;
+                    //REL_PacienteCita
+                    try
+                    {
+                        using (dbRisDA = new RISLiteEntities())
+                        {
+                            if (!dbRisDA.tbl_REL_PacienteCita.Any(x => x.intCitaID == _cita.intCitaID && x.intPacienteID == paciente.intPacienteID))
+                            {
+                                tbl_REL_PacienteCita relCitaPac = new tbl_REL_PacienteCita();
+                                relCitaPac.bitActivo = true;
+                                relCitaPac.datFecha = DateTime.Now;
+                                relCitaPac.intCitaID = _cita.intCitaID;
+                                relCitaPac.intPacienteID = paciente.intPacienteID;
+                                relCitaPac.vchUserAdmin = user;
+                                dbRisDA.tbl_REL_PacienteCita.Add(relCitaPac);
+                                dbRisDA.SaveChanges();
+                                validRELPacienteCita = true;
+                            }
+                            else
+                            {
+                                validRELPacienteCita = false;
+                                mensaje += "Ya existe la relación del paciente y la cita.";
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        validRELPacienteCita = false;
+                        valido = false;
+                        mensaje += " " + e.Message;
+                        Log.EscribeLog("Existe un error en tbl_REL_PacienteCita: " + e.Message, 3, user);
+                    }
+
+                    //det_Cita
+                    try
+                    {
+                        if (lstAdicionales.Count > 0)
+                        {
+                            foreach (clsAdicionales item in lstAdicionales)
+                            {
+                                tbl_DET_Cita detCita = new tbl_DET_Cita();
+                                using (dbRisDA = new RISLiteEntities())
+                                {
+                                    if (!dbRisDA.tbl_DET_Cita.Any(x => x.intAdicionalesID == item.intAdicionalesID && x.intCitaID == _cita.intCitaID))
+                                    {
+
+                                        detCita.bitActivo = true;
+                                        detCita.datFecha = DateTime.Now;
+                                        detCita.intCitaID = _cita.intCitaID;
+                                        detCita.intAdicionalesID = item.intAdicionalesID;
+                                        if (item.vchObservaciones != "")
+                                            detCita.vchObservaciones = item.vchObservaciones;
+                                        detCita.vchUserAdmin = user;
+                                        detCita.vchValor = item.vchValor;
+                                        dbRisDA.tbl_DET_Cita.Add(detCita);
+                                        dbRisDA.SaveChanges();
+                                    }
+                                    else
+                                    {
+
+                                        detCita = dbRisDA.tbl_DET_Cita.First(x => x.intAdicionalesID == item.intAdicionalesID && x.intCitaID == _cita.intCitaID);
+                                        detCita.vchValor = item.vchValor;
+                                        detCita.datFecha = DateTime.Now;
+                                        detCita.vchUserAdmin = user;
+                                        if (item.vchObservaciones != "")
+                                            detCita.vchObservaciones = item.vchObservaciones;
+                                        dbRisDA.SaveChanges();
+                                    }
+                                    validoDetCita = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            validoDetCita = true;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        validoDetCita = false;
+                        Log.EscribeLog("Existe un error en tbl_REL_PacienteCita: " + e.Message, 3, user);
+                    }
+
+                    //Estudios
+                    try
+                    {
+                        if (lstEstudios.Count > 0)
+                        {
+                            foreach (clsEstudioNuevaCita item in lstEstudios)
+                            {
+                                tbl_MST_Estudio estudio = new tbl_MST_Estudio();
+                                using (dbRisDA = new RISLiteEntities())
+                                {
+                                    estudio.bitActivo = true;
+                                    estudio.datFecha = DateTime.Now;
+                                    estudio.datFechaFin = item.fechaFin;
+                                    estudio.datFechaInicio = item.fechaInicio;
+                                    estudio.intEstatusEstudio = 1;
+                                    estudio.intRELModPres = item.intRelModPres;
+                                    estudio.vchDescripcion = paciente.vchNombre + " " + paciente.vchApellidos;
+                                    estudio.vchTitulo = item.vchTitulo;
+                                    estudio.vchUserAdmin = user;
+                                    dbRisDA.tbl_MST_Estudio.Add(estudio);
+                                    dbRisDA.SaveChanges();
+                                }
+
+                                if (estudio.intEstudioID > 0)
+                                {
+                                    using (dbRisDA = new RISLiteEntities())
+                                    {
+                                        if (!dbRisDA.tbl_REL_CitaEstudio.Any(x => x.intCitaID == _cita.intCitaID && x.intEstudioID == estudio.intEstudioID))
+                                        {
+                                            tbl_REL_CitaEstudio relCitaEst = new tbl_REL_CitaEstudio();
+                                            relCitaEst.bitActivo = true;
+                                            relCitaEst.datFecha = DateTime.Now;
+                                            relCitaEst.intCitaID = _cita.intCitaID;
+                                            relCitaEst.intEstudioID = estudio.intEstudioID;
+                                            relCitaEst.vchUserAdmin = user;
+                                            dbRisDA.tbl_REL_CitaEstudio.Add(relCitaEst);
+                                            dbRisDA.SaveChanges();
+                                        }
+                                    }
+                                }
+                                validEstudioCita = true;
+                            }
+                        }
+                        else
+                        {
+                            validEstudioCita = true;
+                        }
+                    }
+                    catch (Exception eEstudios)
+                    {
+                        validEstudioCita = false;
+                        Log.EscribeLog("Existe un error al insertar los estudios: " + eEstudios.Message, 3, user);
+                    }
+                }
+                if (validEstudioCita && validoDetCita && validRELPacienteCita && validCita)
+                    valido = true;
+                else
+                    valido = false;
+            }
+            catch (Exception esCN)
+            {
+                valido = false;
+                Log.EscribeLog("Existe un error en setCitaNueva: " + esCN.Message, 3, user);
+            }
+            return valido;
+        }
+
+        #endregion InsertCita
+
+        #region citaReporte
+        public List<stp_getCitaReporte_Result> getCitaReporte(int intCitaID, String user)
+        {
+            List<stp_getCitaReporte_Result> result = new List<stp_getCitaReporte_Result>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    var query = dbRisDA.stp_getCitaReporte(intCitaID).ToList();
+                    if (query != null)
+                    {
+                        if (query.Count > 0)
+                        {
+                            result.AddRange(query);
+                        }
+                    }
+                }
+            }
+            catch (Exception egS)
+            {
+                result = null;
+                Log.EscribeLog("Existe un error en getCitaReporte: " + egS.Message, 3, user);
+            }
+            return result;
+        }
+
+        public List<clsRepIndicacion> getIndicaciones(int intPrestacionID,string user)
+        {
+            List<clsRepIndicacion> result = new List<clsRepIndicacion>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_DET_IndicacionPrestacion.Any(x => x.intPrestacionID == intPrestacionID))
+                    {
+                        var query = (dbRisDA.tbl_DET_IndicacionPrestacion.Where(x => x.intPrestacionID == intPrestacionID)).ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach(tbl_DET_IndicacionPrestacion indica in query)
+                                {
+                                    clsRepIndicacion rep = new clsRepIndicacion();
+                                    rep.vchIndicacion = indica.vchIndicacion;
+                                    result.Add(rep);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception egS)
+            {
+                result = null;
+                Log.EscribeLog("Existe un error en getIndicaciones: " + egS.Message, 3, user);
+            }
+            return result;
+        }
+
+        public List<clsRepRestriccion> getRestricciones(int intPrestacionID, string user)
+        {
+            List<clsRepRestriccion> result = new List<clsRepRestriccion>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_DET_Restriccion.Any(x => x.intPrestacionID == intPrestacionID))
+                    {
+                        var query = (dbRisDA.tbl_DET_Restriccion.Where(x => x.intPrestacionID == intPrestacionID)).ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (tbl_DET_Restriccion indica in query)
+                                {
+                                    clsRepRestriccion rep = new clsRepRestriccion();
+                                    rep.vchRestriccion = indica.vchNombreReestriccion;
+                                    result.Add(rep);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception egS)
+            {
+                result = null;
+                Log.EscribeLog("Existe un error en getRestricciones: " + egS.Message, 3, user);
+            }
+            return result;
+        }
+
+        #endregion citaReporte
+
+
+        #region CitasGrid
+        public List<stp_getCitas_Result> getCitas(clsEstudioCita busqueda, int intSitioID, String user)
+        {
+            List<stp_getCitas_Result> result = new List<stp_getCitas_Result>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    var query = dbRisDA.stp_getCitas(busqueda.vchNombrePaciente, busqueda.intModalidadID, busqueda.datFechaCita, busqueda.datFechaCitaFin, intSitioID).ToList();
+                    if (query != null)
+                    {
+                        if (query.Count > 0)
+                        {
+                            result.AddRange(query);
+                        }
+                    }
+                }
+            }
+            catch (Exception egS)
+            {
+                result = null;
+                Log.EscribeLog("Existe un error en getCitas: " + egS.Message, 3, user);
+            }
+            return result;
+        }
+
+        public bool setEstatusEstudio(int intEstudioID, int intEstatusID, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_MST_Estudio.Any(x => x.intEstudioID == intEstudioID))
+                    {
+                        tbl_MST_Estudio mdlEstudio = new tbl_MST_Estudio();
+                        mdlEstudio = dbRisDA.tbl_MST_Estudio.First(x => x.intRELModPres == intEstudioID);
+                        mdlEstudio.datFecha = DateTime.Today;
+                        mdlEstudio.vchUserAdmin = user;
+                        mdlEstudio.intEstatusEstudio = intEstatusID;
+                        dbRisDA.SaveChanges();
+                        valido = true;
+                    }
+                    else
+                    {
+                        mensaje = "El usuario no existe.";
+                        valido = false;
+                    }
+                }
+            }
+            catch (Exception eSU)
+            {
+                valido = false;
+                mensaje = eSU.Message;
+                Log.EscribeLog("Existe un error en setEstatusUsuario: " + eSU.Message, 3, user);
+            }
+            return valido;
+        }
+        #endregion CitasGrid
     }
 }

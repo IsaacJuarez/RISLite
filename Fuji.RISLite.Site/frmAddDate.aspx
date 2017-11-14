@@ -576,6 +576,15 @@
                 </UpdatedControls>
             </telerik:AjaxSetting>
 
+            <telerik:AjaxSetting AjaxControlID="txtBusquedaPaciente">
+                <UpdatedControls>
+                    <telerik:AjaxUpdatedControl ControlID="lblIDs" />
+                    <telerik:AjaxUpdatedControl ControlID="txtNombrePaciente" />
+                    <telerik:AjaxUpdatedControl ControlID="txtApellidos" />
+                    <telerik:AjaxUpdatedControl ControlID="Date1" />
+                </UpdatedControls>
+            </telerik:AjaxSetting>
+
             <telerik:AjaxSetting AjaxControlID="RadAjaxPanel1">
                 <UpdatedControls>
                     <telerik:AjaxUpdatedControl ControlID="txtBusquedaEstudio" />
@@ -589,6 +598,13 @@
                 <UpdatedControls><telerik:AjaxUpdatedControl  ControlID="txtBusquedaEstudio"/></UpdatedControls>   
                    <UpdatedControls><telerik:AjaxUpdatedControl  ControlID="AutoCompleteExtender1"/></UpdatedControls>         
             </telerik:AjaxSetting>--%>
+
+            <telerik:AjaxSetting AjaxControlID="btnAddCita">
+                <UpdatedControls>
+                    <telerik:AjaxUpdatedControl ControlID="grvEstudios" />
+                    <telerik:AjaxUpdatedControl ControlID="radAjaxPanelPaciente" />
+                </UpdatedControls>
+            </telerik:AjaxSetting>
         </AjaxSettings>
     </telerik:RadAjaxManager>
 
@@ -601,7 +617,16 @@
                 var id_seleccion = seleccion.split("|");
 
                 $find("<%= RadAjaxPanel1.ClientID%>").ajaxRequestWithTarget("<%= RadAjaxPanel1.UniqueID %>", id_seleccion[0]);
-             }
+            }
+
+            function autoCompletePaciente_ItemSelected(sender, args) {
+                //__doPostBack(sender.get_element().name, "");               
+
+                var seleccion = args._text;
+                var id_seleccion = seleccion.split("|");
+
+                $find("<%= radAjaxPanelPaciente.ClientID%>").ajaxRequestWithTarget("<%= radAjaxPanelPaciente.UniqueID %>", id_seleccion[0]);
+            }
         </script>
     </telerik:RadScriptBlock>
 
@@ -633,7 +658,7 @@
                                     <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 form-search">
                                         <span class="input-icon" style="width: 100%">
                                             <asp:AutoCompleteExtender ID="acxBusqueda" runat="server" TargetControlID="txtBusquedaPaciente" MinimumPrefixLength="1" EnableCaching="true" CompletionSetCount="1"
-                                                CompletionInterval="500" ServiceMethod="obtenerPacienteBusqueda" CompletionListCssClass="completionList" CompletionListItemCssClass="listItem" OnClientItemSelected="autoCompleteEx_ItemSelected"
+                                                CompletionInterval="500" ServiceMethod="obtenerPacienteBusqueda" CompletionListCssClass="completionList" CompletionListItemCssClass="listItem" OnClientItemSelected="autoCompletePaciente_ItemSelected"
                                                 CompletionListHighlightedItemCssClass="itemHighlighted">
                                             </asp:AutoCompleteExtender>
                                             <asp:TextBox ID="txtBusquedaPaciente" runat="server" CssClass="nav-search-input" placeholder="Busquéda Paciente..."
@@ -648,6 +673,7 @@
                                     </div>
                                 </div>
                                 <hr />
+                                <telerik:RadAjaxPanel runat="server" ID="radAjaxPanelPaciente" OnAjaxRequest="radAjaxPanelPaciente_AjaxRequest">
                                 <div class="row">
                                     <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                                         <asp:LinkButton ID="btnEditPaciente" runat="server" OnClick="btnEditPaciente_Click" Text="Editar" Visible="false">
@@ -685,6 +711,7 @@
                                         <asp:TextBox runat="server" ID="Date1" autocomplete="off" CssClass="form-control" Width="100%" Enabled="false" />
                                     </div>
                                 </div>
+                                </telerik:RadAjaxPanel>
                                 <hr />
                                 <div class="row">
                                     <div class="col-lg-5 col-md-12 col-sm-12 col-xs-12">
@@ -706,13 +733,13 @@
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right">
                                         <asp:Panel runat="server" ID="pnlAdiOpe" CssClass="form-group">
                                         </asp:Panel>
-                                        <asp:LinkButton runat="server" ID="lnkImprimir" CssClass="btn btn-app btn-yellow radius-4" ToolTip="Imprimir Cita" OnClick="lnkImprimir_Click" Enabled="false">
+                                        <asp:LinkButton runat="server" ID="lnkImprimir" CssClass="btn btn-app btn-yellow radius-4" ToolTip="Imprimir Cita" OnClick="lnkImprimir_Click" Visible="false" Enabled="false">
                                             <i class="fa fa-print -o" aria-hidden="true"  title="Imprimir Cita" style="font-size:25px;"></i>
                                         </asp:LinkButton>
-                                        <asp:LinkButton runat="server" ID="lnkReEnviarCorreo" CssClass="btn btn-app btn-primary radius-4" ToolTip="Re-enviar cita por correo" OnClick="lnkReEnviarCorreo_Click" Enabled="false">
+                                        <asp:LinkButton runat="server" ID="lnkReEnviarCorreo" CssClass="btn btn-app btn-primary radius-4" ToolTip="Re-enviar cita por correo" OnClick="lnkReEnviarCorreo_Click" Visible="false" Enabled="false">
                                             <i class="fa fa-envelope-o -o" aria-hidden="true"  title="Re-enviar cita por correo" style="font-size:25px;" ></i>
                                         </asp:LinkButton>
-                                        <asp:LinkButton runat="server" ID="lnkInterpretacion" CssClass="btn btn-app btn-purple radius-4" ToolTip="Interpretación" OnClick="lnkInterpretacion_Click" Enabled="false">
+                                        <asp:LinkButton runat="server" ID="lnkInterpretacion" CssClass="btn btn-app btn-purple radius-4" ToolTip="Interpretación" OnClick="lnkInterpretacion_Click" Visible="false" Enabled="false">
                                             <i class="fa fa-user-md -o" aria-hidden="true"  title="Interpretación" style="font-size:25px;"></i>
                                         </asp:LinkButton>
                                     </div>
@@ -1480,6 +1507,16 @@
             });
         }
 
+        function Redirecciona(strRuta) {
+            var sID = Math.round(Math.random() * 10000000000);
+            var winX = screen.availWidth;
+            var winY = screen.availHeight;
+            sID = "E" + sID;
+            window.open(strRuta, sID,
+                "menubar=yes,toolbar=yes,location=yes,directories=yes,status=yes,resizable=yes" +
+                ",scrollbars=yes,top=0,left=0,screenX=0,screenY=0,Width=" +
+                winX + ",Height=" + winY);
+        }
        
     </script>
 

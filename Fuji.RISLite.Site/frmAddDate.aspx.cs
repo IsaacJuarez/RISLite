@@ -1,4 +1,6 @@
-﻿using Fuji.RISLite.Entidades.DataBase;
+﻿using CrystalDecisions.CrystalReports.Engine;
+using CrystalDecisions.Shared;
+using Fuji.RISLite.Entidades.DataBase;
 using Fuji.RISLite.Entidades.Extensions;
 using Fuji.RISLite.Entities;
 using Fuji.RISLite.Site.Services;
@@ -7,7 +9,9 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
+using System.Net.Mail;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
@@ -24,6 +28,56 @@ namespace Fuji.RISLite.Site
                 return ConfigurationManager.AppSettings["URL"];
             }
         }
+
+        public string dbLocalServer
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["dbLocalServer"];
+            }
+        }
+
+        public string dbName
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["dbName"];
+            }
+        }
+
+        public string dbUser
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["dbUser"];
+            }
+        }
+
+        public string dbPass
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["dbPass"];
+            }
+        }
+
+        public string CorreoString
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["CorreoString"];
+            }
+        }
+
+        public string PassString
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["PassString"];
+            }
+        }
+
+
         RisLiteService RisService = new RisLiteService();
         public static clsUsuario Usuario = new clsUsuario();
         public static List<clsEstudio> lstEstudios = new List<clsEstudio>();
@@ -88,24 +142,40 @@ namespace Fuji.RISLite.Site
                     grvEstudios.DataBind();
                     lstSug = null;
 
-                    if (Session["User"] != null)
+                    if (Session["User"] != null && Session["lstVistas"] != null)
                     {
-                        Usuario = (clsUsuario)Session["User"];
-                        if (Usuario != null)
+                        List<clsVistasUsuarios> lstVista = (List<clsVistasUsuarios>)Session["lstVistas"];
+                        if (lstVista != null)
                         {
-                            lstObser.Clear();
-                            pnlObservaciones.Controls.Clear();
-                            bitEditar = false;
-                            if (Request.QueryString.Count > 0)
+                            string vista = "frmAddDate.aspx";
+                            if (lstVista.Any(x => x.vchNombreVista == vista))
                             {
-                                if (Request.QueryString["var"] != null)
-                                    nuevaCita(Request.QueryString["var"].ToString());
+                                Usuario = (clsUsuario)Session["User"];
+                                if (Usuario != null)
+                                {
+                                    lstObser.Clear();
+                                    pnlObservaciones.Controls.Clear();
+                                    bitEditar = false;
+                                    if (Request.QueryString.Count > 0)
+                                    {
+                                        if (Request.QueryString["var"] != null)
+                                            nuevaCita(Request.QueryString["var"].ToString());
+                                    }
+                                }
+                                else
+                                {
+                                    var = Security.Encrypt("1");
+                                    Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                                }
+                            }
+                            else
+                            {
+                                Response.Redirect(URL + "/frmSinPermiso.aspx");
                             }
                         }
                         else
                         {
-                            var = Security.Encrypt("1");
-                            Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                            Response.Redirect(URL + "/frmSinPermiso.aspx");
                         }
                     }
                     else
@@ -134,6 +204,7 @@ namespace Fuji.RISLite.Site
                     PacienteResponse response = new PacienteResponse();
                     RisLiteService service = new RisLiteService();
                     request.mdlUser = Usuario;
+                    request.intSitioID = Usuario.intSitioID;
                     request.busqueda = prefixText;
                     response = service.getBusquedaPacientes(request);
                     if (response != null)
@@ -407,21 +478,38 @@ namespace Fuji.RISLite.Site
                 {
                     chk.Checked = !chk.Checked;
                 }
-                //if (rbt.Checked)
-                //{
-                //    ScriptManager.RegisterStartupScript(Page, Page.GetType(), "modalObs", "$('#modalObs').modal();", true);
-                //}
-                //else
-                //{
-                //    string intAdicionalID = hfintAdicionalID.Value;
-                //    intAdicionalID = "lblAdicionalID" + intAdicionalID;
-                //    Label obs = (Label)pnlObservaciones.FindControl(intAdicionalID);
-                //    if (obs != null)
-                //    {
-                //        pnlObservaciones.Controls.Remove(obs);
-                //    }
-                //    lstObser.RemoveAll(x => x.intAdicionalesID == Convert.ToInt32(hfintAdicionalID.Value));
-                //}
+                if (chk.Checked)
+                {
+                    if (lstAdicionalesClinicos.First(x => x.intAdicionalesID == Convert.ToInt32(rbt.CommandArgument)).bitObservaciones)
+                    {
+                        ScriptManager.RegisterStartupScript(Page, Page.GetType(), "modalObs", "$('#modalObs').modal();", true);
+                    }
+                    else
+                    {
+                        string intAdicionalID = hfintAdicionalID.Value;
+                        intAdicionalID = "lblAdicionalID" + intAdicionalID;
+                        Label obs = (Label)pnlObservaciones.FindControl(intAdicionalID);
+                        if (obs != null)
+                        {
+                            pnlObservaciones.Controls.Remove(obs);
+                        }
+                        lstObser.RemoveAll(x => x.intAdicionalesID == Convert.ToInt32(hfintAdicionalID.Value));
+                    }
+                }
+                else
+                {
+                    if (lstAdicionalesClinicos.First(x => x.intAdicionalesID == Convert.ToInt32(rbt.CommandArgument)).bitObservaciones)
+                    {
+                        string intAdicionalID = hfintAdicionalID.Value;
+                        intAdicionalID = "lblAdicionalID" + intAdicionalID;
+                        Label obs = (Label)pnlObservaciones.FindControl(intAdicionalID);
+                        if (obs != null)
+                        {
+                            pnlObservaciones.Controls.Remove(obs);
+                        }
+                        lstObser.RemoveAll(x => x.intAdicionalesID == Convert.ToInt32(hfintAdicionalID.Value));
+                    }
+                }
             }
             catch (Exception eObs)
             {
@@ -482,6 +570,7 @@ namespace Fuji.RISLite.Site
                 pnlIDContenido.Controls.Clear();
                 VarAdicionalRequest request = new VarAdicionalRequest();
                 request.mdlUser = Usuario;
+                request.intSitioID = Usuario.intSitioID;
                 List<tbl_CAT_Identificacion> lst = new List<tbl_CAT_Identificacion>();
                 lst = RisService.getVariablesAdicionalID(request);
                 if (lst != null)
@@ -490,7 +579,7 @@ namespace Fuji.RISLite.Site
                     {
                         lstIdentificaciones = lst;
                         //-----
-                        Table tb = new Table();
+                        System.Web.UI.WebControls.Table tb = new System.Web.UI.WebControls.Table();
                         tb.ID = "tbIden";
                         //-----
                         foreach (tbl_CAT_Identificacion item in lst)
@@ -584,7 +673,7 @@ namespace Fuji.RISLite.Site
                     {
                         lstIdentificaciones = lst;
                         //-----
-                        Table tb = new Table();
+                        System.Web.UI.WebControls.Table tb = new System.Web.UI.WebControls.Table();
                         tb.ID = "tbIden";
                         
                         //-----
@@ -645,6 +734,7 @@ namespace Fuji.RISLite.Site
                 pnlDinamicoContenido.Controls.Clear();
                 VarAdicionalRequest request = new VarAdicionalRequest();
                 request.mdlUser = Usuario;
+                request.intSitioID = Usuario.intSitioID;
                 List<clsVarAcicionales> lst = new List<clsVarAcicionales>();
                 lst = RisService.getVariablesAdicionalPaciente(request);
                 if (lst != null)
@@ -653,7 +743,7 @@ namespace Fuji.RISLite.Site
                     {
                         lstVarAdic = lst;
                         //-----
-                        Table tb = new Table();
+                        System.Web.UI.WebControls.Table tb = new System.Web.UI.WebControls.Table();
                         tb.ID = "tbAdic";
                         //-----
                         foreach (clsVarAcicionales item in lst)
@@ -737,7 +827,7 @@ namespace Fuji.RISLite.Site
                     {
                         lstVarAdic = lst;
                         //-----
-                        Table tb = new Table();
+                        System.Web.UI.WebControls.Table tb = new System.Web.UI.WebControls.Table();
                         tb.ID = "tbAdic";
                         //-----
                         foreach (clsVarAcicionales item in lst)
@@ -1085,8 +1175,10 @@ namespace Fuji.RISLite.Site
                     PacienteRequest request = new PacienteRequest();
                     PacienteResponse response = new PacienteResponse();
                     request.mdlUser = Usuario;
+                    request.intSitioID = Usuario.intSitioID;
                     request.mdlDireccion = mdlDireccion;
                     request.mdlPaciente = mdlPaciente;
+                    request.mdlPaciente.intSitioID = Usuario.intSitioID;
                     request.lstIdent = lstIden;
                     request.lstVarAdic = lstVar;
                     if (request != null)
@@ -1591,8 +1683,8 @@ namespace Fuji.RISLite.Site
                         {
                             clsPaciente mdlPaciete = new clsPaciente();
                             mdlPaciete.intPacienteID = Convert.ToInt32(lblIDs.Text.ToString());
-                            List<clsEstudio> lstEst = new List<clsEstudio>();
-                            lstEst = lstEstudios;
+                            List<clsEstudioNuevaCita> lstEst = new List<clsEstudioNuevaCita>();
+                            lstEst = do_stEstudios;
                             List<clsAdicionales> lstAdi = new List<clsAdicionales>();
                             lstAdi = lstObser;
                             if (mdlPaciete != null && lstEst != null)
@@ -1600,7 +1692,41 @@ namespace Fuji.RISLite.Site
                                 if (mdlPaciete.intPacienteID > 0 && lstEst.Count > 0)
                                 {
                                      List<clsAdicionales> lstVarAdi = getAdicionales();
-                                    ShowMessage("Favor de verificar la información del Paciente", MessageType.Correcto, "alert_container");
+                                    CitaNuevaResponse response = new CitaNuevaResponse();
+                                    CitaNuevaRequest request = new CitaNuevaRequest();
+                                    request.mdlUser = Usuario;
+                                    request.lstAdicionales = lstVarAdi;
+                                    request.lstEstudios = lstEst;
+                                    request.mdlPaciente = mdlPaciete;
+                                    if (request != null)
+                                    {
+                                        response = RisService.setCitaNueva(request);
+                                        if(response != null)
+                                        {
+                                            if (response.Success)
+                                            {
+                                                ShowMessage("Se guardo correctamente la cita.", MessageType.Correcto, "alert_container");
+                                                limpiarControlesIniciales();
+                                                //Imprimir.
+                                                imprimirCita((int)response.cita.intCitaID);
+                                                //Enviar por correo.
+                                                PrepararCorreo((int)response.cita.intCitaID);
+                                                //Mostrar Indicaciones y restricciones.
+                                            }
+                                            else
+                                            {
+                                                ShowMessage("Favor de verificar la información: " + response.Mensaje, MessageType.Error, "alert_container");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            ShowMessage("Favor de verificar la información.", MessageType.Advertencia, "alert_container");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        ShowMessage("Favor de verificar la información.", MessageType.Advertencia, "alert_container");
+                                    }
                                 }
                                 else
                                 {
@@ -1623,7 +1749,7 @@ namespace Fuji.RISLite.Site
                     }
                 }
                 else
-                {
+                {   
                     ShowMessage("Favor de verificar el paciente.", MessageType.Advertencia, "alert_container");
                 }
             }
@@ -1632,6 +1758,210 @@ namespace Fuji.RISLite.Site
                 ShowMessage("Existe un error al agregar la cita: " + eBC.Message, MessageType.Error, "alert_container");
                 Log.EscribeLog("Existe un error en btnAddCita_Click: " + eBC.Message, 3, Usuario.vchUsuario);
             }
+        }
+
+        private void imprimirCita(int intCitaId)
+        {
+            try
+            {
+                string urlabrir = "";
+                string id = Security.Encrypt(intCitaId.ToString());
+                urlabrir = URL + "/frmDownLoadCita.aspx?appointment=" + id;
+                ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "Cerrar", "javascript:Redirecciona('" + urlabrir + "');", true);
+            }
+            catch (Exception eImprimircita)
+            {
+                Log.EscribeLog("Existe un error en imprimirCita: " + eImprimircita, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private Attachment CreatePDF(int intCitaID, List<stp_getCitaReporte_Result> dataSource)
+        {
+            Attachment pdfAtt = null;
+            try
+            {
+                ReportDocument crystalReport = new ReportDocument();
+                crystalReport.Load(Server.MapPath("~/Data/rptCitaReporte.rpt"));
+                //string ParameterName = "intCitaID";
+                //object val = intCitaID;
+                //ParameterValues prms;
+                //ParameterDiscreteValue prm = new ParameterDiscreteValue();
+                //prms = crystalReport.DataDefinition.ParameterFields[ParameterName].CurrentValues;
+                //prm.Value = val;
+                //prms.Add(prm);
+                //crystalReport.DataDefinition.ParameterFields[ParameterName].ApplyCurrentValues(prms);
+                crystalReport.SetParameterValue("@intCitaID", intCitaID);
+                //crystalReport.SetParameterValue(0, intCitaID);
+                crystalReport.SetDatabaseLogon(dbUser, dbPass, dbLocalServer, dbName);
+                var stream = crystalReport.ExportToStream(ExportFormatType.PortableDocFormat);
+                pdfAtt = new Attachment(stream, "Cita_" + intCitaID + ".pdf");
+            }
+            catch (Exception eCPDF)
+            {
+                Log.EscribeLog("Existe un error al crear el PDF: " + eCPDF.Message + " *" + eCPDF.InnerException, 3, Usuario.vchUsuario);
+            }
+            return pdfAtt;
+        }
+
+        private void SetDBLogonForReport(ConnectionInfo connectionInfo, ReportDocument reportDocument)
+        {
+            Tables tables = reportDocument.Database.Tables;
+            foreach (CrystalDecisions.CrystalReports.Engine.Table table in tables)
+            {
+                TableLogOnInfo tableLogonInfo = table.LogOnInfo;
+                tableLogonInfo.ConnectionInfo = connectionInfo;
+                table.ApplyLogOnInfo(tableLogonInfo);
+            }
+        }
+
+        private void PrepararCorreo(int intCitaID)
+        {
+            try
+            {
+                List<stp_getCitaReporte_Result> Citareporte = new List<stp_getCitaReporte_Result>();
+                CitaReporteRequest request = new CitaReporteRequest();
+                request.intCitaId = intCitaID;
+                request.mdlUser = Usuario;
+                Citareporte = RisService.getCitaReporte(request);
+                if (Citareporte != null)
+                {
+                    clsCorreo correo = new clsCorreo();
+                    correo.asunto = "Proxima Cita.";
+                    correo.bitReporte = true;
+                    correo.toEmail = Citareporte.First().vchEmail;
+                    correo.vchNombrePaciente = Citareporte.First().vchNombre;
+                    correo.intCitaID = intCitaID;
+                    correo.htmlCorreo = obtenerMachote().Replace("SSSitio", Citareporte.First().vchNombreSitio);
+
+                    tbl_Conf_CorreoSitio configCorreo = new tbl_Conf_CorreoSitio();
+                    configCorreo = obtenerDatosCorreoSitio();
+                    if (correo != null && configCorreo != null)
+                    {
+                        enviarCorreo(correo, configCorreo, Citareporte);
+                    }
+                }
+
+            }
+            catch (Exception ePC)
+            {
+                Log.EscribeLog("Existe un error en PrepararCorreo: " + ePC.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private tbl_Conf_CorreoSitio obtenerDatosCorreoSitio()
+        {
+            tbl_Conf_CorreoSitio correo = new tbl_Conf_CorreoSitio();
+            try
+            {
+                
+                ConfigEmailResponse response = new ConfigEmailResponse();
+                ConfigEmailRequest request = new ConfigEmailRequest();
+                request.intSitioID = Usuario.intUsuarioID;
+                request.mdlUser = Usuario;
+                response = RisService.getConfigEmail(request);
+                if(response != null)
+                {
+                    correo = response.mldConfigEmail;
+                }
+            }
+            catch(Exception eoDC)
+            {
+                Log.EscribeLog("Existe un error en obtenerDatosCorreoSitio: " + eoDC.Message, 3, Usuario.vchUsuario);
+            }
+            return correo;
+        }
+
+        private string obtenerMachote()
+        {
+            string texto = "";
+            try
+            {
+                if (File.Exists(Server.MapPath("~/Data/CorreoCita.txt")))
+                {
+                    texto = File.ReadAllText(Server.MapPath("~/Data/CorreoCita.txt"));
+                }
+                else
+                {
+                    texto = "<table width='350px' style='FONT-SIZE:11px;font-family:Tahoma,Helvetica,sans-serif;padding:2px;background-color:#fdfffe;BORDER-RIGHT:#0c922e 3px solid;BORDER-TOP:#0c922e 3px solid;BORDER-LEFT:#0c922e 3px solid;BORDER-BOTTOM:#0c922e 3px solid'>" +
+                            "<tbody>" +
+                            "<tr><td colspan='2'>SSSitio</td></tr><tr><td colspan='2'><hr></td></tr><tr><td colspan='2' align='center' style='background-color:#fefefe'>Nueva <span class='il'>Cita</span></td></tr>" +
+                            "<tr><td colspan='2'><hr></td></tr>" +
+                            "<tr><td colspan='2'>Apreciable paciente:</td></tr>" +
+                            "<tr><td colspan='2'>Adjunto encontrara información de su proxima cita.</td></tr>" +
+                            "<tr><td align='center' colspan='2'><font color='#014615' size='3'>FUJIFILM MEXICO</font></td></tr>" +
+                            "<tr><td colspan='2'>Este correo&nbsp; electronico&nbsp; es&nbsp; confidencial, esta&nbsp; legalmente&nbsp; protegido y/o puede contener informacion privilegiada. Si usted no es su destinatario o no es alguna persona autorizada por este para recibir sus correos electronicos, NO debera usted utilizar, copiar, revelar, o&nbsp; tomar&nbsp; ninguna&nbsp; accion&nbsp; basada&nbsp; en este correo electronico o cualquier otra informacion incluida en el (incluyendo todos los documentos adjuntos). </td></tr>" +
+                            "</tbody></table>";
+                }
+            }
+            catch (Exception eoM)
+            {
+                texto = "<table width='350px' style='FONT-SIZE:11px;font-family:Tahoma,Helvetica,sans-serif;padding:2px;background-color:#fdfffe;BORDER-RIGHT:#0c922e 3px solid;BORDER-TOP:#0c922e 3px solid;BORDER-LEFT:#0c922e 3px solid;BORDER-BOTTOM:#0c922e 3px solid'>" +
+                            "<tbody>" +
+                            "<tr><td colspan='2'>SSSitio</td></tr><tr><td colspan='2'><hr></td></tr><tr><td colspan='2' align='center' style='background-color:#fefefe'>Nueva <span class='il'>Cita</span></td></tr>" +
+                            "<tr><td colspan='2'><hr></td></tr>" +
+                            "<tr><td colspan='2'>Apreciable paciente:</td></tr>" +
+                            "<tr><td colspan='2'>Adjunto encontrara información de su proxima cita.</td></tr>" +
+                            "<tr><td align='center' colspan='2'><font color='#014615' size='3'>FUJIFILM MEXICO</font></td></tr>" +
+                            "<tr><td colspan='2'>Este correo&nbsp; electronico&nbsp; es&nbsp; confidencial, esta&nbsp; legalmente&nbsp; protegido y/o puede contener informacion privilegiada. Si usted no es su destinatario o no es alguna persona autorizada por este para recibir sus correos electronicos, NO debera usted utilizar, copiar, revelar, o&nbsp; tomar&nbsp; ninguna&nbsp; accion&nbsp; basada&nbsp; en este correo electronico o cualquier otra informacion incluida en el (incluyendo todos los documentos adjuntos). </td></tr>" +
+                            "</tbody></table>";
+                Log.EscribeLog("Existe un error al obtener el machote del correo: " + eoM.Message, 3, Usuario.vchUsuario);
+            }
+            return texto;
+        }
+
+        private bool enviarCorreo(clsCorreo correo, tbl_Conf_CorreoSitio configCorreo, List<stp_getCitaReporte_Result> dataSource)
+        {
+            bool valido = false;
+            try
+            {
+                MailMessage mail = new MailMessage();
+                mail.From = new MailAddress(configCorreo.vchCorreo);
+                string[] lista_correos = correo.toEmail.Split(';');
+
+                foreach (string destino in lista_correos)
+                {
+                    mail.To.Add(destino);
+                }
+                mail.Subject = correo.asunto;
+                mail.IsBodyHtml = true;
+                mail.Body = correo.htmlCorreo;
+
+                if (correo.bitReporte)
+                {
+                    try
+                    {
+                        mail.Attachments.Add(CreatePDF(correo.intCitaID, dataSource));
+                    }
+                    catch (Exception e)
+                    {
+                        Log.EscribeLog("Existe un error al adjuntar el pdf: " + e.Message, 3, Usuario.vchUsuario);
+                    }
+                }
+                try
+                {
+                    System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient();
+                    //string correoSit = Security.Decrypt(CorreoString);
+                    //string passSit = Security.Decrypt(PassString);
+                    //smtp.Credentials = new System.Net.NetworkCredential(correoSit, passSit);
+                    smtp.Credentials = new System.Net.NetworkCredential(configCorreo.vchCorreo, configCorreo.vchPassword);
+                    smtp.Host = configCorreo.vchHost != "" ? configCorreo.vchHost : "smtp.gmail.com";
+                    smtp.Port = (int)configCorreo.intPort > 0 ? (int)configCorreo.intPort : 587;
+                    smtp.EnableSsl = (bool)configCorreo.BitEnableSsl;
+                    smtp.Send(mail);
+                    valido = true;
+                }
+                catch (Exception except)
+                {
+                    valido = false;
+                    Log.EscribeLog("Existe un error al intentar enviar el correo: " + except.Message, 3, Usuario.vchUsuario);
+                }
+            }
+            catch (Exception eeC)
+            {
+                Log.EscribeLog("Existe un error en enviarCorreo: " + eeC.Message, 3, Usuario.vchUsuario);
+                valido = false;
+            }
+            return valido;
         }
 
         private List<clsAdicionales> getAdicionales()
@@ -1645,15 +1975,21 @@ namespace Fuji.RISLite.Site
                     {
                         foreach(clsAdicionales item in lstAdicionalesClinicos)
                         {
-                            RadButton btn = new RadButton();
-                            btn = (RadButton)pnlAdiClin.FindControl("radBtn" + item.intAdicionalesID);
+                            LinkButton btn = new LinkButton();
+                            btn = (LinkButton)pnlAdiClin.FindControl("radBtn" + item.intAdicionalesID);
                             if (btn != null)
                             {
-                                clsAdicionales mdl = new clsAdicionales();
-                                mdl.intAdicionalesID = item.intAdicionalesID;
-                                mdl.vchObservaciones = item.vchObservaciones;
-                                mdl.vchValor = btn.Checked ? "1" : "0";
-                                lst.Add(mdl);
+                                CheckBox chk = new CheckBox();
+                                chk = (CheckBox)btn.FindControl("chk" + btn.CommandArgument);
+                                if (chk.Checked)
+                                {
+                                    clsAdicionales mdl = new clsAdicionales();
+                                    mdl.intAdicionalesID = item.intAdicionalesID;
+                                    if(lstObser.Any(x=> x.intAdicionalesID == item.intAdicionalesID))
+                                        mdl.vchObservaciones = lstObser.First(x => x.intAdicionalesID == item.intAdicionalesID).vchObservaciones;
+                                    mdl.vchValor = chk.Checked ? "1" : "0";
+                                    lst.Add(mdl);
+                                }
                             }
                         }
                     }
@@ -1710,7 +2046,7 @@ namespace Fuji.RISLite.Site
             bool valido = false;
             try
             {
-                if (lstEstudios.Count > 0)
+                if (do_stEstudios.Count > 0)
                 {
                     valido = true;
                 }
@@ -1754,10 +2090,12 @@ namespace Fuji.RISLite.Site
                 if (txtObservaciones.Text == "")
                 {
                     string btnID = hfintAdicionalID.Value;
-                    RadButton btn = (RadButton)pnlAdiClin.FindControl("radBtn" + btnID);
+                    LinkButton btn = (LinkButton)pnlAdiClin.FindControl("radBtn" + btnID);
+                    CheckBox chk = new CheckBox();
+                    chk = (CheckBox)btn.FindControl("chk" + btn.CommandArgument);
                     if (btn != null)
                     {
-                        btn.Checked = false;
+                        chk.Checked = false;
                     }
                 }
             }
@@ -1772,13 +2110,18 @@ namespace Fuji.RISLite.Site
         {
             try
             {
+                HFintPacienteID.Value = "0";
                 lblIDs.Visible = false;
                 lblIDs.Text = "";
                 txtNombrePaciente.Text = "";
                 txtApellidos.Text = "";
                 Date1.Text = "";
                 lstEstudios.Clear();
+                do_stEstudios.Clear();
+                grvEstudios.DataSource = null;
+                grvEstudios.DataBind();
                 lstObser.Clear();
+                pnlObservaciones.Controls.Clear();
                 cargaAdicionales();
             }
             catch (Exception eSOBs)
@@ -2303,7 +2646,7 @@ namespace Fuji.RISLite.Site
                 mdl.datFechaFinal = DateTime.Now.AddDays(7);
                 mdl.intModalidad = Convert.ToInt32(Session["intModSug"].ToString());
                 mdl.vchDias = "1,2,3,4,5,6,7,";
-                mdl.vchHoras = "1,2,3,";
+                mdl.vchHoras = "";
                 mdl.intSitioID = Usuario.intSitioID;
                 sug.mdlSug = mdl;
             }
@@ -2591,6 +2934,23 @@ namespace Fuji.RISLite.Site
         protected void radAjaxPanelSugerencia_AjaxRequest(object sender, AjaxRequestEventArgs e)
         {
 
+        }
+
+        protected void radAjaxPanelPaciente_AjaxRequest(object sender, AjaxRequestEventArgs e)
+        {
+            try
+            {
+                string id = "";// txtBusquedaPaciente.Text;
+                //string[] paciente = txtBusquedaPaciente.Text.ToString().Split('|');
+                id = e.Argument;
+                txtBusquedaPaciente.Text = "";
+                cargarDetallePaciente(Convert.ToInt32(id));
+                txtBusquedaEstudio.Enabled = true;
+            }
+            catch (Exception etC)
+            {
+                Log.EscribeLog("Existe un error en radAjaxPanelPaciente_AjaxRequest: " + etC.Message, 3, Usuario.vchUsuario);
+            }
         }
     }
 }

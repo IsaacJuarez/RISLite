@@ -44,6 +44,7 @@
     <Compile Include="clsCatalogo.cs" />
     <Compile Include="clsConfAgenda.cs" />
     <Compile Include="clsConfScheduler.cs" />
+    <Compile Include="clsCorreo.cs" />
     <Compile Include="clsDiaFeriado.cs" />
     <Compile Include="clsDiaSemana.cs" />
     <Compile Include="clsDireccion.cs" />
@@ -57,6 +58,8 @@
     <Compile Include="clsModalidad.cs" />
     <Compile Include="clsPaciente.cs" />
     <Compile Include="clsPrestacion.cs" />
+    <Compile Include="clsRepIndicacion.cs" />
+    <Compile Include="clsRepRestriccion.cs" />
     <Compile Include="clsSugerencia.cs" />
     <Compile Include="clsUsuario.cs" />
     <Compile Include="clsVarAcicionales.cs" />

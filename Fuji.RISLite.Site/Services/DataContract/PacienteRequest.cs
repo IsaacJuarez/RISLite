@@ -10,6 +10,7 @@ namespace Fuji.RISLite.Site.Services.DataContract
         public clsPaciente mdlPaciente;
         public clsDireccion mdlDireccion;
         public int intPacienteID { get; set; }
+        public int intSitioID { get; set; }
         public string busqueda { get; set; }
         public List<tbl_REL_IdentificacionPaciente> lstIdent;
         public List<tbl_DET_PacienteDinamico> lstVarAdic;
@@ -20,6 +21,7 @@ namespace Fuji.RISLite.Site.Services.DataContract
             mdlPaciente = new clsPaciente();
             mdlDireccion = new clsDireccion();
             intPacienteID = int.MinValue;
+            intSitioID = int.MinValue;
             busqueda = string.Empty;
             lstIdent = new List<tbl_REL_IdentificacionPaciente>();
             lstVarAdic = new List<tbl_DET_PacienteDinamico>();

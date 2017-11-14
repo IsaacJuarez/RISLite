@@ -378,15 +378,15 @@ advertencia 6002: La tabla o vista 'RISLite.dbo.tbl_CAT_DuracionModalidad' no ti
           <Key>
             <PropertyRef Name="intDETCitaID" />
           </Key>
-          <Property Name="intDETCitaID" Type="bigint" Nullable="false" />
+          <Property Name="intDETCitaID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="intCitaID" Type="bigint" />
           <Property Name="intAdicionalesID" Type="int" />
           <Property Name="vchValor" Type="varchar" MaxLength="100" />
           <Property Name="bitDato" Type="bit" />
-          <Property Name="vchObservaciones" Type="varbinary" MaxLength="200" />
+          <Property Name="vchObservaciones" Type="varchar" MaxLength="100" />
           <Property Name="bitActivo" Type="bit" />
           <Property Name="datFecha" Type="datetime" />
-          <Property Name="vchUserAdmin" Type="varchar" MaxLength="200" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="tbl_DET_CitaDinamico">
           <Key>
@@ -512,7 +512,7 @@ advertencia 6002: La tabla o vista 'RISLite.dbo.tbl_CAT_DuracionModalidad' no ti
           <Property Name="datFechaCita" Type="datetime" />
           <Property Name="bitActivo" Type="bit" />
           <Property Name="datFecha" Type="datetime" />
-          <Property Name="vchUserAdmin" Type="varbinary" MaxLength="100" />
+          <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="tbl_MST_ConfiguracionSistema">
           <Key>
@@ -828,6 +828,18 @@ advertencia 6002: La tabla o vista 'RISLite.dbo.tbl_CAT_DuracionModalidad' no ti
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DET_Cita_MST_Adicionales">
+          <End Role="tbl_MST_Adicionales" Type="Self.tbl_MST_Adicionales" Multiplicity="0..1" />
+          <End Role="tbl_DET_Cita" Type="Self.tbl_DET_Cita" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_MST_Adicionales">
+              <PropertyRef Name="intAdicionalesID" />
+            </Principal>
+            <Dependent Role="tbl_DET_Cita">
+              <PropertyRef Name="intAdicionalesID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_DET_Cita_MST_Cita">
           <End Role="tbl_MST_Cita" Type="Self.tbl_MST_Cita" Multiplicity="0..1" />
           <End Role="tbl_DET_Cita" Type="Self.tbl_DET_Cita" Multiplicity="*" />
@@ -960,6 +972,30 @@ advertencia 6002: La tabla o vista 'RISLite.dbo.tbl_CAT_DuracionModalidad' no ti
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_MST_Cita_CAT_InstitucionProc">
+          <End Role="tbl_CAT_InstitucionProcedencia" Type="Self.tbl_CAT_InstitucionProcedencia" Multiplicity="0..1" />
+          <End Role="tbl_MST_Cita" Type="Self.tbl_MST_Cita" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_InstitucionProcedencia">
+              <PropertyRef Name="intInstitucionID" />
+            </Principal>
+            <Dependent Role="tbl_MST_Cita">
+              <PropertyRef Name="intInstitucionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MST_Cita_CAT_MedicoTratante">
+          <End Role="tbl_CAT_MedicoTratante" Type="Self.tbl_CAT_MedicoTratante" Multiplicity="0..1" />
+          <End Role="tbl_MST_Cita" Type="Self.tbl_MST_Cita" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_MedicoTratante">
+              <PropertyRef Name="intMedicoTraID" />
+            </Principal>
+            <Dependent Role="tbl_MST_Cita">
+              <PropertyRef Name="intMedicoTraID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_MST_ConfiguracionSistema_CAT_Sitio">
           <End Role="tbl_CAT_Sitio" Type="Self.tbl_CAT_Sitio" Multiplicity="0..1" />
           <End Role="tbl_MST_ConfiguracionSistema" Type="Self.tbl_MST_ConfiguracionSistema" Multiplicity="*" />
@@ -1032,18 +1068,6 @@ advertencia 6002: La tabla o vista 'RISLite.dbo.tbl_CAT_DuracionModalidad' no ti
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_REL_CitaEstudio_MST_Cita">
-          <End Role="tbl_MST_Cita" Type="Self.tbl_MST_Cita" Multiplicity="0..1" />
-          <End Role="tbl_REL_CitaEstudio" Type="Self.tbl_REL_CitaEstudio" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tbl_MST_Cita">
-              <PropertyRef Name="intCitaID" />
-            </Principal>
-            <Dependent Role="tbl_REL_CitaEstudio">
-              <PropertyRef Name="intCitaID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_REL_CitaEstudio_MST_Estudio">
           <End Role="tbl_MST_Estudio" Type="Self.tbl_MST_Estudio" Multiplicity="0..1" />
           <End Role="tbl_REL_CitaEstudio" Type="Self.tbl_REL_CitaEstudio" Multiplicity="*" />
@@ -1065,18 +1089,6 @@ advertencia 6002: La tabla o vista 'RISLite.dbo.tbl_CAT_DuracionModalidad' no ti
             </Principal>
             <Dependent Role="tbl_REL_DiaSemana">
               <PropertyRef Name="intSitioID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_REL_PacienteCita_MST_Cita">
-          <End Role="tbl_MST_Cita" Type="Self.tbl_MST_Cita" Multiplicity="0..1" />
-          <End Role="tbl_REL_PacienteCita" Type="Self.tbl_REL_PacienteCita" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tbl_MST_Cita">
-              <PropertyRef Name="intCitaID" />
-            </Principal>
-            <Dependent Role="tbl_REL_PacienteCita">
-              <PropertyRef Name="intCitaID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1140,6 +1152,18 @@ advertencia 6002: La tabla o vista 'RISLite.dbo.tbl_CAT_DuracionModalidad' no ti
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_TBL_DET__REFERENCE_TBL_CONF">
+          <End Role="tbl_CONFIG_VariablesAdiCita" Type="Self.tbl_CONFIG_VariablesAdiCita" Multiplicity="0..1" />
+          <End Role="tbl_DET_CitaDinamico" Type="Self.tbl_DET_CitaDinamico" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CONFIG_VariablesAdiCita">
+              <PropertyRef Name="intVarAdiCitaID" />
+            </Principal>
+            <Dependent Role="tbl_DET_CitaDinamico">
+              <PropertyRef Name="intVarAdiCitaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_TBL_REL__REFERENCE_TBL_CAT_">
           <End Role="tbl_CAT_DiaSemana" Type="Self.tbl_CAT_DiaSemana" Multiplicity="0..1" />
           <End Role="tbl_REL_DiaSemana" Type="Self.tbl_REL_DiaSemana" Multiplicity="*" />
@@ -1173,6 +1197,7 @@ advertencia 6002: La tabla o vista 'RISLite.dbo.tbl_CAT_DuracionModalidad' no ti
         </Function>
         <Function Name="stp_getBusquedaPaciente" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="vchCadena" Type="varchar" Mode="In" />
+          <Parameter Name="intSitioID" Type="int" Mode="In" />
         </Function>
         <Function Name="stp_getBusquedaPacienteList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="vchCadena" Type="varchar" Mode="In" />
@@ -1183,6 +1208,16 @@ advertencia 6002: La tabla o vista 'RISLite.dbo.tbl_CAT_DuracionModalidad' no ti
           <Parameter Name="intModalidad" Type="int" Mode="In" />
           <Parameter Name="vchDias" Type="varchar(max)" Mode="In" />
           <Parameter Name="vchHoras" Type="varchar(max)" Mode="In" />
+          <Parameter Name="intSitioID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="stp_getCitaReporte" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intCitaID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="stp_getCitas" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="vchNombre" Type="varchar" Mode="In" />
+          <Parameter Name="intModalidadID" Type="int" Mode="In" />
+          <Parameter Name="datFechaInicio" Type="date" Mode="In" />
+          <Parameter Name="datFechaFin" Type="date" Mode="In" />
           <Parameter Name="intSitioID" Type="int" Mode="In" />
         </Function>
         <Function Name="stp_getEstudiosPaciente" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -1337,6 +1372,10 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
             <End Role="tbl_CAT_Sitio" EntitySet="tbl_CAT_Sitio" />
             <End Role="tbl_CONFIG_VariablesAdiCita" EntitySet="tbl_CONFIG_VariablesAdiCita" />
           </AssociationSet>
+          <AssociationSet Name="FK_DET_Cita_MST_Adicionales" Association="Self.FK_DET_Cita_MST_Adicionales">
+            <End Role="tbl_MST_Adicionales" EntitySet="tbl_MST_Adicionales" />
+            <End Role="tbl_DET_Cita" EntitySet="tbl_DET_Cita" />
+          </AssociationSet>
           <AssociationSet Name="FK_DET_Cita_MST_Cita" Association="Self.FK_DET_Cita_MST_Cita">
             <End Role="tbl_MST_Cita" EntitySet="tbl_MST_Cita" />
             <End Role="tbl_DET_Cita" EntitySet="tbl_DET_Cita" />
@@ -1381,6 +1420,14 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
             <End Role="tbl_CAT_EstatusCita" EntitySet="tbl_CAT_EstatusCita" />
             <End Role="tbl_MST_Cita" EntitySet="tbl_MST_Cita" />
           </AssociationSet>
+          <AssociationSet Name="FK_MST_Cita_CAT_InstitucionProc" Association="Self.FK_MST_Cita_CAT_InstitucionProc">
+            <End Role="tbl_CAT_InstitucionProcedencia" EntitySet="tbl_CAT_InstitucionProcedencia" />
+            <End Role="tbl_MST_Cita" EntitySet="tbl_MST_Cita" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MST_Cita_CAT_MedicoTratante" Association="Self.FK_MST_Cita_CAT_MedicoTratante">
+            <End Role="tbl_CAT_MedicoTratante" EntitySet="tbl_CAT_MedicoTratante" />
+            <End Role="tbl_MST_Cita" EntitySet="tbl_MST_Cita" />
+          </AssociationSet>
           <AssociationSet Name="FK_MST_ConfiguracionSistema_CAT_Sitio" Association="Self.FK_MST_ConfiguracionSistema_CAT_Sitio">
             <End Role="tbl_CAT_Sitio" EntitySet="tbl_CAT_Sitio" />
             <End Role="tbl_MST_ConfiguracionSistema" EntitySet="tbl_MST_ConfiguracionSistema" />
@@ -1405,10 +1452,6 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
             <End Role="tbl_REL_TipoUsuarioBoton" EntitySet="tbl_REL_TipoUsuarioBoton" />
             <End Role="tbl_REL_BotonVista" EntitySet="tbl_REL_BotonVista" />
           </AssociationSet>
-          <AssociationSet Name="FK_REL_CitaEstudio_MST_Cita" Association="Self.FK_REL_CitaEstudio_MST_Cita">
-            <End Role="tbl_MST_Cita" EntitySet="tbl_MST_Cita" />
-            <End Role="tbl_REL_CitaEstudio" EntitySet="tbl_REL_CitaEstudio" />
-          </AssociationSet>
           <AssociationSet Name="FK_REL_CitaEstudio_MST_Estudio" Association="Self.FK_REL_CitaEstudio_MST_Estudio">
             <End Role="tbl_MST_Estudio" EntitySet="tbl_MST_Estudio" />
             <End Role="tbl_REL_CitaEstudio" EntitySet="tbl_REL_CitaEstudio" />
@@ -1416,10 +1459,6 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
           <AssociationSet Name="FK_REL_DiaSemana_CAT_Sitio" Association="Self.FK_REL_DiaSemana_CAT_Sitio">
             <End Role="tbl_CAT_Sitio" EntitySet="tbl_CAT_Sitio" />
             <End Role="tbl_REL_DiaSemana" EntitySet="tbl_REL_DiaSemana" />
-          </AssociationSet>
-          <AssociationSet Name="FK_REL_PacienteCita_MST_Cita" Association="Self.FK_REL_PacienteCita_MST_Cita">
-            <End Role="tbl_MST_Cita" EntitySet="tbl_MST_Cita" />
-            <End Role="tbl_REL_PacienteCita" EntitySet="tbl_REL_PacienteCita" />
           </AssociationSet>
           <AssociationSet Name="FK_REL_PacienteCita_MST_Paciente" Association="Self.FK_REL_PacienteCita_MST_Paciente">
             <End Role="tbl_MST_Paciente" EntitySet="tbl_MST_Paciente" />
@@ -1440,6 +1479,10 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
           <AssociationSet Name="FK_REL_TipoUsuarioBoton_CAT_TipoUsuario" Association="Self.FK_REL_TipoUsuarioBoton_CAT_TipoUsuario">
             <End Role="tbl_CAT_TipoUsuario" EntitySet="tbl_CAT_TipoUsuario" />
             <End Role="tbl_REL_TipoUsuarioBoton" EntitySet="tbl_REL_TipoUsuarioBoton" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TBL_DET__REFERENCE_TBL_CONF" Association="Self.FK_TBL_DET__REFERENCE_TBL_CONF">
+            <End Role="tbl_CONFIG_VariablesAdiCita" EntitySet="tbl_CONFIG_VariablesAdiCita" />
+            <End Role="tbl_DET_CitaDinamico" EntitySet="tbl_DET_CitaDinamico" />
           </AssociationSet>
           <AssociationSet Name="FK_TBL_REL__REFERENCE_TBL_CAT_" Association="Self.FK_TBL_REL__REFERENCE_TBL_CAT_">
             <End Role="tbl_CAT_DiaSemana" EntitySet="tbl_CAT_DiaSemana" />
@@ -1527,7 +1570,6 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
           <EntitySet Name="tbl_CAT_Municipio" EntityType="RISLiteModel.tbl_CAT_Municipio" />
           <EntitySet Name="tbl_DET_DireccionPaciente" EntityType="RISLiteModel.tbl_DET_DireccionPaciente" />
           <EntitySet Name="tbl_DET_Paciente" EntityType="RISLiteModel.tbl_DET_Paciente" />
-          <EntitySet Name="tbl_MST_Cita" EntityType="RISLiteModel.tbl_MST_Cita" />
           <EntitySet Name="tbl_REL_IdentificacionPaciente" EntityType="RISLiteModel.tbl_REL_IdentificacionPaciente" />
           <EntitySet Name="tbl_REL_PacienteCita" EntityType="RISLiteModel.tbl_REL_PacienteCita" />
           <AssociationSet Name="FK_CAT_CodigoPostal_CAT_Municipio" Association="RISLiteModel.FK_CAT_CodigoPostal_CAT_Municipio">
@@ -1542,14 +1584,6 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
             <End Role="tbl_CAT_Estado" EntitySet="tbl_CAT_Estado" />
             <End Role="tbl_CAT_Municipio" EntitySet="tbl_CAT_Municipio" />
           </AssociationSet>
-          <AssociationSet Name="FK_MST_Cita_CAT_EstatusCita" Association="RISLiteModel.FK_MST_Cita_CAT_EstatusCita">
-            <End Role="tbl_CAT_EstatusCita" EntitySet="tbl_CAT_EstatusCita" />
-            <End Role="tbl_MST_Cita" EntitySet="tbl_MST_Cita" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MST_Cita_CAT_InstitucionProc" Association="RISLiteModel.FK_MST_Cita_CAT_InstitucionProc">
-            <End Role="tbl_CAT_InstitucionProcedencia" EntitySet="tbl_CAT_InstitucionProcedencia" />
-            <End Role="tbl_MST_Cita" EntitySet="tbl_MST_Cita" />
-          </AssociationSet>
           <AssociationSet Name="FK_DET_DireccionPaciente_MST_Paciente" Association="RISLiteModel.FK_DET_DireccionPaciente_MST_Paciente">
             <End Role="tbl_MST_Paciente" EntitySet="tbl_MST_Paciente" />
             <End Role="tbl_DET_DireccionPaciente" EntitySet="tbl_DET_DireccionPaciente" />
@@ -1557,10 +1591,6 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
           <AssociationSet Name="FK_DET_Paciente_MST_Pacient" Association="RISLiteModel.FK_DET_Paciente_MST_Pacient">
             <End Role="tbl_MST_Paciente" EntitySet="tbl_MST_Paciente" />
             <End Role="tbl_DET_Paciente" EntitySet="tbl_DET_Paciente" />
-          </AssociationSet>
-          <AssociationSet Name="FK_REL_PacienteCita_MST_Cita" Association="RISLiteModel.FK_REL_PacienteCita_MST_Cita">
-            <End Role="tbl_MST_Cita" EntitySet="tbl_MST_Cita" />
-            <End Role="tbl_REL_PacienteCita" EntitySet="tbl_REL_PacienteCita" />
           </AssociationSet>
           <AssociationSet Name="FK_REL_PacienteCita_MST_Paciente" Association="RISLiteModel.FK_REL_PacienteCita_MST_Paciente">
             <End Role="tbl_MST_Paciente" EntitySet="tbl_MST_Paciente" />
@@ -1570,20 +1600,12 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
             <End Role="tbl_MST_Paciente" EntitySet="tbl_MST_Paciente" />
             <End Role="tbl_REL_IdentificacionPaciente" EntitySet="tbl_REL_IdentificacionPaciente" />
           </AssociationSet>
-          <FunctionImport Name="stp_getBusquedaPaciente" ReturnType="Collection(RISLiteModel.stp_getBusquedaPaciente_Result)">
-          <Parameter Name="vchCadena" Mode="In" Type="String" />
-          </FunctionImport>
           <FunctionImport Name="stp_getBusquedaEstudio" ReturnType="Collection(RISLiteModel.stp_getBusquedaEstudio_Result)">
           <Parameter Name="estudio" Mode="In" Type="String" />
           </FunctionImport>
           <EntitySet Name="tbl_CAT_MedicoTratante" EntityType="RISLiteModel.tbl_CAT_MedicoTratante" />
-          <EntitySet Name="tbl_DET_CitaDinamico" EntityType="RISLiteModel.tbl_DET_CitaDinamico" />
           <EntitySet Name="tbl_DET_Cuestionario" EntityType="RISLiteModel.tbl_DET_Cuestionario" />
           <EntitySet Name="tbl_DET_Restriccion" EntityType="RISLiteModel.tbl_DET_Restriccion" />
-          <AssociationSet Name="FK_MST_Cita_CAT_MedicoTratante" Association="RISLiteModel.FK_MST_Cita_CAT_MedicoTratante">
-            <End Role="tbl_CAT_MedicoTratante" EntitySet="tbl_CAT_MedicoTratante" />
-            <End Role="tbl_MST_Cita" EntitySet="tbl_MST_Cita" />
-          </AssociationSet>
           <AssociationSet Name="FK_DET_Restriccion_CAT_Prestacion" Association="RISLiteModel.FK_DET_Restriccion_CAT_Prestacion">
             <End Role="tbl_CAT_Prestacion" EntitySet="tbl_CAT_Prestacion" />
             <End Role="tbl_DET_Restriccion" EntitySet="tbl_DET_Restriccion" />
@@ -1591,10 +1613,6 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
           <AssociationSet Name="FK_TBL_DET__REFERENCE_TBL_CAT_" Association="RISLiteModel.FK_TBL_DET__REFERENCE_TBL_CAT_">
             <End Role="tbl_CAT_Prestacion" EntitySet="tbl_CAT_Prestacion" />
             <End Role="tbl_DET_Cuestionario" EntitySet="tbl_DET_Cuestionario" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DET_CitaDinamico_MST_Cita" Association="RISLiteModel.FK_DET_CitaDinamico_MST_Cita">
-            <End Role="tbl_MST_Cita" EntitySet="tbl_MST_Cita" />
-            <End Role="tbl_DET_CitaDinamico" EntitySet="tbl_DET_CitaDinamico" />
           </AssociationSet>
           <EntitySet Name="tbl_DET_IndicacionPrestacion" EntityType="RISLiteModel.tbl_DET_IndicacionPrestacion" />
           <AssociationSet Name="FK_DET_IndicacionPrestacion_CAT_Prestacion" Association="RISLiteModel.FK_DET_IndicacionPrestacion_CAT_Prestacion">
@@ -1615,10 +1633,6 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
             <End Role="tbl_CAT_EstatusEstudio" EntitySet="tbl_CAT_EstatusEstudio" />
             <End Role="tbl_MST_Estudio" EntitySet="tbl_MST_Estudio" />
           </AssociationSet>
-          <AssociationSet Name="FK_REL_CitaEstudio_MST_Cita" Association="RISLiteModel.FK_REL_CitaEstudio_MST_Cita">
-            <End Role="tbl_MST_Cita" EntitySet="tbl_MST_Cita" />
-            <End Role="tbl_REL_CitaEstudio" EntitySet="tbl_REL_CitaEstudio" />
-          </AssociationSet>
           <AssociationSet Name="FK_MST_Estudio_REL_ModalidadPrestacion" Association="RISLiteModel.FK_MST_Estudio_REL_ModalidadPrestacion">
             <End Role="tbl_REL_ModalidadPrestacion" EntitySet="tbl_REL_ModalidadPrestacion" />
             <End Role="tbl_MST_Estudio" EntitySet="tbl_MST_Estudio" />
@@ -1626,11 +1640,6 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
           <AssociationSet Name="FK_REL_CitaEstudio_MST_Estudio" Association="RISLiteModel.FK_REL_CitaEstudio_MST_Estudio">
             <End Role="tbl_MST_Estudio" EntitySet="tbl_MST_Estudio" />
             <End Role="tbl_REL_CitaEstudio" EntitySet="tbl_REL_CitaEstudio" />
-          </AssociationSet>
-          <EntitySet Name="tbl_DET_Cita" EntityType="RISLiteModel.tbl_DET_Cita" />
-          <AssociationSet Name="FK_DET_Cita_MST_Cita" Association="RISLiteModel.FK_DET_Cita_MST_Cita">
-            <End Role="tbl_MST_Cita" EntitySet="tbl_MST_Cita" />
-            <End Role="tbl_DET_Cita" EntitySet="tbl_DET_Cita" />
           </AssociationSet>
           <EntitySet Name="tbl_CAT_DiaFeriado" EntityType="RISLiteModel.tbl_CAT_DiaFeriado" />
           <EntitySet Name="tbl_CAT_DiaSemana" EntityType="RISLiteModel.tbl_CAT_DiaSemana" />
@@ -1767,6 +1776,51 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
             <End Role="tbl_CAT_Sitio" EntitySet="tbl_CAT_Sitio" />
             <End Role="tbl_REL_DiaSemana" EntitySet="tbl_REL_DiaSemana" />
           </AssociationSet>
+          <FunctionImport Name="stp_getBusquedaPaciente" ReturnType="Collection(RISLiteModel.stp_getBusquedaPaciente_Result)">
+            <Parameter Name="vchCadena" Mode="In" Type="String" />
+            <Parameter Name="intSitioID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="tbl_MST_Cita" EntityType="RISLiteModel.tbl_MST_Cita" />
+          <AssociationSet Name="FK_MST_Cita_CAT_EstatusCita" Association="RISLiteModel.FK_MST_Cita_CAT_EstatusCita">
+            <End Role="tbl_CAT_EstatusCita" EntitySet="tbl_CAT_EstatusCita" />
+            <End Role="tbl_MST_Cita" EntitySet="tbl_MST_Cita" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MST_Cita_CAT_InstitucionProc" Association="RISLiteModel.FK_MST_Cita_CAT_InstitucionProc">
+            <End Role="tbl_CAT_InstitucionProcedencia" EntitySet="tbl_CAT_InstitucionProcedencia" />
+            <End Role="tbl_MST_Cita" EntitySet="tbl_MST_Cita" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MST_Cita_CAT_MedicoTratante" Association="RISLiteModel.FK_MST_Cita_CAT_MedicoTratante">
+            <End Role="tbl_CAT_MedicoTratante" EntitySet="tbl_CAT_MedicoTratante" />
+            <End Role="tbl_MST_Cita" EntitySet="tbl_MST_Cita" />
+          </AssociationSet>
+          <EntitySet Name="tbl_DET_CitaDinamico" EntityType="RISLiteModel.tbl_DET_CitaDinamico" />
+          <AssociationSet Name="FK_TBL_DET__REFERENCE_TBL_CONF" Association="RISLiteModel.FK_TBL_DET__REFERENCE_TBL_CONF">
+            <End Role="tbl_CONFIG_VariablesAdiCita" EntitySet="tbl_CONFIG_VariablesAdiCita" />
+            <End Role="tbl_DET_CitaDinamico" EntitySet="tbl_DET_CitaDinamico" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DET_CitaDinamico_MST_Cita" Association="RISLiteModel.FK_DET_CitaDinamico_MST_Cita">
+            <End Role="tbl_MST_Cita" EntitySet="tbl_MST_Cita" />
+            <End Role="tbl_DET_CitaDinamico" EntitySet="tbl_DET_CitaDinamico" />
+          </AssociationSet>
+          <EntitySet Name="tbl_DET_Cita" EntityType="RISLiteModel.tbl_DET_Cita" />
+          <AssociationSet Name="FK_DET_Cita_MST_Adicionales" Association="RISLiteModel.FK_DET_Cita_MST_Adicionales">
+            <End Role="tbl_MST_Adicionales" EntitySet="tbl_MST_Adicionales" />
+            <End Role="tbl_DET_Cita" EntitySet="tbl_DET_Cita" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DET_Cita_MST_Cita" Association="RISLiteModel.FK_DET_Cita_MST_Cita">
+            <End Role="tbl_MST_Cita" EntitySet="tbl_MST_Cita" />
+            <End Role="tbl_DET_Cita" EntitySet="tbl_DET_Cita" />
+          </AssociationSet>
+          <FunctionImport Name="stp_getCitaReporte" ReturnType="Collection(RISLiteModel.stp_getCitaReporte_Result)">
+          <Parameter Name="intCitaID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="stp_getCitas" ReturnType="Collection(RISLiteModel.stp_getCitas_Result)">
+            <Parameter Name="vchNombre" Mode="In" Type="String" />
+            <Parameter Name="intModalidadID" Mode="In" Type="Int32" />
+            <Parameter Name="datFechaInicio" Mode="In" Type="DateTime" />
+            <Parameter Name="datFechaFin" Mode="In" Type="DateTime" />
+            <Parameter Name="intSitioID" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <EntityType Name="tbl_CAT_TipoMensaje">
           <Key>
@@ -1895,9 +1949,9 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
           <Property Name="bitActivo" Type="Boolean" />
           <Property Name="datFecha" Type="DateTime" Precision="3" />
           <Property Name="vchUserAdmin" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="tbl_MST_Cita" Relationship="RISLiteModel.FK_MST_Cita_CAT_InstitucionProc" FromRole="tbl_CAT_InstitucionProcedencia" ToRole="tbl_MST_Cita" />
           <Property Name="intSitioID" Type="Int32" />
           <NavigationProperty Name="tbl_CAT_Sitio" Relationship="RISLiteModel.FK_CAT_InstitucionProcedencia_CAT_Sitio" FromRole="tbl_CAT_InstitucionProcedencia" ToRole="tbl_CAT_Sitio" />
+          <NavigationProperty Name="tbl_MST_Cita" Relationship="RISLiteModel.FK_MST_Cita_CAT_InstitucionProc" FromRole="tbl_CAT_InstitucionProcedencia" ToRole="tbl_MST_Cita" />
         </EntityType>
         <EntityType Name="tbl_CAT_TipoMovimiento">
           <Key>
@@ -2206,26 +2260,6 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
           <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="tbl_MST_Paciente" Relationship="RISLiteModel.FK_DET_Paciente_MST_Pacient" FromRole="tbl_DET_Paciente" ToRole="tbl_MST_Paciente" />
         </EntityType>
-        <EntityType Name="tbl_MST_Cita">
-          <Key>
-            <PropertyRef Name="intCitaID" />
-          </Key>
-          <Property Name="intCitaID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="intMedicoTraID" Type="Int32" />
-          <Property Name="intInstitucionID" Type="Int32" />
-          <Property Name="intEstatusCita" Type="Int32" />
-          <Property Name="datFechaCita" Type="DateTime" Precision="3" />
-          <Property Name="bitActivo" Type="Boolean" />
-          <Property Name="datFecha" Type="DateTime" Precision="3" />
-          <Property Name="vchUserAdmin" Type="Binary" MaxLength="100" FixedLength="false" />
-          <NavigationProperty Name="tbl_CAT_EstatusCita" Relationship="RISLiteModel.FK_MST_Cita_CAT_EstatusCita" FromRole="tbl_MST_Cita" ToRole="tbl_CAT_EstatusCita" />
-          <NavigationProperty Name="tbl_CAT_InstitucionProcedencia" Relationship="RISLiteModel.FK_MST_Cita_CAT_InstitucionProc" FromRole="tbl_MST_Cita" ToRole="tbl_CAT_InstitucionProcedencia" />
-          <NavigationProperty Name="tbl_REL_PacienteCita" Relationship="RISLiteModel.FK_REL_PacienteCita_MST_Cita" FromRole="tbl_MST_Cita" ToRole="tbl_REL_PacienteCita" />
-          <NavigationProperty Name="tbl_CAT_MedicoTratante" Relationship="RISLiteModel.FK_MST_Cita_CAT_MedicoTratante" FromRole="tbl_MST_Cita" ToRole="tbl_CAT_MedicoTratante" />
-          <NavigationProperty Name="tbl_DET_CitaDinamico" Relationship="RISLiteModel.FK_DET_CitaDinamico_MST_Cita" FromRole="tbl_MST_Cita" ToRole="tbl_DET_CitaDinamico" />
-          <NavigationProperty Name="tbl_REL_CitaEstudio" Relationship="RISLiteModel.FK_REL_CitaEstudio_MST_Cita" FromRole="tbl_MST_Cita" ToRole="tbl_REL_CitaEstudio" />
-          <NavigationProperty Name="tbl_DET_Cita" Relationship="RISLiteModel.FK_DET_Cita_MST_Cita" FromRole="tbl_MST_Cita" ToRole="tbl_DET_Cita" />
-        </EntityType>
         <EntityType Name="tbl_REL_IdentificacionPaciente">
           <Key>
             <PropertyRef Name="intRELIdenPacienteID" />
@@ -2249,7 +2283,6 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
           <Property Name="bitActivo" Type="Boolean" />
           <Property Name="datFecha" Type="DateTime" Precision="3" />
           <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="tbl_MST_Cita" Relationship="RISLiteModel.FK_REL_PacienteCita_MST_Cita" FromRole="tbl_REL_PacienteCita" ToRole="tbl_MST_Cita" />
           <NavigationProperty Name="tbl_MST_Paciente" Relationship="RISLiteModel.FK_REL_PacienteCita_MST_Paciente" FromRole="tbl_REL_PacienteCita" ToRole="tbl_MST_Paciente" />
         </EntityType>
         <Association Name="FK_CAT_CodigoPostal_CAT_Municipio">
@@ -2288,30 +2321,6 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_MST_Cita_CAT_EstatusCita">
-          <End Type="RISLiteModel.tbl_CAT_EstatusCita" Role="tbl_CAT_EstatusCita" Multiplicity="0..1" />
-          <End Type="RISLiteModel.tbl_MST_Cita" Role="tbl_MST_Cita" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tbl_CAT_EstatusCita">
-              <PropertyRef Name="intEstatusCita" />
-            </Principal>
-            <Dependent Role="tbl_MST_Cita">
-              <PropertyRef Name="intEstatusCita" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_MST_Cita_CAT_InstitucionProc">
-          <End Type="RISLiteModel.tbl_CAT_InstitucionProcedencia" Role="tbl_CAT_InstitucionProcedencia" Multiplicity="0..1" />
-          <End Type="RISLiteModel.tbl_MST_Cita" Role="tbl_MST_Cita" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tbl_CAT_InstitucionProcedencia">
-              <PropertyRef Name="intInstitucionID" />
-            </Principal>
-            <Dependent Role="tbl_MST_Cita">
-              <PropertyRef Name="intInstitucionID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_DET_DireccionPaciente_MST_Paciente">
           <End Type="RISLiteModel.tbl_MST_Paciente" Role="tbl_MST_Paciente" Multiplicity="0..1" />
           <End Type="RISLiteModel.tbl_DET_DireccionPaciente" Role="tbl_DET_DireccionPaciente" Multiplicity="*" />
@@ -2333,18 +2342,6 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
             </Principal>
             <Dependent Role="tbl_DET_Paciente">
               <PropertyRef Name="intPacienteID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_REL_PacienteCita_MST_Cita">
-          <End Type="RISLiteModel.tbl_MST_Cita" Role="tbl_MST_Cita" Multiplicity="0..1" />
-          <End Type="RISLiteModel.tbl_REL_PacienteCita" Role="tbl_REL_PacienteCita" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tbl_MST_Cita">
-              <PropertyRef Name="intCitaID" />
-            </Principal>
-            <Dependent Role="tbl_REL_PacienteCita">
-              <PropertyRef Name="intCitaID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2372,10 +2369,6 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="stp_getBusquedaPaciente_Result">
-          <Property Type="Int64" Name="intPacienteID" Nullable="false" />
-          <Property Type="String" Name="CADENA" Nullable="false" />
-        </ComplexType>
         <ComplexType Name="stp_getBusquedaEstudio_Result">
           <Property Type="Int32" Name="intRELModPres" Nullable="false" />
           <Property Type="String" Name="CADENA" Nullable="true" MaxLength="506" />
@@ -2390,22 +2383,9 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
           <Property Name="bitActivo" Type="Boolean" />
           <Property Name="datFecha" Type="DateTime" Precision="3" />
           <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="tbl_MST_Cita" Relationship="RISLiteModel.FK_MST_Cita_CAT_MedicoTratante" FromRole="tbl_CAT_MedicoTratante" ToRole="tbl_MST_Cita" />
           <Property Name="intSitioID" Type="Int32" />
           <NavigationProperty Name="tbl_CAT_Sitio" Relationship="RISLiteModel.FK_CAT_MedicoTratante_CAT_Sitio" FromRole="tbl_CAT_MedicoTratante" ToRole="tbl_CAT_Sitio" />
-        </EntityType>
-        <EntityType Name="tbl_DET_CitaDinamico">
-          <Key>
-            <PropertyRef Name="intADICita" />
-          </Key>
-          <Property Name="intADICita" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="intCitaID" Type="Int64" />
-          <Property Name="intVarAdiCitaID" Type="Int32" />
-          <Property Name="vchValorVar" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="bitActivo" Type="Boolean" />
-          <Property Name="datFecha" Type="DateTime" Precision="3" />
-          <Property Name="vchUserAdmin" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="tbl_MST_Cita" Relationship="RISLiteModel.FK_DET_CitaDinamico_MST_Cita" FromRole="tbl_DET_CitaDinamico" ToRole="tbl_MST_Cita" />
+          <NavigationProperty Name="tbl_MST_Cita" Relationship="RISLiteModel.FK_MST_Cita_CAT_MedicoTratante" FromRole="tbl_CAT_MedicoTratante" ToRole="tbl_MST_Cita" />
         </EntityType>
         <EntityType Name="tbl_DET_Cuestionario">
           <Key>
@@ -2432,18 +2412,6 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
           <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="tbl_CAT_Prestacion" Relationship="RISLiteModel.FK_DET_Restriccion_CAT_Prestacion" FromRole="tbl_DET_Restriccion" ToRole="tbl_CAT_Prestacion" />
         </EntityType>
-        <Association Name="FK_MST_Cita_CAT_MedicoTratante">
-          <End Type="RISLiteModel.tbl_CAT_MedicoTratante" Role="tbl_CAT_MedicoTratante" Multiplicity="0..1" />
-          <End Type="RISLiteModel.tbl_MST_Cita" Role="tbl_MST_Cita" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tbl_CAT_MedicoTratante">
-              <PropertyRef Name="intMedicoTraID" />
-            </Principal>
-            <Dependent Role="tbl_MST_Cita">
-              <PropertyRef Name="intMedicoTraID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_DET_Restriccion_CAT_Prestacion">
           <End Type="RISLiteModel.tbl_CAT_Prestacion" Role="tbl_CAT_Prestacion" Multiplicity="0..1" />
           <End Type="RISLiteModel.tbl_DET_Restriccion" Role="tbl_DET_Restriccion" Multiplicity="*" />
@@ -2465,18 +2433,6 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
             </Principal>
             <Dependent Role="tbl_DET_Cuestionario">
               <PropertyRef Name="intPrestacionID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DET_CitaDinamico_MST_Cita">
-          <End Type="RISLiteModel.tbl_MST_Cita" Role="tbl_MST_Cita" Multiplicity="0..1" />
-          <End Type="RISLiteModel.tbl_DET_CitaDinamico" Role="tbl_DET_CitaDinamico" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tbl_MST_Cita">
-              <PropertyRef Name="intCitaID" />
-            </Principal>
-            <Dependent Role="tbl_DET_CitaDinamico">
-              <PropertyRef Name="intCitaID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2574,7 +2530,6 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
           <Property Name="bitActivo" Type="Boolean" />
           <Property Name="datFecha" Type="DateTime" Precision="3" />
           <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="tbl_MST_Cita" Relationship="RISLiteModel.FK_REL_CitaEstudio_MST_Cita" FromRole="tbl_REL_CitaEstudio" ToRole="tbl_MST_Cita" />
           <NavigationProperty Name="tbl_MST_Estudio" Relationship="RISLiteModel.FK_REL_CitaEstudio_MST_Estudio" FromRole="tbl_REL_CitaEstudio" ToRole="tbl_MST_Estudio" />
         </EntityType>
         <Association Name="FK_MST_Estudio_CAT_EstatusEstudio">
@@ -2586,18 +2541,6 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
             </Principal>
             <Dependent Role="tbl_MST_Estudio">
               <PropertyRef Name="intEstatusEstudio" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_REL_CitaEstudio_MST_Cita">
-          <End Type="RISLiteModel.tbl_MST_Cita" Role="tbl_MST_Cita" Multiplicity="0..1" />
-          <End Type="RISLiteModel.tbl_REL_CitaEstudio" Role="tbl_REL_CitaEstudio" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tbl_MST_Cita">
-              <PropertyRef Name="intCitaID" />
-            </Principal>
-            <Dependent Role="tbl_REL_CitaEstudio">
-              <PropertyRef Name="intCitaID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2622,33 +2565,6 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
             </Principal>
             <Dependent Role="tbl_REL_CitaEstudio">
               <PropertyRef Name="intEstudioID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="tbl_DET_Cita">
-          <Key>
-            <PropertyRef Name="intDETCitaID" />
-          </Key>
-          <Property Name="intDETCitaID" Type="Int64" Nullable="false" />
-          <Property Name="intCitaID" Type="Int64" />
-          <Property Name="intAdicionalesID" Type="Int32" />
-          <Property Name="vchValor" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="bitDato" Type="Boolean" />
-          <Property Name="vchObservaciones" Type="Binary" MaxLength="200" FixedLength="false" />
-          <Property Name="bitActivo" Type="Boolean" />
-          <Property Name="datFecha" Type="DateTime" Precision="3" />
-          <Property Name="vchUserAdmin" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="tbl_MST_Cita" Relationship="RISLiteModel.FK_DET_Cita_MST_Cita" FromRole="tbl_DET_Cita" ToRole="tbl_MST_Cita" />
-        </EntityType>
-        <Association Name="FK_DET_Cita_MST_Cita">
-          <End Type="RISLiteModel.tbl_MST_Cita" Role="tbl_MST_Cita" Multiplicity="0..1" />
-          <End Type="RISLiteModel.tbl_DET_Cita" Role="tbl_DET_Cita" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tbl_MST_Cita">
-              <PropertyRef Name="intCitaID" />
-            </Principal>
-            <Dependent Role="tbl_DET_Cita">
-              <PropertyRef Name="intCitaID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2889,6 +2805,7 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
           <Property Name="datFecha" Type="DateTime" Precision="3" />
           <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="tbl_CAT_Sitio" Relationship="RISLiteModel.FK_Config_VariablesAdiCita_CAT_Sitio" FromRole="tbl_CONFIG_VariablesAdiCita" ToRole="tbl_CAT_Sitio" />
+          <NavigationProperty Name="tbl_DET_CitaDinamico" Relationship="RISLiteModel.FK_TBL_DET__REFERENCE_TBL_CONF" FromRole="tbl_CONFIG_VariablesAdiCita" ToRole="tbl_DET_CitaDinamico" />
         </EntityType>
         <Association Name="FK_Config_VariablesAdiCita_CAT_Sitio">
           <End Type="RISLiteModel.tbl_CAT_Sitio" Role="tbl_CAT_Sitio" Multiplicity="0..1" />
@@ -3026,6 +2943,7 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
           <NavigationProperty Name="tbl_CAT_Sitio" Relationship="RISLiteModel.FK_MST_Adicionales_CAT_Sitio" FromRole="tbl_MST_Adicionales" ToRole="tbl_CAT_Sitio" />
           <NavigationProperty Name="tbl_CAT_TipoAdicional" Relationship="RISLiteModel.FK_MST_Adicionales_CAT_TipoAdicional" FromRole="tbl_MST_Adicionales" ToRole="tbl_CAT_TipoAdicional" />
           <NavigationProperty Name="tbl_CAT_TipoBoton" Relationship="RISLiteModel.FK_MST_Adicionales_CAT_TipoBoton" FromRole="tbl_MST_Adicionales" ToRole="tbl_CAT_TipoBoton" />
+          <NavigationProperty Name="tbl_DET_Cita" Relationship="RISLiteModel.FK_DET_Cita_MST_Adicionales" FromRole="tbl_MST_Adicionales" ToRole="tbl_DET_Cita" />
         </EntityType>
         <Association Name="FK_MST_Adicionales_CAT_Sitio">
           <End Type="RISLiteModel.tbl_CAT_Sitio" Role="tbl_CAT_Sitio" Multiplicity="0..1" />
@@ -3227,6 +3145,170 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="stp_getBusquedaPaciente_Result">
+          <Property Type="Int64" Name="intPacienteID" Nullable="false" />
+          <Property Type="String" Name="CADENA" Nullable="false" />
+        </ComplexType>
+        <EntityType Name="tbl_MST_Cita">
+          <Key>
+            <PropertyRef Name="intCitaID" />
+          </Key>
+          <Property Name="intCitaID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="intMedicoTraID" Type="Int32" />
+          <Property Name="intInstitucionID" Type="Int32" />
+          <Property Name="intEstatusCita" Type="Int32" />
+          <Property Name="datFechaCita" Type="DateTime" Precision="3" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_CAT_EstatusCita" Relationship="RISLiteModel.FK_MST_Cita_CAT_EstatusCita" FromRole="tbl_MST_Cita" ToRole="tbl_CAT_EstatusCita" />
+          <NavigationProperty Name="tbl_CAT_InstitucionProcedencia" Relationship="RISLiteModel.FK_MST_Cita_CAT_InstitucionProc" FromRole="tbl_MST_Cita" ToRole="tbl_CAT_InstitucionProcedencia" />
+          <NavigationProperty Name="tbl_CAT_MedicoTratante" Relationship="RISLiteModel.FK_MST_Cita_CAT_MedicoTratante" FromRole="tbl_MST_Cita" ToRole="tbl_CAT_MedicoTratante" />
+          <NavigationProperty Name="tbl_DET_CitaDinamico" Relationship="RISLiteModel.FK_DET_CitaDinamico_MST_Cita" FromRole="tbl_MST_Cita" ToRole="tbl_DET_CitaDinamico" />
+          <NavigationProperty Name="tbl_DET_Cita" Relationship="RISLiteModel.FK_DET_Cita_MST_Cita" FromRole="tbl_MST_Cita" ToRole="tbl_DET_Cita" />
+        </EntityType>
+        <Association Name="FK_MST_Cita_CAT_EstatusCita">
+          <End Type="RISLiteModel.tbl_CAT_EstatusCita" Role="tbl_CAT_EstatusCita" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_MST_Cita" Role="tbl_MST_Cita" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_EstatusCita">
+              <PropertyRef Name="intEstatusCita" />
+            </Principal>
+            <Dependent Role="tbl_MST_Cita">
+              <PropertyRef Name="intEstatusCita" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MST_Cita_CAT_InstitucionProc">
+          <End Type="RISLiteModel.tbl_CAT_InstitucionProcedencia" Role="tbl_CAT_InstitucionProcedencia" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_MST_Cita" Role="tbl_MST_Cita" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_InstitucionProcedencia">
+              <PropertyRef Name="intInstitucionID" />
+            </Principal>
+            <Dependent Role="tbl_MST_Cita">
+              <PropertyRef Name="intInstitucionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MST_Cita_CAT_MedicoTratante">
+          <End Type="RISLiteModel.tbl_CAT_MedicoTratante" Role="tbl_CAT_MedicoTratante" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_MST_Cita" Role="tbl_MST_Cita" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CAT_MedicoTratante">
+              <PropertyRef Name="intMedicoTraID" />
+            </Principal>
+            <Dependent Role="tbl_MST_Cita">
+              <PropertyRef Name="intMedicoTraID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tbl_DET_CitaDinamico">
+          <Key>
+            <PropertyRef Name="intADICita" />
+          </Key>
+          <Property Name="intADICita" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="intCitaID" Type="Int64" />
+          <Property Name="intVarAdiCitaID" Type="Int32" />
+          <Property Name="vchValorVar" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_CONFIG_VariablesAdiCita" Relationship="RISLiteModel.FK_TBL_DET__REFERENCE_TBL_CONF" FromRole="tbl_DET_CitaDinamico" ToRole="tbl_CONFIG_VariablesAdiCita" />
+          <NavigationProperty Name="tbl_MST_Cita" Relationship="RISLiteModel.FK_DET_CitaDinamico_MST_Cita" FromRole="tbl_DET_CitaDinamico" ToRole="tbl_MST_Cita" />
+        </EntityType>
+        <Association Name="FK_TBL_DET__REFERENCE_TBL_CONF">
+          <End Type="RISLiteModel.tbl_CONFIG_VariablesAdiCita" Role="tbl_CONFIG_VariablesAdiCita" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_DET_CitaDinamico" Role="tbl_DET_CitaDinamico" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_CONFIG_VariablesAdiCita">
+              <PropertyRef Name="intVarAdiCitaID" />
+            </Principal>
+            <Dependent Role="tbl_DET_CitaDinamico">
+              <PropertyRef Name="intVarAdiCitaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DET_CitaDinamico_MST_Cita">
+          <End Type="RISLiteModel.tbl_MST_Cita" Role="tbl_MST_Cita" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_DET_CitaDinamico" Role="tbl_DET_CitaDinamico" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_MST_Cita">
+              <PropertyRef Name="intCitaID" />
+            </Principal>
+            <Dependent Role="tbl_DET_CitaDinamico">
+              <PropertyRef Name="intCitaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tbl_DET_Cita">
+          <Key>
+            <PropertyRef Name="intDETCitaID" />
+          </Key>
+          <Property Name="intDETCitaID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="intCitaID" Type="Int64" />
+          <Property Name="intAdicionalesID" Type="Int32" />
+          <Property Name="vchValor" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="bitDato" Type="Boolean" />
+          <Property Name="vchObservaciones" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="bitActivo" Type="Boolean" />
+          <Property Name="datFecha" Type="DateTime" Precision="3" />
+          <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_MST_Adicionales" Relationship="RISLiteModel.FK_DET_Cita_MST_Adicionales" FromRole="tbl_DET_Cita" ToRole="tbl_MST_Adicionales" />
+          <NavigationProperty Name="tbl_MST_Cita" Relationship="RISLiteModel.FK_DET_Cita_MST_Cita" FromRole="tbl_DET_Cita" ToRole="tbl_MST_Cita" />
+        </EntityType>
+        <Association Name="FK_DET_Cita_MST_Adicionales">
+          <End Type="RISLiteModel.tbl_MST_Adicionales" Role="tbl_MST_Adicionales" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_DET_Cita" Role="tbl_DET_Cita" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_MST_Adicionales">
+              <PropertyRef Name="intAdicionalesID" />
+            </Principal>
+            <Dependent Role="tbl_DET_Cita">
+              <PropertyRef Name="intAdicionalesID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DET_Cita_MST_Cita">
+          <End Type="RISLiteModel.tbl_MST_Cita" Role="tbl_MST_Cita" Multiplicity="0..1" />
+          <End Type="RISLiteModel.tbl_DET_Cita" Role="tbl_DET_Cita" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_MST_Cita">
+              <PropertyRef Name="intCitaID" />
+            </Principal>
+            <Dependent Role="tbl_DET_Cita">
+              <PropertyRef Name="intCitaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="stp_getCitaReporte_Result">
+          <Property Type="Int64" Name="intCitaID" Nullable="false" />
+          <Property Type="String" Name="vchNombreSitio" Nullable="true" MaxLength="100" />
+          <Property Type="Binary" Name="vbLogoSitio" Nullable="true" />
+          <Property Type="String" Name="vchNombre" Nullable="false" MaxLength="401" />
+          <Property Type="String" Name="vchGenero" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="vchEmail" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="vchFechaNac" Nullable="false" MaxLength="14" />
+          <Property Type="DateTime" Name="datFechaInicio" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="datFechaFin" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="intPrestacionID" Nullable="true" />
+          <Property Type="String" Name="vchPrestacion" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="vchNombreReestriccion" Nullable="false" MaxLength="300" />
+          <Property Type="String" Name="vchDetalleRestriccion" Nullable="false" MaxLength="300" />
+          <Property Type="String" Name="vchIndicacion" Nullable="false" MaxLength="200" />
+        </ComplexType>
+        <ComplexType Name="stp_getCitas_Result">
+          <Property Type="Int64" Name="intEstudioID" Nullable="false" />
+          <Property Type="Int64" Name="intCitaID" Nullable="true" />
+          <Property Type="Int64" Name="intPacienteID" Nullable="true" />
+          <Property Type="String" Name="vchNombre" Nullable="false" MaxLength="401" />
+          <Property Type="DateTime" Name="datFechaInicio" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="intModalidadID" Nullable="true" />
+          <Property Type="String" Name="vchModalidad" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="vchPrestacion" Nullable="true" MaxLength="200" />
+          <Property Type="Int32" Name="intEstatusEstudio" Nullable="true" />
+          <Property Type="String" Name="vchEstatus" Nullable="true" MaxLength="200" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3555,20 +3637,6 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="tbl_MST_Cita">
-            <EntityTypeMapping TypeName="RISLiteModel.tbl_MST_Cita">
-              <MappingFragment StoreEntitySet="tbl_MST_Cita">
-                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
-                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
-                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
-                <ScalarProperty Name="datFechaCita" ColumnName="datFechaCita" />
-                <ScalarProperty Name="intEstatusCita" ColumnName="intEstatusCita" />
-                <ScalarProperty Name="intInstitucionID" ColumnName="intInstitucionID" />
-                <ScalarProperty Name="intMedicoTraID" ColumnName="intMedicoTraID" />
-                <ScalarProperty Name="intCitaID" ColumnName="intCitaID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="tbl_REL_IdentificacionPaciente">
             <EntityTypeMapping TypeName="RISLiteModel.tbl_REL_IdentificacionPaciente">
               <MappingFragment StoreEntitySet="tbl_REL_IdentificacionPaciente">
@@ -3594,14 +3662,6 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="stp_getBusquedaPaciente" FunctionName="RISLiteModel.Store.stp_getBusquedaPaciente">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="RISLiteModel.stp_getBusquedaPaciente_Result">
-                <ScalarProperty Name="intPacienteID" ColumnName="intPacienteID" />
-                <ScalarProperty Name="CADENA" ColumnName="CADENA" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="stp_getBusquedaEstudio" FunctionName="RISLiteModel.Store.stp_getBusquedaEstudio">
             <ResultMapping>
               <ComplexTypeMapping TypeName="RISLiteModel.stp_getBusquedaEstudio_Result">
@@ -3620,19 +3680,6 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
                 <ScalarProperty Name="vchApellidos" ColumnName="vchApellidos" />
                 <ScalarProperty Name="vchNombreMedico" ColumnName="vchNombreMedico" />
                 <ScalarProperty Name="intMedicoTraID" ColumnName="intMedicoTraID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="tbl_DET_CitaDinamico">
-            <EntityTypeMapping TypeName="RISLiteModel.tbl_DET_CitaDinamico">
-              <MappingFragment StoreEntitySet="tbl_DET_CitaDinamico">
-                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
-                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
-                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
-                <ScalarProperty Name="vchValorVar" ColumnName="vchValorVar" />
-                <ScalarProperty Name="intVarAdiCitaID" ColumnName="intVarAdiCitaID" />
-                <ScalarProperty Name="intCitaID" ColumnName="intCitaID" />
-                <ScalarProperty Name="intADICita" ColumnName="intADICita" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3723,21 +3770,6 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
                 <ScalarProperty Name="intEstudioID" ColumnName="intEstudioID" />
                 <ScalarProperty Name="intCitaID" ColumnName="intCitaID" />
                 <ScalarProperty Name="intRELCitaEstudioID" ColumnName="intRELCitaEstudioID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="tbl_DET_Cita">
-            <EntityTypeMapping TypeName="RISLiteModel.tbl_DET_Cita">
-              <MappingFragment StoreEntitySet="tbl_DET_Cita">
-                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
-                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
-                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
-                <ScalarProperty Name="vchObservaciones" ColumnName="vchObservaciones" />
-                <ScalarProperty Name="bitDato" ColumnName="bitDato" />
-                <ScalarProperty Name="vchValor" ColumnName="vchValor" />
-                <ScalarProperty Name="intAdicionalesID" ColumnName="intAdicionalesID" />
-                <ScalarProperty Name="intCitaID" ColumnName="intCitaID" />
-                <ScalarProperty Name="intDETCitaID" ColumnName="intDETCitaID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -4036,6 +4068,92 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="stp_getBusquedaPaciente" FunctionName="RISLiteModel.Store.stp_getBusquedaPaciente">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RISLiteModel.stp_getBusquedaPaciente_Result">
+                <ScalarProperty Name="intPacienteID" ColumnName="intPacienteID" />
+                <ScalarProperty Name="CADENA" ColumnName="CADENA" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="tbl_MST_Cita">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_MST_Cita">
+              <MappingFragment StoreEntitySet="tbl_MST_Cita">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="datFechaCita" ColumnName="datFechaCita" />
+                <ScalarProperty Name="intEstatusCita" ColumnName="intEstatusCita" />
+                <ScalarProperty Name="intInstitucionID" ColumnName="intInstitucionID" />
+                <ScalarProperty Name="intMedicoTraID" ColumnName="intMedicoTraID" />
+                <ScalarProperty Name="intCitaID" ColumnName="intCitaID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_DET_CitaDinamico">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_DET_CitaDinamico">
+              <MappingFragment StoreEntitySet="tbl_DET_CitaDinamico">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="vchValorVar" ColumnName="vchValorVar" />
+                <ScalarProperty Name="intVarAdiCitaID" ColumnName="intVarAdiCitaID" />
+                <ScalarProperty Name="intCitaID" ColumnName="intCitaID" />
+                <ScalarProperty Name="intADICita" ColumnName="intADICita" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_DET_Cita">
+            <EntityTypeMapping TypeName="RISLiteModel.tbl_DET_Cita">
+              <MappingFragment StoreEntitySet="tbl_DET_Cita">
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="vchObservaciones" ColumnName="vchObservaciones" />
+                <ScalarProperty Name="bitDato" ColumnName="bitDato" />
+                <ScalarProperty Name="vchValor" ColumnName="vchValor" />
+                <ScalarProperty Name="intAdicionalesID" ColumnName="intAdicionalesID" />
+                <ScalarProperty Name="intCitaID" ColumnName="intCitaID" />
+                <ScalarProperty Name="intDETCitaID" ColumnName="intDETCitaID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="stp_getCitaReporte" FunctionName="RISLiteModel.Store.stp_getCitaReporte">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RISLiteModel.stp_getCitaReporte_Result">
+                <ScalarProperty Name="intCitaID" ColumnName="intCitaID" />
+                <ScalarProperty Name="vchNombreSitio" ColumnName="vchNombreSitio" />
+                <ScalarProperty Name="vbLogoSitio" ColumnName="vbLogoSitio" />
+                <ScalarProperty Name="vchNombre" ColumnName="vchNombre" />
+                <ScalarProperty Name="vchGenero" ColumnName="vchGenero" />
+                <ScalarProperty Name="vchEmail" ColumnName="vchEmail" />
+                <ScalarProperty Name="vchFechaNac" ColumnName="vchFechaNac" />
+                <ScalarProperty Name="datFechaInicio" ColumnName="datFechaInicio" />
+                <ScalarProperty Name="datFechaFin" ColumnName="datFechaFin" />
+                <ScalarProperty Name="intPrestacionID" ColumnName="intPrestacionID" />
+                <ScalarProperty Name="vchPrestacion" ColumnName="vchPrestacion" />
+                <ScalarProperty Name="vchNombreReestriccion" ColumnName="vchNombreReestriccion" />
+                <ScalarProperty Name="vchDetalleRestriccion" ColumnName="vchDetalleRestriccion" />
+                <ScalarProperty Name="vchIndicacion" ColumnName="vchIndicacion" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="stp_getCitas" FunctionName="RISLiteModel.Store.stp_getCitas">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RISLiteModel.stp_getCitas_Result">
+                <ScalarProperty Name="intEstudioID" ColumnName="intEstudioID" />
+                <ScalarProperty Name="intCitaID" ColumnName="intCitaID" />
+                <ScalarProperty Name="intPacienteID" ColumnName="intPacienteID" />
+                <ScalarProperty Name="vchNombre" ColumnName="vchNombre" />
+                <ScalarProperty Name="datFechaInicio" ColumnName="datFechaInicio" />
+                <ScalarProperty Name="intModalidadID" ColumnName="intModalidadID" />
+                <ScalarProperty Name="vchModalidad" ColumnName="vchModalidad" />
+                <ScalarProperty Name="vchPrestacion" ColumnName="vchPrestacion" />
+                <ScalarProperty Name="intEstatusEstudio" ColumnName="intEstatusEstudio" />
+                <ScalarProperty Name="vchEstatus" ColumnName="vchEstatus" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -14,6 +14,11 @@ namespace Fuji.RISLite.Entidades.DataBase
     
     public partial class tbl_CONFIG_VariablesAdiCita
     {
+        public tbl_CONFIG_VariablesAdiCita()
+        {
+            this.tbl_DET_CitaDinamico = new HashSet<tbl_DET_CitaDinamico>();
+        }
+    
         public int intVarAdiCitaID { get; set; }
         public Nullable<int> intSitioID { get; set; }
         public string vchNombreVariable { get; set; }
@@ -22,5 +27,6 @@ namespace Fuji.RISLite.Entidades.DataBase
         public string vchUserAdmin { get; set; }
     
         public virtual tbl_CAT_Sitio tbl_CAT_Sitio { get; set; }
+        public virtual ICollection<tbl_DET_CitaDinamico> tbl_DET_CitaDinamico { get; set; }
     }
 }

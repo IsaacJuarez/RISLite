@@ -275,5 +275,27 @@ namespace Fuji.RISLite.Site.Services
 
         [OperationContract]
         List<clsHoraMuerta> getHoraMuertaConfScheduler_Sitio(ConfigScheduler_HoraMuertaRequest request);
+
+        #region InsertCita
+        CitaNuevaResponse setCitaNueva(CitaNuevaRequest request);
+        #endregion
+
+        #region CitaReporte
+        [OperationContract]
+        List<stp_getCitaReporte_Result> getCitaReporte(CitaReporteRequest request);
+
+        [OperationContract]
+        List<clsRepIndicacion> getIndicaciones(CitaReporteRequest request);
+
+        [OperationContract]
+        List<clsRepRestriccion> getRestricciones(CitaReporteRequest request);
+
+        [OperationContract]
+        List<stp_getCitas_Result> getCitas(CitaReporteRequest request);
+
+        [OperationContract]
+        CitaReporteResponse setEstatusEstudio(CitaReporteRequest request);
+        #endregion CitaReporte
+
     }
 }

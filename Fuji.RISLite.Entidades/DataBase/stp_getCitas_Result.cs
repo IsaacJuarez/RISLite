@@ -10,19 +10,18 @@
 namespace Fuji.RISLite.Entidades.DataBase
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class tbl_DET_CitaDinamico
+    public partial class stp_getCitas_Result
     {
-        public int intADICita { get; set; }
+        public long intEstudioID { get; set; }
         public Nullable<long> intCitaID { get; set; }
-        public Nullable<int> intVarAdiCitaID { get; set; }
-        public string vchValorVar { get; set; }
-        public Nullable<bool> bitActivo { get; set; }
-        public Nullable<System.DateTime> datFecha { get; set; }
-        public string vchUserAdmin { get; set; }
-    
-        public virtual tbl_CONFIG_VariablesAdiCita tbl_CONFIG_VariablesAdiCita { get; set; }
-        public virtual tbl_MST_Cita tbl_MST_Cita { get; set; }
+        public Nullable<long> intPacienteID { get; set; }
+        public string vchNombre { get; set; }
+        public Nullable<System.DateTime> datFechaInicio { get; set; }
+        public Nullable<int> intModalidadID { get; set; }
+        public string vchModalidad { get; set; }
+        public string vchPrestacion { get; set; }
+        public Nullable<int> intEstatusEstudio { get; set; }
+        public string vchEstatus { get; set; }
     }
 }

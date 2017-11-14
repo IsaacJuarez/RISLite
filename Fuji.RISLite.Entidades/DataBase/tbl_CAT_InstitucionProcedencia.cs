@@ -26,7 +26,7 @@ namespace Fuji.RISLite.Entidades.DataBase
         public string vchUserAdmin { get; set; }
         public Nullable<int> intSitioID { get; set; }
     
-        public virtual ICollection<tbl_MST_Cita> tbl_MST_Cita { get; set; }
         public virtual tbl_CAT_Sitio tbl_CAT_Sitio { get; set; }
+        public virtual ICollection<tbl_MST_Cita> tbl_MST_Cita { get; set; }
     }
 }

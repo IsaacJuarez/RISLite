@@ -42,22 +42,38 @@ namespace Fuji.RISLite.Site
                 if (!IsPostBack)
                 {
                     TabName.Value = Request.Form[TabName.UniqueID];
-                    if (Session["User"] != null)
+                    if (Session["User"] != null && Session["lstVistas"] != null)
                     {
-                        Usuario = (clsUsuario)Session["User"];
-                        if (Usuario != null)
+                        List<clsVistasUsuarios> lstVista = (List<clsVistasUsuarios>)Session["lstVistas"];
+                        if (lstVista != null)
                         {
-                            Session["idActializa"] = 0;
-                            Session["idActializaEmail"] = 0;
-                            Session["logo"] = null;
-                            cargarSitios();
-                            cargaSitiosList();
-                            cargarForma();
+                            string vista = "frmConfiguracion.aspx";
+                            if (lstVista.Any(x => x.vchNombreVista == vista))
+                            {
+                                Usuario = (clsUsuario)Session["User"];
+                                if (Usuario != null)
+                                {
+                                    Session["idActializa"] = 0;
+                                    Session["idActializaEmail"] = 0;
+                                    Session["logo"] = null;
+                                    cargarSitios();
+                                    cargaSitiosList();
+                                    cargarForma();
+                                }
+                                else
+                                {
+                                    var = Security.Encrypt("1");
+                                    Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                                }
+                            }
+                            else
+                            {
+                                Response.Redirect(URL + "/frmSinPermiso.aspx");
+                            }
                         }
                         else
                         {
-                            var = Security.Encrypt("1");
-                            Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                            Response.Redirect(URL + "/frmSinPermiso.aspx");
                         }
                     }
                     else
