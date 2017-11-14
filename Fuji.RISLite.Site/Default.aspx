@@ -191,12 +191,13 @@
 
                 <asp:SqlDataSource ID="SqlDataSource1" runat="server"
                     ConnectionString="<%$ ConnectionStrings:BD2 %>"
-                    SelectCommand="SELECT * FROM [tbl_CAT_Modalidad] WHERE bitActivo = 'True'"></asp:SqlDataSource>
+                    SelectCommand="SELECT * FROM [tbl_CAT_Modalidad] WHERE bitActivo = 'True' AND intSitioID = @idsitioss_">
 
-              <%--  <asp:SqlDataSource ID="SqlDataSource2" runat="server"
-        ConnectionString="<%$ ConnectionStrings:BD2 %>"
-        SelectCommand="SELECT * FROM [Eventos]" >
-    </asp:SqlDataSource>--%>
+                   <SelectParameters>
+                        <asp:Parameter Name="idsitioss_" Type="String" DefaultValue="1" />
+                   </SelectParameters>
+
+                </asp:SqlDataSource>
             </div>
         </div>
     </div>

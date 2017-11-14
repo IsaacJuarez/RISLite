@@ -5,6 +5,7 @@ using Fuji.RISLite.Site.Services.DataContract;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Web.UI.HtmlControls;
 
 namespace Fuji.RISLite.Site
@@ -28,18 +29,34 @@ namespace Fuji.RISLite.Site
                 String var = "";
                 if (!IsPostBack)
                 {
-                    if (Session["User"] != null)
+                    if (Session["User"] != null && Session["lstVistas"] != null)
                     {
-                        Usuario = (clsUsuario)Session["User"];
-                        if (Usuario != null)
+                        List<clsVistasUsuarios> lstVista = (List<clsVistasUsuarios>)Session["lstVistas"];
+                        if (lstVista != null)
                         {
-                            createTableEquipo();
-                            createTableTecnico();
+                            string vista = "frmAdminEquipoUsuario.aspx";
+                            if (lstVista.Any(x => x.vchVistaIdentificador == vista))
+                            {
+                                Usuario = (clsUsuario)Session["User"];
+                                if (Usuario != null)
+                                {
+                                    createTableEquipo();
+                                    createTableTecnico();
+                                }
+                                else
+                                {
+                                    var = Security.Encrypt("1");
+                                    Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                                }
+                            }
+                            else
+                            {
+                                Response.Redirect(URL + "/frmSinPermiso.aspx");
+                            }
                         }
                         else
                         {
-                            var = Security.Encrypt("1");
-                            Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                            Response.Redirect(URL + "/frmSinPermiso.aspx");
                         }
                     }
                     else

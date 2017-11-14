@@ -87,20 +87,36 @@ namespace Fuji.RISLite.Site
                 String var = "";
                 if (!IsPostBack)
                 {
-                    if (Session["User"] != null)
+                    if (Session["User"] != null && Session["lstVistas"] != null)
                     {
-                        Usuario = (clsUsuario)Session["User"];
-                        if (Usuario != null)
+                        List<clsVistasUsuarios> lstVista = (List<clsVistasUsuarios>)Session["lstVistas"];
+                        if (lstVista != null)
                         {
-                            customCalendarExtender.SelectedDate = Convert.ToDateTime("2017-01-01");
-                            customCalendarExtender2.SelectedDate = DateTime.Now.AddDays(7);
-                            cargarModalidad();
-                            cargarCitas(1);
+                            string vista = "frmCitas.aspx";
+                            if (lstVista.Any(x => x.vchVistaIdentificador == vista))
+                            {
+                                Usuario = (clsUsuario)Session["User"];
+                                if (Usuario != null)
+                                {
+                                    customCalendarExtender.SelectedDate = Convert.ToDateTime("2017-01-01");
+                                    customCalendarExtender2.SelectedDate = DateTime.Now.AddDays(7);
+                                    cargarModalidad();
+                                    cargarCitas(1);
+                                }
+                                else
+                                {
+                                    var = Security.Encrypt("1");
+                                    Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                                }
+                            }
+                            else
+                            {
+                                Response.Redirect(URL + "/frmSinPermiso.aspx");
+                            }
                         }
                         else
                         {
-                            var = Security.Encrypt("1");
-                            Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                            Response.Redirect(URL + "/frmSinPermiso.aspx");
                         }
                     }
                     else
@@ -298,10 +314,10 @@ namespace Fuji.RISLite.Site
             }
         }
 
-        protected void grvCitas_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
-        {
+        //protected void grvCitas_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        //{
 
-        }
+        //}
 
         protected void grvCitas_RowCommand(object sender, GridViewCommandEventArgs e)
         {
@@ -546,24 +562,52 @@ namespace Fuji.RISLite.Site
             return valido;
         }
 
-        protected void grvCitas_RowEditing(object sender, GridViewEditEventArgs e)
-        {
+        //protected void grvCitas_RowEditing(object sender, GridViewEditEventArgs e)
+        //{
 
-        }
+        //}
 
-        protected void grvCitas_RowUpdating(object sender, GridViewUpdateEventArgs e)
-        {
+        //protected void grvCitas_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        //{
 
-        }
+        //}
 
         protected void ddlBandeja_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            try
+            {
+                DropDownList dropDownList = (DropDownList)sender;
+                if (int.Parse(dropDownList.SelectedValue) != 0)
+                {
+                    this.grvCitas.AllowPaging = true;
+                    this.grvCitas.PageSize = int.Parse(dropDownList.SelectedValue);
+                }
+                else
+                    this.grvCitas.AllowPaging = false;
+                this.cargarCitas(2);
+            }
+            catch (Exception eddS)
+            {
+                Log.EscribeLog("Existe un error ddlBandeja_SelectedIndexChanged de frmCitas: " + eddS.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void txtBandeja_TextChanged(object sender, EventArgs e)
         {
-
+            try
+            {
+                TextBox txtBandejaAvaluosGoToPage = (TextBox)sender;
+                int numeroPagina;
+                if (int.TryParse(txtBandejaAvaluosGoToPage.Text.Trim(), out numeroPagina))
+                    this.grvCitas.PageIndex = numeroPagina - 1;
+                else
+                    this.grvCitas.PageIndex = 0;
+                this.cargarCitas(2);
+            }
+            catch (Exception ex)
+            {
+                Log.EscribeLog("Existe un error txtBandeja_TextChanged de frmCitas: " + ex.Message, 3, Usuario.vchUsuario);
+            }
         }
     }
 }

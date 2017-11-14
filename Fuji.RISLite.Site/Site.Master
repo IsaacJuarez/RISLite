@@ -200,7 +200,7 @@
 						<div class="form-search">
 							<span class="input-icon">
 								<%--<input type="text" placeholder="Buscar ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />--%>
-                                <asp:TextBox ID="txtBusquedaPaciente" runat="server" CssClass="nav-search-input" AutoPostBack="true" Text="" placeholder="Buscar paciente..." OnTextChanged="txtBusquedaPaciente_TextChanged"></asp:TextBox>
+                                <asp:TextBox ID="txtBusquedaPaciente" Width="300" runat="server" CssClass="nav-search-input" AutoPostBack="true" Text="" placeholder="Buscar paciente..." OnTextChanged="txtBusquedaPaciente_TextChanged"></asp:TextBox>
 								<i runat="server" id="imgSearch" class="ace-icon fa fa-search nav-search-icon"></i>
 							</span>
 						</div>

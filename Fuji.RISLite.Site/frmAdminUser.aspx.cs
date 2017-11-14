@@ -32,18 +32,34 @@ namespace Fuji.RISLite.Site
                 String var = "";
                 if (!IsPostBack)
                 {
-                    if (Session["User"] != null)
+                    if (Session["User"] != null && Session["lstVistas"] != null)
                     {
-                        Usuario = (clsUsuario)Session["User"];
-                        if (Usuario != null)
+                        List<clsVistasUsuarios> lstVista = (List<clsVistasUsuarios>)Session["lstVistas"];
+                        if (lstVista != null)
                         {
-                            cargarTipoUsuario();
-                            cargarUsuarios();
+                            string vista = "frmAdminUser.aspx";
+                            if (lstVista.Any(x => x.vchVistaIdentificador == vista))
+                            {
+                                Usuario = (clsUsuario)Session["User"];
+                                if (Usuario != null)
+                                {
+                                    cargarTipoUsuario();
+                                    cargarUsuarios();
+                                }
+                                else
+                                {
+                                    var = Security.Encrypt("1");
+                                    Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                                }
+                            }
+                            else
+                            {
+                                Response.Redirect(URL + "/frmSinPermiso.aspx");
+                            }
                         }
                         else
                         {
-                            var = Security.Encrypt("1");
-                            Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                            Response.Redirect(URL + "/frmSinPermiso.aspx");
                         }
                     }
                     else

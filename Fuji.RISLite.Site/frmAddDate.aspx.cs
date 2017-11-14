@@ -148,7 +148,7 @@ namespace Fuji.RISLite.Site
                         if (lstVista != null)
                         {
                             string vista = "frmAddDate.aspx";
-                            if (lstVista.Any(x => x.vchNombreVista == vista))
+                            if (lstVista.Any(x => x.vchVistaIdentificador == vista))
                             {
                                 Usuario = (clsUsuario)Session["User"];
                                 if (Usuario != null)
@@ -170,12 +170,12 @@ namespace Fuji.RISLite.Site
                             }
                             else
                             {
-                                Response.Redirect(URL + "/frmSinPermiso.aspx");
+                                Response.Redirect(URL + "/frmSinPermiso.aspx", false);
                             }
                         }
                         else
                         {
-                            Response.Redirect(URL + "/frmSinPermiso.aspx");
+                            Response.Redirect(URL + "/frmSinPermiso.aspx", false);
                         }
                     }
                     else

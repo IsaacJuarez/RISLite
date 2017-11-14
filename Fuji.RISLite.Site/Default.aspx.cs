@@ -21,6 +21,7 @@ namespace Fuji.RISLite.Site
     public partial class Default : System.Web.UI.Page
     {
         public static string user = "";
+        int usuario_ = 1;
 
         public string URL
         {
@@ -34,13 +35,7 @@ namespace Fuji.RISLite.Site
 
         protected void Page_Init(object sender, EventArgs e)
         {
-            carga_citas();
-            //cargarAgenda();
-        }
 
-
-        protected void Page_Load(object sender, EventArgs e)
-        {
             try
             {
                 //Validar Token
@@ -65,12 +60,15 @@ namespace Fuji.RISLite.Site
                         {
                             if (response.Success)
                             {
+
+                                SqlDataSource1.SelectParameters.Add("@idsitioss_", System.Data.DbType.String, Convert.ToString(Usuario.intSitioID));
+                                //sqlDataSource.Parameters.Add("@LastName", System.Data.DbType.String, "Smith");
                                 Session["User"] = response.mdlUser;
                                 Usuario = response.mdlUser;
                                 //cargarAgenda();
                                 RS_Agenda.SelectedDate = DateTime.Now;
-                                carga_citas();                               
-                             
+                                carga_citas();
+
                             }
                             else
                             {
@@ -90,6 +88,62 @@ namespace Fuji.RISLite.Site
                 Log.EscribeLog("Existe un error en Page_Load de la pagina Default:" + ePL.Message, 3, "");
             }
         }
+
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            //try
+            //{
+            //    //Usuario_ = (clsUsuario)Session["User"];
+            //    //Usuario_ = (clsUsuario)Session["User"];
+
+            //    //Validar Token
+            //    if (!IsPostBack)
+            //    {
+            //        user = HttpContext.Current.User.Identity.Name.Substring(HttpContext.Current.User.Identity.Name.IndexOf(@"\") + 1);
+            //        user = "ijuarez";
+            //        string var = "";
+            //        if (user == "")
+            //        {
+            //            var = Security.Encrypt("1");
+            //            Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+            //        }
+            //        else
+            //        {
+            //            //validar usuario
+            //            ValidaUserResponse response = new ValidaUserResponse();
+            //            ValidaUserRequest request = new ValidaUserRequest();
+            //            request.user = user;
+            //            response = RisService.getUser(request);
+            //            if (response != null)
+            //            {
+            //                if (response.Success)
+            //                {
+            //                    Session["User"] = response.mdlUser;
+            //                    Usuario = response.mdlUser;
+            //                    //cargarAgenda();
+            //                    RS_Agenda.SelectedDate = DateTime.Now;
+            //                    carga_citas();                               
+                             
+            //                }
+            //                else
+            //                {
+            //                    var = Security.Encrypt("2");
+            //                    Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+            //                }
+            //            }
+            //        }
+            //    }
+            //    else
+            //    {
+            //        //Enviar al login;
+            //    }
+            //}
+            //catch (Exception ePL)
+            //{
+            //    Log.EscribeLog("Existe un error en Page_Load de la pagina Default:" + ePL.Message, 3, "");
+            //}
+        }
       
 
         private void carga_citas()
@@ -100,11 +154,12 @@ namespace Fuji.RISLite.Site
                 List<clsEventoCita> lstTec = new List<clsEventoCita>();
                 CitasRequest request = new CitasRequest();
                 request.mdlUser = Usuario;
-                lstTec = RisService.getListEventoCita(request);
-                RS_Agenda.DataSource = lstTec;
-                RS_Agenda.DataBind();
+                request.mdlevento.intSitioID = Usuario.intSitioID;              
 
-                
+
+                lstTec = RisService.getListEventoCita_SoloSitio(request);
+                RS_Agenda.DataSource = lstTec;
+                RS_Agenda.DataBind();                
             }
             catch (Exception ecU)
             {
@@ -120,6 +175,11 @@ namespace Fuji.RISLite.Site
                 List<clsConfAgenda> lstTec = new List<clsConfAgenda>();
                 AgendaRequest request = new AgendaRequest();
                 request.mdlUser = Usuario;
+                request.mdlagenda.intSitioID = Usuario.intSitioID;
+
+                //request.mdlagenda.intSitioID = usuario_;
+
+
                 lstTec = RisService.getListAgenda(request);
                 if (lstTec != null)
                 {
@@ -131,18 +191,10 @@ namespace Fuji.RISLite.Site
                         RT_Modalidades.TextField = "vchCodigo";
                         RT_Modalidades.ForeignKeyField = "intModalidadID";
                         RS_Agenda.ResourceTypes.Add(RT_Modalidades);
-                        RT_Modalidades.DataSource = lstTec;
-                       
-                        //List<clsEventoCita> stTec2 = new List<clsEventoCita>();
-                        //CitasRequest request2 = new CitasRequest();
-                        //request2.mdlUser = Usuario;
-                        //stTec2 = RisService.getListEventoCita(request2);
-                        //RS_Agenda.DataSource = stTec2;
-
+                        RT_Modalidades.DataSource = lstTec;                       
                         RS_Agenda.DataBind();
                     }
-                }
-                //RS_Agenda.DataBind();
+                }                
             }
             catch (Exception ecU)
             {
@@ -165,7 +217,11 @@ namespace Fuji.RISLite.Site
                 AgendaRequest request = new AgendaRequest();
                 request.mdlUser = Usuario;
                 request.mdlagenda.vchCodigo = e.Container.Resource.Text;
-                lstTec = RisService.getListColorModalidad(request);
+                request.mdlagenda.intSitioID = Usuario.intSitioID;
+
+                //request.mdlagenda.intSitioID = usuario_;                
+                //lstTec = RisService.getListColorModalidad(request);
+                lstTec = RisService.getListColorModalidad_Sitio(request);
                 lstTec = lstTec.TrimEnd();
             }
             catch (Exception ecU)
@@ -209,7 +265,11 @@ namespace Fuji.RISLite.Site
                 AgendaRequest request = new AgendaRequest();
                 request.mdlUser = Usuario;
                 request.mdlagenda.vchCodigo = e.Appointment.Resources.GetResourceByType("vchCodigo").Text;
-                lstTec = RisService.getListColorModalidad(request);
+                request.mdlagenda.intSitioID = Usuario.intSitioID;
+
+                //request.mdlagenda.intSitioID = usuario_;
+                //lstTec = RisService.getListColorModalidad(request);
+                lstTec = RisService.getListColorModalidad_Sitio(request);
                 lstTec = lstTec.TrimEnd();
             }
             catch (Exception ecU)

@@ -2781,14 +2781,14 @@ namespace Fuji.RISLite.DataAccess
             return lst;
         }
 
-        public List<clsPaciente> getBusquedaPacientesList(string busqueda, string user)
+        public List<clsPaciente> getBusquedaPacientesList(string busqueda, int intSitioID, string user)
         {
             List<clsPaciente> lst = new List<clsPaciente>();
             try
             {
                 using (dbRisDA = new RISLiteEntities())
                 {
-                    var query = dbRisDA.stp_getBusquedaPacienteList(busqueda.ToUpper()).ToList();
+                    var query = dbRisDA.stp_getBusquedaPacienteList(busqueda.ToUpper(), intSitioID).ToList();
                     if (query != null)
                     {
                         if (query.Count > 0)
@@ -5144,5 +5144,105 @@ namespace Fuji.RISLite.DataAccess
             return valido;
         }
         #endregion CitasGrid
+
+        #region ListaDeTrabajo
+        public List<clsListaDeTrabajo> getListadeTrabajo(string user, int idsitio)
+        {
+            List<clsListaDeTrabajo> lst = new List<clsListaDeTrabajo>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_MST_Estudio.Any())
+                    {
+                        var query = dbRisDA.stp_getListaTrabajo_Sitio(idsitio).ToList();
+
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsListaDeTrabajo mdl = new clsListaDeTrabajo();
+                                    mdl.intEstudioID = (int)item.intEstudioID;
+                                    mdl.vchNombre = item.NombreCom;
+                                    mdl.vchtitulo = item.vchTitulo;
+                                    mdl.vchModalidad = item.vchModalidad;
+                                    mdl.datFechaInicio = (DateTime)item.datFechaInicio;
+                                    lst.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getListadeTrabajo: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }
+
+        public bool UpdateEstatus_Cita(string user, int idestudio, int estatus)
+        {
+            bool bandera_Actualizar = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    tbl_MST_Estudio mdlCOnf = new tbl_MST_Estudio();
+
+                    mdlCOnf = dbRisDA.tbl_MST_Estudio.First(x => x.intEstudioID == idestudio);
+                    mdlCOnf.intEstatusEstudio = estatus;
+                    mdlCOnf.vchUserAdmin = user;
+
+                    dbRisDA.SaveChanges();
+                    bandera_Actualizar = true;
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en UpdateEstatus_Cita: " + eLT.Message, 3, user);
+            }
+            return bandera_Actualizar;
+        }
+
+        public List<clsEventoCita> getListEventoCita_SoloSitio(string user, int idsitio)
+        {
+            List<clsEventoCita> lst = new List<clsEventoCita>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Modalidad.Any())
+                    {
+                        var query = dbRisDA.stp_getBusquedaCita_SoloSitio(idsitio).ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (var item in query)
+                                {
+                                    clsEventoCita mdl = new clsEventoCita();
+                                    mdl.TaskID = (int)item.intEstudioID;
+                                    mdl.Start = (DateTime)item.datFechaInicio;
+                                    mdl.End = (DateTime)item.datFechaFin;
+                                    mdl.Title = item.vchTitulo;
+                                    mdl.Description = item.vchDescripcion;
+                                    mdl.intModalidadID = (int)item.intModalidadID;
+                                    lst.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getListEventoCita: " + eLT.Message, 3, user);
+            }
+            return lst;
+        }
+        #endregion
     }
 }

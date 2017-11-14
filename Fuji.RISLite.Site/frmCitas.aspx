@@ -85,8 +85,8 @@
             <telerik:RadAjaxPanel runat="server" ID="ajaxPanelCitas" OnAjaxRequest="ajaxPanelCitas_AjaxRequest">
                 <asp:GridView ID="grvCitas" runat="server" AllowPaging="true" CssClass="table table-striped table-bordered"
                     PageSize="20" AutoGenerateColumns="false" OnRowDataBound="grvCitas_RowDataBound" Font-Size="10px"
-                    OnPageIndexChanging="grvCitas_PageIndexChanging" DataKeyNames="intEstudioID" OnRowCancelingEdit="grvCitas_RowCancelingEdit"
-                    OnRowCommand="grvCitas_RowCommand" OnRowEditing="grvCitas_RowEditing" OnRowUpdating="grvCitas_RowUpdating"
+                    OnPageIndexChanging="grvCitas_PageIndexChanging" DataKeyNames="intEstudioID" 
+                    OnRowCommand="grvCitas_RowCommand" 
                     EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
                     <Columns>
                         <asp:BoundField DataField="intEstudioID" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md" />

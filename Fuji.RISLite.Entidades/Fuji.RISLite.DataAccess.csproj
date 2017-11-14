@@ -51,6 +51,9 @@
     <Compile Include="DataBase\stp_getBusquedaCita_Sitio_Result.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
+    <Compile Include="DataBase\stp_getBusquedaCita_SoloSitio_Result.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
     <Compile Include="DataBase\stp_getBusquedaEstudio_Result.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
@@ -73,6 +76,9 @@
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\stp_getListaPaginas_Result.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataBase\stp_getListaTrabajo_Sitio_Result.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\stp_getListCatalogo_Result.cs">

@@ -1666,7 +1666,7 @@ namespace Fuji.RISLite.Site.Services
                 if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
                 {
                     RISLiteDataAccess controller = new RISLiteDataAccess();
-                    response.lstPacientes = controller.getBusquedaPacientesList(request.busqueda, request.mdlUser.vchUsuario);
+                    response.lstPacientes = controller.getBusquedaPacientesList(request.busqueda, request.intSitioID, request.mdlUser.vchUsuario);
                 }
             }
             catch (Exception egU)
@@ -2313,6 +2313,63 @@ namespace Fuji.RISLite.Site.Services
             return response;
         }
         #endregion CitasGrid
+
+        #region ListadeTrabajo
+        public List<clsListaDeTrabajo> getListaDeTrabajo(AgendaRequest request)
+        {
+            List<clsListaDeTrabajo> response = new List<clsListaDeTrabajo>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListadeTrabajo(request.mdlUser.vchUsuario, request.mdlagenda.intSitioID);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getAgenda: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public bool UpdateEstatus_Cita(EstatusCita request, int idestatus, int idsitio)
+        {
+            bool bandera_actualizacion = false;
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    bandera_actualizacion = controller.UpdateEstatus_Cita(request.mdlUser.vchUsuario, idsitio, idestatus);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getAgenda: " + egU.Message, 3, "");
+            }
+            return bandera_actualizacion;
+        }
+
+        public List<clsEventoCita> getListEventoCita_SoloSitio(CitasRequest request)
+        {
+            List<clsEventoCita> response = new List<clsEventoCita>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getListEventoCita_SoloSitio(request.mdlUser.vchUsuario, request.mdlevento.intSitioID);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getAgenda: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        #endregion
 
     }
 }

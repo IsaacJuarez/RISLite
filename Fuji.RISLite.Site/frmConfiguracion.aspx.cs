@@ -48,7 +48,7 @@ namespace Fuji.RISLite.Site
                         if (lstVista != null)
                         {
                             string vista = "frmConfiguracion.aspx";
-                            if (lstVista.Any(x => x.vchNombreVista == vista))
+                            if (lstVista.Any(x => x.vchVistaIdentificador == vista))
                             {
                                 Usuario = (clsUsuario)Session["User"];
                                 if (Usuario != null)

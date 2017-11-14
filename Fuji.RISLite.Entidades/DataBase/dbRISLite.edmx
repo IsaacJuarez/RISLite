@@ -1192,6 +1192,9 @@ advertencia 6002: La tabla o vista 'RISLite.dbo.tbl_CAT_DuracionModalidad' no ti
           <Parameter Name="intIdModalidad" Type="int" Mode="In" />
           <Parameter Name="intIdSitio" Type="int" Mode="In" />
         </Function>
+        <Function Name="stp_getBusquedaCita_SoloSitio" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intIdSitio" Type="int" Mode="In" />
+        </Function>
         <Function Name="stp_getBusquedaEstudio" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="estudio" Type="varchar" Mode="In" />
         </Function>
@@ -1201,6 +1204,7 @@ advertencia 6002: La tabla o vista 'RISLite.dbo.tbl_CAT_DuracionModalidad' no ti
         </Function>
         <Function Name="stp_getBusquedaPacienteList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="vchCadena" Type="varchar" Mode="In" />
+          <Parameter Name="intSitioID" Type="int" Mode="In" />
         </Function>
         <Function Name="stp_getCitaDisponible" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="datFechaInicio" Type="datetime" Mode="In" />
@@ -1225,6 +1229,9 @@ advertencia 6002: La tabla o vista 'RISLite.dbo.tbl_CAT_DuracionModalidad' no ti
         </Function>
         <Function Name="stp_getListaPaginas" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="intTipoUsuarioID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="stp_getListaTrabajo_Sitio" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intIdSitio" Type="int" Mode="In" />
         </Function>
         <Function Name="stp_getListCatalogo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="intCatalogoID" Type="int" Mode="In" />
@@ -1619,12 +1626,6 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
             <End Role="tbl_CAT_Prestacion" EntitySet="tbl_CAT_Prestacion" />
             <End Role="tbl_DET_IndicacionPrestacion" EntitySet="tbl_DET_IndicacionPrestacion" />
           </AssociationSet>
-          <FunctionImport Name="stp_getBusquedaPacienteList" ReturnType="Collection(RISLiteModel.stp_getBusquedaPacienteList_Result)">
-          <Parameter Name="vchCadena" Mode="In" Type="String" />
-          </FunctionImport>
-          <FunctionImport Name="stp_getEstudiosPaciente" ReturnType="Collection(RISLiteModel.stp_getEstudiosPaciente_Result)">
-            <Parameter Name="intPacienteID" Mode="In" Type="Int32" />
-          </FunctionImport>
           <EntitySet Name="tbl_CAT_TipoAdicional" EntityType="RISLiteModel.tbl_CAT_TipoAdicional" />
           <EntitySet Name="tbl_CAT_TipoBoton" EntityType="RISLiteModel.tbl_CAT_TipoBoton" />
           <EntitySet Name="tbl_MST_Estudio" EntityType="RISLiteModel.tbl_MST_Estudio" />
@@ -1820,6 +1821,19 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
             <Parameter Name="datFechaInicio" Mode="In" Type="DateTime" />
             <Parameter Name="datFechaFin" Mode="In" Type="DateTime" />
             <Parameter Name="intSitioID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="stp_getBusquedaPacienteList" ReturnType="Collection(RISLiteModel.stp_getBusquedaPacienteList_Result)">
+            <Parameter Name="vchCadena" Mode="In" Type="String" />
+            <Parameter Name="intSitioID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="stp_getEstudiosPaciente" ReturnType="Collection(RISLiteModel.stp_getEstudiosPaciente_Result)">
+          <Parameter Name="intPacienteID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="stp_getBusquedaCita_SoloSitio" ReturnType="Collection(RISLiteModel.stp_getBusquedaCita_SoloSitio_Result)">
+            <Parameter Name="intIdSitio" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="stp_getListaTrabajo_Sitio" ReturnType="Collection(RISLiteModel.stp_getListaTrabajo_Sitio_Result)">
+            <Parameter Name="intIdSitio" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <EntityType Name="tbl_CAT_TipoMensaje">
@@ -2461,23 +2475,6 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="stp_getBusquedaPacienteList_Result">
-          <Property Type="Int64" Name="intPacienteID" Nullable="false" />
-          <Property Type="String" Name="vchNombre" Nullable="false" />
-          <Property Type="DateTime" Name="datFechaNac" Nullable="true" />
-          <Property Type="String" Name="NSS" Nullable="false" MaxLength="200" />
-        </ComplexType>
-        <ComplexType Name="stp_getEstudiosPaciente_Result">
-          <Property Type="Int64" Name="intPacienteID" Nullable="false" />
-          <Property Type="String" Name="vchNombre" Nullable="true" MaxLength="200" />
-          <Property Type="String" Name="vchApellidos" Nullable="true" MaxLength="200" />
-          <Property Type="Int64" Name="intCitaID" Nullable="false" />
-          <Property Type="Int32" Name="intEstatusCita" Nullable="false" />
-          <Property Type="String" Name="vchEstatusCita" Nullable="false" MaxLength="200" />
-          <Property Type="DateTime" Name="datFechaCita" Nullable="true" Precision="23" />
-          <Property Type="Int32" Name="intPrestacionID" Nullable="true" />
-          <Property Type="String" Name="vchPrestacion" Nullable="true" MaxLength="200" />
-        </ComplexType>
         <EntityType Name="tbl_CAT_TipoAdicional">
           <Key>
             <PropertyRef Name="intTipoAdicional" />
@@ -3307,6 +3304,53 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
           <Property Type="String" Name="vchModalidad" Nullable="true" MaxLength="200" />
           <Property Type="String" Name="vchPrestacion" Nullable="true" MaxLength="200" />
           <Property Type="Int32" Name="intEstatusEstudio" Nullable="true" />
+          <Property Type="String" Name="vchEstatus" Nullable="true" MaxLength="200" />
+        </ComplexType>
+        <ComplexType Name="stp_getBusquedaPacienteList_Result">
+          <Property Type="Int64" Name="intPacienteID" Nullable="false" />
+          <Property Type="String" Name="vchNombre" Nullable="false" />
+          <Property Type="DateTime" Name="datFechaNac" Nullable="true" />
+          <Property Type="String" Name="NSS" Nullable="false" MaxLength="200" />
+        </ComplexType>
+        <ComplexType Name="stp_getEstudiosPaciente_Result">
+          <Property Type="Int64" Name="intPacienteID" Nullable="false" />
+          <Property Type="String" Name="vchNombre" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="vchApellidos" Nullable="true" MaxLength="200" />
+          <Property Type="Int64" Name="intCitaID" Nullable="false" />
+          <Property Type="Int32" Name="intEstatusCita" Nullable="false" />
+          <Property Type="String" Name="vchEstatusCita" Nullable="false" MaxLength="200" />
+          <Property Type="DateTime" Name="datFechaCita" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="intPrestacionID" Nullable="true" />
+          <Property Type="String" Name="vchPrestacion" Nullable="true" MaxLength="200" />
+        </ComplexType>
+        <ComplexType Name="stp_getBusquedaCita_SoloSitio_Result">
+          <Property Type="Int64" Name="intEstudioID" Nullable="false" />
+          <Property Type="Int32" Name="intModalidadID" Nullable="true" />
+          <Property Type="Int32" Name="intEstatusEstudio" Nullable="true" />
+          <Property Type="Int32" Name="intRELModPres" Nullable="true" />
+          <Property Type="DateTime" Name="datFechaInicio" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="datFechaFin" Nullable="true" Precision="23" />
+          <Property Type="String" Name="vchTitulo" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="vchDescripcion" Nullable="true" MaxLength="200" />
+          <Property Type="DateTime" Name="datFecha" Nullable="true" Precision="23" />
+          <Property Type="String" Name="vchUserAdmin" Nullable="true" MaxLength="100" />
+          <Property Type="Boolean" Name="bitActivo" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="stp_getListaTrabajo_Sitio_Result">
+          <Property Type="Int64" Name="intEstudioID" Nullable="false" />
+          <Property Type="Int32" Name="intModalidadID" Nullable="true" />
+          <Property Type="String" Name="vchModalidad" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="vchCodigo" Nullable="true" MaxLength="200" />
+          <Property Type="Int32" Name="intEstatusEstudio" Nullable="true" />
+          <Property Type="Int32" Name="intRELModPres" Nullable="true" />
+          <Property Type="DateTime" Name="datFechaInicio" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="datFechaFin" Nullable="true" Precision="23" />
+          <Property Type="String" Name="vchTitulo" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="vchDescripcion" Nullable="true" MaxLength="200" />
+          <Property Type="DateTime" Name="datFecha" Nullable="true" Precision="23" />
+          <Property Type="String" Name="vchUserAdmin" Nullable="true" MaxLength="100" />
+          <Property Type="Boolean" Name="bitActivo" Nullable="true" />
+          <Property Type="String" Name="NombreCom" Nullable="false" MaxLength="401" />
           <Property Type="String" Name="vchEstatus" Nullable="true" MaxLength="200" />
         </ComplexType>
         </Schema>
@@ -4150,6 +4194,69 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
                 <ScalarProperty Name="vchModalidad" ColumnName="vchModalidad" />
                 <ScalarProperty Name="vchPrestacion" ColumnName="vchPrestacion" />
                 <ScalarProperty Name="intEstatusEstudio" ColumnName="intEstatusEstudio" />
+                <ScalarProperty Name="vchEstatus" ColumnName="vchEstatus" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="stp_getBusquedaPacienteList" FunctionName="RISLiteModel.Store.stp_getBusquedaPacienteList">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RISLiteModel.stp_getBusquedaPacienteList_Result">
+                <ScalarProperty Name="intPacienteID" ColumnName="intPacienteID" />
+                <ScalarProperty Name="vchNombre" ColumnName="vchNombre" />
+                <ScalarProperty Name="datFechaNac" ColumnName="datFechaNac" />
+                <ScalarProperty Name="NSS" ColumnName="NSS" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="stp_getEstudiosPaciente" FunctionName="RISLiteModel.Store.stp_getEstudiosPaciente">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RISLiteModel.stp_getEstudiosPaciente_Result">
+                <ScalarProperty Name="intPacienteID" ColumnName="intPacienteID" />
+                <ScalarProperty Name="vchNombre" ColumnName="vchNombre" />
+                <ScalarProperty Name="vchApellidos" ColumnName="vchApellidos" />
+                <ScalarProperty Name="intCitaID" ColumnName="intCitaID" />
+                <ScalarProperty Name="intEstatusCita" ColumnName="intEstatusCita" />
+                <ScalarProperty Name="vchEstatusCita" ColumnName="vchEstatusCita" />
+                <ScalarProperty Name="datFechaCita" ColumnName="datFechaCita" />
+                <ScalarProperty Name="intPrestacionID" ColumnName="intPrestacionID" />
+                <ScalarProperty Name="vchPrestacion" ColumnName="vchPrestacion" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="stp_getBusquedaCita_SoloSitio" FunctionName="RISLiteModel.Store.stp_getBusquedaCita_SoloSitio">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RISLiteModel.stp_getBusquedaCita_SoloSitio_Result">
+                <ScalarProperty Name="intEstudioID" ColumnName="intEstudioID" />
+                <ScalarProperty Name="intModalidadID" ColumnName="intModalidadID" />
+                <ScalarProperty Name="intEstatusEstudio" ColumnName="intEstatusEstudio" />
+                <ScalarProperty Name="intRELModPres" ColumnName="intRELModPres" />
+                <ScalarProperty Name="datFechaInicio" ColumnName="datFechaInicio" />
+                <ScalarProperty Name="datFechaFin" ColumnName="datFechaFin" />
+                <ScalarProperty Name="vchTitulo" ColumnName="vchTitulo" />
+                <ScalarProperty Name="vchDescripcion" ColumnName="vchDescripcion" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="stp_getListaTrabajo_Sitio" FunctionName="RISLiteModel.Store.stp_getListaTrabajo_Sitio">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RISLiteModel.stp_getListaTrabajo_Sitio_Result">
+                <ScalarProperty Name="intEstudioID" ColumnName="intEstudioID" />
+                <ScalarProperty Name="intModalidadID" ColumnName="intModalidadID" />
+                <ScalarProperty Name="vchModalidad" ColumnName="vchModalidad" />
+                <ScalarProperty Name="vchCodigo" ColumnName="vchCodigo" />
+                <ScalarProperty Name="intEstatusEstudio" ColumnName="intEstatusEstudio" />
+                <ScalarProperty Name="intRELModPres" ColumnName="intRELModPres" />
+                <ScalarProperty Name="datFechaInicio" ColumnName="datFechaInicio" />
+                <ScalarProperty Name="datFechaFin" ColumnName="datFechaFin" />
+                <ScalarProperty Name="vchTitulo" ColumnName="vchTitulo" />
+                <ScalarProperty Name="vchDescripcion" ColumnName="vchDescripcion" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+                <ScalarProperty Name="NombreCom" ColumnName="NombreCom" />
                 <ScalarProperty Name="vchEstatus" ColumnName="vchEstatus" />
               </ComplexTypeMapping>
             </ResultMapping>

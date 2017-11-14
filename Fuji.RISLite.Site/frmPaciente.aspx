@@ -4,6 +4,21 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <telerik:RadAjaxManager runat="server" ID="radScriptManager1">
+        <AjaxSettings>
+            <telerik:AjaxSetting AjaxControlID="grvPacientes">
+                <UpdatedControls>
+                    <telerik:AjaxUpdatedControl ControlID="grvPacientes" />
+                </UpdatedControls>
+            </telerik:AjaxSetting>
+            <telerik:AjaxSetting AjaxControlID="txtBusqueda">
+                <UpdatedControls>
+                    <telerik:AjaxUpdatedControl ControlID="grvPacientes" />
+                </UpdatedControls>
+            </telerik:AjaxSetting>
+        </AjaxSettings>
+    </telerik:RadAjaxManager>
+
     <div class="page-content">
         <div class="page-header">
             <div class="messagealert" id="alert_container"></div>
@@ -37,70 +52,66 @@
                     <div class="col-lg-3">
                     </div>
                     <div class="col-lg-6">
-                        <asp:UpdatePanel runat="server" >
-                            <ContentTemplate>
-                                <asp:Panel runat="server">
-                                    <asp:GridView ID="grvPacientes" runat="server" AllowPaging="true" CssClass="table table-striped table-bordered"
-                                        PageSize="10" AutoGenerateColumns="false" OnRowDataBound="grvPacientes_RowDataBound" Font-Size="10px"
-                                        OnPageIndexChanging="grvPacientes_PageIndexChanging" DataKeyNames="intPacienteID"
-                                        OnRowCommand="grvPacientes_RowCommand"
-                                        EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
-                                        <Columns>
-                                            <asp:BoundField DataField="intPacienteID" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
-                                            <asp:BoundField DataField="vchApellidos"  HeaderText="NSS" ReadOnly="true" />
-                                            <asp:BoundField DataField="vchNombre"  HeaderText="Nombre" ReadOnly="true" />
-                                            <asp:BoundField DataField="datFechaNac" dataformatstring="{0:dd/MM/yyyy}" HeaderText="Fecha de Nacimiento" ReadOnly="true" />
-                                            <asp:TemplateField HeaderText="Detalle" ItemStyle-HorizontalAlign="Center">
-                                                <ItemTemplate>
-                                                    <asp:LinkButton ID="imbDetalle" runat="server" BackColor="Transparent"  Height="25px" Width="25px" 
-                                                        CommandArgument='<%#Eval("intPacienteID") %>' CommandName="Detalle" ToolTip="Ver el detalle del paciente" >
-                                                        <i class="fa fa-user" aria-hidden="true" title="Detalle" style="font-size:25px;"></i>
-                                                    </asp:LinkButton>
-                                                </ItemTemplate>
-                                            </asp:TemplateField>
-                                            <asp:TemplateField HeaderText="Nueva Cita" ItemStyle-HorizontalAlign="Center">
-                                                <ItemTemplate>
-                                                    <asp:LinkButton ID="imbCita" runat="server" BackColor="Transparent"  Height="25px" Width="25px" 
-                                                        CommandArgument='<%#Eval("intPacienteID") %>' CommandName="CrearCita" ToolTip="Realizar una cita" >
-                                                        <i class="fa fa-calendar-plus-o" aria-hidden="true" title="Crear Cita" style="font-size:25px;"></i>
-                                                    </asp:LinkButton>
-                                                </ItemTemplate>
-                                            </asp:TemplateField>
-                                            <asp:TemplateField HeaderText="Estudios" ItemStyle-HorizontalAlign="Center">
-                                                <ItemTemplate>
-                                                    <asp:LinkButton ID="imbEstudios" runat="server" BackColor="Transparent"  Height="25px" Width="25px" 
-                                                        CommandArgument='<%#Eval("intPacienteID") %>' CommandName="Estudios" ToolTip="Lista de Estudios del paciente" >
-                                                        <i class="fa fa-server" aria-hidden="true" title="Lista de Estudios del paciente" style="font-size:25px;"></i>
-                                                    </asp:LinkButton>
-                                                </ItemTemplate>
-                                            </asp:TemplateField>
-                                        </Columns>
-                                        <PagerTemplate>
-                                            <asp:Label ID="lblTemplate" runat="server" Text="Muestra Filas: " CssClass="Label" />
-                                            <asp:DropDownList ID="ddlBandeja" runat="server" AutoPostBack="true" CausesValidation="false"
-                                                Enabled="true" OnSelectedIndexChanged="ddlBandeja_SelectedIndexChanged">
-                                                    <asp:ListItem Value="10" />
-                                                    <asp:ListItem Value="15" />
-                                                    <asp:ListItem Value="20" />
-                                            </asp:DropDownList>
-                                            &nbsp;Página
-                                            <asp:TextBox ID="txtBandeja" runat="server" AutoPostBack="true" OnTextChanged="txtBandeja_TextChanged"
-                                                Width="40" MaxLength="10" />
-                                            de
-                                            <asp:Label ID="lblBandejaTotal" runat="server" />
-                                            &nbsp;
-                                            <asp:Button ID="btnBandeja_I" runat="server" CommandName="Page" CausesValidation="false"
-                                                ToolTip="Página Anterior" CommandArgument="Prev" CssClass="previous" />
-                                            <asp:Button ID="btnBandeja_II" runat="server" CommandName="Page" CausesValidation="false"
-                                                ToolTip="Página Siguiente" CommandArgument="Next" CssClass="next" />
-                                        </PagerTemplate>
-                                        <HeaderStyle CssClass="headerstyle" />
-                                        <FooterStyle CssClass="text-center" />
-                                        <PagerStyle CssClass="text-center" />
-                                    </asp:GridView>
-                                </asp:Panel>
-                            </ContentTemplate>
-                        </asp:UpdatePanel>
+                        <telerik:RadAjaxPanel runat="server" ID="radAjaxPanelPacientes" OnAjaxRequest="radAjaxPanelPacientes_AjaxRequest">
+                            <asp:GridView ID="grvPacientes" runat="server" AllowPaging="true" CssClass="table table-striped table-bordered"
+                                PageSize="10" AutoGenerateColumns="false" OnRowDataBound="grvPacientes_RowDataBound" Font-Size="10px"
+                                OnPageIndexChanging="grvPacientes_PageIndexChanging" DataKeyNames="intPacienteID"
+                                OnRowCommand="grvPacientes_RowCommand"
+                                EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
+                                <Columns>
+                                    <asp:BoundField DataField="intPacienteID" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
+                                    <asp:BoundField DataField="vchApellidos"  HeaderText="NSS" ReadOnly="true" />
+                                    <asp:BoundField DataField="vchNombre"  HeaderText="Nombre" ReadOnly="true" />
+                                    <asp:BoundField DataField="datFechaNac" dataformatstring="{0:dd/MM/yyyy}" HeaderText="Fecha de Nacimiento" ReadOnly="true" />
+                                    <asp:TemplateField HeaderText="Detalle" ItemStyle-HorizontalAlign="Center">
+                                        <ItemTemplate>
+                                            <asp:LinkButton ID="imbDetalle" runat="server" BackColor="Transparent"  Height="25px" Width="25px" 
+                                                CommandArgument='<%#Eval("intPacienteID") %>' CommandName="Detalle" ToolTip="Ver el detalle del paciente" >
+                                                <i class="fa fa-user" aria-hidden="true" title="Detalle" style="font-size:25px;"></i>
+                                            </asp:LinkButton>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Nueva Cita" ItemStyle-HorizontalAlign="Center">
+                                        <ItemTemplate>
+                                            <asp:LinkButton ID="imbCita" runat="server" BackColor="Transparent"  Height="25px" Width="25px" 
+                                                CommandArgument='<%#Eval("intPacienteID") %>' CommandName="CrearCita" ToolTip="Realizar una cita" >
+                                                <i class="fa fa-calendar-plus-o" aria-hidden="true" title="Crear Cita" style="font-size:25px;"></i>
+                                            </asp:LinkButton>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Estudios" ItemStyle-HorizontalAlign="Center">
+                                        <ItemTemplate>
+                                            <asp:LinkButton ID="imbEstudios" runat="server" BackColor="Transparent"  Height="25px" Width="25px" 
+                                                CommandArgument='<%#Eval("intPacienteID") %>' CommandName="Estudios" ToolTip="Lista de Estudios del paciente" >
+                                                <i class="fa fa-server" aria-hidden="true" title="Lista de Estudios del paciente" style="font-size:25px;"></i>
+                                            </asp:LinkButton>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                </Columns>
+                                <PagerTemplate>
+                                    <asp:Label ID="lblTemplate" runat="server" Text="Muestra Filas: " CssClass="Label" />
+                                    <asp:DropDownList ID="ddlBandeja" runat="server" AutoPostBack="true" CausesValidation="false"
+                                        Enabled="true" OnSelectedIndexChanged="ddlBandeja_SelectedIndexChanged">
+                                            <asp:ListItem Value="10" />
+                                            <asp:ListItem Value="15" />
+                                            <asp:ListItem Value="20" />
+                                    </asp:DropDownList>
+                                    &nbsp;Página
+                                    <asp:TextBox ID="txtBandeja" runat="server" AutoPostBack="true" OnTextChanged="txtBandeja_TextChanged"
+                                        Width="40" MaxLength="10" />
+                                    de
+                                    <asp:Label ID="lblBandejaTotal" runat="server" />
+                                    &nbsp;
+                                    <asp:Button ID="btnBandeja_I" runat="server" CommandName="Page" CausesValidation="false"
+                                        ToolTip="Página Anterior" CommandArgument="Prev" CssClass="previous" />
+                                    <asp:Button ID="btnBandeja_II" runat="server" CommandName="Page" CausesValidation="false"
+                                        ToolTip="Página Siguiente" CommandArgument="Next" CssClass="next" />
+                                </PagerTemplate>
+                                <HeaderStyle CssClass="headerstyle" />
+                                <FooterStyle CssClass="text-center" />
+                                <PagerStyle CssClass="text-center" />
+                            </asp:GridView>
+                        </telerik:RadAjaxPanel>
                     </div>
                     <div class="col-lg-3">
                     </div>
@@ -160,7 +171,7 @@
                                                         <asp:TextBox runat="server" ID="txtFecNacDet" autocomplete="off" CssClass="form-control" Width="100%"  Enabled="false"/>
                                                     </td>
                                                     <td style="width: 10%">
-                                                        <asp:ImageButton ID="imgPopup" ImageUrl="~/Images/ic_action_calendar_month.png" Width="25px" Height="25px" ImageAlign="Bottom" runat="server" />
+                                                        <asp:ImageButton ID="imgPopup" ImageUrl="~/Images/ic_action_calendar_month.png" Width="25px" Height="25px" ImageAlign="Bottom" runat="server" Visible="false" />
                                                         <asp:CalendarExtender ID="customCalendarExtender" runat="server" TargetControlID="txtFecNacDet" PopupButtonID="imgPopup"
                                                             CssClass="cal" Format="dd/MM/yyyy" />
                                                     </td>
@@ -332,8 +343,9 @@
                                             EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
                                             <Columns>
                                                 <asp:BoundField DataField="intPacienteID" HeaderText="Estudio" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
-                                                <asp:BoundField DataField="datFechaNac" dataformatstring="{0:dd/MM/yyyy}" HeaderText="Fecha de Estudio" ReadOnly="true" />
-                                                <asp:BoundField DataField="vchNombre"  HeaderText="Nombre" ReadOnly="true" />
+                                                <asp:BoundField DataField="datFechaCita" DataFormatString="{0:dd-MM-yyyy hh:mm tt}" HeaderText="Fecha de Estudio" ReadOnly="true" />
+                                                <asp:BoundField DataField="vchPrestacion"  HeaderText="Estudio" ReadOnly="true" />
+                                                <asp:BoundField DataField="vchEstatusCita"  HeaderText="Estudio" ReadOnly="true" />
                                             </Columns>
                                             <PagerTemplate>
                                                 <asp:Label ID="lblTemplate" runat="server" Text="Muestra Filas: " CssClass="Label" />

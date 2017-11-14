@@ -32,20 +32,36 @@ namespace Fuji.RISLite.Site
             try
             {
                 String var = "";
-                if(!IsPostBack)
+                if (!IsPostBack)
                 {
-                    if(Session["User"]!= null)
+                    if (Session["User"] != null && Session["lstVistas"] != null)
                     {
-                        Usuario = (clsUsuario)Session["User"];
-                        if (Usuario != null)
+                        List<clsVistasUsuarios> lstVista = (List<clsVistasUsuarios>)Session["lstVistas"];
+                        if (lstVista != null)
                         {
-                            fillCat();
-                            bitEdicion = false;
+                            string vista = "frmAdminCatalogo.aspx";
+                            if (lstVista.Any(x => x.vchVistaIdentificador == vista))
+                            {
+                                Usuario = (clsUsuario)Session["User"];
+                                if (Usuario != null)
+                                {
+                                    fillCat();
+                                    bitEdicion = false;
+                                }
+                                else
+                                {
+                                    var = Security.Encrypt("1");
+                                    Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                                }
+                            }
+                            else
+                            {
+                                Response.Redirect(URL + "/frmSinPermiso.aspx");
+                            }
                         }
                         else
                         {
-                            var = Security.Encrypt("1");
-                            Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                            Response.Redirect(URL + "/frmSinPermiso.aspx");
                         }
                     }
                     else
@@ -55,7 +71,7 @@ namespace Fuji.RISLite.Site
                     }
                 }
             }
-            catch(Exception ePL)
+            catch (Exception ePL)
             {
                 Log.EscribeLog("Existe un error en PageLoad de frmAdminCatalogo: " + ePL.Message, 3, "");
             }

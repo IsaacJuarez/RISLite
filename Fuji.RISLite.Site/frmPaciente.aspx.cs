@@ -33,17 +33,33 @@ namespace Fuji.RISLite.Site
                 String var = "";
                 //if (!IsPostBack)
                 //{
-                if (Session["User"] != null)
+                if (Session["User"] != null && Session["lstVistas"] != null)
                 {
-                    Usuario = (clsUsuario)Session["User"];
-                    if (Usuario != null)
+                    List<clsVistasUsuarios> lstVista = (List<clsVistasUsuarios>)Session["lstVistas"];
+                    if (lstVista != null)
                     {
-                        cargaFormaDetalle();
+                        string vista = "frmPaciente.aspx";
+                        if (lstVista.Any(x => x.vchVistaIdentificador == vista))
+                        {
+                            Usuario = (clsUsuario)Session["User"];
+                            if (Usuario != null)
+                            {
+                                cargaFormaDetalle();
+                            }
+                            else
+                            {
+                                var = Security.Encrypt("1");
+                                Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                            }
+                        }
+                        else
+                        {
+                            Response.Redirect(URL + "/frmSinPermiso.aspx", true);
+                        }
                     }
                     else
                     {
-                        var = Security.Encrypt("1");
-                        Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                        Response.Redirect(URL + "/frmSinPermiso.aspx", true);
                     }
                 }
                 else
@@ -67,32 +83,48 @@ namespace Fuji.RISLite.Site
                 String var = "";
                 if (!IsPostBack)
                 {
-                    if (Session["User"] != null)
+                    if (Session["User"] != null && Session["lstVistas"] != null)
                     {
-                        Usuario = (clsUsuario)Session["User"];
-                        if (Usuario != null)
+                        List<clsVistasUsuarios> lstVista = (List<clsVistasUsuarios>)Session["lstVistas"];
+                        if (lstVista != null)
                         {
-                            if (Request.QueryString.Count > 0)
+                            string vista = "frmPaciente.aspx";
+                            if (lstVista.Any(x => x.vchVistaIdentificador == vista))
                             {
-                                String ID = Security.Decrypt(Request.QueryString["var"].ToString());
-                                txtBusqueda.Text = ID;
-                                cargarPacientes(ID);
+                                Usuario = (clsUsuario)Session["User"];
+                                if (Usuario != null)
+                                {
+                                    if (Request.QueryString.Count > 0)
+                                    {
+                                        String ID = Security.Decrypt(Request.QueryString["var"].ToString());
+                                        txtBusqueda.Text = ID;
+                                        cargarPacientes(ID);
+                                    }
+                                    else
+                                    {
+                                        txtBusqueda.Text = "";
+                                    }
+                                }
+                                else
+                                {
+                                    var = Security.Encrypt("1");
+                                    Response.Redirect(URL + "/frmSalir.aspx?var=" + var, true);
+                                }
                             }
                             else
                             {
-                                txtBusqueda.Text = "";
+                                Response.Redirect(URL + "/frmSinPermiso.aspx", true);
                             }
                         }
                         else
                         {
-                            var = Security.Encrypt("1");
-                            Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                            Response.Redirect(URL + "/frmSinPermiso.aspx", true);
                         }
                     }
                     else
                     {
                         var = Security.Encrypt("1");
-                        Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                        Response.Redirect(URL + "/frmSalir.aspx?var=" + var, true);
                     }
                 }
             }
@@ -153,6 +185,7 @@ namespace Fuji.RISLite.Site
                 PacienteResponse response = new PacienteResponse();
                 request.mdlUser = Usuario;
                 request.busqueda = iD;
+                request.intSitioID = Usuario.intSitioID;
                 response = RisService.getBusquedaPacientesList(request);
                 if (response != null)
                 {
@@ -163,6 +196,14 @@ namespace Fuji.RISLite.Site
                             grvPacientes.DataSource = response.lstPacientes;
                         }
                     }
+                }
+                if(Usuario.intTipoUsuario == 2)
+                {
+                    grvPacientes.Columns[5].Visible = true;
+                }
+                else
+                {
+                    grvPacientes.Columns[5].Visible = false;
                 }
                 grvPacientes.DataBind();
             }
@@ -257,7 +298,7 @@ namespace Fuji.RISLite.Site
                     case "CrearCita":
                         intPacienteID = Convert.ToInt32(e.CommandArgument.ToString());
                         string busqueda = Security.Encrypt(intPacienteID.ToString());
-                        Response.Redirect(URL + "/frmAddDate.aspx?var=" + busqueda, false);
+                        Response.Redirect(URL + "/frmAddDate.aspx?var=" + busqueda, true);
                         break;
                     case "Estudios":
                         intPacienteID = Convert.ToInt32(e.CommandArgument.ToString());
@@ -559,6 +600,7 @@ namespace Fuji.RISLite.Site
                 pnlDinamicoContenido.Controls.Clear();
                 VarAdicionalRequest request = new VarAdicionalRequest();
                 request.mdlUser = Usuario;
+                request.intSitioID = Usuario.intSitioID;
                 List<clsVarAcicionales> lst = new List<clsVarAcicionales>();
                 lst = RisService.getVariablesAdicionalPaciente(request);
                 if (lst != null)
@@ -643,6 +685,7 @@ namespace Fuji.RISLite.Site
                 pnlDinamicoContenido.Controls.Clear();
                 VarAdicionalRequest request = new VarAdicionalRequest();
                 request.mdlUser = Usuario;
+                request.intSitioID = Usuario.intSitioID;
                 List<clsVarAcicionales> lst = new List<clsVarAcicionales>();
                 lst = RisService.getVariablesAdicionalPaciente(request);
                 if (lst != null)
@@ -708,6 +751,7 @@ namespace Fuji.RISLite.Site
                 pnlIDContenido.Controls.Clear();
                 VarAdicionalRequest request = new VarAdicionalRequest();
                 request.mdlUser = Usuario;
+                request.intSitioID = Usuario.intSitioID;
                 List<tbl_CAT_Identificacion> lst = new List<tbl_CAT_Identificacion>();
                 lst = RisService.getVariablesAdicionalID(request);
                 if (lst != null)
@@ -802,6 +846,7 @@ namespace Fuji.RISLite.Site
                 pnlIDContenido.Controls.Clear();
                 VarAdicionalRequest request = new VarAdicionalRequest();
                 request.mdlUser = Usuario;
+                request.intSitioID = Usuario.intSitioID;
                 List<tbl_CAT_Identificacion> lst = new List<tbl_CAT_Identificacion>();
                 lst = RisService.getVariablesAdicionalID(request);
                 if (lst != null)
@@ -964,6 +1009,18 @@ namespace Fuji.RISLite.Site
             catch (Exception eddS)
             {
                 Log.EscribeLog("Existe un error ddlBandejaEst_SelectedIndexChanged de frmPaciente: " + eddS.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void radAjaxPanelPacientes_AjaxRequest(object sender, Telerik.Web.UI.AjaxRequestEventArgs e)
+        {
+            try
+            {
+                cargarPacientes(txtBusqueda.Text);
+            }
+            catch(Exception erAP)
+            {
+                Log.EscribeLog("Existe un error en radAjaxPanelPacientes_AjaxRequest: " + erAP.Message, 3, Usuario.vchUsuario);
             }
         }
     }

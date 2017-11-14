@@ -55,6 +55,7 @@
     <Compile Include="clsEventoCita.cs" />
     <Compile Include="clsGeneralConfigAgenda.cs" />
     <Compile Include="clsHoraMuerta.cs" />
+    <Compile Include="clsListaDeTrabajo.cs" />
     <Compile Include="clsModalidad.cs" />
     <Compile Include="clsPaciente.cs" />
     <Compile Include="clsPrestacion.cs" />

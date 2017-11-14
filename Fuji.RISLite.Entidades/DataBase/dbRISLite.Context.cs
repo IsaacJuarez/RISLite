@@ -134,24 +134,6 @@ namespace Fuji.RISLite.Entidades.DataBase
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getBusquedaEstudio_Result>("stp_getBusquedaEstudio", estudioParameter);
         }
     
-        public virtual ObjectResult<stp_getBusquedaPacienteList_Result> stp_getBusquedaPacienteList(string vchCadena)
-        {
-            var vchCadenaParameter = vchCadena != null ?
-                new ObjectParameter("vchCadena", vchCadena) :
-                new ObjectParameter("vchCadena", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getBusquedaPacienteList_Result>("stp_getBusquedaPacienteList", vchCadenaParameter);
-        }
-    
-        public virtual ObjectResult<stp_getEstudiosPaciente_Result> stp_getEstudiosPaciente(Nullable<int> intPacienteID)
-        {
-            var intPacienteIDParameter = intPacienteID.HasValue ?
-                new ObjectParameter("intPacienteID", intPacienteID) :
-                new ObjectParameter("intPacienteID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getEstudiosPaciente_Result>("stp_getEstudiosPaciente", intPacienteIDParameter);
-        }
-    
         public virtual ObjectResult<stp_getListCatalogo_Result> stp_getListCatalogo(Nullable<int> intCatalogoID, Nullable<int> intSitioID)
         {
             var intCatalogoIDParameter = intCatalogoID.HasValue ?
@@ -286,6 +268,46 @@ namespace Fuji.RISLite.Entidades.DataBase
                 new ObjectParameter("intSitioID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getCitas_Result>("stp_getCitas", vchNombreParameter, intModalidadIDParameter, datFechaInicioParameter, datFechaFinParameter, intSitioIDParameter);
+        }
+    
+        public virtual ObjectResult<stp_getBusquedaPacienteList_Result> stp_getBusquedaPacienteList(string vchCadena, Nullable<int> intSitioID)
+        {
+            var vchCadenaParameter = vchCadena != null ?
+                new ObjectParameter("vchCadena", vchCadena) :
+                new ObjectParameter("vchCadena", typeof(string));
+    
+            var intSitioIDParameter = intSitioID.HasValue ?
+                new ObjectParameter("intSitioID", intSitioID) :
+                new ObjectParameter("intSitioID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getBusquedaPacienteList_Result>("stp_getBusquedaPacienteList", vchCadenaParameter, intSitioIDParameter);
+        }
+    
+        public virtual ObjectResult<stp_getEstudiosPaciente_Result> stp_getEstudiosPaciente(Nullable<int> intPacienteID)
+        {
+            var intPacienteIDParameter = intPacienteID.HasValue ?
+                new ObjectParameter("intPacienteID", intPacienteID) :
+                new ObjectParameter("intPacienteID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getEstudiosPaciente_Result>("stp_getEstudiosPaciente", intPacienteIDParameter);
+        }
+    
+        public virtual ObjectResult<stp_getBusquedaCita_SoloSitio_Result> stp_getBusquedaCita_SoloSitio(Nullable<int> intIdSitio)
+        {
+            var intIdSitioParameter = intIdSitio.HasValue ?
+                new ObjectParameter("intIdSitio", intIdSitio) :
+                new ObjectParameter("intIdSitio", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getBusquedaCita_SoloSitio_Result>("stp_getBusquedaCita_SoloSitio", intIdSitioParameter);
+        }
+    
+        public virtual ObjectResult<stp_getListaTrabajo_Sitio_Result> stp_getListaTrabajo_Sitio(Nullable<int> intIdSitio)
+        {
+            var intIdSitioParameter = intIdSitio.HasValue ?
+                new ObjectParameter("intIdSitio", intIdSitio) :
+                new ObjectParameter("intIdSitio", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getListaTrabajo_Sitio_Result>("stp_getListaTrabajo_Sitio", intIdSitioParameter);
         }
     }
 }

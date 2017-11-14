@@ -6,6 +6,7 @@ using Fuji.RISLite.Site.Services.DataContract;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -30,27 +31,43 @@ namespace Fuji.RISLite.Site
                 String var = "";
                 if (!IsPostBack)
                 {
-                    if (Session["User"] != null)
+                    if (Session["User"] != null && Session["lstVistas"] != null)
                     {
-                        Usuario = (clsUsuario)Session["User"];
-                        if (Usuario != null)
+                        List<clsVistasUsuarios> lstVista = (List<clsVistasUsuarios>)Session["lstVistas"];
+                        if (lstVista != null)
                         {
-                            cargarTipoUsuario();
-                            cargarTipoUsuarioAdd();
-                            cargarBotones();
-                            cargarVistas();
-                            if (ddlTipoUsuario.SelectedValue != "")
+                            string vista = "frmConfiguraciones.aspx";
+                            if (lstVista.Any(x => x.vchVistaIdentificador == vista))
                             {
-                                if (Convert.ToInt32(ddlTipoUsuario.SelectedValue) > 0)
+                                Usuario = (clsUsuario)Session["User"];
+                                if (Usuario != null)
                                 {
-                                    cargagridVistas(Convert.ToInt32(ddlTipoUsuario.SelectedValue));
+                                    cargarTipoUsuario();
+                                    cargarTipoUsuarioAdd();
+                                    cargarBotones();
+                                    cargarVistas();
+                                    if (ddlTipoUsuario.SelectedValue != "")
+                                    {
+                                        if (Convert.ToInt32(ddlTipoUsuario.SelectedValue) > 0)
+                                        {
+                                            cargagridVistas(Convert.ToInt32(ddlTipoUsuario.SelectedValue));
+                                        }
+                                    }
                                 }
+                                else
+                                {
+                                    var = Security.Encrypt("1");
+                                    Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                                }
+                            }
+                            else
+                            {
+                                Response.Redirect(URL + "/frmSinPermiso.aspx");
                             }
                         }
                         else
                         {
-                            var = Security.Encrypt("1");
-                            Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                            Response.Redirect(URL + "/frmSinPermiso.aspx");
                         }
                     }
                     else
