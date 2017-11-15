@@ -12,6 +12,8 @@ namespace Fuji.RISLite.Entities
         public DateTime datFechaInicio { get; set; }
         public string vchUserAdmin { get; set; }
         public string vchEstatus { get; set; }
+        public string vchPrestacion { get; set; }
+        public int intEstatusID { get; set; }
 
         public clsListaDeTrabajo()
         {
@@ -23,6 +25,8 @@ namespace Fuji.RISLite.Entities
             datFechaInicio = DateTime.MinValue;
             vchUserAdmin = string.Empty;
             vchEstatus = string.Empty;
+            vchPrestacion = string.Empty;
+            intEstatusID = int.MinValue;
         }
     }
 }

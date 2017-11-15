@@ -75,6 +75,7 @@ namespace Fuji.RISLite.Site
                                     int intCita = 0;
                                     int.TryParse(intCitaiD, out intCita);
                                     ReportDocument crystalReport = new ReportDocument();
+                                    Log.EscribeLog("Inicio Carga del Reporte.", 1, Usuario.vchUsuario);
                                     crystalReport.Load(Server.MapPath("~/Data/rptCitaReporte.rpt"));
                                     //string ParameterName = "intCitaID";
                                     //object val = intCitaID;
@@ -87,10 +88,11 @@ namespace Fuji.RISLite.Site
                                     crystalReport.SetParameterValue("@intCitaID", intCita);
                                     //crystalReport.SetParameterValue(0, intCitaID);
                                     crystalReport.SetDatabaseLogon(dbUser, dbPass, dbLocalServer, dbName);
+                                    Log.EscribeLog("Inyeccion de login.", 1, Usuario.vchUsuario);
                                     System.IO.MemoryStream oStream = new System.IO.MemoryStream();
                                     var stream = crystalReport.ExportToStream(ExportFormatType.PortableDocFormat);
                                     crystalReport.ExportToHttpResponse(ExportFormatType.PortableDocFormat, Response, true, "Cita_" + "." + intCitaiD + ".pdf");
-
+                                    Log.EscribeLog("Formacion del reporte.", 1, Usuario.vchUsuario);
                                     //pdfAtt = new Attachment(stream, "Cita_" + intCitaID + ".pdf");
                                     Response.Buffer = true;
                                     Response.Clear();
@@ -98,7 +100,7 @@ namespace Fuji.RISLite.Site
                                     Response.AddHeader("content-disposition", "attachment; filename=Cita_" + "." + intCitaiD+ ".pdf");
                                     //Response.BinaryWrite(stream); // create the file
                                     Response.Flush(); // send it to the client to download
-
+                                    Log.EscribeLog("Carga del Reporte.", 1, Usuario.vchUsuario);
                                 }
                                 else
                                 {
@@ -121,7 +123,8 @@ namespace Fuji.RISLite.Site
             }
             catch (Exception ePL)
             {
-                Log.EscribeLog("Existe un error en Page_Load de frmAddDate: " + ePL.Message, 3, "");
+                Log.EscribeLog("Existe un error en Page_Load de frmDownLoadCita: " + ePL.Message, 3, "");
+                Log.EscribeLog("Existe un error en Page_Load de frmDownLoadCita: " + ePL.InnerException, 1, Usuario.vchUsuario);
             }
         }
     }

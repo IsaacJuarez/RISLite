@@ -19,6 +19,7 @@ namespace Fuji.RISLite.DataAccess
             bool Success = false;
             try
             {
+                Log.EscribeLog("Usuario de consulta: " + user, 3, "TEST");
                 using (dbRisDA = new RISLiteEntities())
                 {
                     if (dbRisDA.tbl_CAT_Usuario.Any(x => (bool)x.bitActivo && x.vchUsuario.Trim().ToUpper() == user.ToUpper().Trim()))
@@ -70,6 +71,7 @@ namespace Fuji.RISLite.DataAccess
                 Success = false;
                 Log.EscribeLog("Existe un error en getUser: " + egU.Message, 3, user);
             }
+            Log.EscribeLog("Usuario de consulta: " + Usuario.intUsuarioID, 3, "TEST");
             return Success;
         }
 
@@ -5121,7 +5123,7 @@ namespace Fuji.RISLite.DataAccess
                     if (dbRisDA.tbl_MST_Estudio.Any(x => x.intEstudioID == intEstudioID))
                     {
                         tbl_MST_Estudio mdlEstudio = new tbl_MST_Estudio();
-                        mdlEstudio = dbRisDA.tbl_MST_Estudio.First(x => x.intRELModPres == intEstudioID);
+                        mdlEstudio = dbRisDA.tbl_MST_Estudio.First(x => x.intEstudioID == intEstudioID);
                         mdlEstudio.datFecha = DateTime.Today;
                         mdlEstudio.vchUserAdmin = user;
                         mdlEstudio.intEstatusEstudio = intEstatusID;
@@ -5169,6 +5171,9 @@ namespace Fuji.RISLite.DataAccess
                                     mdl.vchtitulo = item.vchTitulo;
                                     mdl.vchModalidad = item.vchModalidad;
                                     mdl.datFechaInicio = (DateTime)item.datFechaInicio;
+                                    mdl.vchEstatus = item.vchEstatus;
+                                    mdl.vchPrestacion = item.vchPrestacion;
+                                    mdl.intEstatusID = (int)item.intEstatusEstudio;
                                     lst.Add(mdl);
                                 }
                             }

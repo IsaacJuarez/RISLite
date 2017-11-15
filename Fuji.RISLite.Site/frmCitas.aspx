@@ -114,6 +114,7 @@
                                 <asp:LinkButton ID="btnArribo" CausesValidation="false" CommandName="Arribo" CommandArgument='<%#Eval("intEstudioID") %>' runat="server" ToolTip="Marcar arribo del paciente a realizar estudio.">
                                     <i class="fa fa-hand-pointer-o" aria-hidden="true" title="Marcar arribo del paciente a realizar estudio." style="font-size:25px;"></i>
                                 </asp:LinkButton>
+                                <asp:Label runat="server" Text="" ForeColor="DarkGreen" ID="lblArriboItem" Visible="false"></asp:Label>
                             </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>
@@ -143,6 +144,42 @@
             </telerik:RadAjaxPanel>
         </div>
     </div>
+
+    <script type="text/javascript">
+        function Redirecciona(strRuta) {
+            var sID = Math.round(Math.random() * 10000000000);
+            var winX = screen.availWidth;
+            var winY = screen.availHeight;
+            sID = "E" + sID;
+            window.open(strRuta, sID,
+                "menubar=yes,toolbar=yes,location=yes,directories=yes,status=yes,resizable=yes" +
+                ",scrollbars=yes,top=0,left=0,screenX=0,screenY=0,Width=" +
+                winX + ",Height=" + winY);
+        }
+
+        function ShowMessage(message, messagetype, idControl) {
+            var cssclass;
+            switch (messagetype) {
+                case 'Correcto':
+                    cssclass = 'alert-success'
+                    break;
+                case 'Error':
+                    cssclass = 'alert-danger'
+                    break;
+                case 'Advertencia':
+                    cssclass = 'alert-warning'
+                    break;
+                default:
+                    cssclass = 'alert-info'
+            }
+            var control = "#" + idControl;
+            $(control).append('<div id="' + idControl + '" style="margin: 0 0.5%; -webkit-box-shadow: 3px 4px 6px #999;" class="alert fade in ' + cssclass + '"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>' + messagetype + '!</strong> <span>' + message + '</span></div>');
+            $(control).fadeTo(2000, 700).slideUp(700, function () {
+                $(control).slideUp(700);
+            });
+        }
+
+    </script>
 
     <telerik:RadScriptBlock runat="server">
         <script type="text/javascript">

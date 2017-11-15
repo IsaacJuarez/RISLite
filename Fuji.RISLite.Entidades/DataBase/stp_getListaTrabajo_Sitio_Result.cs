@@ -28,5 +28,6 @@ namespace Fuji.RISLite.Entidades.DataBase
         public Nullable<bool> bitActivo { get; set; }
         public string NombreCom { get; set; }
         public string vchEstatus { get; set; }
+        public string vchPrestacion { get; set; }
     }
 }

@@ -1,22 +1,13 @@
 ﻿using Fuji.RISLite.Entidades.Extensions;
 using Fuji.RISLite.Entities;
 using Fuji.RISLite.Site.Services;
-using System;
-using System.Configuration;
-
-using System.Web;
-using Telerik.Web.UI;
-using System.Web.UI.WebControls;
-using System.Data;
-using System.Data.Sql;
-using System.Web.UI.HtmlControls;
-using System.Drawing;
-using System.Data.SqlClient;
-using System.Web.UI;
-using System.Collections.Generic;
 using Fuji.RISLite.Site.Services.DataContract;
-using System.Globalization;
-
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
+using System.Web.UI.WebControls;
+using Telerik.Web.UI;
 
 namespace Fuji.RISLite.Site
 {
@@ -38,54 +29,56 @@ namespace Fuji.RISLite.Site
         {
             try
             {
+                String var = "";
                 //Validar Token
                 if (!IsPostBack)
                 {
-                    user = HttpContext.Current.User.Identity.Name.Substring(HttpContext.Current.User.Identity.Name.IndexOf(@"\") + 1);
-                    user = "ijuarez";
-                    string var = "";
-                    if (user == "")
+                    if (Session["User"] != null && Session["lstVistas"] != null)
+                    {
+                        List<clsVistasUsuarios> lstVista = (List<clsVistasUsuarios>)Session["lstVistas"];
+                        if (lstVista != null)
+                        {
+                            string vista = "frmListaTrabajo.aspx";
+                            if (lstVista.Any(x => x.vchVistaIdentificador == vista))
+                            {
+                                Usuario = (clsUsuario)Session["User"];
+                                if (Usuario != null)
+                                {
+
+                                    cargarlistadetrabajo(Usuario.intSitioID);
+                                }
+                                else
+                                {
+                                    var = Security.Encrypt("1");
+                                    Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                                }
+                            }
+                            else
+                            {
+                                Response.Redirect(URL + "/frmSinPermiso.aspx");
+                            }
+                        }
+                        else
+                        {
+                            Response.Redirect(URL + "/frmSinPermiso.aspx");
+                        }
+                    }
+                    else
                     {
                         var = Security.Encrypt("1");
                         Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
                     }
-                    else
-                    {
-                        //validar usuario
-                        ValidaUserResponse response = new ValidaUserResponse();
-                        ValidaUserRequest request = new ValidaUserRequest();
-                        request.user = user;
-                        response = RisService.getUser(request);
-                        if (response != null)
-                        {
-                            Usuario = (clsUsuario)Session["User"];
-                            if (response.Success)
-                            {
-
-                                cargarlistadetrabajo(Usuario.intSitioID);
-                            }
-                            else
-                            {
-                                var = Security.Encrypt("2");
-                                Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    //Enviar al login;
                 }
             }
             catch (Exception ePL)
             {
                 Log.EscribeLog("Existe un error en Page_Load de frmListaTrabajo: " + ePL.Message, 3, "");
-            }        
+            }
         }
 
 
 
-            private void cargarlistadetrabajo(int idsitio)
+        private void cargarlistadetrabajo(int idsitio)
         {
             try
             {
@@ -99,6 +92,7 @@ namespace Fuji.RISLite.Site
                 {
                     if (lstTec.Count > 0)
                     {
+                        lstTec = lstTec.Where(x => x.datFechaInicio.Day == DateTime.Today.Day && x.datFechaInicio.Month == DateTime.Today.Month && x.datFechaInicio.Year == DateTime.Today.Year && x.intEstatusID == 2).ToList();
                         GV_ListaTrabajo.DataSource = lstTec;
                     }
                 }
@@ -109,18 +103,25 @@ namespace Fuji.RISLite.Site
                 Log.EscribeLog("Existe un error en cargaLista de trabajo: " + ecU.Message, 3, Usuario.vchUsuario);
             }
         }
- 
+
 
         protected void GV_ListaTrabajo_RowDataBound(object sender, GridViewRowEventArgs e)
         {
+            try
+            {
 
+            }
+            catch(Exception eDB)
+            {
+                Log.EscribeLog("Existe un error en GV_ListaTrabajo_RowDataBound: " + eDB.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void GV_ListaTrabajo_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
 
         }
-       
+
         protected void GV_ListaTrabajo_RowCommand1(object sender, GridViewCommandEventArgs e)
         {
             try
@@ -128,24 +129,17 @@ namespace Fuji.RISLite.Site
                 int intmodalidadID = 0;
 
                 int index = Convert.ToInt32(e.CommandArgument);
-                //GridViewRow row = GV_ListaTrabajo.Rows[index];
-
-                //ListItem item = new ListItem();
-                //string celda_estatus = "";
-                //celda_estatus = Server.HtmlDecode(row.Cells[5].Text);
-
-                //clsUsuario mdl = new clsUsuario();
                 bool bandera_Actualizar = false;
-          
+
                 switch (e.CommandName)
                 {
-                    case "Tomar":                     
-                            EstatusCita request = new EstatusCita();
-                            request.mdlUser = Usuario;                            
-                            bandera_Actualizar = RisService.UpdateEstatus_Cita(request, 3, index);
+                    case "Tomar":
+                        EstatusCita request = new EstatusCita();
+                        request.mdlUser = Usuario;
+                        bandera_Actualizar = RisService.UpdateEstatus_Cita(request, 3, index);
 
-                            cargarlistadetrabajo(Usuario.intSitioID);
-                     
+                        cargarlistadetrabajo(Usuario.intSitioID);
+
                         int rowIndex = int.Parse(e.CommandArgument.ToString());
                         break;
                     case "Finalizar":
@@ -174,8 +168,5 @@ namespace Fuji.RISLite.Site
                 Log.EscribeLog("Existe un error GV_AGENDA: " + eRU.Message, 3, Usuario.vchUsuario);
             }
         }
-
-
-   
     }
 }

@@ -1830,7 +1830,7 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
           <Parameter Name="intPacienteID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="stp_getBusquedaCita_SoloSitio" ReturnType="Collection(RISLiteModel.stp_getBusquedaCita_SoloSitio_Result)">
-            <Parameter Name="intIdSitio" Mode="In" Type="Int32" />
+          <Parameter Name="intIdSitio" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="stp_getListaTrabajo_Sitio" ReturnType="Collection(RISLiteModel.stp_getListaTrabajo_Sitio_Result)">
             <Parameter Name="intIdSitio" Mode="In" Type="Int32" />
@@ -3352,6 +3352,7 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
           <Property Type="Boolean" Name="bitActivo" Nullable="true" />
           <Property Type="String" Name="NombreCom" Nullable="false" MaxLength="401" />
           <Property Type="String" Name="vchEstatus" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="vchPrestacion" Nullable="true" MaxLength="200" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -4258,6 +4259,7 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
                 <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
                 <ScalarProperty Name="NombreCom" ColumnName="NombreCom" />
                 <ScalarProperty Name="vchEstatus" ColumnName="vchEstatus" />
+                <ScalarProperty Name="vchPrestacion" ColumnName="vchPrestacion" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

@@ -34,12 +34,11 @@
 
                         <asp:BoundField HeaderStyle-CssClass="center" ItemStyle-CssClass="center" DataField="intEstudioID" HeaderText="ID" ItemStyle-ForeColor="DarkGreen" />
                         <asp:BoundField HeaderStyle-CssClass="center" ItemStyle-CssClass="center" DataField="vchNombre" HeaderText="Nombre" ItemStyle-ForeColor="DarkGreen" />
-                        <asp:BoundField HeaderStyle-CssClass="center" ItemStyle-CssClass="center" DataField="vchtitulo" HeaderText="Procedimiento" ItemStyle-ForeColor="DarkGreen" />
-                        <asp:BoundField HeaderStyle-CssClass="center" ItemStyle-CssClass="center" DataField="vchModalidad" HeaderText="Procedimiento" ItemStyle-ForeColor="DarkGreen" />
-
+                        <asp:BoundField HeaderStyle-CssClass="center" ItemStyle-CssClass="center" DataField="vchModalidad" HeaderText="Modalidad" ItemStyle-ForeColor="DarkGreen" />
+                        <asp:BoundField HeaderStyle-CssClass="center" ItemStyle-CssClass="center" DataField="vchPrestacion" HeaderText="Estudio" ItemStyle-ForeColor="DarkGreen" />
                         <asp:TemplateField HeaderText="Fecha" HeaderStyle-CssClass="center" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
                             <ItemTemplate>
-                                <asp:Label ID="lblFecha_Inicio" runat="server" Text='<%# String.Format("{0:dd/MM/yyyy}", Eval("datFechaInicio")) %>' ForeColor="DarkGreen" />
+                                <asp:Label ID="lblFecha_Inicio" runat="server" Text='<%# String.Format("{0:dd-MM-yyyy hh:mm tt}", Eval("datFechaInicio")) %>' ForeColor="DarkGreen" />
                             </ItemTemplate>
                         </asp:TemplateField>
 

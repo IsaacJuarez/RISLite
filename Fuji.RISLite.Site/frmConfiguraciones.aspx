@@ -1,10 +1,41 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="frmConfiguraciones.aspx.cs" Inherits="Fuji.RISLite.Site.frmConfiguraciones" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
-    <script src="assets/jquery/dist/jquery.min.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
+    <!-- bootstrap & fontawesome -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/font-awesome/4.5.0/css/font-awesome.min.css" />
+
+    <!-- page specific plugin styles -->
+    <link rel="stylesheet" href="assets/css/jquery-ui.custom.min.css" />
+    <link rel="stylesheet" href="assets/css/jquery.gritter.min.css" />
+
+    <!-- text fonts -->
+    <link rel="stylesheet" href="assets/css/fonts.googleapis.com.css" />
+
+    <!-- ace styles -->
+    <link rel="stylesheet" href="assets/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
+
+    <!--[if lte IE 9]>
+		<link rel="stylesheet" href="assets/css/ace-part2.min.css" class="ace-main-stylesheet" />
+	<![endif]-->
+    <link rel="stylesheet" href="assets/css/ace-skins.min.css" />
+    <link rel="stylesheet" href="assets/css/ace-rtl.min.css" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <telerik:RadAjaxManager ID="RadAjaxManager1" runat="server">
+        <AjaxSettings>
+            <telerik:AjaxSetting AjaxControlID="ddlTipoUsuario">
+                <UpdatedControls>
+                    <telerik:AjaxUpdatedControl ControlID="grvVista" />
+                </UpdatedControls>
+            </telerik:AjaxSetting>
+            <telerik:AjaxSetting AjaxControlID="grvVista">
+                <UpdatedControls>
+                    <telerik:AjaxUpdatedControl ControlID="grvVista" />
+                </UpdatedControls>
+            </telerik:AjaxSetting>
+          </AjaxSettings>
+    </telerik:RadAjaxManager>
+
     <div class="page-content">
         <div class="page-header">
 		    <h1>
@@ -16,93 +47,6 @@
 		    </h1>
 	    </div><!-- /.page-header -->
         <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-12">
-                <div class="widget-box">
-                    <div class="widget-header widget-header-flat widget-header-small">
-						<h5 class="widget-title">
-							<i class="ace-icon fa fa-user-md"></i>
-							Sistema
-						</h5>
-                    </div>
-                    <div class="widget-body">
-                        <div class="widget-main">
-                            <div class="widget-box">
-								<div class="widget-header widget-header-flat widget-header-small">
-									<h5 class="widget-title">
-										<i class="ace-icon fa fa-signal"></i>
-										Vistas por Tipo de Usuario
-									</h5>
-                                </div>
-                                <div class="widget-body">
-                                    <div class="row">
-                                        <div class="col-lg-6 text-right">
-                                        </div>
-                                        <div class="col-lg-6 text-right">
-                                            <asp:DropDownList runat="server" CssClass="form-control" ID="ddlTipoUsuario" AutoPostBack="true" OnSelectedIndexChanged="ddlTipoUsuario_SelectedIndexChanged"></asp:DropDownList>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-12 col-md-12 ">
-                                            <asp:UpdatePanel runat="server">
-                                                <ContentTemplate>
-                                                    <asp:Panel runat="server">
-                                                        <asp:GridView ID="grvVista" runat="server" AllowPaging="true" CssClass="table table-striped table-bordered"
-                                                            PageSize="10" AutoGenerateColumns="false" OnRowDataBound="grvVista_RowDataBound" Font-Size="10px"
-                                                            OnPageIndexChanging="grvVista_PageIndexChanging" DataKeyNames="intRELUsuarioBotonID"
-                                                            OnRowCommand="grvVista_RowCommand"
-                                                            EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
-                                                            <Columns>
-                                                                <asp:BoundField DataField="intRELUsuarioBotonID" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
-                                                                <asp:BoundField DataField="vchNombreBoton"  HeaderText="Botón" ReadOnly="true" />
-                                                                <asp:BoundField DataField="vchNombreVista"  HeaderText="Vista" ReadOnly="true" />
-                                                                <asp:TemplateField HeaderText="Editar" ItemStyle-HorizontalAlign="Center">
-                                                                    <ItemTemplate>      
-                                                                        <asp:LinkButton ID="btnVisualizar" CausesValidation="false" CommandName="viewEditar" CommandArgument='<%# Bind("intRELUsuarioBotonID") %>' runat="server">
-                                                                            <asp:Image ID="ImageVisializa" runat="server" ImageUrl="~/images/ic_action_edit.png" Height="25px" Width="25px" ToolTip="Editar"/>
-                                                                        </asp:LinkButton>
-                                                                    </ItemTemplate>
-                                                                </asp:TemplateField>
-                                                                <asp:TemplateField HeaderText="Estatus" ItemStyle-HorizontalAlign="Center">
-                                                                    <ItemTemplate>
-                                                                        <asp:ImageButton ID="imbEstatus" runat="server" BackColor="Transparent"  Height="25px" Width="25px" 
-                                                                            CommandArgument='<%#Eval("intRELUsuarioBotonID") %>' CommandName="Estatus" ToolTip="Cambia el estatus del Sitio" />
-                                                                    </ItemTemplate>
-                                                                </asp:TemplateField>
-                                                            </Columns>
-                                                            <PagerTemplate>
-                                                                <asp:Label ID="lblTemplate" runat="server" Text="Muestra Filas: " CssClass="Label" />
-                                                                <asp:DropDownList ID="ddlBandeja" runat="server" AutoPostBack="true" CausesValidation="false"
-                                                                    Enabled="true" OnSelectedIndexChanged="ddlBandeja_SelectedIndexChanged">
-                                                                        <asp:ListItem Value="10" />
-                                                                        <asp:ListItem Value="15" />
-                                                                        <asp:ListItem Value="20" />
-                                                                </asp:DropDownList>
-                                                                &nbsp;Página
-                                                                <asp:TextBox ID="txtBandeja" runat="server" AutoPostBack="true" OnTextChanged="txtBandeja_TextChanged"
-                                                                    Width="40" MaxLength="10" />
-                                                                de
-                                                                <asp:Label ID="lblBandejaTotal" runat="server" />
-                                                                &nbsp;
-                                                                <asp:Button ID="btnBandeja_I" runat="server" CommandName="Page" CausesValidation="false"
-                                                                    ToolTip="Página Anterior" CommandArgument="Prev" CssClass="previous" />
-                                                                <asp:Button ID="btnBandeja_II" runat="server" CommandName="Page" CausesValidation="false"
-                                                                    ToolTip="Página Siguiente" CommandArgument="Next" CssClass="next" />
-                                                            </PagerTemplate>
-                                                            <HeaderStyle CssClass="headerstyle" />
-                                                            <FooterStyle CssClass="text-center" />
-                                                            <PagerStyle CssClass="text-center" />
-                                                        </asp:GridView>
-                                                    </asp:Panel>
-                                                </ContentTemplate>
-                                            </asp:UpdatePanel>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="col-lg-6 col-md-6 col-sm-12">
                 <div class="row">
                     <div class="widget-box">
@@ -201,24 +145,77 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12">
                 <div class="widget-box">
-                    <div class="widget-header widget-header-flat widget-header-small">
+					<div class="widget-header widget-header-flat widget-header-small">
 						<h5 class="widget-title">
-							<i class="ace-icon fa fa-medkit"></i>
-							Agenda
+							<i class="ace-icon fa fa-signal"></i>
+							Vistas por Tipo de Usuario
 						</h5>
                     </div>
                     <div class="widget-body">
-                        <div class="widget-main">
+                        <div class="row">
+                            <div class="col-lg-6 text-right">
+                            </div>
+                            <div class="col-lg-6 text-right">
+                                <telerik:RadComboBox runat="server" ID="ddlTipoUsuario"  RenderMode="Lightweight" ForeColor="DarkGreen" Width="100%"  OnClientSelectedIndexChanged="ComboTipoUsuario"></telerik:RadComboBox>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 ">
+                                <telerik:RadAjaxPanel ID="radAjaxPanelVista" runat="server" OnAjaxRequest="radAjaxPanelVista_AjaxRequest">
+                                    <asp:GridView ID="grvVista" runat="server" AllowPaging="true" CssClass="table table-striped table-bordered"
+                                        PageSize="10" AutoGenerateColumns="false" OnRowDataBound="grvVista_RowDataBound" Font-Size="10px"
+                                        OnPageIndexChanging="grvVista_PageIndexChanging" DataKeyNames="intRELUsuarioBotonID"
+                                        OnRowCommand="grvVista_RowCommand"
+                                        EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
+                                        <Columns>
+                                            <asp:BoundField DataField="intRELUsuarioBotonID" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
+                                            <asp:BoundField DataField="vchNombreBoton"  HeaderText="Botón" ReadOnly="true" />
+                                            <asp:BoundField DataField="vchNombreVista"  HeaderText="Vista" ReadOnly="true" />
+                                            <asp:TemplateField HeaderText="Editar" ItemStyle-HorizontalAlign="Center">
+                                                <ItemTemplate>      
+                                                    <asp:LinkButton ID="btnVisualizar" CausesValidation="false" CommandName="viewEditar" CommandArgument='<%# Bind("intRELUsuarioBotonID") %>' runat="server">
+                                                        <asp:Image ID="ImageVisializa" runat="server" ImageUrl="~/images/ic_action_edit.png" Height="25px" Width="25px" ToolTip="Editar"/>
+                                                    </asp:LinkButton>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Estatus" ItemStyle-HorizontalAlign="Center">
+                                                <ItemTemplate>
+                                                    <asp:ImageButton ID="imbEstatus" runat="server" BackColor="Transparent"  Height="25px" Width="25px" 
+                                                        CommandArgument='<%#Eval("intRELUsuarioBotonID") %>' CommandName="Estatus" ToolTip="Cambia el estatus del Sitio" />
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                        </Columns>
+                                        <PagerTemplate>
+                                            <asp:Label ID="lblTemplate" runat="server" Text="Muestra Filas: " CssClass="Label" />
+                                            <asp:DropDownList ID="ddlBandeja" runat="server" AutoPostBack="true" CausesValidation="false"
+                                                Enabled="true" OnSelectedIndexChanged="ddlBandeja_SelectedIndexChanged">
+                                                    <asp:ListItem Value="10" />
+                                                    <asp:ListItem Value="15" />
+                                                    <asp:ListItem Value="20" />
+                                            </asp:DropDownList>
+                                            &nbsp;Página
+                                            <asp:TextBox ID="txtBandeja" runat="server" AutoPostBack="true" OnTextChanged="txtBandeja_TextChanged"
+                                                Width="40" MaxLength="10" />
+                                            de
+                                            <asp:Label ID="lblBandejaTotal" runat="server" />
+                                            &nbsp;
+                                            <asp:Button ID="btnBandeja_I" runat="server" CommandName="Page" CausesValidation="false"
+                                                ToolTip="Página Anterior" CommandArgument="Prev" CssClass="previous" />
+                                            <asp:Button ID="btnBandeja_II" runat="server" CommandName="Page" CausesValidation="false"
+                                                ToolTip="Página Siguiente" CommandArgument="Next" CssClass="next" />
+                                        </PagerTemplate>
+                                        <HeaderStyle CssClass="headerstyle" />
+                                        <FooterStyle CssClass="text-center" />
+                                        <PagerStyle CssClass="text-center" />
+                                    </asp:GridView>
+                               </telerik:RadAjaxPanel>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-12">
             </div>
         </div>
 
@@ -270,4 +267,14 @@
             $('#myModal').modal('show');
         }
     </script>
+
+    <telerik:RadScriptBlock runat="server">
+        <script type="text/javascript">
+            function ComboTipoUsuario(sender, eventArgs) {
+                //var evento = eventArgs.Command.get_name();
+                var idsitio = sender._value;
+                $find('<%= radAjaxPanelVista.ClientID%>').ajaxRequestWithTarget('<%= radAjaxPanelVista.UniqueID %>', idsitio);
+            }
+        </script>
+    </telerik:RadScriptBlock>
 </asp:Content>

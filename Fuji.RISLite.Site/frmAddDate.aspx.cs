@@ -400,7 +400,6 @@ namespace Fuji.RISLite.Site
                                 case 1:
                                     break;
                                 case 2:
-
                                     LinkButton lnkbtn = new LinkButton();
                                     lnkbtn.CssClass = "btn btn-empty";
                                     lnkbtn.ID = "radBtn" + item.intAdicionalesID;

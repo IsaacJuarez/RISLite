@@ -1,20 +1,14 @@
 ﻿using Fuji.RISLite.Entidades.Extensions;
-using System;
-using System.Web;
-using Telerik.Web.UI;
-using System.Web.UI.WebControls;
-using System.Data;
-using System.Data.Sql;
-using System.Web.UI.HtmlControls;
-using System.Drawing;
-using System.Data.SqlClient;
-using System.Configuration;
-using System.Web.UI;
 using Fuji.RISLite.Entities;
-using System.Collections.Generic;
-using Fuji.RISLite.Site.Services.DataContract;
 using Fuji.RISLite.Site.Services;
-using System.Globalization;
+using Fuji.RISLite.Site.Services.DataContract;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Drawing;
+using System.Web;
+using System.Web.UI.WebControls;
+using Telerik.Web.UI;
 
 namespace Fuji.RISLite.Site
 {
@@ -30,6 +24,14 @@ namespace Fuji.RISLite.Site
                 return ConfigurationManager.AppSettings["URL"];
             }
         }
+        public string debug
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["debug"];
+            }
+        }
+
         public static clsUsuario Usuario = new clsUsuario();
         RisLiteService RisService = new RisLiteService();
 
@@ -42,7 +44,9 @@ namespace Fuji.RISLite.Site
                 if (!IsPostBack)
                 {
                     user = HttpContext.Current.User.Identity.Name.Substring(HttpContext.Current.User.Identity.Name.IndexOf(@"\") + 1);
-                    user = "ijuarez";
+                    Log.EscribeLog("Usuario de Login: " + user, 1, "");
+                    if (debug == "1")
+                        user = "ijuarez";
                     string var = "";
                     if (user == "")
                     {
@@ -92,57 +96,57 @@ namespace Fuji.RISLite.Site
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            //try
-            //{
-            //    //Usuario_ = (clsUsuario)Session["User"];
-            //    //Usuario_ = (clsUsuario)Session["User"];
+            try
+            {
+                //    //Usuario_ = (clsUsuario)Session["User"];
+                //    //Usuario_ = (clsUsuario)Session["User"];
 
-            //    //Validar Token
-            //    if (!IsPostBack)
-            //    {
-            //        user = HttpContext.Current.User.Identity.Name.Substring(HttpContext.Current.User.Identity.Name.IndexOf(@"\") + 1);
-            //        user = "ijuarez";
-            //        string var = "";
-            //        if (user == "")
-            //        {
-            //            var = Security.Encrypt("1");
-            //            Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
-            //        }
-            //        else
-            //        {
-            //            //validar usuario
-            //            ValidaUserResponse response = new ValidaUserResponse();
-            //            ValidaUserRequest request = new ValidaUserRequest();
-            //            request.user = user;
-            //            response = RisService.getUser(request);
-            //            if (response != null)
-            //            {
-            //                if (response.Success)
-            //                {
-            //                    Session["User"] = response.mdlUser;
-            //                    Usuario = response.mdlUser;
-            //                    //cargarAgenda();
-            //                    RS_Agenda.SelectedDate = DateTime.Now;
-            //                    carga_citas();                               
-                             
-            //                }
-            //                else
-            //                {
-            //                    var = Security.Encrypt("2");
-            //                    Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
-            //                }
-            //            }
-            //        }
-            //    }
-            //    else
-            //    {
-            //        //Enviar al login;
-            //    }
-            //}
-            //catch (Exception ePL)
-            //{
-            //    Log.EscribeLog("Existe un error en Page_Load de la pagina Default:" + ePL.Message, 3, "");
-            //}
+                //    //Validar Token
+                //    if (!IsPostBack)
+                //    {
+                //        user = HttpContext.Current.User.Identity.Name.Substring(HttpContext.Current.User.Identity.Name.IndexOf(@"\") + 1);
+                //        user = "ijuarez";
+                //        string var = "";
+                //        if (user == "")
+                //        {
+                //            var = Security.Encrypt("1");
+                //            Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                //        }
+                //        else
+                //        {
+                //            //validar usuario
+                //            ValidaUserResponse response = new ValidaUserResponse();
+                //            ValidaUserRequest request = new ValidaUserRequest();
+                //            request.user = user;
+                //            response = RisService.getUser(request);
+                //            if (response != null)
+                //            {
+                //                if (response.Success)
+                //                {
+                //                    Session["User"] = response.mdlUser;
+                //                    Usuario = response.mdlUser;
+                //                    //cargarAgenda();
+                //                    RS_Agenda.SelectedDate = DateTime.Now;
+                carga_citas();
+
+                //                }
+                //                else
+                //                {
+                //                    var = Security.Encrypt("2");
+                //                    Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                //                }
+                //            }
+                //        }
+                //    }
+                //    else
+                //    {
+                //        //Enviar al login;
+
+            }
+            catch (Exception ePL)
+            {
+                Log.EscribeLog("Existe un error en Page_Load de la pagina Default:" + ePL.Message, 3, "");
+            }
         }
       
 

@@ -67,7 +67,7 @@
 				<ul class="nav ace-nav">
 					<li class="light-blue dropdown-modal">
 						<a data-toggle="dropdown" href="#" class="dropdown-toggle">
-							<img class="nav-user-photo" src="Images/isaac 1.JPG" alt="Isaac Juarez" />
+                            <img runat="server" id="imgUser" class="nav-user-photo" src="Users/user.png" alt="Usuario" />
 							<span class="user-info">
 								<small>Bienvenido,</small>
 								<asp:label runat="server" ID="lblUser" Text=""></asp:label>
@@ -171,13 +171,13 @@
 					<b class="arrow"></b>
 				</li>
 
-                <li class="" id="li5">
+                <%--<li class="" id="li5">
 					<a runat="server" id="A1" href="frmConfiguracion.aspx">
 						<i class="menu-icon fa fa-wrench"  runat="server" id="i1"></i>
 						<span class="menu-text"> <asp:Label runat="server" Text="Nueva Configuración" ID="Label1"></asp:Label> </span>
 					</a>
 					<b class="arrow"></b>
-				</li>
+				</li>--%>
             </ul><!-- /.nav-list -->
 
             <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">

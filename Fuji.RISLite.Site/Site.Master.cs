@@ -19,6 +19,13 @@ namespace Fuji.RISLite.Site
                 return ConfigurationManager.AppSettings["URL"];
             }
         }
+        public string debug
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["debug"];
+            }
+        }
         RisLiteService RisService = new RisLiteService();
         private static clsUsuario usuario = new clsUsuario();
         private static List<clsVistasUsuarios> lstVistas = new List<clsVistasUsuarios>();
@@ -30,7 +37,9 @@ namespace Fuji.RISLite.Site
                 if (!IsPostBack)
                 {
                     user = HttpContext.Current.User.Identity.Name.Substring(HttpContext.Current.User.Identity.Name.IndexOf(@"\") + 1);
-                    user = "ijuarez";
+                    Log.EscribeLog("Usuario de Login: " + user, 1, "");
+                    if(debug == "1")
+                        user = "ijuarez";
                     string var = "";
                     if (user == "")
                     {
@@ -48,6 +57,8 @@ namespace Fuji.RISLite.Site
                         {
                             if (response.Success)
                             {
+                                imgUser.Src = "/Users/" + user + ".jpg";
+                                imgUser.Alt = response.mdlUser.vchNombre;
                                 lblUser.Text = response.mdlUser.vchNombre;
                                 Session["User"] = response.mdlUser;
                                 Session["lstVistas"] = response.lstVistas;

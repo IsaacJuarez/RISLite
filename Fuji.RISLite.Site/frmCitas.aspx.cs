@@ -286,10 +286,32 @@ namespace Fuji.RISLite.Site
                 {
                     stp_getCitas_Result _mdl = (stp_getCitas_Result)e.Row.DataItem;
                     LinkButton ibtEstatus = (LinkButton)e.Row.FindControl("btnArribo");
+                    //Label lblEstatus = (Label)e.Row.FindControl("lblArriboItem");
+
                     if (_mdl.intEstatusEstudio == 1)
+                    {
+                        ibtEstatus.ToolTip = "Marcar arribo del paciente a realizar estudio.";
+                        ibtEstatus.Text = "<i class='fa fa-hand-pointer-o' aria-hidden='true' title='Marcar arribo del paciente a realizar estudio.' style='font-size:25px;'></i>";
+                        ibtEstatus.Enabled = true;
                         ibtEstatus.Visible = true;
+                    }
                     else
-                        ibtEstatus.Visible = false;
+                    {
+                        if (_mdl.intEstatusEstudio == 2)
+                        {
+                            //lblEstatus.Visible = true;
+                            ibtEstatus.ToolTip = "Paciente Arribado a cita";
+                            ibtEstatus.Text = "<i class='fa fa-pause' aria-hidden='true' title='Paciente Arribado a cita.' style='font-size:25px;'></i>";
+                            ibtEstatus.Enabled = false;
+                            ibtEstatus.Visible = true;
+                            //lblEstatus.Text = "Paciente Arribado";
+                        }
+                        else
+                        {
+                            ibtEstatus.Enabled = false;
+                            ibtEstatus.Visible = false;
+                        }
+                    }
                 }
             }
             catch (Exception eGUP)

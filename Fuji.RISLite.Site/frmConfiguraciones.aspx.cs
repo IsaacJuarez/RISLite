@@ -230,7 +230,6 @@ namespace Fuji.RISLite.Site
             catch(Exception eddC)
             {
                 Log.EscribeLog("Existe un error en ddlTipoUsuario_SelectedIndexChanged: " + eddC.Message,3,Usuario.vchUsuario);
-                //
             }
         }
 
@@ -268,7 +267,7 @@ namespace Fuji.RISLite.Site
             }
             catch (Exception eGUP)
             {
-                throw eGUP;
+                Log.EscribeLog("Existe un error en grvVista_RowDataBound: " + eGUP.Message, 3, Usuario.vchUsuario);
             }
         }
 
@@ -367,6 +366,25 @@ namespace Fuji.RISLite.Site
         protected void btnAddRelVistaBoton_Click(object sender, EventArgs e)
         {
 
+        }
+
+        protected void radAjaxPanelVista_AjaxRequest(object sender, Telerik.Web.UI.AjaxRequestEventArgs e)
+        {
+            try
+            {
+                if (ddlTipoUsuario.SelectedValue != "")
+                {
+                    if (Convert.ToInt32(ddlTipoUsuario.SelectedValue) > 0)
+                    {
+                        cargagridVistas(Convert.ToInt32(ddlTipoUsuario.SelectedValue));
+                    }
+                }
+            }
+            catch (Exception eddC)
+            {
+                Log.EscribeLog("Existe un error en radAjaxPanelVista_AjaxRequest: " + eddC.Message, 3, Usuario.vchUsuario);
+                //
+            }
         }
     }
 }
