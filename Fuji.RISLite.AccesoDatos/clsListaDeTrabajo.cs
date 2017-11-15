@@ -10,6 +10,7 @@ namespace Fuji.RISLite.Entities
         public string vchCodigo { get; set; }
         public string vchtitulo { get; set; }
         public DateTime datFechaInicio { get; set; }
+        public DateTime datFecha { get; set; }
         public string vchUserAdmin { get; set; }
         public string vchEstatus { get; set; }
         public string vchPrestacion { get; set; }
@@ -23,6 +24,7 @@ namespace Fuji.RISLite.Entities
             vchCodigo = string.Empty;
             vchtitulo = string.Empty;
             datFechaInicio = DateTime.MinValue;
+            datFecha = DateTime.MinValue;
             vchUserAdmin = string.Empty;
             vchEstatus = string.Empty;
             vchPrestacion = string.Empty;

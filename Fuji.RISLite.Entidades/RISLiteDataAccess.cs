@@ -761,6 +761,7 @@ namespace Fuji.RISLite.DataAccess
                     if (dbRisDA.tbl_Conf_CorreoSitio.Any(x=>x.intSitioID == intSitioID))
                     {
                         mdl = dbRisDA.tbl_Conf_CorreoSitio.First();
+                        Log.EscribeLog("Correo de sitio: " + mdl.vchCorreo, 3, user);
                         valido = true;
                     }
                     else
@@ -5174,6 +5175,7 @@ namespace Fuji.RISLite.DataAccess
                                     mdl.vchEstatus = item.vchEstatus;
                                     mdl.vchPrestacion = item.vchPrestacion;
                                     mdl.intEstatusID = (int)item.intEstatusEstudio;
+                                    mdl.datFecha = (DateTime)item.datFecha;
                                     lst.Add(mdl);
                                 }
                             }

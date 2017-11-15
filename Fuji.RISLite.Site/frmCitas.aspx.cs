@@ -353,10 +353,12 @@ namespace Fuji.RISLite.Site
                     case "Email":
                         intCitaID = Convert.ToInt32(e.CommandArgument.ToString());
                         PrepararCorreo(intCitaID);
+                        ShowMessage("Se envío el correo.", MessageType.Correcto, "alert_container");
                         break;
                     case "Imprimir":
                         intCitaID = Convert.ToInt32(e.CommandArgument.ToString());
                         imprimirCita(intCitaID);
+                        ShowMessage("Impresion correcta.", MessageType.Correcto, "alert_container");
                         break;
                     case "Arribo":
                         intEstudioID = Convert.ToInt32(e.CommandArgument.ToString());
@@ -429,6 +431,8 @@ namespace Fuji.RISLite.Site
                     configCorreo = obtenerDatosCorreoSitio();
                     if (correo != null && configCorreo != null)
                     {
+                        Log.EscribeLog("Correo para: " + correo.toEmail, 3, Usuario.vchUsuario);
+                        Log.EscribeLog("Correo de: " + configCorreo.vchCorreo, 3, Usuario.vchUsuario);
                         enviarCorreo(correo, configCorreo, Citareporte);
                     }
                 }
@@ -448,7 +452,7 @@ namespace Fuji.RISLite.Site
 
                 ConfigEmailResponse response = new ConfigEmailResponse();
                 ConfigEmailRequest request = new ConfigEmailRequest();
-                request.intSitioID = Usuario.intUsuarioID;
+                request.intSitioID = Usuario.intSitioID;
                 request.mdlUser = Usuario;
                 response = RisService.getConfigEmail(request);
                 if (response != null)
@@ -534,7 +538,9 @@ namespace Fuji.RISLite.Site
             bool valido = false;
             try
             {
+                Log.EscribeLog("Inicio de creacion de email.", 1, Usuario.vchUsuario);
                 MailMessage mail = new MailMessage();
+                Log.EscribeLog("From: " + configCorreo.vchCorreo, 1, Usuario.vchUsuario);
                 mail.From = new MailAddress(configCorreo.vchCorreo);
                 string[] lista_correos = correo.toEmail.Split(';');
 
@@ -542,10 +548,12 @@ namespace Fuji.RISLite.Site
                 {
                     mail.To.Add(destino);
                 }
+                Log.EscribeLog("Email para: " + configCorreo.vchCorreo, 1, Usuario.vchUsuario);
                 mail.Subject = correo.asunto;
                 mail.IsBodyHtml = true;
                 mail.Body = correo.htmlCorreo;
 
+                Log.EscribeLog("Se inicia reporte", 1, Usuario.vchUsuario);
                 if (correo.bitReporte)
                 {
                     try
@@ -559,6 +567,7 @@ namespace Fuji.RISLite.Site
                 }
                 try
                 {
+                    Log.EscribeLog("Proceso de envío", 1, Usuario.vchUsuario);
                     System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient();
                     //string correoSit = Security.Decrypt(CorreoString);
                     //string passSit = Security.Decrypt(PassString);

@@ -92,7 +92,7 @@ namespace Fuji.RISLite.Site
                 {
                     if (lstTec.Count > 0)
                     {
-                        lstTec = lstTec.Where(x => x.datFechaInicio.Day == DateTime.Today.Day && x.datFechaInicio.Month == DateTime.Today.Month && x.datFechaInicio.Year == DateTime.Today.Year && x.intEstatusID == 2).ToList();
+                        lstTec = lstTec.Where(x => x.datFechaInicio.Day == DateTime.Today.Day && x.datFechaInicio.Month == DateTime.Today.Month && x.datFechaInicio.Year == DateTime.Today.Year && x.intEstatusID != 1).OrderBy(x=> x.datFecha).ToList();
                         GV_ListaTrabajo.DataSource = lstTec;
                     }
                 }
@@ -109,9 +109,43 @@ namespace Fuji.RISLite.Site
         {
             try
             {
+                if (e.Row.RowType != DataControlRowType.DataRow)
+                {
+                    return;
+                }
 
+                if (e.Row.DataItem != null)
+                {
+                    clsListaDeTrabajo item = (clsListaDeTrabajo)e.Row.DataItem;
+                    LinkButton btn = (LinkButton)e.Row.FindControl("btn1");
+                    LinkButton btn2 = (LinkButton)e.Row.FindControl("btn2");
+                    LinkButton btn3 = (LinkButton)e.Row.FindControl("btn3");
+                    if (btn != null)
+                    {
+                        if(item.intEstatusID == 2)
+                        {
+                            btn.Visible = true;
+                            btn2.Visible = false;
+                            btn3.Visible = false;
+                        }
+                        else
+                        {
+                            btn.Visible = false;
+                            if(item.intEstatusID == 3)
+                            {
+                                btn2.Visible = true;
+                                btn3.Visible = true;
+                            }
+                            else
+                            {
+                                btn2.Visible = false;
+                                btn3.Visible = false;
+                            }
+                        }
+                    }
+                }
             }
-            catch(Exception eDB)
+            catch (Exception eDB)
             {
                 Log.EscribeLog("Existe un error en GV_ListaTrabajo_RowDataBound: " + eDB.Message, 3, Usuario.vchUsuario);
             }
@@ -145,7 +179,7 @@ namespace Fuji.RISLite.Site
                     case "Finalizar":
                         EstatusCita request2 = new EstatusCita();
                         request2.mdlUser = Usuario;
-                        bandera_Actualizar = RisService.UpdateEstatus_Cita(request2, 2, index);
+                        bandera_Actualizar = RisService.UpdateEstatus_Cita(request2, 4, index);
 
                         cargarlistadetrabajo(Usuario.intSitioID);
 
@@ -155,7 +189,7 @@ namespace Fuji.RISLite.Site
                     case "Cancelar":
                         EstatusCita request3 = new EstatusCita();
                         request3.mdlUser = Usuario;
-                        bandera_Actualizar = RisService.UpdateEstatus_Cita(request3, 1, index);
+                        bandera_Actualizar = RisService.UpdateEstatus_Cita(request3, 2, index);
 
                         cargarlistadetrabajo(Usuario.intSitioID);
 
