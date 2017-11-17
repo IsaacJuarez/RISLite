@@ -16,14 +16,14 @@ namespace Fuji.RISLite.Site.Data {
     using CrystalDecisions.CrystalReports.Engine;
     
     
-    public class rptCitaReporte : ReportClass {
+    public class rptReporteEtapa : ReportClass {
         
-        public rptCitaReporte() {
+        public rptReporteEtapa() {
         }
         
         public override string ResourceName {
             get {
-                return "rptCitaReporte.rpt";
+                return "rptReporteEtapa.rpt";
             }
             set {
                 // Do nothing
@@ -41,7 +41,7 @@ namespace Fuji.RISLite.Site.Data {
         
         public override string FullResourceName {
             get {
-                return "Fuji.RISLite.Site.Data.rptCitaReporte.rpt";
+                return "Fuji.RISLite.Site.Data.rptReporteEtapa.rpt";
             }
             set {
                 // Do nothing
@@ -50,7 +50,7 @@ namespace Fuji.RISLite.Site.Data {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section1 {
+        public CrystalDecisions.CrystalReports.Engine.Section ReportHeaderSection1 {
             get {
                 return this.ReportDefinition.Sections[0];
             }
@@ -58,7 +58,7 @@ namespace Fuji.RISLite.Site.Data {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section2 {
+        public CrystalDecisions.CrystalReports.Engine.Section PageHeaderSection1 {
             get {
                 return this.ReportDefinition.Sections[1];
             }
@@ -66,7 +66,7 @@ namespace Fuji.RISLite.Site.Data {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section GroupHeaderSection1 {
+        public CrystalDecisions.CrystalReports.Engine.Section GroupHeaderSection2 {
             get {
                 return this.ReportDefinition.Sections[2];
             }
@@ -74,7 +74,7 @@ namespace Fuji.RISLite.Site.Data {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section GroupHeaderSection2 {
+        public CrystalDecisions.CrystalReports.Engine.Section GroupHeaderSection3 {
             get {
                 return this.ReportDefinition.Sections[3];
             }
@@ -82,7 +82,7 @@ namespace Fuji.RISLite.Site.Data {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section GroupHeaderSection3 {
+        public CrystalDecisions.CrystalReports.Engine.Section GroupHeaderSection1 {
             get {
                 return this.ReportDefinition.Sections[4];
             }
@@ -98,7 +98,7 @@ namespace Fuji.RISLite.Site.Data {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section3 {
+        public CrystalDecisions.CrystalReports.Engine.Section DetailSection1 {
             get {
                 return this.ReportDefinition.Sections[6];
             }
@@ -106,7 +106,7 @@ namespace Fuji.RISLite.Site.Data {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section GroupFooterSection4 {
+        public CrystalDecisions.CrystalReports.Engine.Section GroupFooterSection1 {
             get {
                 return this.ReportDefinition.Sections[7];
             }
@@ -130,7 +130,7 @@ namespace Fuji.RISLite.Site.Data {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section GroupFooterSection1 {
+        public CrystalDecisions.CrystalReports.Engine.Section ReportFooterSection1 {
             get {
                 return this.ReportDefinition.Sections[10];
             }
@@ -138,7 +138,7 @@ namespace Fuji.RISLite.Site.Data {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section4 {
+        public CrystalDecisions.CrystalReports.Engine.Section PageFooterSection1 {
             get {
                 return this.ReportDefinition.Sections[11];
             }
@@ -146,25 +146,65 @@ namespace Fuji.RISLite.Site.Data {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section5 {
+        public CrystalDecisions.Shared.IParameterField Parameter_intUsuarioID {
             get {
-                return this.ReportDefinition.Sections[12];
+                return this.DataDefinition.ParameterFields[0];
             }
         }
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_intCitaID {
+        public CrystalDecisions.Shared.IParameterField Parameter_sintOficinaAtencionID {
             get {
-                return this.DataDefinition.ParameterFields[0];
+                return this.DataDefinition.ParameterFields[1];
+            }
+        }
+        
+        [Browsable(false)]
+        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+        public CrystalDecisions.Shared.IParameterField Parameter_sintEstadoID {
+            get {
+                return this.DataDefinition.ParameterFields[2];
+            }
+        }
+        
+        [Browsable(false)]
+        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+        public CrystalDecisions.Shared.IParameterField Parameter_sdatFechaRegistroInicial {
+            get {
+                return this.DataDefinition.ParameterFields[3];
+            }
+        }
+        
+        [Browsable(false)]
+        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+        public CrystalDecisions.Shared.IParameterField Parameter_sdatFechaRegistroFinal {
+            get {
+                return this.DataDefinition.ParameterFields[4];
+            }
+        }
+        
+        [Browsable(false)]
+        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+        public CrystalDecisions.Shared.IParameterField Parameter_sintEtapa {
+            get {
+                return this.DataDefinition.ParameterFields[5];
+            }
+        }
+        
+        [Browsable(false)]
+        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+        public CrystalDecisions.Shared.IParameterField Parameter_sintFase {
+            get {
+                return this.DataDefinition.ParameterFields[6];
             }
         }
     }
     
     [System.Drawing.ToolboxBitmapAttribute(typeof(CrystalDecisions.Shared.ExportOptions), "report.bmp")]
-    public class CachedrptCitaReporte : Component, ICachedReport {
+    public class CachedrptReporteEtapa : Component, ICachedReport {
         
-        public CachedrptCitaReporte() {
+        public CachedrptReporteEtapa() {
         }
         
         [Browsable(false)]
@@ -201,7 +241,7 @@ namespace Fuji.RISLite.Site.Data {
         }
         
         public virtual CrystalDecisions.CrystalReports.Engine.ReportDocument CreateReport() {
-            rptCitaReporte rpt = new rptCitaReporte();
+            rptReporteEtapa rpt = new rptReporteEtapa();
             rpt.Site = this.Site;
             return rpt;
         }

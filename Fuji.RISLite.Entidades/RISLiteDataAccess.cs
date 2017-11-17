@@ -2755,6 +2755,90 @@ namespace Fuji.RISLite.DataAccess
             return valido;
         }
 
+        public bool getPacienteAdicionales(int intPacienteID, ref List<tbl_REL_IdentificacionPaciente> lstIden, ref List<clsVarAcicionales> lstVarAdi, string user)
+        {
+            bool valido = false;
+            try
+            {
+                //Identificaciones
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_REL_IdentificacionPaciente.Any(x => x.intPacienteID == intPacienteID))
+                    {
+                        var query = dbRisDA.tbl_REL_IdentificacionPaciente.Where(x => x.intPacienteID == intPacienteID).ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                lstIden.AddRange(query);
+                            }
+                        }
+                    }
+                }
+
+                //Variables Adicionales
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_DET_PacienteDinamico.Any(x => x.intPacienteID == intPacienteID))
+                    {
+                        var query = dbRisDA.tbl_DET_PacienteDinamico.Where(x => x.intPacienteID == intPacienteID).ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach (tbl_DET_PacienteDinamico item in query)
+                                {
+                                    clsVarAcicionales mdl = new clsVarAcicionales();
+                                    mdl.intADIPacienteID = item.intADIPacienteID;
+                                    mdl.bitActivo = (bool)item.bitActivo;
+                                    mdl.datFecha = (DateTime)item.datFecha;
+                                    mdl.intVariableAdiID = (int)item.intVarAdiPacienteID;
+                                    mdl.vchValorAdicional = item.vchValorVar;
+                                    mdl.vchUserAdmin = item.vchUserAdmin;
+                                    lstVarAdi.Add(mdl);
+                                }
+                            }
+                        }
+                    }
+                }
+                valido = true;
+            }
+            catch(Exception gpA)
+            {
+                valido = false;
+                Log.EscribeLog("Existe un error en getPacienteAdicionales: " + gpA.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public List<tbl_DET_Cita> getCitaAdicionales(int intCitaID, string user)
+        {
+            List<tbl_DET_Cita> lstCitaAdicionales = new List<tbl_DET_Cita>();
+            try
+            {
+                //Variables Adicionales
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_DET_Cita.Any(x => x.intCitaID == intCitaID))
+                    {
+                        var query = dbRisDA.tbl_DET_Cita.Where(x => x.intCitaID == intCitaID).ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                lstCitaAdicionales.AddRange(query);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception gpA)
+            {
+                Log.EscribeLog("Existe un error en getPacienteAdicionales: " + gpA.Message, 3, user);
+            }
+            return lstCitaAdicionales;
+        }
+
         public List<string> getBusquedaPacientes(string busqueda, int intSitioID, string user)
         {
             List<string> lst = new List<string>();
@@ -4020,7 +4104,7 @@ namespace Fuji.RISLite.DataAccess
                 using (dbRisDA = new RISLiteEntities())
                 {
                     //Primero en cat
-                    if (!dbRisDA.tbl_DET_IndicacionPrestacion.Any(x => x.vchIndicacion.ToUpper() == indicacion.vchIndicacion.ToUpper()))
+                    if (!dbRisDA.tbl_DET_IndicacionPrestacion.Any(x => x.vchIndicacion.ToUpper() == indicacion.vchIndicacion.ToUpper() && x.intPrestacionID == indicacion.intPrestacionID))
                     {
                         mdlInd.bitActivo = true;
                         mdlInd.datFecha = DateTime.Now;
@@ -4160,7 +4244,7 @@ namespace Fuji.RISLite.DataAccess
                 using (dbRisDA = new RISLiteEntities())
                 {
                     //Primero en cat
-                    if (!dbRisDA.tbl_DET_Restriccion.Any(x => x.vchNombreReestriccion.ToUpper() == indicacion.vchNombreReestriccion.ToUpper()))
+                    if (!dbRisDA.tbl_DET_Restriccion.Any(x => x.vchNombreReestriccion.ToUpper() == indicacion.vchNombreReestriccion.ToUpper() && x.intPrestacionID == indicacion.intPrestacionID))
                     {
                         mdlRes.bitActivo = true;
                         mdlRes.datFecha = DateTime.Now;
@@ -5176,6 +5260,7 @@ namespace Fuji.RISLite.DataAccess
                                     mdl.vchPrestacion = item.vchPrestacion;
                                     mdl.intEstatusID = (int)item.intEstatusEstudio;
                                     mdl.datFecha = (DateTime)item.datFecha;
+                                    mdl.intCitaID = (int)item.intCitaID;
                                     lst.Add(mdl);
                                 }
                             }

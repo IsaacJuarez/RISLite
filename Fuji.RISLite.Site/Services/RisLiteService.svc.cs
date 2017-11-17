@@ -1640,6 +1640,48 @@ namespace Fuji.RISLite.Site.Services
             return response;
         }
 
+        public PacienteResponse getPacienteAdicionales(PacienteRequest request)
+        {
+            PacienteResponse response = new PacienteResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    List<tbl_REL_IdentificacionPaciente> lstIden = new List<tbl_REL_IdentificacionPaciente>();
+                    List<clsVarAcicionales> lstVarAdi = new List<clsVarAcicionales>();
+                    response.Success = controller.getPacienteAdicionales(request.intPacienteID, ref lstIden, ref lstVarAdi, request.mdlUser.vchUsuario);
+                    response.lstIden = lstIden;
+                    response.lstVarAdi = lstVarAdi;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getPacienteDetalle: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public CitaNuevaResponse getCitaAdicionales(CitaNuevaRequest request)
+        {
+            CitaNuevaResponse response = new CitaNuevaResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response.mdlDetCita = controller.getCitaAdicionales(request.intCitaID, request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getCitaAdicionales: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+
+
         public PacienteResponse getBusquedaPacientes(PacienteRequest request)
         {
             PacienteResponse response = new PacienteResponse();

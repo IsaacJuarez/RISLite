@@ -164,6 +164,12 @@ namespace Fuji.RISLite.Site.Services
         PacienteResponse getPacienteDetalle(PacienteRequest request);
 
         [OperationContract]
+        PacienteResponse getPacienteAdicionales(PacienteRequest request);
+
+        [OperationContract]
+        CitaNuevaResponse getCitaAdicionales(CitaNuevaRequest request);
+
+        [OperationContract]
         PacienteResponse getBusquedaPacientes(PacienteRequest request);
 
         [OperationContract]

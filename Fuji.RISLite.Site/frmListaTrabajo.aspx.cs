@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 
@@ -153,15 +154,24 @@ namespace Fuji.RISLite.Site
 
         protected void GV_ListaTrabajo_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
-
+            try
+            {
+                if (e.NewPageIndex >= 0)
+                {
+                    this.GV_ListaTrabajo.PageIndex = e.NewPageIndex;
+                    cargarlistadetrabajo(Usuario.intSitioID);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.EscribeLog("Existe un error grvVista_PageIndexChanging: " + ex.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void GV_ListaTrabajo_RowCommand1(object sender, GridViewCommandEventArgs e)
         {
             try
             {
-                int intmodalidadID = 0;
-
                 int index = Convert.ToInt32(e.CommandArgument);
                 bool bandera_Actualizar = false;
 
@@ -195,11 +205,73 @@ namespace Fuji.RISLite.Site
 
                         int rowIndex3 = int.Parse(e.CommandArgument.ToString());
                         break;
+                    case "Adicional":
+                        cargarAdicionalesCita(index);
+                        ScriptManager.RegisterStartupScript(Page, Page.GetType(), "mdlCita", "$('#mdlCita').modal();", true);
+                        break;
                 }
             }
             catch (Exception eRU)
             {
                 Log.EscribeLog("Existe un error GV_AGENDA: " + eRU.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargarAdicionalesCita(int intCitaID)
+        {
+            try
+            {
+                CitaNuevaRequest request = new CitaNuevaRequest();
+                CitaNuevaResponse response = new CitaNuevaResponse();
+                request.mdlUser = Usuario;
+                request.intCitaID = intCitaID;
+                response = RisService.getCitaAdicionales(request);
+                if(response!= null)
+                {
+
+                }
+            }
+            catch(Exception eCAC)
+            {
+                Log.EscribeLog("Existe un error en cargarAdicionalesCita: " + eCAC.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void ddlBandeja_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                DropDownList dropDownList = (DropDownList)sender;
+                if (int.Parse(dropDownList.SelectedValue) != 0)
+                {
+                    this.GV_ListaTrabajo.AllowPaging = true;
+                    this.GV_ListaTrabajo.PageSize = int.Parse(dropDownList.SelectedValue);
+                }
+                else
+                    this.GV_ListaTrabajo.AllowPaging = false;
+                this.cargarlistadetrabajo(Usuario.intSitioID);
+            }
+            catch (Exception eddS)
+            {
+                Log.EscribeLog("Existe un error ddlBandeja_SelectedIndexChanged de frmListaTrabajo: " + eddS.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void txtBandeja_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                TextBox txtBandejaAvaluosGoToPage = (TextBox)sender;
+                int numeroPagina;
+                if (int.TryParse(txtBandejaAvaluosGoToPage.Text.Trim(), out numeroPagina))
+                    this.GV_ListaTrabajo.PageIndex = numeroPagina - 1;
+                else
+                    this.GV_ListaTrabajo.PageIndex = 0;
+                this.cargarlistadetrabajo(Usuario.intSitioID);
+            }
+            catch (Exception ex)
+            {
+                Log.EscribeLog("Existe un error txtBandeja_TextChanged de frmListaTrabajo: " + ex.Message, 3, Usuario.vchUsuario);
             }
         }
     }

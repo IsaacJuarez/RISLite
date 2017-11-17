@@ -1224,6 +1224,9 @@ advertencia 6002: La tabla o vista 'RISLite.dbo.tbl_CAT_DuracionModalidad' no ti
           <Parameter Name="datFechaFin" Type="date" Mode="In" />
           <Parameter Name="intSitioID" Type="int" Mode="In" />
         </Function>
+        <Function Name="stp_getDetalleCita" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intCitaID" Type="int" Mode="In" />
+        </Function>
         <Function Name="stp_getEstudiosPaciente" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="intPacienteID" Type="int" Mode="In" />
         </Function>
@@ -1833,7 +1836,10 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
           <Parameter Name="intIdSitio" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="stp_getListaTrabajo_Sitio" ReturnType="Collection(RISLiteModel.stp_getListaTrabajo_Sitio_Result)">
-            <Parameter Name="intIdSitio" Mode="In" Type="Int32" />
+          <Parameter Name="intIdSitio" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="stp_getDetalleCita" ReturnType="Collection(RISLiteModel.stp_getDetalleCita_Result)">
+            <Parameter Name="intCitaID" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <EntityType Name="tbl_CAT_TipoMensaje">
@@ -3353,6 +3359,18 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
           <Property Type="String" Name="NombreCom" Nullable="false" MaxLength="401" />
           <Property Type="String" Name="vchEstatus" Nullable="true" MaxLength="200" />
           <Property Type="String" Name="vchPrestacion" Nullable="true" MaxLength="200" />
+          <Property Type="Int64" Name="intCitaID" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="stp_getDetalleCita_Result">
+          <Property Type="Int64" Name="intDETCitaID" Nullable="false" />
+          <Property Type="Int32" Name="intAdicionalesID" Nullable="true" />
+          <Property Type="Int64" Name="intCitaID" Nullable="true" />
+          <Property Type="String" Name="vchNombre" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="vchValor" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="vchURLImagen" Nullable="true" MaxLength="200" />
+          <Property Type="Boolean" Name="bitObservaciones" Nullable="true" />
+          <Property Type="String" Name="vchObservaciones" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="vchTipoBoton" Nullable="true" MaxLength="100" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -4260,6 +4278,22 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
                 <ScalarProperty Name="NombreCom" ColumnName="NombreCom" />
                 <ScalarProperty Name="vchEstatus" ColumnName="vchEstatus" />
                 <ScalarProperty Name="vchPrestacion" ColumnName="vchPrestacion" />
+                <ScalarProperty Name="intCitaID" ColumnName="intCitaID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="stp_getDetalleCita" FunctionName="RISLiteModel.Store.stp_getDetalleCita">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RISLiteModel.stp_getDetalleCita_Result">
+                <ScalarProperty Name="intDETCitaID" ColumnName="intDETCitaID" />
+                <ScalarProperty Name="intAdicionalesID" ColumnName="intAdicionalesID" />
+                <ScalarProperty Name="intCitaID" ColumnName="intCitaID" />
+                <ScalarProperty Name="vchNombre" ColumnName="vchNombre" />
+                <ScalarProperty Name="vchValor" ColumnName="vchValor" />
+                <ScalarProperty Name="vchURLImagen" ColumnName="vchURLImagen" />
+                <ScalarProperty Name="bitObservaciones" ColumnName="bitObservaciones" />
+                <ScalarProperty Name="vchObservaciones" ColumnName="vchObservaciones" />
+                <ScalarProperty Name="vchTipoBoton" ColumnName="vchTipoBoton" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

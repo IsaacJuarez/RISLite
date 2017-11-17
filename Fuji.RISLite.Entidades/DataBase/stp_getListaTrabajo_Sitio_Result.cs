@@ -29,5 +29,6 @@ namespace Fuji.RISLite.Entidades.DataBase
         public string NombreCom { get; set; }
         public string vchEstatus { get; set; }
         public string vchPrestacion { get; set; }
+        public Nullable<long> intCitaID { get; set; }
     }
 }

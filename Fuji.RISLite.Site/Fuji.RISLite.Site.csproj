@@ -128,6 +128,9 @@
     <Content Include="Iconos\01_HOSPITALIZACION_VERDE.png" />
     <Content Include="Images\CR.png" />
     <Content Include="Images\CT.png" />
+    <Content Include="Images\fujifilm %281%29.png" />
+    <Content Include="Images\Fujifilm.png" />
+    <Content Include="Images\fuji_logo.jpeg" />
     <Content Include="Images\HD.png" />
     <Content Include="Images\ic_action_bulb.png" />
     <Content Include="Images\ic_action_calendar_month.png" />
@@ -1702,6 +1705,24 @@
       <DependentUpon>rptCitaReporte.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Data\rptEnviados.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptEnviados.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Data\rptReporteEtapa.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptReporteEtapa.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Data\rptTestimoniosPorEnviar.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptTestimoniosPorEnviar.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1920,6 +1941,18 @@
     <EmbeddedResource Include="Data\rptCitaReporte.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>rptCitaReporte.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Data\rptEnviados.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptEnviados.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Data\rptReporteEtapa.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptReporteEtapa.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Data\rptTestimoniosPorEnviar.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptTestimoniosPorEnviar.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
   </ItemGroup>
