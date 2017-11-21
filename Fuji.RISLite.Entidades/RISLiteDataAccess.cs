@@ -75,6 +75,83 @@ namespace Fuji.RISLite.DataAccess
             return Success;
         }
 
+        public bool getLoginUser(string user, string pass, ref clsUsuario Usuario, ref List<clsVistasUsuarios> lstVistas, ref string mensaje)
+        {
+            bool Success = false;
+            try
+            {
+                Log.EscribeLog("Usuario de consulta: " + user, 3, "TEST");
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_CAT_Usuario.Any(x => (bool)x.bitActivo && x.vchUsuario.Trim().ToUpper() == user.ToUpper().Trim()))
+                    {
+                        string password = pass;
+                        if (dbRisDA.tbl_CAT_Usuario.Any(x => (bool)x.bitActivo && x.vchUsuario.Trim().ToUpper() == user.ToUpper().Trim() && x.vchPassword == password))
+                        {
+
+                            var query = (from _user in dbRisDA.tbl_CAT_Usuario
+                                         join catTipo in dbRisDA.tbl_CAT_TipoUsuario on _user.intTipoUsuario equals catTipo.intTipoUsuario
+                                         join sitio in dbRisDA.tbl_CAT_Sitio on _user.intSitioID equals sitio.intSitioID into sitioDef
+                                         from x in sitioDef.DefaultIfEmpty()
+                                         where _user.vchUsuario.Trim().ToUpper() == user.Trim().ToUpper() && (bool)_user.bitActivo
+                                         select new
+                                         {
+                                             intUsuarioID = _user.intUsuarioID,
+                                             intTipoUsuario = _user.intTipoUsuario,
+                                             vchNombre = _user.vchNombre,
+                                             vchUsuario = _user.vchUsuario,
+                                             vchTipoUsuario = catTipo.vchTipoUsuario,
+                                             bitActivo = _user.bitActivo,
+                                             vchEmail = _user.vchEmail == null ? "" : _user.vchEmail,
+                                             datFecha = _user.datFecha,
+                                             vchUserAdmin = _user.vchUserAdmin,
+                                             intSitioId = _user.intSitioID == null ? 0 : _user.intSitioID,
+                                             vchSitio = x.vchNombreSitio == null ? "" : x.vchNombreSitio
+                                         }
+                               ).First();
+                            if (query != null)
+                            {
+                                if (Success = query.intUsuarioID > 0 ? true : false)
+                                {
+                                    Usuario.intUsuarioID = query.intUsuarioID;
+                                    Usuario.intTipoUsuario = (int)query.intTipoUsuario;
+                                    Usuario.vchTipoUsuario = query.vchTipoUsuario;
+                                    Usuario.vchNombre = query.vchNombre;
+                                    Usuario.vchUsuario = query.vchUsuario;
+                                    Usuario.vchEmail = query.vchEmail;
+                                    Usuario.bitActivo = (bool)query.bitActivo;
+                                    Usuario.datFecha = (DateTime)query.datFecha;
+                                    Usuario.vchUserAdmin = query.vchUserAdmin;
+                                    Usuario.intSitioID = (int)query.intSitioId;
+                                    Usuario.vchSitio = query.vchSitio;
+                                    Usuario.Token = Security.Encrypt(query.intUsuarioID + "-" + query.vchUsuario);
+                                    lstVistas = getListVistas(Usuario.intTipoUsuario);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Success = false;
+                            mensaje = "Contraseña incorrecta.";
+                        }
+                    }
+                    else
+                    {
+                        Success = false;
+                        mensaje = "El usuario no existe";
+                    }
+                }
+            }
+            catch (Exception egU)
+            {
+                Success = false;
+                mensaje = egU.Message;
+                Log.EscribeLog("Existe un error en getUser: " + egU.Message, 3, user);
+            }
+            Log.EscribeLog("Usuario de consulta: " + Usuario.intUsuarioID, 3, "TEST");
+            return Success;
+        }
+
         public List<clsVistasUsuarios> getListVistas(int intTipoUsuario)
         {
             List<clsVistasUsuarios> lstReturn = new List<clsVistasUsuarios>();

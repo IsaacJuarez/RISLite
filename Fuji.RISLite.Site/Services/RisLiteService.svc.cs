@@ -35,6 +35,27 @@ namespace Fuji.RISLite.Site.Services
             return response;
         }
 
+        public ValidaUserResponse getLoginUser(ValidaUserRequest request)
+        {
+            ValidaUserResponse response = new ValidaUserResponse();
+            try
+            {
+                clsUsuario mdlUser = new clsUsuario();
+                List<clsVistasUsuarios> lstVistas = new List<clsVistasUsuarios>();
+                RISLiteDataAccess controller = new RISLiteDataAccess();
+                string mensaje = "";
+                response.Success = controller.getLoginUser(request.user, request.pass, ref mdlUser, ref lstVistas, ref mensaje);
+                response.mdlUser = mdlUser;
+                response.mensaje = mensaje;
+                response.lstVistas = lstVistas;
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getLoginUser: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
         #region catalogo
         public List<tbl_CAT_Catalogo> getListCatalogos(CatalogoRequest request)
         {

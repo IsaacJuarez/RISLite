@@ -9,9 +9,13 @@
 </head>
 <body>
     <center>
-        <div>
+        <div class="row">
             <h1><asp:Label ID="lblMensaje" runat="server" Text="" Font-Bold="true"></asp:Label></h1>
         </div>
+        <hr />
+        <h1>
+            <button onclick="window.location.href='/frmLogin.aspx'">Inicio</button>
+        </h1>
     </center>
 </body>
 </html>

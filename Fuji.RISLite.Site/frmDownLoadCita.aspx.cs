@@ -67,45 +67,53 @@ namespace Fuji.RISLite.Site
                         Usuario = (clsUsuario)Session["User"];
                         if (Usuario != null)
                         {
-                            if (Request.QueryString.Count > 0)
+                            if (Security.ValidateToken(Usuario.Token, Usuario.intUsuarioID.ToString(), Usuario.vchUsuario))
                             {
-                                string intCitaiD = Security.Decrypt(Request.QueryString["appointment"].ToString());
-                                if (intCitaiD != "")
+                                if (Request.QueryString.Count > 0)
                                 {
-                                    int intCita = 0;
-                                    int.TryParse(intCitaiD, out intCita);
-                                    ReportDocument crystalReport = new ReportDocument();
-                                    Log.EscribeLog("Inicio Carga del Reporte.", 1, Usuario.vchUsuario);
-                                    crystalReport.Load(Server.MapPath("~/Data/rptCitaReporte.rpt"));
-                                    //string ParameterName = "intCitaID";
-                                    //object val = intCitaID;
-                                    //ParameterValues prms;
-                                    //ParameterDiscreteValue prm = new ParameterDiscreteValue();
-                                    //prms = crystalReport.DataDefinition.ParameterFields[ParameterName].CurrentValues;
-                                    //prm.Value = val;
-                                    //prms.Add(prm);
-                                    //crystalReport.DataDefinition.ParameterFields[ParameterName].ApplyCurrentValues(prms);
-                                    crystalReport.SetParameterValue("@intCitaID", intCita);
-                                    //crystalReport.SetParameterValue(0, intCitaID);
-                                    crystalReport.SetDatabaseLogon(dbUser, dbPass, dbLocalServer, dbName);
-                                    Log.EscribeLog("Inyeccion de login.", 1, Usuario.vchUsuario);
-                                    System.IO.MemoryStream oStream = new System.IO.MemoryStream();
-                                    var stream = crystalReport.ExportToStream(ExportFormatType.PortableDocFormat);
-                                    crystalReport.ExportToHttpResponse(ExportFormatType.PortableDocFormat, Response, true, "Cita_" + "." + intCitaiD + ".pdf");
-                                    Log.EscribeLog("Formacion del reporte.", 1, Usuario.vchUsuario);
-                                    //pdfAtt = new Attachment(stream, "Cita_" + intCitaID + ".pdf");
-                                    Response.Buffer = true;
-                                    Response.Clear();
-                                    Response.ContentType = "application/pdf";
-                                    Response.AddHeader("content-disposition", "attachment; filename=Cita_" + "." + intCitaiD+ ".pdf");
-                                    //Response.BinaryWrite(stream); // create the file
-                                    Response.Flush(); // send it to the client to download
-                                    Log.EscribeLog("Carga del Reporte.", 1, Usuario.vchUsuario);
+                                    string intCitaiD = Security.Decrypt(Request.QueryString["appointment"].ToString());
+                                    if (intCitaiD != "")
+                                    {
+                                        int intCita = 0;
+                                        int.TryParse(intCitaiD, out intCita);
+                                        ReportDocument crystalReport = new ReportDocument();
+                                        Log.EscribeLog("Inicio Carga del Reporte.", 1, Usuario.vchUsuario);
+                                        crystalReport.Load(Server.MapPath("~/Data/rptCitaReporte.rpt"));
+                                        //string ParameterName = "intCitaID";
+                                        //object val = intCitaID;
+                                        //ParameterValues prms;
+                                        //ParameterDiscreteValue prm = new ParameterDiscreteValue();
+                                        //prms = crystalReport.DataDefinition.ParameterFields[ParameterName].CurrentValues;
+                                        //prm.Value = val;
+                                        //prms.Add(prm);
+                                        //crystalReport.DataDefinition.ParameterFields[ParameterName].ApplyCurrentValues(prms);
+                                        crystalReport.SetParameterValue("@intCitaID", intCita);
+                                        //crystalReport.SetParameterValue(0, intCitaID);
+                                        crystalReport.SetDatabaseLogon(dbUser, dbPass, dbLocalServer, dbName);
+                                        Log.EscribeLog("Inyeccion de login.", 1, Usuario.vchUsuario);
+                                        System.IO.MemoryStream oStream = new System.IO.MemoryStream();
+                                        var stream = crystalReport.ExportToStream(ExportFormatType.PortableDocFormat);
+                                        crystalReport.ExportToHttpResponse(ExportFormatType.PortableDocFormat, Response, true, "Cita_" + "." + intCitaiD + ".pdf");
+                                        Log.EscribeLog("Formacion del reporte.", 1, Usuario.vchUsuario);
+                                        //pdfAtt = new Attachment(stream, "Cita_" + intCitaID + ".pdf");
+                                        Response.Buffer = true;
+                                        Response.Clear();
+                                        Response.ContentType = "application/pdf";
+                                        Response.AddHeader("content-disposition", "attachment; filename=Cita_" + "." + intCitaiD + ".pdf");
+                                        //Response.BinaryWrite(stream); // create the file
+                                        Response.Flush(); // send it to the client to download
+                                        Log.EscribeLog("Carga del Reporte.", 1, Usuario.vchUsuario);
+                                    }
+                                    else
+                                    {
+                                        lblError.Text = "No se pudo encontrar la cita.";
+                                    }
                                 }
-                                else
-                                {
-                                    lblError.Text = "No se pudo encontrar la cita.";
-                                }
+                            }
+                            else
+                            {
+                                var = Security.Encrypt("4");
+                                Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
                             }
                         }
                         else

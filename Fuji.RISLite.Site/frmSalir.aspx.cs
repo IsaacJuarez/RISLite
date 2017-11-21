@@ -29,13 +29,13 @@ namespace Fuji.RISLite.Site
                                 lblMensaje.Text = "Se cerró correctamente la sesión.";
                                 lblMensaje.ForeColor = System.Drawing.Color.DarkGreen;
                                 break;
-                            case "4":
-
+                            case "4"://Session no encontrada
+                                lblMensaje.Text = "No se encuentra la sesión.";
+                                lblMensaje.ForeColor = System.Drawing.Color.Red;
                                 break;
                         }
                     }
                 }
-
             }
             catch (Exception ePL)
             {

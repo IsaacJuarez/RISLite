@@ -305,6 +305,7 @@ advertencia 6002: La tabla o vista 'RISLite.dbo.tbl_CAT_DuracionModalidad' no ti
           <Property Name="intTipoUsuario" Type="int" />
           <Property Name="intSitioID" Type="int" />
           <Property Name="vchUsuario" Type="varchar" MaxLength="100" />
+          <Property Name="vchPassword" Type="varchar" MaxLength="100" />
           <Property Name="vchNombre" Type="varchar" MaxLength="100" />
           <Property Name="vchEmail" Type="varchar" MaxLength="100" />
           <Property Name="bitActivo" Type="bit" />
@@ -1839,7 +1840,7 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
           <Parameter Name="intIdSitio" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="stp_getDetalleCita" ReturnType="Collection(RISLiteModel.stp_getDetalleCita_Result)">
-            <Parameter Name="intCitaID" Mode="In" Type="Int32" />
+          <Parameter Name="intCitaID" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <EntityType Name="tbl_CAT_TipoMensaje">
@@ -2714,6 +2715,7 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
           <Property Name="vchUserAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="tbl_CAT_Sitio" Relationship="RISLiteModel.FK_CAT_Usuario_CAT_Sitio" FromRole="tbl_CAT_Usuario" ToRole="tbl_CAT_Sitio" />
           <NavigationProperty Name="tbl_CAT_TipoUsuario" Relationship="RISLiteModel.FK_CAT_Usuario_CAT_TipoUsuario" FromRole="tbl_CAT_Usuario" ToRole="tbl_CAT_TipoUsuario" />
+          <Property Name="vchPassword" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_CAT_Usuario_CAT_Sitio">
           <End Type="RISLiteModel.tbl_CAT_Sitio" Role="tbl_CAT_Sitio" Multiplicity="0..1" />
@@ -3916,6 +3918,7 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
           <EntitySetMapping Name="tbl_CAT_Usuario">
             <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_Usuario">
               <MappingFragment StoreEntitySet="tbl_CAT_Usuario">
+                <ScalarProperty Name="vchPassword" ColumnName="vchPassword" />
                 <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
                 <ScalarProperty Name="datFecha" ColumnName="datFecha" />
                 <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />

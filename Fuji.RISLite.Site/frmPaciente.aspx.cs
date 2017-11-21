@@ -35,21 +35,29 @@ namespace Fuji.RISLite.Site
                 //{
                 if (Session["User"] != null && Session["lstVistas"] != null)
                 {
-                    List<clsVistasUsuarios> lstVista = (List<clsVistasUsuarios>)Session["lstVistas"];
-                    if (lstVista != null)
+                    Usuario = (clsUsuario)Session["User"];
+                    if (Security.ValidateToken(Usuario.Token, Usuario.intUsuarioID.ToString(), Usuario.vchUsuario))
                     {
-                        string vista = "frmPaciente.aspx";
-                        if (lstVista.Any(x => x.vchVistaIdentificador == vista))
+                        List<clsVistasUsuarios> lstVista = (List<clsVistasUsuarios>)Session["lstVistas"];
+                        if (lstVista != null)
                         {
-                            Usuario = (clsUsuario)Session["User"];
-                            if (Usuario != null)
+                            string vista = "frmPaciente.aspx";
+                            if (lstVista.Any(x => x.vchVistaIdentificador == vista))
                             {
-                                cargaFormaDetalle();
+                                Usuario = (clsUsuario)Session["User"];
+                                if (Usuario != null)
+                                {
+                                    cargaFormaDetalle();
+                                }
+                                else
+                                {
+                                    var = Security.Encrypt("1");
+                                    Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                                }
                             }
                             else
                             {
-                                var = Security.Encrypt("1");
-                                Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                                Response.Redirect(URL + "/frmSinPermiso.aspx", true);
                             }
                         }
                         else
@@ -59,7 +67,8 @@ namespace Fuji.RISLite.Site
                     }
                     else
                     {
-                        Response.Redirect(URL + "/frmSinPermiso.aspx", true);
+                        var = Security.Encrypt("4");
+                        Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
                     }
                 }
                 else
@@ -67,8 +76,6 @@ namespace Fuji.RISLite.Site
                     var = Security.Encrypt("1");
                     Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
                 }
-                //}
-                //else
             }
             catch (Exception ePL)
             {

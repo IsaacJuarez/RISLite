@@ -103,16 +103,24 @@ namespace Fuji.RISLite.Site
                 if (Session["User"] != null)
                 {
                     Usuario = (clsUsuario)Session["User"];
-                    if (Usuario != null)
+                    if (Security.ValidateToken(Usuario.Token, Usuario.intUsuarioID.ToString(), Usuario.vchUsuario))
                     {
-                        lstEstudios = new List<clsEstudio>();
-                        //lstSug = null;
-                        cargaAdicionales();
-                        cargaFormaDetalle();
+                        if (Usuario != null)
+                        {
+                            lstEstudios = new List<clsEstudio>();
+                            //lstSug = null;
+                            cargaAdicionales();
+                            cargaFormaDetalle();
+                        }
+                        else
+                        {
+                            var = Security.Encrypt("1");
+                            Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                        }
                     }
                     else
                     {
-                        var = Security.Encrypt("1");
+                        var = Security.Encrypt("4");
                         Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
                     }
                 }

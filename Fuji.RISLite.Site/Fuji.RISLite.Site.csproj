@@ -119,6 +119,7 @@
     <Content Include="frmDownLoadCita.aspx" />
     <Content Include="frmEstadisticasTec.aspx" />
     <Content Include="frmListaTrabajo.aspx" />
+    <Content Include="frmLogin.aspx" />
     <Content Include="frmPaciente.aspx" />
     <Content Include="frmRepEstadisticas.aspx" />
     <Content Include="frmSalir.aspx" />
@@ -1814,6 +1815,13 @@
     <Compile Include="frmListaTrabajo.aspx.designer.cs">
       <DependentUpon>frmListaTrabajo.aspx</DependentUpon>
     </Compile>
+    <Compile Include="frmLogin.aspx.cs">
+      <DependentUpon>frmLogin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="frmLogin.aspx.designer.cs">
+      <DependentUpon>frmLogin.aspx</DependentUpon>
+    </Compile>
     <Compile Include="frmPaciente.aspx.cs">
       <DependentUpon>frmPaciente.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1890,6 +1898,7 @@
     <Compile Include="Services\DataContract\EstudioResponse.cs" />
     <Compile Include="Services\DataContract\IndicacionRequest.cs" />
     <Compile Include="Services\DataContract\IndicacionResponse.cs" />
+    <Compile Include="Services\DataContract\LoginRequest.cs" />
     <Compile Include="Services\DataContract\PacienteRequest.cs" />
     <Compile Include="Services\DataContract\PacienteResponse.cs" />
     <Compile Include="Services\DataContract\PrestacionRequest.cs" />

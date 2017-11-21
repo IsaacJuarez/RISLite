@@ -11,7 +11,7 @@ namespace Fuji.RISLite.Site
 {
     public partial class Site : System.Web.UI.MasterPage
     {
-        public static string user = "";
+        //public static string user = "";
         public string URL
         {
             get
@@ -36,43 +36,49 @@ namespace Fuji.RISLite.Site
             {
                 if (!IsPostBack)
                 {
-                    user = HttpContext.Current.User.Identity.Name.Substring(HttpContext.Current.User.Identity.Name.IndexOf(@"\") + 1);
-                    Log.EscribeLog("Usuario de Login: " + user, 1, "");
-                    if(debug == "1")
-                        user = "ijuarez";
+                    //user = HttpContext.Current.User.Identity.Name.Substring(HttpContext.Current.User.Identity.Name.IndexOf(@"\") + 1);
+                    //Log.EscribeLog("Usuario de Login: " + user, 1, "");
+                    //if(debug == "1")
+                    //    user = "ijuarez";
                     string var = "";
-                    if (user == "")
+                    //if (user == "")
+                    //{
+                    //    var = Security.Encrypt("1");
+                    //    Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                    //}
+                    //else
+                    //{
+                    //validar usuario
+                    //ValidaUserResponse response = new ValidaUserResponse();
+                    //ValidaUserRequest request = new ValidaUserRequest();
+                    //request.user = user;
+                    //response = RisService.getUser(request);
+                    //if (response != null)
+                    //{
+                    if (Session["User"] != null && Session["lstVistas"] != null)
                     {
-                        var = Security.Encrypt("1");
-                        Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                        usuario = (clsUsuario)Session["User"];
+                        if (Security.ValidateToken(usuario.Token, usuario.intUsuarioID.ToString(), usuario.vchUsuario))
+                        {
+                            imgUser.Src = "/Users/" + usuario.vchUsuario + ".jpg";
+                            imgUser.Alt = usuario.vchNombre;
+                            lblUser.Text = usuario.vchNombre;
+                            lstVistas = (List<clsVistasUsuarios>)Session["lstVistas"];
+                            configUser(usuario.intTipoUsuario, lstVistas);
+                        }
+                        else
+                        {
+                            var = Security.Encrypt("4");
+                            Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                        }
                     }
                     else
                     {
-                        //validar usuario
-                        ValidaUserResponse response = new ValidaUserResponse();
-                        ValidaUserRequest request = new ValidaUserRequest();
-                        request.user = user;
-                        response = RisService.getUser(request);
-                        if (response != null)
-                        {
-                            if (response.Success)
-                            {
-                                imgUser.Src = "/Users/" + user + ".jpg";
-                                imgUser.Alt = response.mdlUser.vchNombre;
-                                lblUser.Text = response.mdlUser.vchNombre;
-                                Session["User"] = response.mdlUser;
-                                Session["lstVistas"] = response.lstVistas;
-                                usuario = response.mdlUser;
-                                lstVistas = response.lstVistas;
-                                configUser(response.mdlUser.intTipoUsuario, lstVistas);
-                            }
-                            else
-                            {
-                                var = Security.Encrypt("2");
-                                Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
-                            }
-                        }
+                        var = Security.Encrypt("2");
+                        Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
                     }
+                    //}
+                    //}
                 }
             }
             catch (Exception ePL)

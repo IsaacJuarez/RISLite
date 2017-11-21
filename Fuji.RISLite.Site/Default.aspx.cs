@@ -14,8 +14,7 @@ namespace Fuji.RISLite.Site
 {
     public partial class Default : System.Web.UI.Page
     {
-        public static string user = "";
-        int usuario_ = 1;
+        //public static string user = "";
 
         public string URL
         {
@@ -43,43 +42,32 @@ namespace Fuji.RISLite.Site
                 //Validar Token
                 if (!IsPostBack)
                 {
-                    user = HttpContext.Current.User.Identity.Name.Substring(HttpContext.Current.User.Identity.Name.IndexOf(@"\") + 1);
-                    Log.EscribeLog("Usuario de Login: " + user, 1, "");
-                    if (debug == "1")
-                        user = "ijuarez";
+                    //user = HttpContext.Current.User.Identity.Name.Substring(HttpContext.Current.User.Identity.Name.IndexOf(@"\") + 1);
+                    //Log.EscribeLog("Usuario de Login: " + user, 1, "");
+                    //if (debug == "1")
+                    //    user = "ijuarez";
                     string var = "";
-                    if (user == "")
+                    if (Session["User"] != null && Session["lstVistas"] != null)
                     {
-                        var = Security.Encrypt("1");
-                        Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                        Usuario = (clsUsuario)Session["User"];
+                        if (Security.ValidateToken(Usuario.Token, Usuario.intUsuarioID.ToString(), Usuario.vchUsuario))
+                        {
+                            SqlDataSource1.SelectParameters.Add("@idsitioss_", System.Data.DbType.String, Convert.ToString(Usuario.intSitioID));
+                            //sqlDataSource.Parameters.Add("@LastName", System.Data.DbType.String, "Smith");
+                            //cargarAgenda();
+                            RS_Agenda.SelectedDate = DateTime.Now;
+                            carga_citas();
+                        }
+                        else
+                        {
+                            var = Security.Encrypt("4");
+                            Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
+                        }
                     }
                     else
                     {
-                        //validar usuario
-                        ValidaUserResponse response = new ValidaUserResponse();
-                        ValidaUserRequest request = new ValidaUserRequest();
-                        request.user = user;
-                        response = RisService.getUser(request);
-                        if (response != null)
-                        {
-                            if (response.Success)
-                            {
-
-                                SqlDataSource1.SelectParameters.Add("@idsitioss_", System.Data.DbType.String, Convert.ToString(Usuario.intSitioID));
-                                //sqlDataSource.Parameters.Add("@LastName", System.Data.DbType.String, "Smith");
-                                Session["User"] = response.mdlUser;
-                                Usuario = response.mdlUser;
-                                //cargarAgenda();
-                                RS_Agenda.SelectedDate = DateTime.Now;
-                                carga_citas();
-
-                            }
-                            else
-                            {
-                                var = Security.Encrypt("2");
-                                Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
-                            }
-                        }
+                        var = Security.Encrypt("2");
+                        Response.Redirect(URL + "/frmSalir.aspx?var=" + var);
                     }
                 }
                 else

@@ -16,6 +16,9 @@ namespace Fuji.RISLite.Site.Services
         [OperationContract]
         ValidaUserResponse getUser(ValidaUserRequest request);
 
+        [OperationContract]
+        ValidaUserResponse getLoginUser(ValidaUserRequest request);
+
         #region catalogo
         [OperationContract]
         List<tbl_CAT_Catalogo> getListCatalogos(CatalogoRequest request);
