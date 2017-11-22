@@ -1,4 +1,5 @@
-﻿using Fuji.RISLite.Entidades.Extensions;
+﻿using Fuji.RISLite.Entidades.DataBase;
+using Fuji.RISLite.Entidades.Extensions;
 using Fuji.RISLite.Entities;
 using Fuji.RISLite.Site.Services;
 using Fuji.RISLite.Site.Services.DataContract;
@@ -23,6 +24,7 @@ namespace Fuji.RISLite.Site
                 return ConfigurationManager.AppSettings["URL"];
             }
         }
+
         RisLiteService RisService = new RisLiteService();
         public static clsUsuario Usuario = new clsUsuario();
 
@@ -130,6 +132,19 @@ namespace Fuji.RISLite.Site
                     LinkButton btn = (LinkButton)e.Row.FindControl("btn1");
                     LinkButton btn2 = (LinkButton)e.Row.FindControl("btn2");
                     LinkButton btn3 = (LinkButton)e.Row.FindControl("btn3");
+                    LinkButton btn_Adicional = (LinkButton)e.Row.FindControl("btn_Adicional");
+
+                    AgendaRequest request = new AgendaRequest();
+                    request.mdlUser = Usuario;
+                    int idcita = item.intCitaID;
+                    bool bandera_detalleCIta = RisService.getListaDetalleCita(request, idcita);
+
+
+                    if (bandera_detalleCIta == false)
+                    {
+                        btn_Adicional.Visible = false;
+                    }
+
                     if (btn != null)
                     {
                         if(item.intEstatusID == 2)
@@ -230,14 +245,30 @@ namespace Fuji.RISLite.Site
         {
             try
             {
+               
                 CitaNuevaRequest request = new CitaNuevaRequest();
-                CitaNuevaResponse response = new CitaNuevaResponse();
+                List<stp_getDetalleCita_Result> response = new List<stp_getDetalleCita_Result>();
                 request.mdlUser = Usuario;
                 request.intCitaID = intCitaID;
-                response = RisService.getCitaAdicionales(request);
-                if(response!= null)
-                {
+                //response = RisService.getCitaAdicionales(request);
+                response = RisService.get_stpDetalleCita(request);
 
+                if (response != null)
+                {
+                   
+                    if (response[0].vchValor == "1")
+                    {
+                        Label LB_1 = new Label();
+                        LB_1.Text = response[0].vchNombre;
+                        pnlDinamicoContenido.Controls.Add(LB_1);
+                    }
+
+                    if (response[0].bitObservaciones == true)
+                    {
+                        Label LB_2 = new Label();
+                        LB_2.Text = "           " + response[0].vchObservaciones;
+                        pnlDinamicoContenido.Controls.Add(LB_2);
+                    }
                 }
             }
             catch(Exception eCAC)
@@ -282,6 +313,11 @@ namespace Fuji.RISLite.Site
             {
                 Log.EscribeLog("Existe un error txtBandeja_TextChanged de frmListaTrabajo: " + ex.Message, 3, Usuario.vchUsuario);
             }
+        }
+
+        protected void btnCancelEstudios_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

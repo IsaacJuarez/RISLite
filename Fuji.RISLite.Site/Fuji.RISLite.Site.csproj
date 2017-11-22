@@ -125,13 +125,16 @@
     <Content Include="frmSalir.aspx" />
     <Content Include="frmSinPermiso.aspx" />
     <Content Include="frmTest.aspx" />
+    <Content Include="frmUsuario.aspx" />
     <Content Include="Iconos\01VIP_VERDE.png" />
     <Content Include="Iconos\01_HOSPITALIZACION_VERDE.png" />
     <Content Include="Images\CR.png" />
     <Content Include="Images\CT.png" />
+    <Content Include="Images\faviconF.ico" />
     <Content Include="Images\fujifilm %281%29.png" />
     <Content Include="Images\Fujifilm.png" />
     <Content Include="Images\fuji_logo.jpeg" />
+    <Content Include="Images\FUji_Logo_svg.png" />
     <Content Include="Images\HD.png" />
     <Content Include="Images\ic_action_bulb.png" />
     <Content Include="Images\ic_action_calendar_month.png" />
@@ -1857,6 +1860,13 @@
     <Compile Include="frmTest.aspx.designer.cs">
       <DependentUpon>frmTest.aspx</DependentUpon>
     </Compile>
+    <Compile Include="frmUsuario.aspx.cs">
+      <DependentUpon>frmUsuario.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="frmUsuario.aspx.designer.cs">
+      <DependentUpon>frmUsuario.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -1901,6 +1911,8 @@
     <Compile Include="Services\DataContract\LoginRequest.cs" />
     <Compile Include="Services\DataContract\PacienteRequest.cs" />
     <Compile Include="Services\DataContract\PacienteResponse.cs" />
+    <Compile Include="Services\DataContract\PerfilRequest.cs" />
+    <Compile Include="Services\DataContract\PerfilResponse.cs" />
     <Compile Include="Services\DataContract\PrestacionRequest.cs" />
     <Compile Include="Services\DataContract\PrestacionResponse.cs" />
     <Compile Include="Services\DataContract\RestriccionRequest.cs" />

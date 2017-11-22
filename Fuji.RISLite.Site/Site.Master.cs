@@ -60,7 +60,7 @@ namespace Fuji.RISLite.Site
                         usuario = (clsUsuario)Session["User"];
                         if (Security.ValidateToken(usuario.Token, usuario.intUsuarioID.ToString(), usuario.vchUsuario))
                         {
-                            imgUser.Src = "/Users/" + usuario.vchUsuario + ".jpg";
+                            imgUser.Src = "/Users/" + usuario.vchRutaIcono;
                             imgUser.Alt = usuario.vchNombre;
                             lblUser.Text = usuario.vchNombre;
                             lstVistas = (List<clsVistasUsuarios>)Session["lstVistas"];

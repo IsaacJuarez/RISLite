@@ -101,6 +101,7 @@ namespace Fuji.RISLite.DataAccess
                                              vchNombre = _user.vchNombre,
                                              vchUsuario = _user.vchUsuario,
                                              vchTipoUsuario = catTipo.vchTipoUsuario,
+                                             vchRutaIcono = _user.vchRutaIcono,
                                              bitActivo = _user.bitActivo,
                                              vchEmail = _user.vchEmail == null ? "" : _user.vchEmail,
                                              datFecha = _user.datFecha,
@@ -118,6 +119,7 @@ namespace Fuji.RISLite.DataAccess
                                     Usuario.vchTipoUsuario = query.vchTipoUsuario;
                                     Usuario.vchNombre = query.vchNombre;
                                     Usuario.vchUsuario = query.vchUsuario;
+                                    Usuario.vchRutaIcono = query.vchRutaIcono;
                                     Usuario.vchEmail = query.vchEmail;
                                     Usuario.bitActivo = (bool)query.bitActivo;
                                     Usuario.datFecha = (DateTime)query.datFecha;
@@ -955,6 +957,7 @@ namespace Fuji.RISLite.DataAccess
                                          bitActivo = _user.bitActivo,
                                          datFecha = _user.datFecha,
                                          vchNombre = _user.vchNombre,
+                                         vchPassword = _user.vchPassword,
                                          vchUserAdmin = _user.vchUserAdmin,
                                          vchEmail = _user.vchEmail,
                                          vchUsuario = _user.vchUsuario,
@@ -973,6 +976,7 @@ namespace Fuji.RISLite.DataAccess
                                     mdl.intUsuarioID = item.intUsuarioID;
                                     mdl.bitActivo = (bool)item.bitActivo;
                                     mdl.datFecha = (DateTime)item.datFecha;
+                                    mdl.vchPassword = item.vchPassword;
                                     mdl.vchNombre = item.vchNombre;
                                     mdl.vchEmail = item.vchEmail;
                                     mdl.vchUserAdmin = item.vchUserAdmin;
@@ -1010,7 +1014,9 @@ namespace Fuji.RISLite.DataAccess
                         mdlUser.intTipoUsuario = usuario.intTipoUsuario;
                         mdlUser.vchEmail = usuario.vchEmail;
                         mdlUser.vchNombre = usuario.vchNombre;
+                        mdlUser.vchRutaIcono = "user.png";
                         mdlUser.vchUserAdmin = user;
+                        mdlUser.vchPassword = usuario.vchPassword;
                         mdlUser.vchUsuario = usuario.vchUsuario;
                         if (usuario.intSitioID > 0)
                             mdlUser.intSitioID = usuario.intSitioID;
@@ -1049,6 +1055,7 @@ namespace Fuji.RISLite.DataAccess
                         mdlUser.datFecha = usuario.datFecha;
                         mdlUser.vchNombre = usuario.vchNombre;
                         mdlUser.vchUserAdmin = user;
+                        mdlUser.vchPassword = usuario.vchPassword;
                         //mdlUser.intSitioID = usuario.intSitioID;
                         mdlUser.vchEmail = usuario.vchEmail;
                         mdlUser.vchUsuario = usuario.vchUsuario;
@@ -2914,6 +2921,62 @@ namespace Fuji.RISLite.DataAccess
                 Log.EscribeLog("Existe un error en getPacienteAdicionales: " + gpA.Message, 3, user);
             }
             return lstCitaAdicionales;
+        }
+
+        public List<stp_getDetalleCita_Result> get_stpDetalleCita(int intCitaID, string user)
+        {
+            List<stp_getDetalleCita_Result> lstCitaAdicionales = new List<stp_getDetalleCita_Result>();
+            try
+            {
+                //Variables Adicionales
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_DET_Cita.Any(x => x.intCitaID == intCitaID))
+                    {
+                        var query = dbRisDA.stp_getDetalleCita(intCitaID).ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                lstCitaAdicionales.AddRange(query);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception gpA)
+            {
+                Log.EscribeLog("Existe un error en get_stpDetalleCita: " + gpA.Message, 3, user);
+            }
+            return lstCitaAdicionales;
+        }
+
+        public bool getListaDetalleCita(string user, int idcita)
+        {
+            bool bandera_rev_detalle = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (dbRisDA.tbl_MST_Cita.Any())
+                    {
+                        var query = dbRisDA.tbl_DET_Cita.Where(x => x.intCitaID == idcita).ToList();
+
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                bandera_rev_detalle = true;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en getListaDetalleCita: " + eLT.Message, 3, user);
+            }
+            return bandera_rev_detalle;
         }
 
         public List<string> getBusquedaPacientes(string busqueda, int intSitioID, string user)
@@ -5413,5 +5476,85 @@ namespace Fuji.RISLite.DataAccess
             return lst;
         }
         #endregion
+
+        #region Perfil
+
+        public bool setPerfil(clsUsuario usuario, int Variable, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                switch (Variable)
+                {
+                    case 1://Solo Contraseña o Nombre
+
+                        using (dbRisDA = new RISLiteEntities())
+                        {
+                            if (dbRisDA.tbl_CAT_Usuario.Any(x => x.intUsuarioID == usuario.intUsuarioID))
+                            {
+                                tbl_CAT_Usuario mdluser = dbRisDA.tbl_CAT_Usuario.First(x => x.intUsuarioID == usuario.intUsuarioID);
+                                if (mdluser != null)
+                                {
+                                    mdluser.vchNombre = usuario.vchNombre;
+                                    mdluser.vchPassword = usuario.vchPassword;
+                                    mdluser.datFecha = DateTime.Now;
+                                    mdluser.bitActivo = true;
+                                    mdluser.vchUserAdmin = user;
+                                    dbRisDA.SaveChanges();
+                                    valido = true;
+                                }
+                            }
+                        }
+                        break;
+                    case 2: //Solo Icono
+                        using (dbRisDA = new RISLiteEntities())
+                        {
+                            if (dbRisDA.tbl_CAT_Usuario.Any(x => x.intUsuarioID == usuario.intUsuarioID))
+                            {
+                                tbl_CAT_Usuario mdluser = dbRisDA.tbl_CAT_Usuario.First(x => x.intUsuarioID == usuario.intUsuarioID);
+                                if (mdluser != null)
+                                {
+                                    mdluser.vchRutaIcono = usuario.vchRutaIcono;
+                                    mdluser.datFecha = DateTime.Now;
+                                    mdluser.bitActivo = true;
+                                    mdluser.vchUserAdmin = user;
+                                    dbRisDA.SaveChanges();
+                                    valido = true;
+                                }
+                            }
+                        }
+                        break;
+                    case 3://Icono y (contraseña o nombre)
+                        using (dbRisDA = new RISLiteEntities())
+                        {
+                            if (dbRisDA.tbl_CAT_Usuario.Any(x => x.intUsuarioID == usuario.intUsuarioID))
+                            {
+                                tbl_CAT_Usuario mdluser = dbRisDA.tbl_CAT_Usuario.First(x => x.intUsuarioID == usuario.intUsuarioID);
+                                if (mdluser != null)
+                                {
+                                    mdluser.vchNombre = usuario.vchNombre;
+                                    mdluser.vchPassword = usuario.vchPassword;
+                                    mdluser.vchRutaIcono = usuario.vchRutaIcono;
+                                    mdluser.datFecha = DateTime.Now;
+                                    mdluser.bitActivo = true;
+                                    mdluser.vchUserAdmin = user;
+                                    dbRisDA.SaveChanges();
+                                    valido = true;
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+            catch (Exception esP)
+            {
+                valido = false;
+                mensaje = esP.Message;
+                Log.EscribeLog("Existe un error en setPerfil: " + esP.Message, 3, user);
+            }
+            return valido;
+        }
+        #endregion Perfil
+
     }
 }

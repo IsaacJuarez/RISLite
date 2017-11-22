@@ -306,5 +306,10 @@ namespace Fuji.RISLite.Site.Services
         CitaReporteResponse setEstatusEstudio(CitaReporteRequest request);
         #endregion CitaReporte
 
+        #region Perfil
+        [OperationContract]
+        PerfilResponse setPerfil(PerfilRequest request);
+        #endregion Perfil
+
     }
 }

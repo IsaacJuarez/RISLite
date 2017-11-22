@@ -889,6 +889,7 @@ namespace Fuji.RISLite.Site
                 if (user.intTipoUsuario > 1)
                     user.intSitioID = Convert.ToInt32(ddlSitioUser.SelectedValue.ToString());
                 user.vchNombre = txtNombre.Text.ToUpper();
+                user.vchPassword = Security.Encrypt(txtPasswordUser.Text);
                 user.vchUserAdmin = Usuario.vchUsuario.ToUpper();
                 user.vchUsuario = txtUsuario.Text.ToUpper();
             }
@@ -937,10 +938,15 @@ namespace Fuji.RISLite.Site
                 mdlVar.bitActivo = true;
                 mdlVar.datFecha = DateTime.Now;
                 TextBox txtNameUser = (TextBox)grvUsuario.Rows[e.RowIndex].FindControl("txtNombreUsuario");
-                TextBox txtUser = (TextBox)grvUsuario.Rows[e.RowIndex].FindControl("txtUsuario");
+                TextBox txtUser = (TextBox)grvUsuario.Rows[e.RowIndex].FindControl("txtUsuario"); 
+                TextBox txtPass = (TextBox)grvUsuario.Rows[e.RowIndex].FindControl("txtPass");
+                Label lblPass = (Label)grvUsuario.Rows[e.RowIndex].FindControl("lblPass");
                 TextBox txtEmail = (TextBox)grvUsuario.Rows[e.RowIndex].FindControl("txtEmailUser");
                 mdlVar.vchNombre = txtNameUser.Text.ToUpper();
                 mdlVar.vchUsuario = txtUser.Text.ToUpper();
+                string pass = lblPass.Text;
+                string newPass = txtPass.Text == "" ? "" : Security.Encrypt(txtPass.Text);
+                mdlVar.vchPassword = newPass == "" ? pass : newPass;
                 mdlVar.vchEmail = txtEmail.Text;
                 mdlVar.intUsuarioID = Convert.ToInt16(grvUsuario.DataKeys[e.RowIndex].Values["intUsuarioID"].ToString());
                 if (mdlVar != null)

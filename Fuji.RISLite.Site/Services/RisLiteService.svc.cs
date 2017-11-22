@@ -1701,7 +1701,41 @@ namespace Fuji.RISLite.Site.Services
             return response;
         }
 
+        public List<stp_getDetalleCita_Result> get_stpDetalleCita(CitaNuevaRequest request)
+        {
+            List<stp_getDetalleCita_Result> response = new List<stp_getDetalleCita_Result>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.get_stpDetalleCita(request.intCitaID, request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en get_stpDetalleCita: " + egU.Message, 3, "");
+            }
+            return response;
+        }
 
+        public bool getListaDetalleCita(AgendaRequest request, int idcita)
+        {
+            bool boolbandera_citaDet = false;
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    boolbandera_citaDet = controller.getListaDetalleCita(request.mdlUser.vchUsuario, idcita);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getAgenda: " + egU.Message, 3, "");
+            }
+            return boolbandera_citaDet;
+        }
 
         public PacienteResponse getBusquedaPacientes(PacienteRequest request)
         {
@@ -2433,6 +2467,28 @@ namespace Fuji.RISLite.Site.Services
         }
 
         #endregion
+
+        #region Perfil
+        public PerfilResponse setPerfil(PerfilRequest request)
+        {
+            PerfilResponse response = new PerfilResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.success = controller.setPerfil(request.mdlPerfil, request.intVariableID, request.mdlUser.vchUsuario, ref mensaje);
+                    response.mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setPerfil: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+        #endregion Perfil
 
     }
 }

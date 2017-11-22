@@ -8,6 +8,7 @@ namespace Fuji.RISLite.Entities
         public int intTipoUsuario { get; set; }
         public string vchTipoUsuario { get; set; }
         public string vchUsuario { get; set; }
+        public string vchPassword { get; set; }
         public string vchNombre { get; set; }
         public DateTime datFecha { get; set; }
         public bool bitActivo { get; set; }
@@ -16,12 +17,14 @@ namespace Fuji.RISLite.Entities
         public int intSitioID { get; set; }
         public string vchSitio { get; set; }
         public string vchEmail { get; set; }
+        public string vchRutaIcono { get; set; }
 
         public clsUsuario()
         {
             intUsuarioID = int.MinValue;
             intTipoUsuario = int.MinValue;
             vchUsuario = string.Empty;
+            vchPassword = string.Empty;
             vchNombre = string.Empty;
             datFecha = DateTime.MinValue;
             bitActivo = false;
@@ -30,6 +33,7 @@ namespace Fuji.RISLite.Entities
             intSitioID = int.MinValue;
             vchSitio = string.Empty;
             vchEmail = string.Empty;
+            vchRutaIcono = string.Empty;
         }
     }
 }

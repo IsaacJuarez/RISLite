@@ -21,7 +21,7 @@
                     OnRowCommand="GV_ListaTrabajo_RowCommand1"
                     EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
                     <Columns>
-
+                        <asp:BoundField HeaderStyle-CssClass="center" ItemStyle-CssClass="center" DataField="intCitaID" HeaderText="IDCita" ItemStyle-ForeColor="DarkGreen" Visible="false" />
                         <asp:BoundField HeaderStyle-CssClass="center" ItemStyle-CssClass="center" DataField="intEstudioID" HeaderText="ID" ItemStyle-ForeColor="DarkGreen" />
                         <asp:BoundField HeaderStyle-CssClass="center" ItemStyle-CssClass="center" DataField="vchNombre" HeaderText="Nombre" ItemStyle-ForeColor="DarkGreen" />
                         <asp:BoundField HeaderStyle-CssClass="center" ItemStyle-CssClass="center" DataField="vchModalidad" HeaderText="Modalidad" ItemStyle-ForeColor="DarkGreen" />
@@ -30,8 +30,8 @@
                         <asp:BoundField HeaderStyle-CssClass="center" ItemStyle-CssClass="center" DataField="vchEstatus" HeaderText="Estatus" ItemStyle-ForeColor="DarkGreen" />
                         <asp:TemplateField HeaderText="Adicionales" HeaderStyle-CssClass="center" ItemStyle-HorizontalAlign="Center">
                             <ItemTemplate>
-                                <asp:LinkButton ID="btn1" CausesValidation="false" CommandName="Adicional" runat="server" Text="Adicionales" CommandArgument='<%#Eval("intCitaID") %>'>
-                                 <i class="fa fa-info-circle" aria-hidden="true" title="Tomar" style="font-size:25px;"></i>
+                                <asp:LinkButton ID="btn_Adicional" CausesValidation="false" CommandName="Adicional" runat="server" Text="Adicionales" CommandArgument='<%#Eval("intCitaID") %>'>
+                                 <i class="fa fa-info-circle" aria-hidden="true" title="Adicional" style="font-size:25px;"></i>
                                 </asp:LinkButton>
                             </ItemTemplate>
                         </asp:TemplateField>
@@ -102,7 +102,7 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-lg-6 col-md-12 col-sm-12">
+                   <%-- <div class="col-lg-6 col-md-12 col-sm-12">
                         <div class="row " runat="server" id="divID">
                             <div class="col-12">
                                 <asp:Label runat="server" Text="Identificaciones" ForeColor="DarkBlue" Font-Bold="true"></asp:Label>
@@ -114,7 +114,7 @@
 
                             </asp:Panel>
                         </div>
-                    </div>
+                    </div>--%>
                     <div class="col-lg-6 col-md-12 col-sm-12">
                         <div class="row" runat="server" id="divDinamico">
                             <div class="col-12">
@@ -124,7 +124,6 @@
                         <hr />
                         <div runat="server" id="divDinamicoContenido">
                             <asp:Panel ID="pnlDinamicoContenido"  CssClass="form-group" runat="server">
-
                             </asp:Panel>
                         </div>
                     </div>
@@ -138,4 +137,42 @@
         </div>
     </div>
     <!-- /modals -->
+
+      <script src="assets/js/bootstrap.min.js"></script>
+    <!-- page specific plugin scripts -->
+    <script src="assets/js/jquery-ui.custom.min.js"></script>
+    <script src="assets/js/jquery.ui.touch-punch.min.js"></script>
+    <script src="assets/js/moment.min.js"></script>
+    <script src="assets/js/bootbox.js"></script>
+    <!-- inline scripts related to this page -->
+
+    <script src="assets/js/ace-elements.min.js"></script>
+	<script src="assets/js/ace.min.js"></script>
+    <script type="text/javascript">
+        function openModal() {
+            $('#myModal').modal('show');
+        }
+
+        function ShowMessage(message, messagetype, idControl) {
+            var cssclass;
+            switch (messagetype) {
+                case 'Correcto':
+                    cssclass = 'alert-success'
+                    break;
+                case 'Error':
+                    cssclass = 'alert-danger'
+                    break;
+                case 'Advertencia':
+                    cssclass = 'alert-warning'
+                    break;
+                default:
+                    cssclass = 'alert-info'
+            }
+            var control = "#" + idControl;
+            $(control).append('<div id="' + idControl + '" style="margin: 0 0.5%; -webkit-box-shadow: 3px 4px 6px #999;" class="alert fade in ' + cssclass + '"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>' + messagetype + '!</strong> <span>' + message + '</span></div>');
+            $(control).fadeTo(2000, 700).slideUp(700, function () {
+                $(control).slideUp(700);
+            });
+        }       
+    </script>
 </asp:Content>

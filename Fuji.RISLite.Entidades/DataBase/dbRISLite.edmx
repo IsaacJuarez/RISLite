@@ -308,6 +308,7 @@ advertencia 6002: La tabla o vista 'RISLite.dbo.tbl_CAT_DuracionModalidad' no ti
           <Property Name="vchPassword" Type="varchar" MaxLength="100" />
           <Property Name="vchNombre" Type="varchar" MaxLength="100" />
           <Property Name="vchEmail" Type="varchar" MaxLength="100" />
+          <Property Name="vchRutaIcono" Type="varchar" MaxLength="100" />
           <Property Name="bitActivo" Type="bit" />
           <Property Name="datFecha" Type="datetime" />
           <Property Name="vchUserAdmin" Type="varchar" MaxLength="100" />
@@ -2716,6 +2717,7 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
           <NavigationProperty Name="tbl_CAT_Sitio" Relationship="RISLiteModel.FK_CAT_Usuario_CAT_Sitio" FromRole="tbl_CAT_Usuario" ToRole="tbl_CAT_Sitio" />
           <NavigationProperty Name="tbl_CAT_TipoUsuario" Relationship="RISLiteModel.FK_CAT_Usuario_CAT_TipoUsuario" FromRole="tbl_CAT_Usuario" ToRole="tbl_CAT_TipoUsuario" />
           <Property Name="vchPassword" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="vchRutaIcono" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_CAT_Usuario_CAT_Sitio">
           <End Type="RISLiteModel.tbl_CAT_Sitio" Role="tbl_CAT_Sitio" Multiplicity="0..1" />
@@ -3918,6 +3920,7 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
           <EntitySetMapping Name="tbl_CAT_Usuario">
             <EntityTypeMapping TypeName="RISLiteModel.tbl_CAT_Usuario">
               <MappingFragment StoreEntitySet="tbl_CAT_Usuario">
+                <ScalarProperty Name="vchRutaIcono" ColumnName="vchRutaIcono" />
                 <ScalarProperty Name="vchPassword" ColumnName="vchPassword" />
                 <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
                 <ScalarProperty Name="datFecha" ColumnName="datFecha" />

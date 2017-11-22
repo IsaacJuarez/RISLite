@@ -335,7 +335,7 @@
                                 <div class="widget-body">
                                     <div class="widget-main">
                                         <div class="row form-group">
-                                            <div class="col-lg-2 col-md-12 col-sm-12">
+                                            <div class="col-lg-2 col-md-6 col-sm-12">
                                                 <div class="row">
                                                     <div class="col-lg-12 col-md-12 col-sm-12">
                                                         <asp:Label runat="server" Text="Nombre de Usuario" AssociatedControlID="txtNombre" Width="100%"></asp:Label>
@@ -348,7 +348,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-2 col-sm-12">
+                                            <div class="col-lg-2 col-md-6 col-sm-12">
                                                 <div class="row">
                                                     <div class="col-lg-12 col-md-12 col-sm-12">
                                                         <asp:Label runat="server" Text="Usuario" AssociatedControlID="txtUsuario" Width="100%"></asp:Label>
@@ -361,7 +361,20 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-2 col-sm-12">
+                                            <div class="col-lg-1 col-md-6 col-sm-12">
+                                                <div class="row">
+                                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                                        <asp:Label runat="server" Text="Password" AssociatedControlID="txtPasswordUser" Width="100%"></asp:Label>
+                                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator14" runat="server" Text="*" ForeColor="Red" ControlToValidate="txtPasswordUser" ValidationGroup="vgAddUser"></asp:RequiredFieldValidator>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                                        <asp:TextBox runat="server" ID="txtPasswordUser" TextMode="Password" Text="" CssClass="form-control" placeholder="Password"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 col-md-6 col-sm-12">
                                                 <div class="row">
                                                     <div class="col-lg-12 col-md-12 col-sm-12">
                                                         <asp:Label runat="server" Text="Email" ForeColor="DarkGreen"></asp:Label>
@@ -377,7 +390,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-2 col-sm-12">
+                                            <div class="col-lg-2 col-md-6 col-sm-12">
                                                 <div class="row">
                                                     <div class="col-lg-12 col-md-12 col-sm-12">
                                                         <asp:Label runat="server" Text="Tipo de Usuario" AssociatedControlID="ddlTipoUsuario" Width="100%"></asp:Label>
@@ -391,7 +404,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-2 col-sm-12">
+                                            <div class="col-lg-2 col-md-6 col-sm-12">
                                                 <div class="row">
                                                     <div class="col-lg-12 col-md-12 col-sm-12">
                                                         <asp:Label runat="server" Text="Sitio" ForeColor="DarkGreen" AssociatedControlID="ddlSitioUser"></asp:Label>
@@ -405,13 +418,13 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-2 col-sm-12">
+                                            <div class="col-lg-1 col-md-6 col-sm-12">
                                                 <div class="row">
                                                     <div class="col-lg-12 col-md-12 col-sm-12">
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-lg-12 text-right">
+                                                    <div class="col-lg-12 col-md-12 col-sm-12 text-right">
                                                         <asp:Button runat="server" ID="btnAgregar" CssClass="btn btn-success" Text="Agregar" OnClick="btnAgregar_Click" ValidationGroup="vgAddUser" />
                                                     </div>
                                                 </div>
@@ -444,6 +457,15 @@
                                                                         </ItemTemplate>
                                                                         <EditItemTemplate>
                                                                             <asp:TextBox ID="txtUsuario" Width="100%" runat="server" Text='<%#Eval("vchUsuario") %>' />
+                                                                        </EditItemTemplate>
+                                                                    </asp:TemplateField>
+                                                                    <asp:TemplateField HeaderText="Contraseña">
+                                                                        <ItemTemplate>
+                                                                            <asp:Label runat="server" Visible="false" ID="lblPassword" Text='<%#Eval("vchPassword") %>' />
+                                                                        </ItemTemplate>
+                                                                        <EditItemTemplate>
+                                                                            <asp:Label runat="server" ID="lblPass" Visible="false" Text='<%#Eval("vchPassword") %>' />
+                                                                            <asp:TextBox ID="txtPass" Width="100%" TextMode="Password" runat="server" ToolTip="Si no se desea cambiar de contraseña mantener este campo en blanco." Text='<%#Eval("vchPassword") %>' />
                                                                         </EditItemTemplate>
                                                                     </asp:TemplateField>
                                                                     <asp:TemplateField HeaderText="Email">
