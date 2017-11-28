@@ -2566,5 +2566,118 @@ namespace Fuji.RISLite.Site.Services
         }
         #endregion Perfil
 
+        #region estadistica
+
+        public List<clsConfAgenda> get_modalidades_estadistica(AgendaRequest request)
+        {
+            List<clsConfAgenda> response = new List<clsConfAgenda>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.get_modalidades_estadistica(request.mdlUser.vchUsuario, request.mdlagenda.intSitioID);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en get_modalidades_estadistica: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public List<clsUsuario> get_personal_Estadistica(AgendaRequest request)
+        {
+            List<clsUsuario> response = new List<clsUsuario>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.get_personal_Estadistica(request.mdlUser.vchUsuario, request.mdlagenda.intSitioID);
+                }
+            }
+            catch (Exception egU)        
+            {
+                Log.EscribeLog("Existe un error en get_personal_Estadistica: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public List<clsSitio> get_sitio_estadistica(AgendaRequest request)
+        {
+            List<clsSitio> response = new List<clsSitio>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.get_sitio_estadistica(request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getAgenda: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public List<clsEstatusEstudio> get_sitio_estatus_estudio(AgendaRequest request)
+        {
+            List<clsEstatusEstudio> response = new List<clsEstatusEstudio>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.get_sitio_estatus_estudio(request.mdlUser.vchUsuario);               
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getAgenda: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+
+
+        public List<clsGraficaModalidad> stp_get_Datos_Modalidad_Estadistica(AgendaRequest request, int idsitio, int idmodalidad, string fechainicio, string fechafin, string estatusid)
+        {
+            List<clsGraficaModalidad> response = new List<clsGraficaModalidad>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.stp_get_Datos_Modalidad_Estadistica(request.mdlUser.vchUsuario, idsitio, idmodalidad, fechainicio, fechafin, estatusid);
+                }
+            }
+            catch (Exception egU)
+            {            
+                Log.EscribeLog("Existe un error en stp_get_Datos_Modalidad_Estadistica: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public List<clsGraficaUsuario> stp_get_Datos_Usuarios_Estadistica(AgendaRequest request, int idsitio, int idmodalidad, string fechainicio, string fechafin, string estatusid)
+        {
+            List<clsGraficaUsuario> response = new List<clsGraficaUsuario>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.stp_get_Datos_Usuarios_Estadistica(request.mdlUser.vchUsuario, idsitio, idmodalidad, fechainicio, fechafin, estatusid);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en stp_get_Datos_Usuarios_Estadistica: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+        #endregion
+
     }
 }

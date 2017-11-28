@@ -50,11 +50,14 @@
     <Compile Include="clsDiaSemana.cs" />
     <Compile Include="clsDireccion.cs" />
     <Compile Include="clsEquipo.cs" />
+    <Compile Include="clsEstatusEstudio.cs" />
     <Compile Include="clsEstudio.cs" />
     <Compile Include="clsEstudioCita.cs" />
     <Compile Include="clsEstudioNuevaCita.cs" />
     <Compile Include="clsEventoCita.cs" />
     <Compile Include="clsGeneralConfigAgenda.cs" />
+    <Compile Include="clsGraficaModalidad.cs" />
+    <Compile Include="clsGraficaUsuario.cs" />
     <Compile Include="clsHoraMuerta.cs" />
     <Compile Include="clsListaDeTrabajo.cs" />
     <Compile Include="clsModalidad.cs" />
@@ -62,6 +65,7 @@
     <Compile Include="clsPrestacion.cs" />
     <Compile Include="clsRepIndicacion.cs" />
     <Compile Include="clsRepRestriccion.cs" />
+    <Compile Include="clsSitio.cs" />
     <Compile Include="clsSugerencia.cs" />
     <Compile Include="clsUsuario.cs" />
     <Compile Include="clsVarAcicionales.cs" />

@@ -329,5 +329,55 @@ namespace Fuji.RISLite.Entidades.DataBase
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getListaTrabajo_Sitio_Result>("stp_getListaTrabajo_Sitio", intIdSitioParameter);
         }
+    
+        public virtual ObjectResult<stp_getGraficaModalidad_Result> stp_getGraficaModalidad(Nullable<int> intIdSitio, Nullable<int> intModalidadID, Nullable<System.DateTime> datFechaInicio, Nullable<System.DateTime> datFechaFin, string intEstatusSitio)
+        {
+            var intIdSitioParameter = intIdSitio.HasValue ?
+                new ObjectParameter("intIdSitio", intIdSitio) :
+                new ObjectParameter("intIdSitio", typeof(int));
+    
+            var intModalidadIDParameter = intModalidadID.HasValue ?
+                new ObjectParameter("intModalidadID", intModalidadID) :
+                new ObjectParameter("intModalidadID", typeof(int));
+    
+            var datFechaInicioParameter = datFechaInicio.HasValue ?
+                new ObjectParameter("datFechaInicio", datFechaInicio) :
+                new ObjectParameter("datFechaInicio", typeof(System.DateTime));
+    
+            var datFechaFinParameter = datFechaFin.HasValue ?
+                new ObjectParameter("datFechaFin", datFechaFin) :
+                new ObjectParameter("datFechaFin", typeof(System.DateTime));
+    
+            var intEstatusSitioParameter = intEstatusSitio != null ?
+                new ObjectParameter("intEstatusSitio", intEstatusSitio) :
+                new ObjectParameter("intEstatusSitio", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getGraficaModalidad_Result>("stp_getGraficaModalidad", intIdSitioParameter, intModalidadIDParameter, datFechaInicioParameter, datFechaFinParameter, intEstatusSitioParameter);
+        }
+    
+        public virtual ObjectResult<stp_getGraficaUsuario_Result> stp_getGraficaUsuario(Nullable<int> intIdSitio, Nullable<int> intUsuarioID, Nullable<System.DateTime> datFechaInicio, Nullable<System.DateTime> datFechaFin, string intEstatusSitio)
+        {
+            var intIdSitioParameter = intIdSitio.HasValue ?
+                new ObjectParameter("intIdSitio", intIdSitio) :
+                new ObjectParameter("intIdSitio", typeof(int));
+    
+            var intUsuarioIDParameter = intUsuarioID.HasValue ?
+                new ObjectParameter("intUsuarioID", intUsuarioID) :
+                new ObjectParameter("intUsuarioID", typeof(int));
+    
+            var datFechaInicioParameter = datFechaInicio.HasValue ?
+                new ObjectParameter("datFechaInicio", datFechaInicio) :
+                new ObjectParameter("datFechaInicio", typeof(System.DateTime));
+    
+            var datFechaFinParameter = datFechaFin.HasValue ?
+                new ObjectParameter("datFechaFin", datFechaFin) :
+                new ObjectParameter("datFechaFin", typeof(System.DateTime));
+    
+            var intEstatusSitioParameter = intEstatusSitio != null ?
+                new ObjectParameter("intEstatusSitio", intEstatusSitio) :
+                new ObjectParameter("intEstatusSitio", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getGraficaUsuario_Result>("stp_getGraficaUsuario", intIdSitioParameter, intUsuarioIDParameter, datFechaInicioParameter, datFechaFinParameter, intEstatusSitioParameter);
+        }
     }
 }

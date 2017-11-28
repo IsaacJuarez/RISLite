@@ -1302,6 +1302,20 @@ advertencia 6002: La tabla o vista 'RISLite.dbo.tbl_CAT_DuracionModalidad' no ti
         <Function Name="stp_getEstudiosPaciente" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="intPacienteID" Type="int" Mode="In" />
         </Function>
+        <Function Name="stp_getGraficaModalidad" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intIdSitio" Type="int" Mode="In" />
+          <Parameter Name="intModalidadID" Type="int" Mode="In" />
+          <Parameter Name="datFechaInicio" Type="datetime" Mode="In" />
+          <Parameter Name="datFechaFin" Type="datetime" Mode="In" />
+          <Parameter Name="intEstatusSitio" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="stp_getGraficaUsuario" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intIdSitio" Type="int" Mode="In" />
+          <Parameter Name="intUsuarioID" Type="int" Mode="In" />
+          <Parameter Name="datFechaInicio" Type="datetime" Mode="In" />
+          <Parameter Name="datFechaFin" Type="datetime" Mode="In" />
+          <Parameter Name="intEstatusSitio" Type="nvarchar" Mode="In" />
+        </Function>
         <Function Name="stp_getListaPaginas" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="intTipoUsuarioID" Type="int" Mode="In" />
         </Function>
@@ -1955,6 +1969,20 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
             <End Role="tbl_MST_Estudio" EntitySet="tbl_MST_Estudio" />
             <End Role="tbl_REL_EstudioTecnico" EntitySet="tbl_REL_EstudioTecnico" />
           </AssociationSet>
+          <FunctionImport Name="stp_getGraficaModalidad" ReturnType="Collection(RISLiteModel.stp_getGraficaModalidad_Result)">
+            <Parameter Name="intIdSitio" Mode="In" Type="Int32" />
+            <Parameter Name="intModalidadID" Mode="In" Type="Int32" />
+            <Parameter Name="datFechaInicio" Mode="In" Type="DateTime" />
+            <Parameter Name="datFechaFin" Mode="In" Type="DateTime" />
+            <Parameter Name="intEstatusSitio" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="stp_getGraficaUsuario" ReturnType="Collection(RISLiteModel.stp_getGraficaUsuario_Result)">
+            <Parameter Name="intIdSitio" Mode="In" Type="Int32" />
+            <Parameter Name="intUsuarioID" Mode="In" Type="Int32" />
+            <Parameter Name="datFechaInicio" Mode="In" Type="DateTime" />
+            <Parameter Name="datFechaFin" Mode="In" Type="DateTime" />
+            <Parameter Name="intEstatusSitio" Mode="In" Type="String" />
+          </FunctionImport>
           </EntityContainer>
         <EntityType Name="tbl_CAT_TipoMensaje">
           <Key>
@@ -3571,6 +3599,37 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="stp_getGraficaModalidad_Result">
+          <Property Type="Int64" Name="intEstudioID" Nullable="false" />
+          <Property Type="Int32" Name="intModalidadID" Nullable="true" />
+          <Property Type="String" Name="vchModalidad" Nullable="true" MaxLength="200" />
+          <Property Type="Int32" Name="intEstatusEstudio" Nullable="true" />
+          <Property Type="String" Name="vchEstatus" Nullable="true" MaxLength="200" />
+          <Property Type="Int32" Name="intRELModPres" Nullable="true" />
+          <Property Type="DateTime" Name="datFechaInicio" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="datFechaFin" Nullable="true" Precision="23" />
+          <Property Type="String" Name="vchTitulo" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="vchDescripcion" Nullable="true" MaxLength="200" />
+          <Property Type="DateTime" Name="datFecha" Nullable="true" Precision="23" />
+          <Property Type="String" Name="vchUserAdmin" Nullable="true" MaxLength="100" />
+          <Property Type="Boolean" Name="bitActivo" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="stp_getGraficaUsuario_Result">
+          <Property Type="Int64" Name="intEstudioID" Nullable="false" />
+          <Property Type="String" Name="vchUsuario" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="vchModalidad" Nullable="true" MaxLength="200" />
+          <Property Type="Int32" Name="intModalidadID" Nullable="true" />
+          <Property Type="Int32" Name="intEstatusEstudio" Nullable="true" />
+          <Property Type="String" Name="vchEstatus" Nullable="true" MaxLength="200" />
+          <Property Type="Int32" Name="intRELModPres" Nullable="true" />
+          <Property Type="DateTime" Name="datFechaInicio" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="datFechaFin" Nullable="true" Precision="23" />
+          <Property Type="String" Name="vchTitulo" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="vchDescripcion" Nullable="true" MaxLength="200" />
+          <Property Type="DateTime" Name="datFecha" Nullable="true" Precision="23" />
+          <Property Type="String" Name="vchUserAdmin" Nullable="true" MaxLength="100" />
+          <Property Type="Boolean" Name="bitActivo" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4531,6 +4590,45 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="stp_getGraficaModalidad" FunctionName="RISLiteModel.Store.stp_getGraficaModalidad">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RISLiteModel.stp_getGraficaModalidad_Result">
+                <ScalarProperty Name="intEstudioID" ColumnName="intEstudioID" />
+                <ScalarProperty Name="intModalidadID" ColumnName="intModalidadID" />
+                <ScalarProperty Name="vchModalidad" ColumnName="vchModalidad" />
+                <ScalarProperty Name="intEstatusEstudio" ColumnName="intEstatusEstudio" />
+                <ScalarProperty Name="vchEstatus" ColumnName="vchEstatus" />
+                <ScalarProperty Name="intRELModPres" ColumnName="intRELModPres" />
+                <ScalarProperty Name="datFechaInicio" ColumnName="datFechaInicio" />
+                <ScalarProperty Name="datFechaFin" ColumnName="datFechaFin" />
+                <ScalarProperty Name="vchTitulo" ColumnName="vchTitulo" />
+                <ScalarProperty Name="vchDescripcion" ColumnName="vchDescripcion" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="stp_getGraficaUsuario" FunctionName="RISLiteModel.Store.stp_getGraficaUsuario">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RISLiteModel.stp_getGraficaUsuario_Result">
+                <ScalarProperty Name="intEstudioID" ColumnName="intEstudioID" />
+                <ScalarProperty Name="vchUsuario" ColumnName="vchUsuario" />
+                <ScalarProperty Name="vchModalidad" ColumnName="vchModalidad" />
+                <ScalarProperty Name="intModalidadID" ColumnName="intModalidadID" />
+                <ScalarProperty Name="intEstatusEstudio" ColumnName="intEstatusEstudio" />
+                <ScalarProperty Name="vchEstatus" ColumnName="vchEstatus" />
+                <ScalarProperty Name="intRELModPres" ColumnName="intRELModPres" />
+                <ScalarProperty Name="datFechaInicio" ColumnName="datFechaInicio" />
+                <ScalarProperty Name="datFechaFin" ColumnName="datFechaFin" />
+                <ScalarProperty Name="vchTitulo" ColumnName="vchTitulo" />
+                <ScalarProperty Name="vchDescripcion" ColumnName="vchDescripcion" />
+                <ScalarProperty Name="datFecha" ColumnName="datFecha" />
+                <ScalarProperty Name="vchUserAdmin" ColumnName="vchUserAdmin" />
+                <ScalarProperty Name="bitActivo" ColumnName="bitActivo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
