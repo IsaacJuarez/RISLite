@@ -17,6 +17,7 @@ namespace Fuji.RISLite.Entidades.DataBase
         public tbl_MST_Estudio()
         {
             this.tbl_REL_CitaEstudio = new HashSet<tbl_REL_CitaEstudio>();
+            this.tbl_REL_EstudioTecnico = new HashSet<tbl_REL_EstudioTecnico>();
         }
     
         public long intEstudioID { get; set; }
@@ -34,5 +35,6 @@ namespace Fuji.RISLite.Entidades.DataBase
         public virtual tbl_CAT_EstatusEstudio tbl_CAT_EstatusEstudio { get; set; }
         public virtual tbl_REL_ModalidadPrestacion tbl_REL_ModalidadPrestacion { get; set; }
         public virtual ICollection<tbl_REL_CitaEstudio> tbl_REL_CitaEstudio { get; set; }
+        public virtual ICollection<tbl_REL_EstudioTecnico> tbl_REL_EstudioTecnico { get; set; }
     }
 }

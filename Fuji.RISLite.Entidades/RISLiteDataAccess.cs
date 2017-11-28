@@ -1110,6 +1110,130 @@ namespace Fuji.RISLite.DataAccess
             }
             return valido;
         }
+
+        public List<tbl_CAT_Modalidad> getModalidadTecnico(int intSitioID, string user)
+        {
+            List<tbl_CAT_Modalidad> lstresult = new List<tbl_CAT_Modalidad>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if(dbRisDA.tbl_CAT_Modalidad.Any(x=> x.intSitioID == intSitioID))
+                    {
+                        var query = (dbRisDA.tbl_CAT_Modalidad.Where(x => x.intSitioID == intSitioID && (bool)x.bitActivo)).ToList();
+                        if (query != null)
+                        {
+                            if(query.Count > 0)
+                            {
+                                lstresult.AddRange(query);
+                            }
+                        }
+                    }
+                }
+            }
+            catch(Exception egmT)
+            {
+                Log.EscribeLog("Existe un error en getModalidadTecnico : " + egmT.Message, 3, user);
+            }
+            return lstresult;
+        }
+
+        public List<stp_getRELModalidadTecnico_Result> getModalidadTecnicoList(int intUsuarioID, string user)
+        {
+            List<stp_getRELModalidadTecnico_Result> lstresult = new List<stp_getRELModalidadTecnico_Result>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    var query = (dbRisDA.stp_getRELModalidadTecnico(intUsuarioID)).ToList();
+                    if (query != null)
+                    {
+                        if (query.Count > 0)
+                        {
+                            lstresult.AddRange(query);
+                        }
+                    }
+
+                }
+            }
+            catch (Exception egmT)
+            {
+                Log.EscribeLog("Existe un error en getModalidadTecnicoList : " + egmT.Message, 3, user);
+            }
+            return lstresult;
+        }
+
+        public bool setModalidadTecnico(int intUsuarioID, int intModalidadID, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using(dbRisDA = new RISLiteEntities())
+                {
+                    tbl_REL_ModalidadesTecnico mdl = new tbl_REL_ModalidadesTecnico();
+                    if (!dbRisDA.tbl_REL_ModalidadesTecnico.Any(x=>x.intModalidadID == intModalidadID && x.intUsuarioID == intUsuarioID))
+                    {
+                        mdl.intUsuarioID = intUsuarioID;
+                        mdl.intModalidadID = intModalidadID;
+                        mdl.bitActivo = true;
+                        mdl.datFecha = DateTime.Now;
+                        mdl.vchUserAdmin = user;
+                        dbRisDA.tbl_REL_ModalidadesTecnico.Add(mdl);
+                        dbRisDA.SaveChanges();
+                    }
+                    else
+                    {
+                        mdl = dbRisDA.tbl_REL_ModalidadesTecnico.First(x => x.intModalidadID == intModalidadID && x.intUsuarioID == intUsuarioID);
+                        mdl.bitActivo = true;
+                        mdl.datFecha = DateTime.Now;
+                        mdl.vchUserAdmin = user;
+                        dbRisDA.SaveChanges();
+                    }
+                    valido = true;
+                }
+            }
+            catch (Exception esMT)
+            {
+                valido = false;
+                Log.EscribeLog("Existe un error en setModalidadTecnico: " + esMT.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public bool setEstatusModalidadTecnico(int intRELModTecnicoID, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    tbl_REL_ModalidadesTecnico mdl = new tbl_REL_ModalidadesTecnico();
+                    if (!dbRisDA.tbl_REL_ModalidadesTecnico.Any(x => x.intRELModTecnicoID == intRELModTecnicoID))
+                    {
+                        mdl.bitActivo = !mdl.bitActivo;
+                        mdl.datFecha = DateTime.Now;
+                        mdl.vchUserAdmin = user;
+                        dbRisDA.tbl_REL_ModalidadesTecnico.Add(mdl);
+                        dbRisDA.SaveChanges();
+                        valido = true;
+                    }
+                    else
+                    {
+                        valido = false;
+                        mensaje = "No existe la modalidad asociada al usuario.";
+                    }
+                    
+                }
+            }
+            catch (Exception esMT)
+            {
+                valido = false;
+                Log.EscribeLog("Existe un error en setModalidadTecnico: " + esMT.Message, 3, user);
+            }
+            return valido;
+        }
+
+
         #endregion AdminUsers
 
         #region varadicionales
@@ -5401,6 +5525,7 @@ namespace Fuji.RISLite.DataAccess
                                     mdl.intEstatusID = (int)item.intEstatusEstudio;
                                     mdl.datFecha = (DateTime)item.datFecha;
                                     mdl.intCitaID = (int)item.intCitaID;
+                                    mdl.intModalidadID = (int)item.intModalidadID;
                                     lst.Add(mdl);
                                 }
                             }
@@ -5415,7 +5540,7 @@ namespace Fuji.RISLite.DataAccess
             return lst;
         }
 
-        public bool UpdateEstatus_Cita(string user, int idestudio, int estatus)
+        public bool UpdateEstatus_Cita(clsUsuario user, int idestudio, int estatus)
         {
             bool bandera_Actualizar = false;
             try
@@ -5426,15 +5551,46 @@ namespace Fuji.RISLite.DataAccess
 
                     mdlCOnf = dbRisDA.tbl_MST_Estudio.First(x => x.intEstudioID == idestudio);
                     mdlCOnf.intEstatusEstudio = estatus;
-                    mdlCOnf.vchUserAdmin = user;
-
+                    mdlCOnf.vchUserAdmin = user.vchUsuario;
                     dbRisDA.SaveChanges();
+                    if(estatus == 3)//Tomar{
+                    {
+                        setEstudioTecnico((int)mdlCOnf.intEstudioID, user.intUsuarioID, user.vchUsuario);
+                    }
                     bandera_Actualizar = true;
                 }
             }
             catch (Exception eLT)
             {
-                Log.EscribeLog("Existe un error en UpdateEstatus_Cita: " + eLT.Message, 3, user);
+                Log.EscribeLog("Existe un error en UpdateEstatus_Cita: " + eLT.Message, 3, user.vchUsuario);
+            }
+            return bandera_Actualizar;
+        }
+
+        public bool setEstudioTecnico(int intEstudioID,int intUsuarioID,string user)
+        {
+            bool bandera_Actualizar = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if(!dbRisDA.tbl_REL_EstudioTecnico.Any(x => x.intEstudioID == intEstudioID && x.intUsuarioID == intUsuarioID))
+                    {
+                        tbl_REL_EstudioTecnico mdlCOnf = new tbl_REL_EstudioTecnico();
+                        mdlCOnf.intUsuarioID = intUsuarioID;
+                        mdlCOnf.intEstudioID = intEstudioID;
+                        mdlCOnf.vchUserAdmin = user;
+                        mdlCOnf.datFecha = DateTime.Now;
+                        mdlCOnf.bitActivo = true;
+                        dbRisDA.tbl_REL_EstudioTecnico.Add(mdlCOnf);
+                        dbRisDA.SaveChanges();
+                        bandera_Actualizar = true;
+                    }
+                }
+            }
+            catch (Exception eLT)
+            {
+                Log.EscribeLog("Existe un error en setEstudioTecnico: " + eLT.Message, 3, user);
             }
             return bandera_Actualizar;
         }

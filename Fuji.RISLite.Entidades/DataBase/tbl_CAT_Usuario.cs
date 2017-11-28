@@ -14,6 +14,12 @@ namespace Fuji.RISLite.Entidades.DataBase
     
     public partial class tbl_CAT_Usuario
     {
+        public tbl_CAT_Usuario()
+        {
+            this.tbl_REL_ModalidadesTecnico = new HashSet<tbl_REL_ModalidadesTecnico>();
+            this.tbl_REL_EstudioTecnico = new HashSet<tbl_REL_EstudioTecnico>();
+        }
+    
         public int intUsuarioID { get; set; }
         public Nullable<int> intTipoUsuario { get; set; }
         public Nullable<int> intSitioID { get; set; }
@@ -28,5 +34,7 @@ namespace Fuji.RISLite.Entidades.DataBase
     
         public virtual tbl_CAT_Sitio tbl_CAT_Sitio { get; set; }
         public virtual tbl_CAT_TipoUsuario tbl_CAT_TipoUsuario { get; set; }
+        public virtual ICollection<tbl_REL_ModalidadesTecnico> tbl_REL_ModalidadesTecnico { get; set; }
+        public virtual ICollection<tbl_REL_EstudioTecnico> tbl_REL_EstudioTecnico { get; set; }
     }
 }

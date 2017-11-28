@@ -81,6 +81,8 @@ namespace Fuji.RISLite.Entidades.DataBase
         public DbSet<tbl_MST_Cita> tbl_MST_Cita { get; set; }
         public DbSet<tbl_DET_CitaDinamico> tbl_DET_CitaDinamico { get; set; }
         public DbSet<tbl_DET_Cita> tbl_DET_Cita { get; set; }
+        public DbSet<tbl_REL_ModalidadesTecnico> tbl_REL_ModalidadesTecnico { get; set; }
+        public DbSet<tbl_REL_EstudioTecnico> tbl_REL_EstudioTecnico { get; set; }
     
         public virtual ObjectResult<stp_updateCatEstatus_Result> stp_updateCatEstatus(Nullable<int> intCatalogoID, Nullable<bool> bitActivo, Nullable<int> intPrimaryKey)
         {
@@ -301,15 +303,6 @@ namespace Fuji.RISLite.Entidades.DataBase
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getBusquedaCita_SoloSitio_Result>("stp_getBusquedaCita_SoloSitio", intIdSitioParameter);
         }
     
-        public virtual ObjectResult<stp_getListaTrabajo_Sitio_Result> stp_getListaTrabajo_Sitio(Nullable<int> intIdSitio)
-        {
-            var intIdSitioParameter = intIdSitio.HasValue ?
-                new ObjectParameter("intIdSitio", intIdSitio) :
-                new ObjectParameter("intIdSitio", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getListaTrabajo_Sitio_Result>("stp_getListaTrabajo_Sitio", intIdSitioParameter);
-        }
-    
         public virtual ObjectResult<stp_getDetalleCita_Result> stp_getDetalleCita(Nullable<int> intCitaID)
         {
             var intCitaIDParameter = intCitaID.HasValue ?
@@ -317,6 +310,24 @@ namespace Fuji.RISLite.Entidades.DataBase
                 new ObjectParameter("intCitaID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getDetalleCita_Result>("stp_getDetalleCita", intCitaIDParameter);
+        }
+    
+        public virtual ObjectResult<stp_getRELModalidadTecnico_Result> stp_getRELModalidadTecnico(Nullable<int> intUsuarioID)
+        {
+            var intUsuarioIDParameter = intUsuarioID.HasValue ?
+                new ObjectParameter("intUsuarioID", intUsuarioID) :
+                new ObjectParameter("intUsuarioID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getRELModalidadTecnico_Result>("stp_getRELModalidadTecnico", intUsuarioIDParameter);
+        }
+    
+        public virtual ObjectResult<stp_getListaTrabajo_Sitio_Result> stp_getListaTrabajo_Sitio(Nullable<int> intIdSitio)
+        {
+            var intIdSitioParameter = intIdSitio.HasValue ?
+                new ObjectParameter("intIdSitio", intIdSitio) :
+                new ObjectParameter("intIdSitio", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getListaTrabajo_Sitio_Result>("stp_getListaTrabajo_Sitio", intIdSitioParameter);
         }
     }
 }

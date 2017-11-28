@@ -110,6 +110,12 @@
         <EntityTypeShape EntityType="RISLiteModel.tbl_DET_Cita" Width="1.5" PointX="22.25" PointY="20.625" />
         <AssociationConnector Association="RISLiteModel.FK_DET_Cita_MST_Adicionales" />
         <AssociationConnector Association="RISLiteModel.FK_DET_Cita_MST_Cita" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_REL_ModalidadesTecnico" Width="1.5" PointX="10.25" PointY="5" />
+        <AssociationConnector Association="RISLiteModel.FK_REL_ModalidadesTecnico_CAT_Modalidad" />
+        <AssociationConnector Association="RISLiteModel.FK_REL_ModalidadesTecnico_CAT_Usuario" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_REL_EstudioTecnico" Width="1.5" PointX="18.125" PointY="11.625" />
+        <AssociationConnector Association="RISLiteModel.FK_REL_EstudioTecnico_CAT_Usuario" />
+        <AssociationConnector Association="RISLiteModel.FK_REL_EstudioTecnico_MST_Estudio" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

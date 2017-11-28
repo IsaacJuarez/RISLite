@@ -668,6 +668,82 @@ namespace Fuji.RISLite.Site.Services
             return response;
         }
 
+        public List<tbl_CAT_Modalidad> getModalidadTecnico(ModTecnicoRequest request)
+        {
+            List<tbl_CAT_Modalidad> response = new List<tbl_CAT_Modalidad>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getModalidadTecnico(request.intSitioID, request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egmT)
+            {
+                Log.EscribeLog("Existe un error en getModalidadTecnico : " + egmT.Message, 3, request.mdlUser.vchUsuario);
+            }
+            return response;
+        }
+
+        public List<stp_getRELModalidadTecnico_Result> getModalidadTecnicoList(ModTecnicoRequest request)
+        {
+            List<stp_getRELModalidadTecnico_Result> response = new List<stp_getRELModalidadTecnico_Result>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getModalidadTecnicoList(request.intUsuarioID, request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egmT)
+            {
+                Log.EscribeLog("Existe un error en getModalidadTecnicoList : " + egmT.Message, 3, request.mdlUser.vchUsuario);
+            }
+            return response;
+        }
+
+        public ModTecnicoResponse setModalidadTecnico(ModTecnicoRequest request)
+        {
+            ModTecnicoResponse response = new ModTecnicoResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.success = controller.setModalidadTecnico(request.intUsuarioID, request.intModalidadID, request.mdlUser.vchUsuario, ref mensaje);
+                    response.mensaje = mensaje;
+                }
+            }
+            catch(Exception esM)
+            {
+                Log.EscribeLog("Existe un error en setModalidadTecnico: " + esM.Message, 3, request.mdlUser.vchUsuario);
+            }
+            return response;
+        }
+
+        public ModTecnicoResponse setEstatusModalidadTecnico(ModTecnicoRequest request)
+        {
+            ModTecnicoResponse response = new ModTecnicoResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.success = controller.setEstatusModalidadTecnico(request.intRELModTecnicoID, request.mdlUser.vchUsuario, ref mensaje);
+                    response.mensaje = mensaje;
+                }
+            }
+            catch (Exception esM)
+            {
+                Log.EscribeLog("Existe un error en setEstatusModalidadTecnico: " + esM.Message, 3, request.mdlUser.vchUsuario);
+            }
+            return response;
+        }
+
         #endregion AdminUsers
 
         #region Prestacion
@@ -2438,7 +2514,7 @@ namespace Fuji.RISLite.Site.Services
                 if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
                 {
                     RISLiteDataAccess controller = new RISLiteDataAccess();
-                    bandera_actualizacion = controller.UpdateEstatus_Cita(request.mdlUser.vchUsuario, idsitio, idestatus);
+                    bandera_actualizacion = controller.UpdateEstatus_Cita(request.mdlUser, idsitio, idestatus);
                 }
             }
             catch (Exception egU)

@@ -121,6 +121,18 @@ namespace Fuji.RISLite.Site.Services
 
         [OperationContract]
         AdminUserResponse setEstatusUsuario(AdminUserRequest request);
+
+        [OperationContract]
+        List<tbl_CAT_Modalidad> getModalidadTecnico(ModTecnicoRequest request);
+
+        [OperationContract]
+        List<stp_getRELModalidadTecnico_Result> getModalidadTecnicoList(ModTecnicoRequest request);
+
+        [OperationContract]
+        ModTecnicoResponse setModalidadTecnico(ModTecnicoRequest request);
+
+        [OperationContract]
+        ModTecnicoResponse setEstatusModalidadTecnico(ModTecnicoRequest request);
         #endregion AdminUser
 
         #region Prestacion

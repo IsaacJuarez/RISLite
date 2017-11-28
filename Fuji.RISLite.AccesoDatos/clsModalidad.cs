@@ -6,6 +6,7 @@ namespace Fuji.RISLite.Entities
     {
 
         public int intModalidadID { get; set; }
+        public int intRelModTecnico { get; set; }
         public int intSitioID { get; set; }
         public string vchModalidad { get; set; }
         public string vchCodigo { get; set; }
@@ -18,6 +19,7 @@ namespace Fuji.RISLite.Entities
         public clsModalidad()
         {
             intModalidadID = int.MinValue;
+            intRelModTecnico = int.MinValue;
             intSitioID = int.MinValue;
             vchModalidad = string.Empty;
             vchCodigo = string.Empty;

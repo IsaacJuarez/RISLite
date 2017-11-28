@@ -99,7 +99,48 @@ namespace Fuji.RISLite.Site
             }
         }
 
-
+        private void cargaModTecnico(int intSitioID, List<stp_getRELModalidadTecnico_Result> lstGrid)
+        {
+            try
+            {
+                ModTecnicoRequest request = new ModTecnicoRequest();
+                request.mdlUser = Usuario;
+                request.intSitioID = intSitioID;
+                List<tbl_CAT_Modalidad> response = new List<tbl_CAT_Modalidad>();
+                response = RisService.getModalidadTecnico(request);
+                ddlModalidadTecnico.DataSource = null;
+                ddlModalidadTecnico.Items.Clear();
+                if (response != null)
+                {
+                    if (response.Count > 0)
+                    {
+                        if (lstGrid != null)
+                        {
+                            if (lstGrid.Count > 0)
+                            {
+                                ddlModalidadTecnico.DataSource = response.Where(p => !lstGrid.Any(p2 => p2.intModalidadID == p.intModalidadID)).ToList();
+                            }
+                            else
+                            {
+                                ddlModalidadTecnico.DataSource = response;
+                            }
+                        }
+                        else
+                        {
+                            ddlModalidadTecnico.DataSource = response;
+                        }
+                        ddlModalidadTecnico.DataTextField = "vchModalidad";
+                        ddlModalidadTecnico.DataValueField = "intModalidadID";
+                    }
+                    //ddlModalidad.Items.Insert(0, new RadComboBoxItem("Seleccionar Modalidad...", "0"));
+                }
+                ddlModalidadTecnico.DataBind();
+            }
+            catch (Exception eFC)
+            {
+                Log.EscribeLog("Existe un error en cargaModTecnico: " + eFC.Message, 3, "");
+            }
+        }
 
         private void cargaSitiosList()
         {
@@ -1008,6 +1049,20 @@ namespace Fuji.RISLite.Site
                         ibtEstatus.ImageUrl = @"~/Images/ic_action_tick.png";
                     else
                         ibtEstatus.ImageUrl = @"~/Images/ic_action_cancel.png";
+
+
+                    LinkButton lnkBtn = (LinkButton)e.Row.FindControl("btnModalidades");
+                    if (lnkBtn != null)
+                    {
+                        if (_mdl.intTipoUsuario == 3)//Tecnico
+                        {
+                            lnkBtn.Visible = true;
+                        }
+                        else
+                        {
+                            lnkBtn.Visible = false;
+                        }
+                    }
                 }
             }
             catch (Exception eGUP)
@@ -1070,11 +1125,50 @@ namespace Fuji.RISLite.Site
                             }
                         }
                         break;
+                    case "Modalidades":
+                        intUsuarioId = Convert.ToInt32(e.CommandArgument.ToString());
+                        Control ctl = e.CommandSource as Control;
+                        GridViewRow CurrentRow = ctl.NamingContainer as GridViewRow;
+                        int intSitioID = Convert.ToInt32(grvUsuario.DataKeys[CurrentRow.RowIndex].Values["intSitioID"].ToString());
+                        string vchNombre = grvUsuario.DataKeys[CurrentRow.RowIndex].Values["vchNombre"].ToString();
+                        Session["ModTecUserID"] = intUsuarioId;
+                        Session["ModTecSiteID"] = intSitioID;
+                        cargarModalidadesTecnico(intUsuarioId, intSitioID);
+                        lblTecnico.Text = vchNombre;
+                        lblTecnicoID.Text = intUsuarioId.ToString();
+                        ScriptManager.RegisterStartupScript(Page, Page.GetType(), "mdlModalidades", "$('#mdlModalidades').modal();", true);
+                        break;
                 }
             }
             catch (Exception eRU)
             {
                 Log.EscribeLog("Existe un error grvUsuario_RowCommand: " + eRU.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargarModalidadesTecnico(int intUsuarioID, int intSitioID)
+        {
+            try
+            {
+                List<stp_getRELModalidadTecnico_Result> result = new List<stp_getRELModalidadTecnico_Result>();
+                ModTecnicoRequest request = new ModTecnicoRequest();
+                request.mdlUser = Usuario;
+                request.intUsuarioID = intUsuarioID;
+                result = RisService.getModalidadTecnicoList(request);
+                grvModalidadTecnico.DataSource = null;
+                if(result != null)
+                {
+                    if (result.Count > 0)
+                    {
+                        grvModalidadTecnico.DataSource = result;
+                    }
+                }
+                cargaModTecnico(intSitioID, result);
+                grvModalidadTecnico.DataBind();
+            }
+            catch(Exception ecMOT)
+            {
+                Log.EscribeLog("Existe un error en cargarModalidadesTecnico: " + ecMOT.Message, 3, Usuario.vchUsuario);
             }
         }
 
@@ -4713,6 +4807,177 @@ namespace Fuji.RISLite.Site
             catch (Exception eCat)
             {
                 Log.EscribeLog("Existe un error en AjaxPanelModalidadEquipo_AjaxRequest: " + eCat.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void ajaxPanelTecnico_AjaxRequest(object sender, AjaxRequestEventArgs e)
+        {
+
+        }
+
+        protected void btnAddMod_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ModTecnicoResponse response = new ModTecnicoResponse();
+                ModTecnicoRequest request = new ModTecnicoRequest();
+                request.mdlUser = Usuario;
+                request.intModalidadID = Convert.ToInt32(ddlModalidadTecnico.SelectedValue);
+                request.intUsuarioID = Convert.ToInt32(lblTecnicoID.Text);
+                response = RisService.setModalidadTecnico(request);
+                if(response != null)
+                {
+                    if (response.success)
+                    {
+                        int intUsuarioId = Convert.ToInt32(Session["ModTecUserID"]);
+                        int intSitioID = Convert.ToInt32(Session["ModTecSiteID"]);
+                        cargarModalidadesTecnico(intUsuarioId, intSitioID);
+                        ShowMessage("Modalidad agregada.", MessageType.Correcto, "alert_container");
+                    }
+                    else
+                    {
+                        ShowMessage("Verificar la información: " + response.mensaje, MessageType.Advertencia, "alert_container");
+                    }
+                }
+                else
+                {
+                    ShowMessage("Verificar la información.", MessageType.Error, "alert_container");
+                }
+            }
+            catch(Exception ebA)
+            {
+                ShowMessage("Existe un error: " + ebA.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error en btnAddMod_Click : " + ebA.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvModalidadTecnico_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            try
+            {
+                if (e.Row.RowType == DataControlRowType.Pager)
+                {
+                    Label lblTotalNumDePaginas = (Label)e.Row.FindControl("lblBandejaTotal");
+                    lblTotalNumDePaginas.Text = grvModalidadTecnico.PageCount.ToString();
+
+                    TextBox txtIrAlaPagina = (TextBox)e.Row.FindControl("txtBandejaMT");
+                    txtIrAlaPagina.Text = (grvModalidadTecnico.PageIndex + 1).ToString();
+
+                    DropDownList ddlTamPagina = (DropDownList)e.Row.FindControl("ddlBandejaMT");
+                    ddlTamPagina.SelectedValue = grvModalidadTecnico.PageSize.ToString();
+                }
+
+                if (e.Row.RowType != DataControlRowType.DataRow)
+                {
+                    return;
+                }
+
+                if (e.Row.DataItem != null)
+                {
+                    stp_getRELModalidadTecnico_Result _mdl = (stp_getRELModalidadTecnico_Result)e.Row.DataItem;
+                    ImageButton ibtEstatus = (ImageButton)e.Row.FindControl("imbEstatus");
+                    ibtEstatus.Attributes.Add("onclick", "javascript:return confirm('¿Desea quitar la modalidad seleccionada?');");
+                    ibtEstatus.ImageUrl = @"~/Images/ic_action_cancel.png";
+                }
+            }
+            catch (Exception eGUP)
+            {
+                Log.EscribeLog("Existe un error en grvModalidadTecnico_RowDataBound: " + eGUP.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvModalidadTecnico_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            try
+            {
+                if (e.NewPageIndex >= 0)
+                {
+                    this.grvModalidadTecnico.PageIndex = e.NewPageIndex;
+                    cargarModalidadesTecnico(Convert.ToInt32(Session["ModTecUserID"]), Convert.ToInt32(Session["ModTecSiteID"]));
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.EscribeLog("Existe un error grvModalidadTecnico_PageIndexChanging: " + ex.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvModalidadTecnico_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            try
+            {
+                int intRELModTecnicoID = 0;
+                clsPrestacion mdl = new clsPrestacion();
+                switch (e.CommandName)
+                {
+                    case "Estatus":
+                        intRELModTecnicoID = Convert.ToInt32(e.CommandArgument.ToString());
+                        ModTecnicoRequest request = new ModTecnicoRequest();
+                        ModTecnicoResponse response = new ModTecnicoResponse();
+                        request.mdlUser = Usuario;
+                        request.intRELModTecnicoID = intRELModTecnicoID;
+                        response = RisService.setEstatusModalidadTecnico(request);
+                        if (response != null)
+                        {
+                            if (response.success)
+                            {
+                                ShowMessage("Se actualizó correctamente.", MessageType.Correcto, "alert_container");
+                                cargarModalidadesTecnico(Convert.ToInt32(Session["ModTecUserID"]), Convert.ToInt32(Session["ModTecSiteID"]));
+                            }
+                            else
+                            {
+                                ShowMessage("Existe un error al actualizar: " + response.mensaje, MessageType.Error, "alert_container");
+                            }
+                        }
+                        else
+                        {
+                            ShowMessage("Existe un error al actualizar, favor de revisar la información. ", MessageType.Advertencia, "alert_container");
+                        }
+                        break;
+                }
+            }
+            catch (Exception eRU)
+            {
+                ShowMessage("Existe un error al actualizar, favor de revisar la información: " + eRU.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error grvModalidadTecnico_RowCommand: " + eRU.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void ddlBandejaMT_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                DropDownList dropDownList = (DropDownList)sender;
+                if (int.Parse(dropDownList.SelectedValue) != 0)
+                {
+                    this.grvModalidadTecnico.AllowPaging = true;
+                    this.grvModalidadTecnico.PageSize = int.Parse(dropDownList.SelectedValue);
+                }
+                else
+                    this.grvModalidadTecnico.AllowPaging = false;
+                this.cargarModalidadesTecnico(Convert.ToInt32(Session["ModTecUserID"]), Convert.ToInt32(Session["ModTecSiteID"]));
+            }
+            catch (Exception eddS)
+            {
+                Log.EscribeLog("Existe un error ddlBandejaMT_SelectedIndexChanged de frmConfiguracion: " + eddS.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void txtBandejaMT_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                TextBox txtBandejaAvaluosGoToPage = (TextBox)sender;
+                int numeroPagina;
+                if (int.TryParse(txtBandejaAvaluosGoToPage.Text.Trim(), out numeroPagina))
+                    this.grvModalidadTecnico.PageIndex = numeroPagina - 1;
+                else
+                    this.grvModalidadTecnico.PageIndex = 0;
+                this.cargarModalidadesTecnico(Convert.ToInt32(Session["ModTecUserID"]), Convert.ToInt32(Session["ModTecSiteID"]));
+            }
+            catch (Exception ex)
+            {
+                Log.EscribeLog("Existe un error txtBandejaMT_TextChanged de frmConfiguracion: " + ex.Message, 3, Usuario.vchUsuario);
             }
         }
     }

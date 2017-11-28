@@ -136,6 +136,18 @@
                     <telerik:AjaxUpdatedControl ControlID="grvAdicional" />
                 </UpdatedControls>
             </telerik:AjaxSetting>
+            <telerik:AjaxSetting AjaxControlID="grvUsuario">
+                <UpdatedControls>
+                    <telerik:AjaxUpdatedControl ControlID="ddlModalidadTecnico" />
+                    <telerik:AjaxUpdatedControl ControlID="grvModalidadTecnico" />
+                </UpdatedControls>
+            </telerik:AjaxSetting>
+            <telerik:AjaxSetting AjaxControlID="btnAddMod">
+                <UpdatedControls>
+                    <telerik:AjaxUpdatedControl ControlID="ddlModalidadTecnico" />
+                    <telerik:AjaxUpdatedControl ControlID="grvModalidadTecnico" />
+                </UpdatedControls>
+            </telerik:AjaxSetting>
         </AjaxSettings>
     </telerik:RadAjaxManager>
 
@@ -438,7 +450,7 @@
                                                         <asp:Panel runat="server">
                                                             <asp:GridView ID="grvUsuario" runat="server" AllowPaging="true" CssClass="table table-striped table-bordered"
                                                                 PageSize="10" AutoGenerateColumns="false" OnRowDataBound="grvUsuario_RowDataBound" Font-Size="10px"
-                                                                OnPageIndexChanging="grvUsuario_PageIndexChanging" DataKeyNames="intUsuarioID" OnRowCancelingEdit="grvUsuario_RowCancelingEdit"
+                                                                OnPageIndexChanging="grvUsuario_PageIndexChanging" DataKeyNames="intUsuarioID,intSitioID,vchNombre" OnRowCancelingEdit="grvUsuario_RowCancelingEdit"
                                                                 OnRowCommand="grvUsuario_RowCommand" OnRowEditing="grvUsuario_RowEditing" OnRowUpdating="grvUsuario_RowUpdating"
                                                                 EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
                                                                 <Columns>
@@ -492,6 +504,13 @@
                                                                                     <i class="fa fa-ban" aria-hidden="true" title="Cancelar" style="font-size:25px;"></i>
                                                                             </asp:LinkButton>
                                                                         </EditItemTemplate>
+                                                                    </asp:TemplateField>
+                                                                    <asp:TemplateField HeaderText="Modalidades" ItemStyle-HorizontalAlign="Center">
+                                                                        <ItemTemplate>
+                                                                            <asp:LinkButton ID="btnModalidades" CausesValidation="false" CommandName="Modalidades" CommandArgument='<%#Eval("intUsuarioID") %>' runat="server">
+                                                                                    <i class="fa fa-stethoscope" aria-hidden="true" title="Editar" style="font-size:25px;"></i>
+                                                                            </asp:LinkButton>
+                                                                        </ItemTemplate>
                                                                     </asp:TemplateField>
                                                                     <asp:TemplateField HeaderText="Estatus" ItemStyle-HorizontalAlign="Center">
                                                                         <ItemTemplate>
@@ -1998,6 +2017,101 @@
     </div>
     <!-- /modals -->
 
+    <!-- modals -->
+    <div class="modal fade bs-example-modal-sm" id="mdlModalidades" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" style="width:50%">
+            <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="mdlEstudiosLabel">Modalidades del Técnico</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row form-group">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <asp:UpdatePanel runat="server">
+                            <ContentTemplate>
+                                <asp:Label ID="lblTecnicoID" runat="server" Text="" ForeColor="DarkGreen" Visible="false" Font-Bold="true" ></asp:Label>
+                                <asp:Label ID="lblTecnico" runat="server" Text="" ForeColor="DarkGreen" Font-Bold="true" ></asp:Label>
+                            </ContentTemplate>
+                        </asp:UpdatePanel>
+                    </div>
+                </div>
+                <div class="row form-group">                    
+                    <div class="col-lg-9 col-md-12 col-sm-12">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-12 col-sm-12">
+                                <asp:Label runat="server" Text="Modalidades:" ForeColor="DarkGreen" ></asp:Label>
+                            </div>
+                            <div class="col-lg-8 col-md-12 col-sm-12">
+                                <telerik:RadComboBox runat="server" ID="ddlModalidadTecnico" RenderMode="Lightweight" Width="100%" ForeColor="DarkGreen" OnClientSelectedIndexChanged="comboTecnico_Mod"></telerik:RadComboBox>
+                            </div>
+                        </div>                        
+                    </div>
+                    <div class="col-lg-3 col-md-12 col-sm-12">
+                        <asp:LinkButton runat="server" ID="btnAddMod" OnClick="btnAddMod_Click" CssClass="btn btn-success" Text="Agregar" ToolTip="Agregar Modalidad">
+                            <span aria-hidden="true" class="fa fa-plus"></span>Agregar
+                        </asp:LinkButton>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <telerik:RadAjaxPanel runat="server" ID="ajaxPanelTecnico" OnAjaxRequest="ajaxPanelTecnico_AjaxRequest">
+                            <asp:GridView ID="grvModalidadTecnico" runat="server" AllowPaging="true" CssClass="table table-striped table-bordered"
+                                PageSize="10" AutoGenerateColumns="false" OnRowDataBound="grvModalidadTecnico_RowDataBound" Font-Size="10px"
+                                OnPageIndexChanging="grvModalidadTecnico_PageIndexChanging" DataKeyNames="intRELModTecnicoID" 
+                                OnRowCommand="grvModalidadTecnico_RowCommand" 
+                                EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
+                                <Columns>
+                                    <asp:TemplateField HeaderText="Nombre">
+                                        <ItemTemplate>
+                                            <asp:Label runat="server" ID="lblNombreModalidadTec" Text='<%#Eval("vchModalidad") %>' />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Eliminar" ItemStyle-HorizontalAlign="Center">
+                                        <ItemTemplate>
+                                            <asp:ImageButton ID="imbEstatus" runat="server" BackColor="Transparent" Height="25px" Width="25px"
+                                                CommandArgument='<%#Eval("intRELModTecnicoID") %>' CommandName="Estatus" ToolTip="Cambia el estatus del Sitio" />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                </Columns>
+                                <PagerTemplate>
+                                    <asp:Label ID="lblTemplate" runat="server" Text="Muestra Filas: " CssClass="Label" />
+                                    <asp:DropDownList ID="ddlBandejaMT" runat="server" AutoPostBack="true" CausesValidation="false"
+                                        Enabled="true" OnSelectedIndexChanged="ddlBandejaMT_SelectedIndexChanged">
+                                        <asp:ListItem Value="10" />
+                                        <asp:ListItem Value="15" />
+                                        <asp:ListItem Value="20" />
+                                    </asp:DropDownList>
+                                    &nbsp;Página
+                                        <asp:TextBox ID="txtBandejaMT" runat="server" AutoPostBack="true" OnTextChanged="txtBandejaMT_TextChanged"
+                                            Width="40" MaxLength="10" />
+                                    de
+                                        <asp:Label ID="lblBandejaTotal" runat="server" />
+                                    &nbsp;
+                                        <asp:Button ID="btnBandeja_I" runat="server" CommandName="Page" CausesValidation="false"
+                                            ToolTip="Página Anterior" CommandArgument="Prev" CssClass="previous" />
+                                    <asp:Button ID="btnBandeja_II" runat="server" CommandName="Page" CausesValidation="false"
+                                        ToolTip="Página Siguiente" CommandArgument="Next" CssClass="next" />
+                                </PagerTemplate>
+                                <HeaderStyle CssClass="headerstyle" />
+                                <FooterStyle CssClass="text-center" />
+                                <PagerStyle CssClass="text-center" />
+                            </asp:GridView>
+                        </telerik:RadAjaxPanel>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <asp:Button runat="server" ID="btnCancelMod" class="btn btn-default" Text="Cerrar" data-dismiss="modal"></asp:Button>
+            </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- /modals -->
+
     <script type="text/javascript">
         $(function () {
             var tabName = $("[id*=TabName]").val() != "" ? $("[id*=TabName]").val() : "SitiosConfig";
@@ -2093,6 +2207,10 @@
 
             function ddlSitioModEquipo_SelectedIndexChanged(sender, eventArgs) {
                 $find('<%= AjaxPanelModalidadEquipo.ClientID%>').ajaxRequestWithTarget('<%= AjaxPanelModalidadEquipo.UniqueID %>', '');
+            }
+
+            function comboTecnico_Mod(sender, eventArgs) {
+                $find('<%= ajaxPanelTecnico.ClientID%>').ajaxRequestWithTarget('<%= ajaxPanelTecnico.UniqueID %>', '');
             }
         </script>
     </telerik:RadScriptBlock>
