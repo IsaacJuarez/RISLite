@@ -272,19 +272,6 @@ namespace Fuji.RISLite.Entidades.DataBase
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getCitas_Result>("stp_getCitas", vchNombreParameter, intModalidadIDParameter, datFechaInicioParameter, datFechaFinParameter, intSitioIDParameter);
         }
     
-        public virtual ObjectResult<stp_getBusquedaPacienteList_Result> stp_getBusquedaPacienteList(string vchCadena, Nullable<int> intSitioID)
-        {
-            var vchCadenaParameter = vchCadena != null ?
-                new ObjectParameter("vchCadena", vchCadena) :
-                new ObjectParameter("vchCadena", typeof(string));
-    
-            var intSitioIDParameter = intSitioID.HasValue ?
-                new ObjectParameter("intSitioID", intSitioID) :
-                new ObjectParameter("intSitioID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getBusquedaPacienteList_Result>("stp_getBusquedaPacienteList", vchCadenaParameter, intSitioIDParameter);
-        }
-    
         public virtual ObjectResult<stp_getEstudiosPaciente_Result> stp_getEstudiosPaciente(Nullable<int> intPacienteID)
         {
             var intPacienteIDParameter = intPacienteID.HasValue ?
@@ -378,6 +365,24 @@ namespace Fuji.RISLite.Entidades.DataBase
                 new ObjectParameter("intEstatusSitio", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getGraficaUsuario_Result>("stp_getGraficaUsuario", intIdSitioParameter, intUsuarioIDParameter, datFechaInicioParameter, datFechaFinParameter, intEstatusSitioParameter);
+        }
+    
+        public virtual ObjectResult<stp_getBusquedaPacienteList_Result> stp_getBusquedaPacienteList(string vchCadena, Nullable<int> intSitioID)
+        {
+            var vchCadenaParameter = vchCadena != null ?
+                new ObjectParameter("vchCadena", vchCadena) :
+                new ObjectParameter("vchCadena", typeof(string));
+    
+            var intSitioIDParameter = intSitioID.HasValue ?
+                new ObjectParameter("intSitioID", intSitioID) :
+                new ObjectParameter("intSitioID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getBusquedaPacienteList_Result>("stp_getBusquedaPacienteList", vchCadenaParameter, intSitioIDParameter);
+        }
+    
+        public virtual ObjectResult<string> stp_updateCita()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("stp_updateCita");
         }
     }
 }

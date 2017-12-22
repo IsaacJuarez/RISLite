@@ -63,6 +63,7 @@
                                     <asp:BoundField DataField="vchApellidos"  HeaderText="NSS" ReadOnly="true" />
                                     <asp:BoundField DataField="vchNombre"  HeaderText="Nombre" ReadOnly="true" />
                                     <asp:BoundField DataField="datFechaNac" dataformatstring="{0:dd/MM/yyyy}" HeaderText="Fecha de Nacimiento" ReadOnly="true" />
+                                    <asp:BoundField DataField="vchNombreSitio" HeaderText="Sitio" ReadOnly="true" />
                                     <asp:TemplateField HeaderText="Detalle" ItemStyle-HorizontalAlign="Center">
                                         <ItemTemplate>
                                             <asp:LinkButton ID="imbDetalle" runat="server" BackColor="Transparent"  Height="25px" Width="25px" 

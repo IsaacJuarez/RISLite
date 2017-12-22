@@ -7,6 +7,7 @@ namespace Fuji.RISLite.Entities
         public int intPacienteID { get; set; }
         public int intGeneroID { get; set; } 
         public int intSitioID { get; set; }
+        public string vchNombreSitio { get; set; }
         public  string vchGenero { get; set; }
         public  string vchNombre { get; set; }
         public string vchApellidos { get; set; }
@@ -20,6 +21,7 @@ namespace Fuji.RISLite.Entities
             intPacienteID = int.MinValue;
             intGeneroID = int.MinValue;
             intSitioID = int.MinValue;
+            vchNombreSitio = string.Empty;
             vchGenero = string.Empty;
             vchNombre = string.Empty;
             vchApellidos = string.Empty;

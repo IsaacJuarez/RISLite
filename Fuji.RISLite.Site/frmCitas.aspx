@@ -49,7 +49,7 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12">
-                                <table style="width:100%">
+                                <table style="width:50%">
                                     <tr>
                                         <td style="width:40%">
                                             <asp:TextBox runat="server" ID="Date1" autocomplete="off" CssClass="form-control" Width="100%" Enabled="false" Font-Size="Small"/>
@@ -69,6 +69,10 @@
                                         </td>
                                     </tr>
                                 </table>
+                                <telerik:RadDatePicker RenderMode="Lightweight" ID="radCalInicio" Width="80%" runat="server" DateInput-Label="Fecha Inicio">
+                                </telerik:RadDatePicker>
+                                <telerik:RadDatePicker RenderMode="Lightweight" ID="radCalFin" Width="80%" runat="server" DateInput-Label="Fecha Fin">
+                                </telerik:RadDatePicker>
                             </div>
                         </div>
                     </div>

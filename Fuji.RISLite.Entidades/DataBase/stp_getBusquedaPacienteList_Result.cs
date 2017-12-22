@@ -17,5 +17,7 @@ namespace Fuji.RISLite.Entidades.DataBase
         public string vchNombre { get; set; }
         public Nullable<System.DateTime> datFechaNac { get; set; }
         public string NSS { get; set; }
+        public Nullable<int> intSitioID { get; set; }
+        public string vchNombreSitio { get; set; }
     }
 }

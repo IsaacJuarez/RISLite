@@ -3151,6 +3151,8 @@ namespace Fuji.RISLite.DataAccess
                                 mdl.vchNombre = item.vchNombre;
                                 mdl.datFechaNac = (DateTime)item.datFechaNac;
                                 mdl.vchApellidos = item.NSS;
+                                mdl.intSitioID = (int)item.intSitioID;
+                                mdl.vchNombreSitio = item.vchNombreSitio;
                                 lst.Add(mdl);
                             }
                         }
@@ -5502,6 +5504,21 @@ namespace Fuji.RISLite.DataAccess
                 Log.EscribeLog("Existe un error en setEstatusUsuario: " + eSU.Message, 3, user);
             }
             return valido;
+        }
+
+        public void updateEstatusCitaAutomatica(string user)
+        {
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    var query = dbRisDA.stp_updateCita();
+                }
+            }
+            catch(Exception esEC)
+            {
+                Log.EscribeLog("Existe un error en updateEstatusCita: " + esEC.Message, 3, user);
+            }
         }
         #endregion CitasGrid
 

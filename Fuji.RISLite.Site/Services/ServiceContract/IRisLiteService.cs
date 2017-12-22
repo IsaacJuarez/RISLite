@@ -316,6 +316,9 @@ namespace Fuji.RISLite.Site.Services
 
         [OperationContract]
         CitaReporteResponse setEstatusEstudio(CitaReporteRequest request);
+
+        [OperationContract]
+        void updateEstatusCitaAutomatica(string user);
         #endregion CitaReporte
 
         #region Perfil

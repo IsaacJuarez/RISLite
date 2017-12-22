@@ -130,6 +130,7 @@
     <Content Include="Iconos\01_HOSPITALIZACION_VERDE.png" />
     <Content Include="Images\CR.png" />
     <Content Include="Images\CT.png" />
+    <Content Include="Images\Excel_XLSX.png" />
     <Content Include="Images\faviconF.ico" />
     <Content Include="Images\fujifilm %281%29.png" />
     <Content Include="Images\Fujifilm.png" />

@@ -48,6 +48,7 @@ namespace Fuji.RISLite.Site
                                 if (Usuario != null)
                                 {
                                     cargaFormaDetalle();
+                                    cargarPacientes("");
                                 }
                                 else
                                 {

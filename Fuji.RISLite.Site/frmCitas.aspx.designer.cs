@@ -112,6 +112,24 @@ namespace Fuji.RISLite.Site {
         protected global::AjaxControlToolkit.CalendarExtender customCalendarExtender2;
         
         /// <summary>
+        /// Control radCalInicio.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadDatePicker radCalInicio;
+        
+        /// <summary>
+        /// Control radCalFin.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadDatePicker radCalFin;
+        
+        /// <summary>
         /// Control btnBuscarCita.
         /// </summary>
         /// <remarks>

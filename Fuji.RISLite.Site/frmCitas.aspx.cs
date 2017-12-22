@@ -14,6 +14,7 @@ using System.Net.Mail;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Telerik.Web.UI;
 
 namespace Fuji.RISLite.Site
 {
@@ -101,8 +102,13 @@ namespace Fuji.RISLite.Site
                                     Usuario = (clsUsuario)Session["User"];
                                     if (Usuario != null)
                                     {
+                                        RisService.updateEstatusCitaAutomatica(Usuario.vchUsuario);
                                         customCalendarExtender.SelectedDate = Convert.ToDateTime("2017-01-01");
+                                        Date1.Text = "2017-01-01";
+                                        //radCalInicio.SelectedDate = Convert.ToDateTime("2017-01-01");
                                         customCalendarExtender2.SelectedDate = DateTime.Now.AddDays(7);
+                                        Date2.Text = DateTime.Now.AddDays(7).ToString("yyyy-MM-dd");
+                                        //radCalFin.SelectedDate = DateTime.Now.AddDays(7);
                                         cargarModalidad();
                                         cargarCitas(1);
                                     }
@@ -161,10 +167,10 @@ namespace Fuji.RISLite.Site
                         ddlModalidadBuesqueda.DataSource = response.Where(x => x.intSitioID == Usuario.intSitioID);
                         ddlModalidadBuesqueda.DataTextField = "vchModalidad";
                         ddlModalidadBuesqueda.DataValueField = "intModalidadID";
-                        //ddlModalidadEquipo.Items.Insert(0, new RadComboBoxItem("Seleccionar Modalidad...", "0"));
                     }
                 }
                 ddlModalidadBuesqueda.DataBind();
+                ddlModalidadBuesqueda.Items.Insert(0, new RadComboBoxItem("Todas...", "0"));
             }
             catch (Exception ecM)
             {
@@ -209,7 +215,7 @@ namespace Fuji.RISLite.Site
             }
             catch (Exception eOBC)
             {
-                Log.EscribeLog("Existe un error en obtenerBusquedaCita: " + eOBC.Message, 3, Usuario.vchUsuario);
+                Log.EscribeLog("Existe un error en obtenerBusquedaCitaDefault: " + eOBC.Message, 3, Usuario.vchUsuario);
             }
             return busqueda;
         }

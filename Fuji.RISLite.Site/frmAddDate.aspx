@@ -913,38 +913,41 @@
                                                         <asp:Label runat="server" ID="Label5" Text="Días" ForeColor="DarkGreen"></asp:Label>
                                                     </div>
                                                     <div class="col-lg-10 col-md-10 col-sm-10">
-                                                        <table style="width: 100%">
-                                                            <tr>
-                                                                <td style="width: 14%">
-                                                                    <telerik:RadCheckBox runat="server" ID="chkLunes" ToolTip="Lunes" Text="Lunes">
-                                                                    </telerik:RadCheckBox>
-                                                                </td>
-                                                                <td style="width: 14%">
-                                                                    <telerik:RadCheckBox runat="server" ID="chkMartes" ToolTip="Martes" Text="Martes">
-                                                                    </telerik:RadCheckBox>
-                                                                </td>
-                                                                <td style="width: 14%">
-                                                                    <telerik:RadCheckBox runat="server" ID="chkMiercoles" ToolTip="Miercoles" Text="Miercoles">
-                                                                    </telerik:RadCheckBox>
-                                                                </td>
-                                                                <td style="width: 14%">
-                                                                    <telerik:RadCheckBox runat="server" ID="chkJueves" ToolTip="Jueves" Text="Jueves">
-                                                                    </telerik:RadCheckBox>
-                                                                </td>
-                                                                <td style="width: 14%">
-                                                                    <telerik:RadCheckBox runat="server" ID="chkViernes" ToolTip="Viernes" Text="Viernes">
-                                                                    </telerik:RadCheckBox>
-                                                                </td>
-                                                                <td style="width: 14%">
-                                                                    <telerik:RadCheckBox runat="server" ID="chkSabado" ToolTip="Sábado" Text="Sábado">
-                                                                    </telerik:RadCheckBox>
-                                                                </td>
-                                                                <td style="width: 14%">
-                                                                    <telerik:RadCheckBox runat="server" ID="chkDomingo" ToolTip="Domingo" Text="Domingo">
-                                                                    </telerik:RadCheckBox>
-                                                                </td>
-                                                            </tr>
-                                                        </table>
+                                                        <div class="row">
+                                                            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                                                                <telerik:RadCheckBox runat="server" ID="chkLunes" ToolTip="Lunes" Text="Lunes">
+                                                                </telerik:RadCheckBox>
+                                                            </div>
+                                                            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                                                                <telerik:RadCheckBox runat="server" ID="chkMartes" ToolTip="Martes" Text="Martes">
+                                                                </telerik:RadCheckBox>
+                                                            </div>
+                                                            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                                                                <telerik:RadCheckBox runat="server" ID="chkMiercoles" ToolTip="Miércoles" Text="Martes">
+                                                                </telerik:RadCheckBox>
+                                                            </div>
+                                                            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                                                                <telerik:RadCheckBox runat="server" ID="chkJueves" ToolTip="Jueves" Text="Jueves">
+                                                                </telerik:RadCheckBox>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                                                                <telerik:RadCheckBox runat="server" ID="chkViernes" ToolTip="Viernes" Text="Viernes">
+                                                                </telerik:RadCheckBox>
+                                                            </div>
+                                                            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                                                                <telerik:RadCheckBox runat="server" ID="chkSabado" ToolTip="Sábado" Text="Sábado">
+                                                                </telerik:RadCheckBox>
+                                                            </div>
+                                                            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                                                                <telerik:RadCheckBox runat="server" ID="chkDomingo" ToolTip="Domingo" Text="Domingo">
+                                                                </telerik:RadCheckBox>
+                                                            </div>
+                                                            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <asp:UpdatePanel runat="server">

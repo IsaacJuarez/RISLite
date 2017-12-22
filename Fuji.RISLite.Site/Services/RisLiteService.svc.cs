@@ -2485,6 +2485,19 @@ namespace Fuji.RISLite.Site.Services
             }
             return response;
         }
+
+        public void updateEstatusCitaAutomatica(string user)
+        {
+            try
+            {
+                RISLiteDataAccess controller = new RISLiteDataAccess();
+                controller.updateEstatusCitaAutomatica(user);
+            }
+            catch (Exception egS)
+            {
+                Log.EscribeLog("Existe un error en updateEstatusCitaAutomatica: " + egS.Message, 3, "");
+            }
+        }
         #endregion CitasGrid
 
         #region ListadeTrabajo
