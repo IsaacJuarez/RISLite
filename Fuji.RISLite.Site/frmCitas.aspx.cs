@@ -103,12 +103,12 @@ namespace Fuji.RISLite.Site
                                     if (Usuario != null)
                                     {
                                         RisService.updateEstatusCitaAutomatica(Usuario.vchUsuario);
-                                        customCalendarExtender.SelectedDate = Convert.ToDateTime("2017-01-01");
-                                        Date1.Text = "2017-01-01";
-                                        //radCalInicio.SelectedDate = Convert.ToDateTime("2017-01-01");
-                                        customCalendarExtender2.SelectedDate = DateTime.Now.AddDays(7);
-                                        Date2.Text = DateTime.Now.AddDays(7).ToString("yyyy-MM-dd");
-                                        //radCalFin.SelectedDate = DateTime.Now.AddDays(7);
+                                        //customCalendarExtender.SelectedDate = Convert.ToDateTime("2017-01-01");
+                                        //Date1.Text = "2017-01-01";
+                                        RadDatePicker1.SelectedDate = Convert.ToDateTime("2017-01-01");
+                                        //customCalendarExtender2.SelectedDate = DateTime.Now.AddDays(7);
+                                        //Date2.Text = DateTime.Now.AddDays(7).ToString("yyyy-MM-dd");
+                                        RadDatePicker2.SelectedDate = DateTime.Now.AddDays(7);
                                         cargarModalidad();
                                         cargarCitas(1);
                                     }
@@ -208,8 +208,8 @@ namespace Fuji.RISLite.Site
             clsEstudioCita busqueda = new clsEstudioCita();
             try
             {
-                busqueda.datFechaCita = Convert.ToDateTime(Date1.Text);
-                busqueda.datFechaCitaFin = Convert.ToDateTime(Date2.Text);
+                busqueda.datFechaCita = Convert.ToDateTime(RadDatePicker1.SelectedDate);
+                busqueda.datFechaCitaFin = Convert.ToDateTime(RadDatePicker2.SelectedDate);
                 busqueda.vchNombrePaciente = txtNombreBus.Text;
                 busqueda.intModalidadID = Convert.ToInt32(ddlModalidadBuesqueda.SelectedValue);
             }
@@ -230,7 +230,7 @@ namespace Fuji.RISLite.Site
                 busqueda.vchNombrePaciente = txtNombreBus.Text;
                 busqueda.intModalidadID = Convert.ToInt32(ddlModalidadBuesqueda.SelectedValue);
             }
-            catch(Exception eOBC)
+            catch (Exception eOBC)
             {
                 Log.EscribeLog("Existe un error en obtenerBusquedaCita: " + eOBC.Message, 3, Usuario.vchUsuario);
             }
@@ -270,7 +270,7 @@ namespace Fuji.RISLite.Site
             {
                 cargarCitas(2);
             }
-            catch(Exception eARC)
+            catch (Exception eARC)
             {
                 Log.EscribeLog("Existe un error en ajaxPanelCitas_AjaxRequest: " + eARC.Message, 3, Usuario.vchUsuario);
             }
@@ -327,6 +327,115 @@ namespace Fuji.RISLite.Site
                             ibtEstatus.Visible = false;
                         }
                     }
+
+                    LinkButton boton_entrega = (LinkButton)e.Row.FindControl("btnentrega");
+                    LinkButton boton_agregar = (LinkButton)e.Row.FindControl("btnagregar");
+                    LinkButton boton_renviarEMail = (LinkButton)e.Row.FindControl("btnReEmail");
+                    LinkButton boton_imprimir = (LinkButton)e.Row.FindControl("btnImprimir");
+                    LinkButton boton_cancelar = (LinkButton)e.Row.FindControl("btncancelar");
+
+                    int Estatus_ = Convert.ToInt32(_mdl.intEstatusEstudio);
+
+                    switch (Estatus_)
+                    {
+                        case 1:
+                            boton_entrega.Enabled = true;
+                            boton_entrega.Visible = true;
+                            boton_agregar.Enabled = true;
+                            boton_agregar.Visible = true;
+                            boton_renviarEMail.Enabled = true;
+                            boton_renviarEMail.Visible = true;
+                            boton_imprimir.Enabled = true;
+                            boton_imprimir.Visible = true;
+                            boton_cancelar.Enabled = false;
+                            boton_cancelar.Visible = false;
+                            break;
+                        case 2:
+                            boton_entrega.Enabled = true;
+                            boton_entrega.Visible = true;
+                            boton_agregar.Enabled = true;
+                            boton_agregar.Visible = true;
+                            boton_renviarEMail.Enabled = false;
+                            boton_renviarEMail.Visible = false;
+                            boton_imprimir.Enabled = false;
+                            boton_imprimir.Visible = false;
+                            boton_cancelar.Enabled = false;
+                            boton_cancelar.Visible = false;
+                            break;
+                        case 3:
+                            boton_entrega.Enabled = false;
+                            boton_entrega.Visible = false;
+                            boton_agregar.Enabled = false;
+                            boton_agregar.Visible = false;
+                            boton_renviarEMail.Enabled = false;
+                            boton_renviarEMail.Visible = false;
+                            boton_imprimir.Enabled = false;
+                            boton_imprimir.Visible = false;
+                            boton_cancelar.Enabled = false;
+                            boton_cancelar.Visible = false;
+                            break;
+                        case 4:
+                            boton_entrega.Enabled = false;
+                            boton_entrega.Visible = false;
+                            boton_agregar.Enabled = false;
+                            boton_agregar.Visible = false;
+                            boton_renviarEMail.Enabled = false;
+                            boton_renviarEMail.Visible = false;
+                            boton_imprimir.Enabled = false;
+                            boton_imprimir.Visible = false;
+                            boton_cancelar.Enabled = false;
+                            boton_cancelar.Visible = false;
+                            break;
+                        case 5:
+                            boton_entrega.Enabled = false;
+                            boton_entrega.Visible = false;
+                            boton_agregar.Enabled = false;
+                            boton_agregar.Visible = false;
+                            boton_renviarEMail.Enabled = false;
+                            boton_renviarEMail.Visible = false;
+                            boton_imprimir.Enabled = false;
+                            boton_imprimir.Visible = false;
+                            boton_cancelar.Enabled = false;
+                            boton_cancelar.Visible = false;
+                            break;
+                        case 6:
+                            boton_entrega.Enabled = false;
+                            boton_entrega.Visible = false;
+                            boton_agregar.Enabled = false;
+                            boton_agregar.Visible = false;
+                            boton_renviarEMail.Enabled = false;
+                            boton_renviarEMail.Visible = false;
+                            boton_imprimir.Enabled = false;
+                            boton_imprimir.Visible = false;
+                            boton_cancelar.Enabled = false;
+                            boton_cancelar.Visible = false;
+                            break;
+                        case 7:
+                            boton_entrega.Enabled = false;
+                            boton_entrega.Visible = false;
+                            boton_agregar.Enabled = false;
+                            boton_agregar.Visible = false;
+                            boton_renviarEMail.Enabled = false;
+                            boton_renviarEMail.Visible = false;
+                            boton_imprimir.Enabled = true;
+                            boton_imprimir.Visible = true;
+                            boton_cancelar.Enabled = true;
+                            boton_cancelar.Visible = true;
+                            break;
+                        case 8:
+                            boton_entrega.Enabled = false;
+                            boton_entrega.Visible = false;
+                            boton_agregar.Enabled = false;
+                            boton_agregar.Visible = false;
+                            boton_renviarEMail.Enabled = false;
+                            boton_renviarEMail.Visible = false;
+                            boton_imprimir.Enabled = true;
+                            boton_imprimir.Visible = true;
+                            boton_cancelar.Enabled = true;
+                            boton_cancelar.Visible = true;
+                            break;
+                    }
+
                 }
             }
             catch (Exception eGUP)
@@ -399,6 +508,78 @@ namespace Fuji.RISLite.Site
                         {
                             ShowMessage("Verificar la información.", MessageType.Error, "alert_container");
                         }
+                        break;
+                    case "Cancelar":
+                        intEstudioID = Convert.ToInt32(e.CommandArgument.ToString());
+                        CitaReporteResponse response_canc = new CitaReporteResponse();
+                        CitaReporteRequest request_canc = new CitaReporteRequest();
+                        request_canc.mdlUser = Usuario;
+                        request_canc.intEstatusID = 7;
+                        request_canc.intEstudioID = intEstudioID;
+                        response_canc = RisService.setEstatusEstudio(request_canc);
+                        if (response_canc != null)
+                        {
+                            if (response_canc.Success)
+                            {
+                                ShowMessage("Se marcó el estudio cancelado.", MessageType.Correcto, "alert_container");
+                                cargarCitas(2);
+                            }
+                            else
+                            {
+                                ShowMessage("Verificar la información de cancelado: " + response_canc.Mensaje, MessageType.Advertencia, "alert_container");
+                            }
+                        }
+                        else
+                        {
+                            ShowMessage("Verificar la información de cancelado.", MessageType.Error, "alert_container");
+                        }
+                        break;
+                    case "Entrega":
+                        intEstudioID = Convert.ToInt32(e.CommandArgument.ToString());
+                        CitaReporteResponse response_entrega = new CitaReporteResponse();
+                        CitaReporteRequest request_entrega = new CitaReporteRequest();
+                        request_entrega.mdlUser = Usuario;
+                        request_entrega.intEstatusID = 2;
+                        request_entrega.intEstudioID = intEstudioID;
+                        //response_entrega = RisService.setEstatusEstudio(request_entrega);
+                        if (response_entrega != null)
+                        {
+                            if (response_entrega.Success)
+                            {
+                                ShowMessage("Se entrego el estudio.", MessageType.Correcto, "alert_container");
+                                cargarCitas(2);
+                            }
+                            else
+                            {
+                                ShowMessage("Verificar la información de entregado: " + response_entrega.Mensaje, MessageType.Advertencia, "alert_container");
+                            }
+                        }
+                        else
+                        {
+                            ShowMessage("Verificar la información de entregado.", MessageType.Error, "alert_container");
+                        }
+                        break;
+                    case "Agregar":
+                        //intEstudioID = Convert.ToInt32(e.CommandArgument.ToString());
+                        //string[] lista_par_estudio = e.CommandArgument.ToString().Split('|') ;
+                        //string idestudio = lista_par_estudio[0];
+                        //string idcita = lista_par_estudio[1];
+
+                        //int index = grvCitas.SelectedIndex;
+                        //string ss = grvCitas.DataKeys[].Values[0];
+                        //string idestudio = grvCitas.DataKeys[index].Value.ToString();
+
+
+
+                        Control ctl = e.CommandSource as Control;
+                        GridViewRow CurrentRow = ctl.NamingContainer as GridViewRow;
+                        string _intEstudioID = grvCitas.DataKeys[CurrentRow.RowIndex].Values["intEstudioID"].ToString();
+                        //string vchNombre = grvUsuario.DataKeys[CurrentRow.RowIndex].Values["vchNombre"].ToString();
+
+
+                        string par_citas = e.CommandArgument.ToString();
+                        string busqueda = Security.Encrypt(_intEstudioID + "|" + par_citas.ToString());
+                        Response.Redirect(URL + "/frmAddDate.aspx?var=" + busqueda, true);
                         break;
                 }
             }
@@ -653,6 +834,21 @@ namespace Fuji.RISLite.Site
             catch (Exception ex)
             {
                 Log.EscribeLog("Existe un error txtBandeja_TextChanged de frmCitas: " + ex.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        protected void grvCitas_DataBound(object sender, EventArgs e)
+        {
+            try
+            {
+                for (int i = 0; i <= grvCitas.Rows.Count - 1; i++)
+                {
+                    grvCitas.Rows[i].Cells[5].BackColor = System.Drawing.ColorTranslator.FromHtml(grvCitas.Rows[i].Cells[12].Text);
+                }
+            }
+            catch (Exception eRDB)
+            {
+                Log.EscribeLog("Existe un error en grvCitas_DataBound: " + eRDB.Message, 3, Usuario.vchUsuario);
             }
         }
     }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Fuji.RISLite.Entities;
+﻿using Fuji.RISLite.Entities;
 
 namespace Fuji.RISLite.Site.Services.DataContract
 {

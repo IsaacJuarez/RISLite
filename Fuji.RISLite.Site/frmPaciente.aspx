@@ -31,9 +31,9 @@
 		    </h1>
 	    </div><!-- /.page-header -->
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
                         <div class="form-search">      
                             <span class="input-icon">
                                 <asp:TextBox Text="" runat="server" ID="txtBusqueda" CssClass="form-search" OnTextChanged="txtBusqueda_TextChanged" AutoPostBack="true"></asp:TextBox>
@@ -41,17 +41,17 @@
                             </span>
                         </div>
                     </div>
-                    <div class="col-lg-6"></div>
+                    <div class="col-lg-6 col-md-6 col-sm-6"></div>
                 </div>
             </div>
         </div><!-- /.row -->
         <hr />
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="row">
-                    <div class="col-lg-3">
+                    <div class="col-lg-3 col-md-1 col-sm-1">
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-6 col-md-10 col-sm-10">
                         <telerik:RadAjaxPanel runat="server" ID="radAjaxPanelPacientes" OnAjaxRequest="radAjaxPanelPacientes_AjaxRequest">
                             <asp:GridView ID="grvPacientes" runat="server" AllowPaging="true" CssClass="table table-striped table-bordered"
                                 PageSize="10" AutoGenerateColumns="false" OnRowDataBound="grvPacientes_RowDataBound" Font-Size="10px"
@@ -59,7 +59,7 @@
                                 OnRowCommand="grvPacientes_RowCommand"
                                 EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
                                 <Columns>
-                                    <asp:BoundField DataField="intPacienteID" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
+                                    <%--<asp:BoundField DataField="intPacienteID" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>--%>
                                     <asp:BoundField DataField="vchApellidos"  HeaderText="NSS" ReadOnly="true" />
                                     <asp:BoundField DataField="vchNombre"  HeaderText="Nombre" ReadOnly="true" />
                                     <asp:BoundField DataField="datFechaNac" dataformatstring="{0:dd/MM/yyyy}" HeaderText="Fecha de Nacimiento" ReadOnly="true" />
@@ -104,9 +104,9 @@
                                     <asp:Label ID="lblBandejaTotal" runat="server" />
                                     &nbsp;
                                     <asp:Button ID="btnBandeja_I" runat="server" CommandName="Page" CausesValidation="false"
-                                        ToolTip="Página Anterior" CommandArgument="Prev" CssClass="previous" />
+                                        ToolTip="Página Anterior" CommandArgument="Prev" CssClass="previous" style="background: url(../Images/previous.gif)" />
                                     <asp:Button ID="btnBandeja_II" runat="server" CommandName="Page" CausesValidation="false"
-                                        ToolTip="Página Siguiente" CommandArgument="Next" CssClass="next" />
+                                        ToolTip="Página Siguiente" CommandArgument="Next" CssClass="next" style="background: url(../Images/next.gif)"/>
                                 </PagerTemplate>
                                 <HeaderStyle CssClass="headerstyle" />
                                 <FooterStyle CssClass="text-center" />
@@ -114,7 +114,7 @@
                             </asp:GridView>
                         </telerik:RadAjaxPanel>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-3 col-md-1 col-sm-1">
                     </div>
                 </div>
             </div>

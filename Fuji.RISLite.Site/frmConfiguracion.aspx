@@ -1564,7 +1564,25 @@
                                             </div>
                                         </div>
                                         <div class="row form-group">
-                                            <div class="col-lg-12 col-md-12 col-sm-12 text-right">
+                                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                                <telerik:RadComboBox RenderMode="Lightweight" ID="radComboxGenero" runat="server" CheckBoxes="true" Width="100%" EnableCheckAllItemsCheckBox="true" Label="Activo por Genero para:">
+                                                    <Localization AllItemsCheckedString="Todos..." ItemsCheckedString="Todos..." CheckAllString="Todos..."/>
+                                                    <Items>
+                                                        <telerik:RadComboBoxItem Text="Hombre" Value="1"/>
+                                                        <telerik:RadComboBoxItem Text="Mujer" Value="2" />
+                                                    </Items>
+                                                </telerik:RadComboBox>
+                                                <asp:RequiredFieldValidator runat="server" Text="*" ErrorMessage="*" ForeColor="Red" ControlToValidate="radComboxGenero" ValidationGroup="vgAdicional"></asp:RequiredFieldValidator>
+                                                <telerik:RadComboBox RenderMode="Lightweight" ID="radComboEdad" runat="server" CheckBoxes="true" Width="100%" EnableCheckAllItemsCheckBox="true" Label="Activo por Edad para:">
+                                                    <Localization AllItemsCheckedString="Todos.." ItemsCheckedString="Todos..."  CheckAllString="Todos..."/>
+                                                    <Items>
+                                                        <telerik:RadComboBoxItem Text="Adulto Mayor" Value="3"/>
+                                                        <telerik:RadComboBoxItem Text="Menor" Value="4" />
+                                                    </Items>
+                                                </telerik:RadComboBox>
+                                                <asp:RequiredFieldValidator runat="server" Text="*" ErrorMessage="*" ForeColor="Red" ControlToValidate="radComboEdad" ValidationGroup="vgAdicional"></asp:RequiredFieldValidator>
+                                            </div>
+                                            <div class="col-lg-6 col-md-12 col-sm-12 text-right">
                                                 <asp:Button runat="server" ID="btnAgregarAdicional" Text="Agregar" CssClass="btn btn-success" ValidationGroup="vgAdicional" OnClick="btnAgregarAdicional_Click" />
                                             </div>
                                         </div>
@@ -1620,6 +1638,13 @@
                                                             <EditItemTemplate>
                                                                 <asp:CheckBox runat="server" ID="chkObsItem" Width="100%" Checked='<%#Eval("bitObservaciones")%>'></asp:CheckBox>
                                                             </EditItemTemplate>
+                                                        </asp:TemplateField>
+                                                        <asp:TemplateField HeaderText="Activar: " ItemStyle-HorizontalAlign="Center">
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton ID="btnActivar" runat="server" CommandName="Activar" CommandArgument='<%#Eval("intAdicionalesID") %>' Text="Actualizar">
+                                                                    <i class="fa fa-external-link-square" aria-hidden="true"  title="Activar para: " style="font-size:25px;"></i>
+                                                                </asp:LinkButton>
+                                                            </ItemTemplate>
                                                         </asp:TemplateField>
                                                         <asp:TemplateField HeaderText="Editar" ItemStyle-HorizontalAlign="Center">
                                                             <ItemTemplate>
@@ -2107,6 +2132,45 @@
                 <asp:Button runat="server" ID="btnCancelMod" class="btn btn-default" Text="Cerrar" data-dismiss="modal"></asp:Button>
             </div>
 
+            </div>
+        </div>
+    </div>
+    <!-- /modals -->
+
+    <!-- modals -->
+    <div class="modal fade bs-example-modal-sm" id="mdlActivos" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" style="width:50%">
+            <div class="modal-content">
+                <asp:UpdatePanel runat="server">
+                    <ContentTemplate>
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                            </button>
+                            <h4 class="modal-title" id="mdlActivosLabel"><asp:Label runat="server" ID="lblAdicionalItem" Text="" ForeColor="DarkGreen"></asp:Label><small>  Activo para: </small></h4>
+                            <asp:Label runat="server" ID="lblintAdicionalID" Text="" Visible="false"></asp:Label>
+                        </div>
+                        <div class="modal-body">
+                            <telerik:RadComboBox RenderMode="Lightweight" ID="radComboGeneroItem" runat="server" CheckBoxes="true" Width="100%" EnableCheckAllItemsCheckBox="true" Label="Genero:">
+                                <Localization AllItemsCheckedString="Todos..." ItemsCheckedString="Todos..." CheckAllString="Todos..."/>
+                                <Items>
+                                    <telerik:RadComboBoxItem Text="Hombre" Value="1"/>
+                                    <telerik:RadComboBoxItem Text="Mujer" Value="2" />
+                                </Items>
+                            </telerik:RadComboBox>
+                            <telerik:RadComboBox RenderMode="Lightweight" ID="radComboEdadItem" runat="server" CheckBoxes="true" Width="100%" EnableCheckAllItemsCheckBox="true" Label="Edad:">
+                                <Localization AllItemsCheckedString="Todos..." ItemsCheckedString="Todos..." CheckAllString="Todos..."/>
+                                <Items>
+                                    <telerik:RadComboBoxItem Text="Adulto Mayor" Value="3"/>
+                                    <telerik:RadComboBoxItem Text="Menor" Value="4" />
+                                </Items>
+                            </telerik:RadComboBox>
+                        </div>
+                    </ContentTemplate>
+                </asp:UpdatePanel>
+                <div class="modal-footer">
+                    <asp:Button runat="server" ID="btnCerrar" class="btn btn-default" Text="Cerrar" data-dismiss="modal"></asp:Button>
+                    <asp:Button runat="server" ID="btnGuardarActivos" class="btn btn-success" Text="Guardar" OnClick="btnGuardarActivos_Click"></asp:Button>
+                </div>
             </div>
         </div>
     </div>

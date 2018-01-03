@@ -3132,6 +3132,37 @@ namespace Fuji.RISLite.DataAccess
             return lst;
         }
 
+        public List<clsPaciente> getBusquedaPacientesMod(string busqueda, int intSitioID, string user)
+        {
+            List<clsPaciente> lst = new List<clsPaciente>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    var query = dbRisDA.stp_getBusquedaPacienteMod(busqueda.ToUpper(), intSitioID).ToList();
+                    if (query != null)
+                    {
+                        if (query.Count > 0)
+                        {
+                            foreach (var item in query)
+                            {
+                                clsPaciente pac = new clsPaciente();
+                                pac.intPacienteID = (int)item.intPacienteID;
+                                pac.vchNombre = item.CADENA;
+                                pac.intSitioID = intSitioID;
+                                lst.Add(pac);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception egBP)
+            {
+                Log.EscribeLog("Existe un error en getBusquedaPacientes: " + egBP.Message, 3, user);
+            }
+            return lst;
+        }
+
         public List<clsPaciente> getBusquedaPacientesList(string busqueda, int intSitioID, string user)
         {
             List<clsPaciente> lst = new List<clsPaciente>();
@@ -3235,6 +3266,77 @@ namespace Fuji.RISLite.DataAccess
             catch (Exception egBP)
             {
                 Log.EscribeLog("Existe un error en getEstudioDetalle: " + egBP.Message, 3, user);
+            }
+            return estudio;
+        }
+
+        public clsEstudioNuevaCita getEstudioDetalle_ModificacionCIta(string user, string intEstudioID, int idtablacita)
+        {
+            clsEstudioNuevaCita estudio = new clsEstudioNuevaCita();
+            try
+            {
+                int id = Convert.ToInt32(intEstudioID);
+
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    //var query = (from RCE in dbRisDA.tbl_REL_CitaEstudio
+                    //             join MC in dbRisDA.tbl_MST_Cita on RCE.intCitaID equals MC.intCitaID
+                    //             where RCE.intEstudioID == id
+                    //             select new
+                    //             {
+                    //                 intEstudioID_ = RCE.intEstudioID,
+                    //                 intCitaID_ = RCE.intCitaID,
+                    //                 datFechaCita_ = MC.datFechaCita
+                    //             }).ToList().First();
+
+                    //if (query != null)
+                    //{
+                    //    estudio.intEstudioID = (int)query.intEstudioID_;
+                    //    estudio.fechaInicio = (DateTime)query.datFechaCita_;
+
+                    //}
+
+                    var query = (from RCE in dbRisDA.tbl_REL_CitaEstudio
+                                 join ME in dbRisDA.tbl_MST_Estudio on RCE.intEstudioID equals ME.intEstudioID
+                                 join RMP in dbRisDA.tbl_REL_ModalidadPrestacion on ME.intRELModPres equals RMP.intRELModPres
+                                 join mod in dbRisDA.tbl_CAT_Modalidad on RMP.intModalidadID equals mod.intModalidadID
+                                 join pres in dbRisDA.tbl_CAT_Prestacion on RMP.intPrestacionID equals pres.intPrestacionID
+                                 where RCE.intEstudioID == id
+                                 select new
+                                 {
+                                     intRELModPres = RMP.intRELModPres,
+                                     intModalidadID = RMP.intModalidadID,
+                                     intPrestacionID = RMP.intPrestacionID,
+                                     vchCodigo = mod.vchCodigo,
+                                     vchModalidad = mod.vchModalidad,
+                                     intDuracionMin = pres.intDuracionMin,
+                                     vchPrestacion = pres.vchPrestacion,
+
+
+                                     intEstudioID_ = ME.intEstudioID,
+                                     //intCitaID_ = RCE.intCitaID,
+                                     datFechaCita_ = ME.datFechaInicio
+                                 }).ToList().First();
+
+                    if (query != null)
+                    {
+                        estudio.intEstudioID = (int)query.intEstudioID_;
+                        estudio.fechaInicio = (DateTime)query.datFechaCita_;
+                        estudio.intconsecutivo_Modalidad = idtablacita;
+                        estudio.cadena = query.vchCodigo + " - " + query.vchPrestacion;
+                        estudio.intRelModPres = query.intRELModPres;
+                        estudio.intModalidadID = (int)query.intModalidadID;
+                        estudio.intPrestacionID = (int)query.intPrestacionID;
+                        estudio.vchCodigo = query.vchCodigo;
+                        estudio.vchModalidad = query.vchModalidad;
+                        estudio.intDuracionMin = (int)query.intDuracionMin;
+                        estudio.vchPrestacion = query.vchPrestacion;
+                    }
+                }
+            }
+            catch (Exception egBP)
+            {
+                Log.EscribeLog("Existe un error en getEstudioDetalle_ModificacionCIta: " + egBP.Message, 3, user);
             }
             return estudio;
         }
@@ -4869,9 +4971,9 @@ namespace Fuji.RISLite.DataAccess
             {
                 using (dbRisDA = new RISLiteEntities())
                 {
+                    tbl_MST_Adicionales mdl = new tbl_MST_Adicionales();
                     if (!dbRisDA.tbl_MST_Adicionales.Any(x => x.vchNombre.ToUpper() == adicionales.vchNombreAdicional && x.intSitioID == adicionales.intSitioID))
                     {
-                        tbl_MST_Adicionales mdl = new tbl_MST_Adicionales();
                         mdl.bitActivo = adicionales.bitActivo;
                         mdl.bitObservaciones = adicionales.bitObservaciones;
                         mdl.datFecha = adicionales.datFecha;
@@ -4884,6 +4986,65 @@ namespace Fuji.RISLite.DataAccess
                         dbRisDA.tbl_MST_Adicionales.Add(mdl);
                         dbRisDA.SaveChanges();
                         valido = true;
+                        if(mdl.intAdicionalesID > 0)
+                        {
+                            if(adicionales.intHombre == 1)
+                            {
+                                using(dbRisDA = new RISLiteEntities())
+                                {
+                                    tbl_REL_AdicionalEspecificaciones rel = new tbl_REL_AdicionalEspecificaciones();
+                                    rel.intAdicionalesID = mdl.intAdicionalesID;
+                                    rel.bitActivo = true;
+                                    rel.datFecha = DateTime.Now;
+                                    rel.intAdiEspecificoID = 1;
+                                    rel.vchUserAdmin = user;
+                                    dbRisDA.tbl_REL_AdicionalEspecificaciones.Add(rel);
+                                    dbRisDA.SaveChanges();
+                                }
+                            }
+                            if (adicionales.intHombre == 2)
+                            {
+                                using (dbRisDA = new RISLiteEntities())
+                                {
+                                    tbl_REL_AdicionalEspecificaciones rel = new tbl_REL_AdicionalEspecificaciones();
+                                    rel.intAdicionalesID = mdl.intAdicionalesID;
+                                    rel.bitActivo = true;
+                                    rel.datFecha = DateTime.Now;
+                                    rel.intAdiEspecificoID = 2;
+                                    rel.vchUserAdmin = user;
+                                    dbRisDA.tbl_REL_AdicionalEspecificaciones.Add(rel);
+                                    dbRisDA.SaveChanges();
+                                }
+                            }
+                            if (adicionales.intHombre == 3)
+                            {
+                                using (dbRisDA = new RISLiteEntities())
+                                {
+                                    tbl_REL_AdicionalEspecificaciones rel = new tbl_REL_AdicionalEspecificaciones();
+                                    rel.intAdicionalesID = mdl.intAdicionalesID;
+                                    rel.bitActivo = true;
+                                    rel.datFecha = DateTime.Now;
+                                    rel.intAdiEspecificoID = 3;
+                                    rel.vchUserAdmin = user;
+                                    dbRisDA.tbl_REL_AdicionalEspecificaciones.Add(rel);
+                                    dbRisDA.SaveChanges();
+                                }
+                            }
+                            if (adicionales.intHombre == 4)
+                            {
+                                using (dbRisDA = new RISLiteEntities())
+                                {
+                                    tbl_REL_AdicionalEspecificaciones rel = new tbl_REL_AdicionalEspecificaciones();
+                                    rel.intAdicionalesID = mdl.intAdicionalesID;
+                                    rel.bitActivo = true;
+                                    rel.datFecha = DateTime.Now;
+                                    rel.intAdiEspecificoID = 4;
+                                    rel.vchUserAdmin = user;
+                                    dbRisDA.tbl_REL_AdicionalEspecificaciones.Add(rel);
+                                    dbRisDA.SaveChanges();
+                                }
+                            }
+                        }
                     }
                     else
                     {
@@ -4923,6 +5084,11 @@ namespace Fuji.RISLite.DataAccess
                             mdl.vchUserAdmin = user;
                             dbRisDA.SaveChanges();
                             valido = true;
+
+                            saveRELAdicional(adicional.intAdicionalesID, 1, adicional.intHombre, user);
+                            saveRELAdicional(adicional.intAdicionalesID, 2, adicional.intMujer, user);
+                            saveRELAdicional(adicional.intAdicionalesID, 3, adicional.intMayor, user);
+                            saveRELAdicional(adicional.intAdicionalesID, 4, adicional.intMenor, user);
                         }
                         else
                         {
@@ -4942,6 +5108,53 @@ namespace Fuji.RISLite.DataAccess
                 Log.EscribeLog("Existe un error en setAgregarVariable: " + esAV.Message, 3, user);
             }
             return valido;
+        }
+
+        private void saveRELAdicional(int intAdicionalesID, int v, int intMenor, string user)
+        {
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    tbl_REL_AdicionalEspecificaciones rel = new tbl_REL_AdicionalEspecificaciones();
+                    if (dbRisDA.tbl_REL_AdicionalEspecificaciones.Any(x => x.intAdicionalesID == intAdicionalesID && x.intAdiEspecificoID == v))
+                    {
+                        if (intMenor > 0)
+                        {
+                            rel = dbRisDA.tbl_REL_AdicionalEspecificaciones.Where(x => x.intAdicionalesID == intAdicionalesID && x.intAdiEspecificoID == v).First();
+                            rel.bitActivo = true;
+                            rel.datFecha = DateTime.Now;
+                            rel.vchUserAdmin = user;
+                            dbRisDA.SaveChanges();
+                        }
+                        else
+                        {
+                            rel = dbRisDA.tbl_REL_AdicionalEspecificaciones.Where(x => x.intAdicionalesID == intAdicionalesID && x.intAdiEspecificoID == v).First();
+                            rel.bitActivo = false;
+                            rel.datFecha = DateTime.Now;
+                            rel.vchUserAdmin = user;
+                            dbRisDA.SaveChanges();
+                        }
+                    }
+                    else
+                    {
+                        if (intMenor > 0)
+                        {
+                            rel.bitActivo = true;
+                            rel.datFecha = DateTime.Now;
+                            rel.intAdicionalesID = intAdicionalesID;
+                            rel.intAdiEspecificoID = v;
+                            rel.vchUserAdmin = user;
+                            dbRisDA.tbl_REL_AdicionalEspecificaciones.Add(rel);
+                            dbRisDA.SaveChanges();
+                        }
+                    }
+                }
+            }
+            catch (Exception esRA)
+            {
+                Log.EscribeLog("Existe un error saveRELAdicional: " + esRA.Message, 3, user);
+            }
         }
 
         public List<tbl_CAT_TipoBoton> getCATTipoBoton(string user)
@@ -5026,6 +5239,194 @@ namespace Fuji.RISLite.DataAccess
                 valido = false;
                 mensaje = esAV.Message;
                 Log.EscribeLog("Existe un error en setEstatusAdicional: " + esAV.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public List<clsAdicionales> getAdicionalesREL(int intAdicionalID, string user)
+        {
+            List<clsAdicionales> lstResult = new List<clsAdicionales>();
+            try
+            {
+                using(dbRisDA = new RISLiteEntities())
+                {
+                    if(dbRisDA.tbl_REL_AdicionalEspecificaciones.Any(x=> x.intAdicionalesID == intAdicionalID && (bool)x.bitActivo))
+                    {
+                        var query = (from adi in dbRisDA.tbl_REL_AdicionalEspecificaciones
+                                     join cat in dbRisDA.tbl_CAT_AdicionalEspecifico on adi.intAdiEspecificoID equals cat.intAdiEspecificoID
+                                     where (bool)adi.bitActivo && adi.intAdicionalesID == intAdicionalID
+                                     select new
+                                     {
+                                         intAdicionalesID = adi.intAdicionalesID,
+                                         intAdiEspecificoID = adi.intAdiEspecificoID,
+                                         intRELAdiEspID = adi.intRELAdiEspID,
+                                         vchEspecifico = cat.vchEspecifico
+                                     }).ToList();
+                        if (query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                foreach(var item in query)
+                                {
+                                    clsAdicionales adi = new clsAdicionales();
+                                    adi.intAdicionalesID = (int)item.intAdicionalesID;
+                                    switch (item.intAdiEspecificoID)
+                                    {
+                                        case 1:
+                                            adi.intHombre = 1;
+                                            break;
+                                        case 2:
+                                            adi.intMujer = 2;
+                                            break;
+                                        case 3:
+                                            adi.intMayor = 3;
+                                            break;
+                                        case 4:
+                                            adi.intMenor = 4;
+                                            break;
+                                    }
+                                    adi.intAdiEspecificoID = (int)item.intAdiEspecificoID;
+                                    adi.intAdicionalesID = intAdicionalID;
+                                    lstResult.Add(adi);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch(Exception egA)
+            {
+                Log.EscribeLog("Existe un error en getAdicionalesREL: " + egA.Message, 3, user);
+            }
+            return lstResult;
+        }
+
+        public bool setAdicionalesREL(clsAdicionales adicionales, string user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if (adicionales.intHombre == 1)
+                    {
+                        using (dbRisDA = new RISLiteEntities())
+                        {
+                            tbl_REL_AdicionalEspecificaciones rel = new tbl_REL_AdicionalEspecificaciones();
+                            if (!dbRisDA.tbl_REL_AdicionalEspecificaciones.Any(x => x.intAdicionalesID == adicionales.intAdicionalesID && x.intAdiEspecificoID == 1))
+                            {
+                                rel.intAdicionalesID = adicionales.intAdicionalesID;
+                                rel.bitActivo = true;
+                                rel.datFecha = DateTime.Now;
+                                rel.intAdiEspecificoID = 1;
+                                rel.vchUserAdmin = user;
+                                dbRisDA.tbl_REL_AdicionalEspecificaciones.Add(rel);
+                                dbRisDA.SaveChanges();
+                            }
+                            else
+                            {
+                                rel = dbRisDA.tbl_REL_AdicionalEspecificaciones.First(x => x.intAdicionalesID == adicionales.intAdicionalesID && x.intAdiEspecificoID == 2);
+                                rel.intAdicionalesID = adicionales.intAdicionalesID;
+                                rel.bitActivo = true;
+                                rel.datFecha = DateTime.Now;
+                                rel.intAdiEspecificoID = 1;
+                                rel.vchUserAdmin = user;
+                                dbRisDA.SaveChanges();
+                            }
+                        }
+                        valido = true;
+                    }
+                    if (adicionales.intMujer == 2)
+                    {
+                        using (dbRisDA = new RISLiteEntities())
+                        {
+                            tbl_REL_AdicionalEspecificaciones rel = new tbl_REL_AdicionalEspecificaciones();
+                            if (!dbRisDA.tbl_REL_AdicionalEspecificaciones.Any(x => x.intAdicionalesID == adicionales.intAdicionalesID && x.intAdiEspecificoID == 2))
+                            {
+                                rel.intAdicionalesID = adicionales.intAdicionalesID;
+                                rel.bitActivo = true;
+                                rel.datFecha = DateTime.Now;
+                                rel.intAdiEspecificoID = 2;
+                                rel.vchUserAdmin = user;
+                                dbRisDA.tbl_REL_AdicionalEspecificaciones.Add(rel);
+                                dbRisDA.SaveChanges();
+                            }
+                            else
+                            {
+                                rel = dbRisDA.tbl_REL_AdicionalEspecificaciones.First(x => x.intAdicionalesID == adicionales.intAdicionalesID && x.intAdiEspecificoID == 2);
+                                rel.intAdicionalesID = adicionales.intAdicionalesID;
+                                rel.bitActivo = true;
+                                rel.datFecha = DateTime.Now;
+                                rel.intAdiEspecificoID = 2;
+                                rel.vchUserAdmin = user;
+                                dbRisDA.SaveChanges();
+                            }
+                        }
+                        valido = true;
+                    }
+                    if (adicionales.intMayor == 3)
+                    {
+                        using (dbRisDA = new RISLiteEntities())
+                        {
+                            tbl_REL_AdicionalEspecificaciones rel = new tbl_REL_AdicionalEspecificaciones();
+                            if (!dbRisDA.tbl_REL_AdicionalEspecificaciones.Any(x => x.intAdicionalesID == adicionales.intAdicionalesID && x.intAdiEspecificoID == 3))
+                            {
+                                rel.intAdicionalesID = adicionales.intAdicionalesID;
+                                rel.bitActivo = true;
+                                rel.datFecha = DateTime.Now;
+                                rel.intAdiEspecificoID = 3;
+                                rel.vchUserAdmin = user;
+                                dbRisDA.tbl_REL_AdicionalEspecificaciones.Add(rel);
+                                dbRisDA.SaveChanges();
+                            }
+                            else
+                            {
+                                rel = dbRisDA.tbl_REL_AdicionalEspecificaciones.First(x => x.intAdicionalesID == adicionales.intAdicionalesID && x.intAdiEspecificoID == 3);
+                                rel.intAdicionalesID = adicionales.intAdicionalesID;
+                                rel.bitActivo = true;
+                                rel.datFecha = DateTime.Now;
+                                rel.intAdiEspecificoID = 3;
+                                rel.vchUserAdmin = user;
+                                dbRisDA.SaveChanges();
+                            }
+                        }
+                        valido = true;
+                    }
+                    if (adicionales.intMenor == 4)
+                    {
+                        using (dbRisDA = new RISLiteEntities())
+                        {
+                            tbl_REL_AdicionalEspecificaciones rel = new tbl_REL_AdicionalEspecificaciones();
+                            if (!dbRisDA.tbl_REL_AdicionalEspecificaciones.Any(x => x.intAdicionalesID == adicionales.intAdicionalesID && x.intAdiEspecificoID == 4))
+                            {
+                                rel.intAdicionalesID = adicionales.intAdicionalesID;
+                                rel.bitActivo = true;
+                                rel.datFecha = DateTime.Now;
+                                rel.intAdiEspecificoID = 4;
+                                rel.vchUserAdmin = user;
+                                dbRisDA.tbl_REL_AdicionalEspecificaciones.Add(rel);
+                                dbRisDA.SaveChanges();
+                            }
+                            else
+                            {
+                                rel = dbRisDA.tbl_REL_AdicionalEspecificaciones.First(x => x.intAdicionalesID == adicionales.intAdicionalesID && x.intAdiEspecificoID == 4);
+                                rel.intAdicionalesID = adicionales.intAdicionalesID;
+                                rel.bitActivo = true;
+                                rel.datFecha = DateTime.Now;
+                                rel.intAdiEspecificoID = 4;
+                                rel.vchUserAdmin = user;
+                                dbRisDA.SaveChanges();
+                            }
+                        }
+                        valido = true;
+                    }
+                }
+            }
+            catch (Exception esAV)
+            {
+                valido = false;
+                mensaje = esAV.Message;
+                Log.EscribeLog("Existe un error en setAdicionalesREL: " + esAV.Message, 3, user);
             }
             return valido;
         }

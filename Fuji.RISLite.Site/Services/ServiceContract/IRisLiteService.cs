@@ -188,6 +188,9 @@ namespace Fuji.RISLite.Site.Services
         PacienteResponse getBusquedaPacientes(PacienteRequest request);
 
         [OperationContract]
+        PacienteResponse getBusquedaPacientesMod(PacienteRequest request);
+
+        [OperationContract]
         PacienteResponse getBusquedaPacientesList(PacienteRequest request);
 
         [OperationContract]
@@ -269,6 +272,12 @@ namespace Fuji.RISLite.Site.Services
 
         [OperationContract]
         AdicionalesResponse setEstatusAdicional(AdicionalesRequest request);
+
+        [OperationContract]
+        List<clsAdicionales> getAdicionalesREL(AdicionalesRequest request);
+
+        [OperationContract]
+        AdicionalesResponse setAdicionalesREL(AdicionalesRequest request);
         #endregion Adicionales
 
         #region SugerenciasCita

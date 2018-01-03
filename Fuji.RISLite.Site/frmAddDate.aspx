@@ -161,6 +161,9 @@
                 <UpdatedControls>
                     <telerik:AjaxUpdatedControl ControlID="RB_despues_feha" />
                 </UpdatedControls>
+                <UpdatedControls>
+                    <telerik:AjaxUpdatedControl ControlID="RC_Agenda" />
+                </UpdatedControls>
             </telerik:AjaxSetting>
 
             <telerik:AjaxSetting AjaxControlID="RG_Dia2">
@@ -378,6 +381,9 @@
             </telerik:AjaxSetting>
 
             <telerik:AjaxSetting AjaxControlID="grvEstudios">
+                <UpdatedControls>
+                    <telerik:AjaxUpdatedControl ControlID="RC_Agenda" />
+                </UpdatedControls>
                 <UpdatedControls>
                     <telerik:AjaxUpdatedControl ControlID="RS_Agenda" />
                 </UpdatedControls>
@@ -605,6 +611,16 @@
                     <telerik:AjaxUpdatedControl ControlID="radAjaxPanelPaciente" />
                 </UpdatedControls>
             </telerik:AjaxSetting>
+
+            <telerik:AjaxSetting AjaxControlID="RC_Agenda">
+                <UpdatedControls>
+                    <telerik:AjaxUpdatedControl ControlID="RG_Dia1" />
+                    <telerik:AjaxUpdatedControl ControlID="LDia1" />
+                    <telerik:AjaxUpdatedControl ControlID="RC_Agenda" />
+                </UpdatedControls>
+            </telerik:AjaxSetting>
+
+
         </AjaxSettings>
     </telerik:RadAjaxManager>
 
@@ -620,12 +636,13 @@
             }
 
             function autoCompletePaciente_ItemSelected(sender, args) {
-                //__doPostBack(sender.get_element().name, "");               
+                <%--//__doPostBack(sender.get_element().name, "");               
 
                 var seleccion = args._text;
-                var id_seleccion = seleccion.split("|");
+                var id_seleccion = seleccion.split("|");--%>
+                $get("<%=hfPacienteId.ClientID %>").value = args.get_value();
+                $find("<%= radAjaxPanelPaciente.ClientID%>").ajaxRequestWithTarget("<%= radAjaxPanelPaciente.UniqueID %>", args.get_value());
 
-                $find("<%= radAjaxPanelPaciente.ClientID%>").ajaxRequestWithTarget("<%= radAjaxPanelPaciente.UniqueID %>", id_seleccion[0]);
             }
         </script>
     </telerik:RadScriptBlock>
@@ -665,6 +682,7 @@
                                                 ToolTip="Búsqueda de Paciente por Nombre, Apellido, NSS, ID del paciente." Width="100%" OnTextChanged="txtBusquedaPaciente_TextChanged"></asp:TextBox>
                                             <i runat="server" id="imgSearchNC" class="ace-icon fa fa-search nav-search-icon"></i>
                                         </span>
+                                        <asp:HiddenField ID="hfPacienteId" runat="server" />
                                     </div>
                                     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-center">
                                         <asp:LinkButton ID="btnAddUser" runat="server" OnClick="btnAddUser_Click" Text="Actualizar">
@@ -674,43 +692,43 @@
                                 </div>
                                 <hr />
                                 <telerik:RadAjaxPanel runat="server" ID="radAjaxPanelPaciente" OnAjaxRequest="radAjaxPanelPaciente_AjaxRequest">
-                                <div class="row">
-                                    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                                        <asp:LinkButton ID="btnEditPaciente" runat="server" OnClick="btnEditPaciente_Click" Text="Editar" Visible="false">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                                            <asp:LinkButton ID="btnEditPaciente" runat="server" OnClick="btnEditPaciente_Click" Text="Editar" Visible="false">
                                             <i class="fa fa-pencil-square-o" aria-hidden="true"  title="Editar Paciente" style="font-size:25px;"></i>
-                                        </asp:LinkButton>
-                                        <asp:Label runat="server" ID="lblPacienteTitulo" ForeColor="DarkBlue" Text="Paciente" Font-Bold="true"></asp:Label>
-                                        <asp:HiddenField runat="server" ID="HFintPacienteID" ClientIDMode="Static" />
+                                            </asp:LinkButton>
+                                            <asp:Label runat="server" ID="lblPacienteTitulo" ForeColor="DarkBlue" Text="Paciente" Font-Bold="true"></asp:Label>
+                                            <asp:HiddenField runat="server" ID="HFintPacienteID" ClientIDMode="Static" />
+                                        </div>
+                                        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 text-right">
+                                            <asp:RequiredFieldValidator runat="server" ID="rfvPaciente" Text="* Seleccionar paciente" ErrorMessage="* Seleccionar Paciente" ForeColor="Red" ControlToValidate="txtNombrePaciente" ValidationGroup="vgSaveCita"></asp:RequiredFieldValidator>
+                                            <asp:Label runat="server" ID="lblIDs" ForeColor="PowderBlue" Text="" Font-Bold="true" Visible="false"></asp:Label>
+                                        </div>
                                     </div>
-                                    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 text-right">
-                                        <asp:RequiredFieldValidator runat="server" ID="rfvPaciente" Text="* Seleccionar paciente" ErrorMessage="* Seleccionar Paciente" ForeColor="Red" ControlToValidate="txtNombrePaciente" ValidationGroup="vgSaveCita"></asp:RequiredFieldValidator>
-                                        <asp:Label runat="server" ID="lblIDs" ForeColor="PowderBlue" Text="" Font-Bold="true" Visible="false"></asp:Label>
+                                    <div class="row form-group">
+                                        <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+                                            <asp:Label runat="server" Text="Nombre" AssociatedControlID="txtNombrePaciente"></asp:Label>
+                                        </div>
+                                        <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+                                            <asp:TextBox runat="server" Text="" ID="txtNombrePaciente" Width="100%" Enabled="false"></asp:TextBox>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="row form-group">
-                                    <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
-                                        <asp:Label runat="server" Text="Nombre" AssociatedControlID="txtNombrePaciente"></asp:Label>
+                                    <div class="row form-group">
+                                        <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+                                            <asp:Label runat="server" Text="Apellidos"></asp:Label>
+                                        </div>
+                                        <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+                                            <asp:TextBox runat="server" Text="" ID="txtApellidos" Width="100%" Enabled="false"></asp:TextBox>
+                                        </div>
                                     </div>
-                                    <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
-                                        <asp:TextBox runat="server" Text="" ID="txtNombrePaciente" Width="100%" Enabled="false"></asp:TextBox>
+                                    <div class="row form-group">
+                                        <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+                                            <asp:Label runat="server" Text="Fecha de Nacimiento"></asp:Label>
+                                        </div>
+                                        <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+                                            <asp:TextBox runat="server" ID="Date1" autocomplete="off" CssClass="form-control" Width="100%" Enabled="false" />
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="row form-group">
-                                    <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
-                                        <asp:Label runat="server" Text="Apellidos"></asp:Label>
-                                    </div>
-                                    <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
-                                        <asp:TextBox runat="server" Text="" ID="txtApellidos" Width="100%" Enabled="false"></asp:TextBox>
-                                    </div>
-                                </div>
-                                <div class="row form-group">
-                                    <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
-                                        <asp:Label runat="server" Text="Fecha de Nacimiento"></asp:Label>
-                                    </div>
-                                    <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
-                                        <asp:TextBox runat="server" ID="Date1" autocomplete="off" CssClass="form-control" Width="100%" Enabled="false" />
-                                    </div>
-                                </div>
                                 </telerik:RadAjaxPanel>
                                 <hr />
                                 <div class="row">
@@ -750,29 +768,31 @@
                 </div>
             </div>
             <div class="col-lg-7 col-md-12 col-sm-12 col-sx-12">
-                <telerik:RadAjaxPanel ID="RadAjaxPanel1" runat="server" Width="100%" OnAjaxRequest="RadAjaxPanel1_AjaxRequest">
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-sx-12">
-                            <div class="row">
-                                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
-                                    <asp:Label runat="server" ID="Label2" ForeColor="DarkBlue" Text="Estudios" Font-Bold="true"></asp:Label>
-                                    <asp:Label ID="Lcontador" runat="server" Text="" Visible="false"></asp:Label>
-                                </div>
-                                <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 form-search">
-                                    <span class="input-icon" style="width: 100%">
-                                        <asp:AutoCompleteExtender ID="AutoCompleteExtender1" runat="server" TargetControlID="txtBusquedaEstudio" MinimumPrefixLength="1" EnableCaching="true" CompletionSetCount="1"
-                                            CompletionInterval="500" ServiceMethod="obtenerEstudioBusqueda" CompletionListCssClass="completionList" CompletionListItemCssClass="listItem"
-                                            OnClientItemSelected="autoCompleteEx_ItemSelected"
-                                            CompletionListHighlightedItemCssClass="itemHighlighted">
-                                        </asp:AutoCompleteExtender>
-                                        <asp:TextBox ID="txtBusquedaEstudio" runat="server" CssClass="nav-search-input" placeholder="       Estudio..." ToolTip="Seleccionar Estudio" Width="100%"
-                                            OnTextChanged="txtBusquedaEstudio_TextChanged">
-                                        </asp:TextBox>
-                                        <i runat="server" id="i1" class="ace-icon fa fa-search nav-search-icon"></i>
-                                    </span>
-                                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-sx-12">
+                        <div class="row">
+                            
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                <asp:Label runat="server" ID="Label2" ForeColor="DarkBlue" Text="Estudios" Font-Bold="true"></asp:Label>
+                                <asp:Label ID="Lcontador" runat="server" Text="" Visible="false"></asp:Label>
                             </div>
-                            <hr />
+                            <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 form-search">
+                                <span class="input-icon" style="width: 100%">
+                                    <asp:AutoCompleteExtender ID="AutoCompleteExtender1" runat="server" TargetControlID="txtBusquedaEstudio" MinimumPrefixLength="1" EnableCaching="true" CompletionSetCount="1"
+                                        CompletionInterval="500" ServiceMethod="obtenerEstudioBusqueda" CompletionListCssClass="completionList" CompletionListItemCssClass="listItem"
+                                        OnClientItemSelected="autoCompleteEx_ItemSelected"
+                                        CompletionListHighlightedItemCssClass="itemHighlighted">
+                                    </asp:AutoCompleteExtender>
+                                    <asp:TextBox ID="txtBusquedaEstudio" runat="server" CssClass="nav-search-input" placeholder="Estudio..."
+                                        ToolTip="Seleccionar Estudio" Width="100%" OnTextChanged="txtBusquedaEstudio_TextChanged">
+                                    </asp:TextBox>
+                                </span>
+                            </div>
+                        </div>
+                        <hr />
+                        <telerik:RadAjaxPanel ID="RadAjaxPanel1" runat="server" Width="100%" OnAjaxRequest="RadAjaxPanel1_AjaxRequest">
                             <div class="row">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <%--   <asp:UpdatePanel runat="server">
@@ -839,9 +859,10 @@
                                 </asp:UpdatePanel>--%>
                                 </div>
                             </div>
-                        </div>
+                        </telerik:RadAjaxPanel>
                     </div>
-                </telerik:RadAjaxPanel>
+                </div>
+
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-sx-12">
                         <div class="tabbable">
@@ -868,7 +889,8 @@
                                                 <asp:UpdatePanel runat="server">
                                                     <ContentTemplate>
                                                         <p>
-                                                            <asp:Label runat="server" ID="lblTituloSug" Text="Elegir un estudio" ForeColor="DarkGreen"></asp:Label></p>
+                                                            <asp:Label runat="server" ID="lblTituloSug" Text="Elegir un estudio" ForeColor="DarkGreen"></asp:Label>
+                                                        </p>
                                                     </ContentTemplate>
                                                 </asp:UpdatePanel>
                                                 <div class="row form-group">
@@ -945,7 +967,6 @@
                                                                 </telerik:RadCheckBox>
                                                             </div>
                                                             <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
-
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1017,7 +1038,7 @@
                                     </div>
                                 </div>
                                 <div id="AgendaManual" class="tab-pane fade">
-                                    <div id="botones" runat="server" class="row">
+                                    <%-- <div id="botones" runat="server" class="row">
                                         <div class="col-md-4">
                                             <telerik:RadButton ID="RB_antes_fecha" runat="server" Text="Fecha Anterior" CssClass="btn btn-success" OnClick="RB_antes_fecha_Click" Enabled="false">
                                             </telerik:RadButton>
@@ -1033,7 +1054,7 @@
                                         </div>
                                     </div>
 
-                                    <br />
+                                    <br />--%>
 
                                     <div id="encabezado_agenda" runat="server">
                                         <div class="row">
@@ -1059,6 +1080,20 @@
                                     <asp:Label ID="Label6" runat="server" Text=""></asp:Label>
                                     <asp:Label ID="L_modalidad_seleccion" runat="server" Text="" Visible="false"></asp:Label>
                                     <br />
+                                    <div class="row">
+                                        <div class="col-xs-2 center">
+                                        </div>
+                                        <div class="col-xs-8 center">
+                                            <telerik:RadCalendar ID="RC_Agenda" runat="server" Width="100%" OnSelectionChanged="RC_Agenda_SelectionChanged" EnableMultiSelect="false"
+                                                AutoPostBack="true" Visible="false" ShowRowHeaders="false">
+                                            </telerik:RadCalendar>
+                                        </div>
+                                        <div class="col-xs-2 center">
+                                        </div>
+                                    </div>
+
+
+                                    <br />
                                     <asp:Label ID="LDia1" runat="server" Text="" CssClass="center-block"></asp:Label>
                                     <telerik:RadGrid ID="RG_Dia1" runat="server" AutoGenerateColumns="false" OnItemCommand="RG_Dia1_ItemCommand">
                                         <MasterTableView TableLayout="Fixed">
@@ -1078,7 +1113,7 @@
                                         </MasterTableView>
                                     </telerik:RadGrid>
                                     <br />
-                                    <asp:Label ID="LDia2" runat="server" Text="" CssClass="center"></asp:Label>
+                                    <%--<asp:Label ID="LDia2" runat="server" Text="" CssClass="center"></asp:Label>
                                     <telerik:RadGrid ID="RG_Dia2" runat="server" AutoGenerateColumns="false" OnItemCommand="RG_Dia1_ItemCommand">
                                         <MasterTableView TableLayout="Fixed">
                                             <Columns>
@@ -1152,7 +1187,7 @@
                                                 <telerik:GridButtonColumn UniqueName="btnElegir" HeaderText="" HeaderStyle-Width="10%" Text="Elegir" ItemStyle-CssClass="center" ItemStyle-ForeColor="DarkGreen" CommandName="Agregar_cita"></telerik:GridButtonColumn>
                                             </Columns>
                                         </MasterTableView>
-                                    </telerik:RadGrid>
+                                    </telerik:RadGrid>--%>
                                 </div>
                             </div>
                         </div>
@@ -1219,18 +1254,21 @@
                                         <div class="form-group">
                                             <asp:Label runat="server" class="col-sm-3 control-label no-padding-right" AssociatedControlID="txtFecNacDet"> Fecha de Nacimiento</asp:Label>
                                             <div class="col-sm-8">
-                                                <table style="width: 100%">
+                                                <%--<table style="width: 100%">
                                                     <tr>
-                                                        <td style="width: 90%">
-                                                            <asp:TextBox runat="server" ID="txtFecNacDet" autocomplete="off" CssClass="form-control" Width="100%" Enabled="false" />
-                                                        </td>
-                                                        <td style="width: 10%">
-                                                            <asp:ImageButton ID="imgPopup" ImageUrl="~/Images/ic_action_calendar_month.png" Width="25px" Height="25px" ImageAlign="Bottom" runat="server" />
+                                                        <td style="width: 90%">--%>
+                                                <asp:TextBox runat="server" ID="txtFecNacDet" CssClass="form-control" Width="100%" />
+                                                <asp:RegularExpressionValidator ID="RegularExpressionValidator4" runat="server" ForeColor="Red"
+                                                    ControlToValidate="txtFecNacDet" ValidationGroup="vgAddPaciente" ErrorMessage="Formato DD/MM/YYYY"
+                                                    ValidationExpression="^(0[1-9]|[12][0-9]|3[01])[-/.](0[1-9]|1[012])[-/.](19|20)\d\d$"></asp:RegularExpressionValidator>
+                                                <%--</td>
+                                                        <td style="width: 10%">--%>
+                                                <%--<asp:ImageButton ID="imgPopup" ImageUrl="~/Images/ic_action_calendar_month.png" Width="25px" Height="25px" ImageAlign="Bottom" runat="server" />
                                                             <asp:CalendarExtender ID="customCalendarExtender" runat="server" TargetControlID="txtFecNacDet" PopupButtonID="imgPopup"
-                                                                CssClass="cal" Format="dd/MM/yyyy" />
-                                                        </td>
+                                                                CssClass="cal" Format="dd/MM/yyyy" />--%>
+                                                <%-- </td>
                                                     </tr>
-                                                </table>
+                                                </table>--%>
                                             </div>
                                             <div class="col-sm-1 text-right">
                                                 <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ErrorMessage="* " ForeColor="Red" ControlToValidate="txtFecNacDet" ValidationGroup="vgAddPaciente"></asp:RequiredFieldValidator>
@@ -1484,43 +1522,43 @@
     <script src="assets/js/ace-elements.min.js"></script>
     <script src="assets/js/ace.min.js"></script>
     <script type="text/javascript">
-        function openModal() {
-            $('#myModal').modal('show');
-        }
-
-        function ShowMessage(message, messagetype, idControl) {
-            var cssclass;
-            switch (messagetype) {
-                case 'Correcto':
-                    cssclass = 'alert-success'
-                    break;
-                case 'Error':
-                    cssclass = 'alert-danger'
-                    break;
-                case 'Advertencia':
-                    cssclass = 'alert-warning'
-                    break;
-                default:
-                    cssclass = 'alert-info'
+            function openModal() {
+                $('#myModal').modal('show');
             }
-            var control = "#" + idControl;
-            $(control).append('<div id="' + idControl + '" style="margin: 0 0.5%; -webkit-box-shadow: 3px 4px 6px #999;" class="alert fade in ' + cssclass + '"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>' + messagetype + '!</strong> <span>' + message + '</span></div>');
-            $(control).fadeTo(2000, 700).slideUp(700, function () {
-                $(control).slideUp(700);
-            });
-        }
 
-        function Redirecciona(strRuta) {
-            var sID = Math.round(Math.random() * 10000000000);
-            var winX = screen.availWidth;
-            var winY = screen.availHeight;
-            sID = "E" + sID;
-            window.open(strRuta, sID,
-                "menubar=yes,toolbar=yes,location=yes,directories=yes,status=yes,resizable=yes" +
-                ",scrollbars=yes,top=0,left=0,screenX=0,screenY=0,Width=" +
-                winX + ",Height=" + winY);
-        }
-       
+            function ShowMessage(message, messagetype, idControl) {
+                var cssclass;
+                switch (messagetype) {
+                    case 'Correcto':
+                        cssclass = 'alert-success'
+                        break;
+                    case 'Error':
+                        cssclass = 'alert-danger'
+                        break;
+                    case 'Advertencia':
+                        cssclass = 'alert-warning'
+                        break;
+                    default:
+                        cssclass = 'alert-info'
+                }
+                var control = "#" + idControl;
+                $(control).append('<div id="' + idControl + '" style="margin: 0 0.5%; -webkit-box-shadow: 3px 4px 6px #999;" class="alert fade in ' + cssclass + '"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>' + messagetype + '!</strong> <span>' + message + '</span></div>');
+                $(control).fadeTo(2000, 700).slideUp(700, function () {
+                    $(control).slideUp(700);
+                });
+            }
+
+            function Redirecciona(strRuta) {
+                var sID = Math.round(Math.random() * 10000000000);
+                var winX = screen.availWidth;
+                var winY = screen.availHeight;
+                sID = "E" + sID;
+                window.open(strRuta, sID,
+                    "menubar=yes,toolbar=yes,location=yes,directories=yes,status=yes,resizable=yes" +
+                    ",scrollbars=yes,top=0,left=0,screenX=0,screenY=0,Width=" +
+                    winX + ",Height=" + winY);
+            }
+
     </script>
 
 </asp:Content>

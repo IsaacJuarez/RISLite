@@ -1,5 +1,15 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="frmCitas.aspx.cs" Inherits="Fuji.RISLite.Site.frmCitas" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <style type="text/css">
+        .hiddencol {
+            display: none;
+        }
+
+        .viscol {
+            display: block;
+        }
+    </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <telerik:RadAjaxManager ID="RadAjaxManager1" runat="server">
@@ -43,13 +53,13 @@
                                 <asp:TextBox runat="server" ID="txtNombreBus" Text="" CssClass="form-control"></asp:TextBox>
                             </div>
                             <div class="col-lg-6 col-md-12 col-sm-12">
-                                <asp:Label Text="Modalidad" ID="lblModalidad" runat="server"  AssociatedControlID="ddlModalidadBuesqueda"/>
+                                <asp:Label Text="Modalidad" ID="lblModalidad" runat="server" AssociatedControlID="ddlModalidadBuesqueda" />
                                 <telerik:RadComboBox runat="server" ID="ddlModalidadBuesqueda" RenderMode="Lightweight" ForeColor="DarkGreen" Width="100%" OnClientSelectedIndexChanged="combo_modalidad"></telerik:RadComboBox>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12">
-                                <table style="width:50%">
+                                <%--<table style="width:100%">
                                     <tr>
                                         <td style="width:40%">
                                             <asp:TextBox runat="server" ID="Date1" autocomplete="off" CssClass="form-control" Width="100%" Enabled="false" Font-Size="Small"/>
@@ -68,11 +78,15 @@
                                             CssClass="cal" Format="dd/MM/yyyy" />
                                         </td>
                                     </tr>
-                                </table>
-                                <telerik:RadDatePicker RenderMode="Lightweight" ID="radCalInicio" Width="80%" runat="server" DateInput-Label="Fecha Inicio">
-                                </telerik:RadDatePicker>
-                                <telerik:RadDatePicker RenderMode="Lightweight" ID="radCalFin" Width="80%" runat="server" DateInput-Label="Fecha Fin">
-                                </telerik:RadDatePicker>
+                                </table>--%>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <telerik:RadDatePicker ID="RadDatePicker1" RenderMode="Lightweight" ForeColor="DarkGreen" runat="server" DateInput-Label="Desde" Width="100%"></telerik:RadDatePicker>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <telerik:RadDatePicker ID="RadDatePicker2" RenderMode="Lightweight" ForeColor="DarkGreen" runat="server" DateInput-Label="Hasta" Width="100%"></telerik:RadDatePicker>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -89,16 +103,35 @@
             <telerik:RadAjaxPanel runat="server" ID="ajaxPanelCitas" OnAjaxRequest="ajaxPanelCitas_AjaxRequest">
                 <asp:GridView ID="grvCitas" runat="server" AllowPaging="true" CssClass="table table-striped table-bordered"
                     PageSize="20" AutoGenerateColumns="false" OnRowDataBound="grvCitas_RowDataBound" Font-Size="10px"
-                    OnPageIndexChanging="grvCitas_PageIndexChanging" DataKeyNames="intEstudioID" 
-                    OnRowCommand="grvCitas_RowCommand" 
+                    OnPageIndexChanging="grvCitas_PageIndexChanging" DataKeyNames="intEstudioID" OnDataBound="grvCitas_DataBound"
+                    OnRowCommand="grvCitas_RowCommand"
                     EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
                     <Columns>
-                        <asp:BoundField DataField="intEstudioID" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md" />
-                        <asp:boundfield datafield="vchNombre" HeaderText="Nombre"  ReadOnly="true"/>
-                        <asp:BoundField DataField="datFechaInicio" HeaderText="Fecha de Cita"  DataFormatString="{0:dd-MM-yyyy hh:mm tt}"  />
-                        <asp:boundfield datafield="vchModalidad" HeaderText="Modalidad"  ReadOnly="true"/>
-                        <asp:boundfield datafield="vchPrestacion" HeaderText="Prestacion"  ReadOnly="true"/>
-                        <asp:boundfield datafield="vchEstatus" HeaderText="Estatus Estudio"  ReadOnly="true"/>
+                        <asp:BoundField DataField="intEstudioID" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md" Visible="false"/>
+                        <asp:BoundField DataField="vchNombre" HeaderText="Nombre" ReadOnly="true" />
+                        <asp:BoundField DataField="datFechaInicio" HeaderText="Fecha de Cita" DataFormatString="{0:dd-MM-yyyy hh:mm tt}" />
+                        <asp:BoundField DataField="vchModalidad" HeaderText="Modalidad" ReadOnly="true" />
+                        <asp:BoundField DataField="vchPrestacion" HeaderText="Prestacion" ReadOnly="true" />
+                        <asp:BoundField DataField="vchEstatus" HeaderText="Estatus Estudio" ReadOnly="true" />
+
+
+                        <asp:TemplateField HeaderText="Entrega" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:LinkButton ID="btnentrega" CausesValidation="false" CommandName="Entrega" CommandArgument='<%#Eval("intEstudioID") %>' runat="server" ToolTip="Entrega.">
+                                    <i class="fa fa-paper-plane-o" aria-hidden="true" title="Entrega." style="font-size:25px;"></i>
+                                </asp:LinkButton>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="Agregar" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:LinkButton ID="btnagregar" CausesValidation="false" CommandName="Agregar" CommandArgument='<%#Eval("intCitaID") %>' runat="server" ToolTip="Agregar.">
+                                    <i class="fa fa-plus" aria-hidden="true" title="Agregar." style="font-size:25px;"></i>
+                                </asp:LinkButton>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
                         <asp:TemplateField HeaderText="Re-enviar Email" ItemStyle-HorizontalAlign="Center">
                             <ItemTemplate>
                                 <asp:LinkButton ID="btnReEmail" CausesValidation="false" CommandName="Email" CommandArgument='<%#Eval("intCitaID") %>' runat="server" ToolTip="Re-enviar cita por correo electrónico.">
@@ -106,6 +139,7 @@
                                 </asp:LinkButton>
                             </ItemTemplate>
                         </asp:TemplateField>
+
                         <asp:TemplateField HeaderText="Imprimir Cita" ItemStyle-HorizontalAlign="Center">
                             <ItemTemplate>
                                 <asp:LinkButton ID="btnImprimir" CausesValidation="false" CommandName="Imprimir" CommandArgument='<%#Eval("intCitaID") %>' runat="server" ToolTip="Imprimir Cita">
@@ -113,6 +147,7 @@
                                 </asp:LinkButton>
                             </ItemTemplate>
                         </asp:TemplateField>
+
                         <asp:TemplateField HeaderText="Marcar Arribo" ItemStyle-HorizontalAlign="Center">
                             <ItemTemplate>
                                 <asp:LinkButton ID="btnArribo" CausesValidation="false" CommandName="Arribo" CommandArgument='<%#Eval("intEstudioID") %>' runat="server" ToolTip="Marcar arribo del paciente a realizar estudio.">
@@ -121,6 +156,17 @@
                                 <asp:Label runat="server" Text="" ForeColor="DarkGreen" ID="lblArriboItem" Visible="false"></asp:Label>
                             </ItemTemplate>
                         </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Cancelar" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:LinkButton ID="btncancelar" CausesValidation="false" CommandName="Cancelar" CommandArgument='<%#Eval("intEstudioID") %>' runat="server" ToolTip="Cancelar.">
+                                    <i class="fa fa-ban" aria-hidden="true" title="Cancelar." style="font-size:25px;"></i>
+                                </asp:LinkButton>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:BoundField DataField="vchColor" ItemStyle-CssClass="hiddencol" ShowHeader="false" HeaderStyle-Width="0%" ItemStyle-Width="0%" />
+
                     </Columns>
                     <PagerTemplate>
                         <asp:Label ID="lblTemplate" runat="server" Text="Muestra Filas: " CssClass="Label" />
@@ -137,9 +183,9 @@
                         <asp:Label ID="lblBandejaTotal" runat="server" />
                         &nbsp;
                         <asp:Button ID="btnBandeja_I" runat="server" CommandName="Page" CausesValidation="false"
-                            ToolTip="Página Anterior" CommandArgument="Prev" CssClass="previous" />
+                            ToolTip="Página Anterior" CommandArgument="Prev" CssClass="previous" Style="background: url(../Images/previous.gif)" />
                         <asp:Button ID="btnBandeja_II" runat="server" CommandName="Page" CausesValidation="false"
-                            ToolTip="Página Siguiente" CommandArgument="Next" CssClass="next" />
+                            ToolTip="Página Siguiente" CommandArgument="Next" CssClass="next" Style="background: url(../Images/next.gif)" />
                     </PagerTemplate>
                     <HeaderStyle CssClass="headerstyle" />
                     <FooterStyle CssClass="text-center" />

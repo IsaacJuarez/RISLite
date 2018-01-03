@@ -23,5 +23,6 @@ namespace Fuji.RISLite.Entidades.DataBase
         public string vchPrestacion { get; set; }
         public Nullable<int> intEstatusEstudio { get; set; }
         public string vchEstatus { get; set; }
+        public string vchColor { get; set; }
     }
 }

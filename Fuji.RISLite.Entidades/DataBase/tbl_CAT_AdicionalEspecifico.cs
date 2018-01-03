@@ -12,20 +12,19 @@ namespace Fuji.RISLite.Entidades.DataBase
     using System;
     using System.Collections.Generic;
     
-    public partial class tbl_CAT_EstatusEstudio
+    public partial class tbl_CAT_AdicionalEspecifico
     {
-        public tbl_CAT_EstatusEstudio()
+        public tbl_CAT_AdicionalEspecifico()
         {
-            this.tbl_MST_Estudio = new HashSet<tbl_MST_Estudio>();
+            this.tbl_REL_AdicionalEspecificaciones = new HashSet<tbl_REL_AdicionalEspecificaciones>();
         }
     
-        public int intEstatusEstudio { get; set; }
-        public string vchEstatus { get; set; }
+        public int intAdiEspecificoID { get; set; }
+        public string vchEspecifico { get; set; }
         public Nullable<bool> bitActivo { get; set; }
         public Nullable<System.DateTime> datFecha { get; set; }
         public string vchUserAdmin { get; set; }
-        public string vchColor { get; set; }
     
-        public virtual ICollection<tbl_MST_Estudio> tbl_MST_Estudio { get; set; }
+        public virtual ICollection<tbl_REL_AdicionalEspecificaciones> tbl_REL_AdicionalEspecificaciones { get; set; }
     }
 }

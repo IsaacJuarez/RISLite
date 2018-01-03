@@ -44,11 +44,13 @@
     <Compile Include="clsCatalogo.cs" />
     <Compile Include="clsConfAgenda.cs" />
     <Compile Include="clsConfScheduler.cs" />
+    <Compile Include="clsconfscheduler_addcita.cs" />
     <Compile Include="clsCorreo.cs" />
     <Compile Include="clsDetalleCita.cs" />
     <Compile Include="clsDiaFeriado.cs" />
     <Compile Include="clsDiaSemana.cs" />
     <Compile Include="clsDireccion.cs" />
+    <Compile Include="clsDuracionModalidad.cs" />
     <Compile Include="clsEquipo.cs" />
     <Compile Include="clsEstatusEstudio.cs" />
     <Compile Include="clsEstudio.cs" />

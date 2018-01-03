@@ -17,6 +17,7 @@ namespace Fuji.RISLite.Entidades.DataBase
         public tbl_MST_Adicionales()
         {
             this.tbl_DET_Cita = new HashSet<tbl_DET_Cita>();
+            this.tbl_REL_AdicionalEspecificaciones = new HashSet<tbl_REL_AdicionalEspecificaciones>();
         }
     
         public int intAdicionalesID { get; set; }
@@ -34,5 +35,6 @@ namespace Fuji.RISLite.Entidades.DataBase
         public virtual tbl_CAT_TipoAdicional tbl_CAT_TipoAdicional { get; set; }
         public virtual tbl_CAT_TipoBoton tbl_CAT_TipoBoton { get; set; }
         public virtual ICollection<tbl_DET_Cita> tbl_DET_Cita { get; set; }
+        public virtual ICollection<tbl_REL_AdicionalEspecificaciones> tbl_REL_AdicionalEspecificaciones { get; set; }
     }
 }

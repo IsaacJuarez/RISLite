@@ -60,6 +60,9 @@
     <Compile Include="DataBase\stp_getBusquedaPacienteList_Result.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
+    <Compile Include="DataBase\stp_getBusquedaPacienteMod_Result.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
     <Compile Include="DataBase\stp_getBusquedaPaciente_Result.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
@@ -106,6 +109,9 @@
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\stp_updateCatEstatus_Result.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataBase\tbl_CAT_AdicionalEspecifico.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\tbl_CAT_Botones.cs">
@@ -229,6 +235,9 @@
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\tbl_MST_Paciente.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataBase\tbl_REL_AdicionalEspecificaciones.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
     <Compile Include="DataBase\tbl_REL_BotonVista.cs">

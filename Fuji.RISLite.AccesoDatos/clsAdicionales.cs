@@ -18,6 +18,13 @@ namespace Fuji.RISLite.Entities
         public string vchUserAdmin { get; set; }
         public string vchObservaciones { get; set; }
         public string vchValor { get; set; }
+        public string vchGenero { get; set; }
+        public int intAdiEspecificoID { get; set; }
+        public int intHombre { get; set; }
+        public int intMujer { get; set; }
+        public string vchEdad { get; set; }
+        public int intMayor { get; set; }
+        public int intMenor { get; set; }
 
         public clsAdicionales()
         {
@@ -35,6 +42,13 @@ namespace Fuji.RISLite.Entities
             vchUserAdmin = string.Empty;
             vchObservaciones = string.Empty;
             vchValor = string.Empty;
+            vchGenero = string.Empty;
+            intAdiEspecificoID = int.MinValue;
+            intHombre = int.MinValue;
+            intMujer = int.MinValue;
+            vchEdad = string.Empty;
+            intMayor = int.MinValue;
+            intMenor = int.MinValue;
         }
     }
 }

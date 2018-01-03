@@ -112,6 +112,7 @@
     <Content Include="frmAdminEquipoUsuario.aspx" />
     <Content Include="frmAdminUser.aspx" />
     <Content Include="frmAgenda.aspx" />
+    <Content Include="frmArribo.aspx" />
     <Content Include="frmCitas.aspx" />
     <Content Include="frmConfigAgenda.aspx" />
     <Content Include="frmConfiguracion.aspx" />
@@ -154,6 +155,7 @@
     <Content Include="Images\previous.gif" />
     <Content Include="Images\quiz-loading.gif" />
     <Content Include="Images\RF.png" />
+    <Content Include="Images\transparente2.png" />
     <Content Include="Images\US.png" />
     <Content Include="Images\XA.png" />
     <Content Include="js\cultures\kendo.culture.af-ZA.min.js" />
@@ -1770,6 +1772,13 @@
     <Compile Include="frmAgenda.aspx.designer.cs">
       <DependentUpon>frmAgenda.aspx</DependentUpon>
     </Compile>
+    <Compile Include="frmArribo.aspx.cs">
+      <DependentUpon>frmArribo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="frmArribo.aspx.designer.cs">
+      <DependentUpon>frmArribo.aspx</DependentUpon>
+    </Compile>
     <Compile Include="frmCitas.aspx.cs">
       <DependentUpon>frmCitas.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1884,11 +1893,13 @@
     <Compile Include="Services\DataContract\CatalogoRequest.cs" />
     <Compile Include="Services\DataContract\CitaModalidad.cs" />
     <Compile Include="Services\DataContract\CitaNuevaRequest.cs" />
+    <Compile Include="Services\DataContract\CitaNuevaRequest_Modif_Cita.cs" />
     <Compile Include="Services\DataContract\CitaNuevaResponse.cs" />
     <Compile Include="Services\DataContract\CitaNumEquipos.cs" />
     <Compile Include="Services\DataContract\CitaReporteRequest.cs" />
     <Compile Include="Services\DataContract\CitaReporteResponse.cs" />
     <Compile Include="Services\DataContract\CitasRequest.cs" />
+    <Compile Include="Services\DataContract\ConfigDuracionModalidad.cs" />
     <Compile Include="Services\DataContract\ConfigEmailRequest.cs" />
     <Compile Include="Services\DataContract\ConfigEmailResponse.cs" />
     <Compile Include="Services\DataContract\ConfigGeneralAgenda.cs" />

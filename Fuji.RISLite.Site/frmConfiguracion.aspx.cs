@@ -33,6 +33,7 @@ namespace Fuji.RISLite.Site
         public static List<tbl_CAT_Equipo> lstEquipo = new List<tbl_CAT_Equipo>();
         public static List<tbl_CAT_TipoAdicional> lstTipoAdicional = new List<tbl_CAT_TipoAdicional>();
         public static List<tbl_CAT_TipoBoton> lstTipoControl = new List<tbl_CAT_TipoBoton>();
+        public static List<clsAdicionales> lstAdicionales = new List<clsAdicionales>();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -266,11 +267,13 @@ namespace Fuji.RISLite.Site
                 request.intTipoAdicional = Convert.ToInt32(ddlTipoVariable.SelectedValue);
                 response = RisService.getAdicionales(request);
                 grvAdicional.DataSource = null;
+                lstAdicionales = null;
                 if (response != null)
                 {
                     if (response.Count > 0)
                     {
                         grvAdicional.DataSource = response;
+                        lstAdicionales = response;
                     }
                 }
                 grvAdicional.DataBind();
@@ -3995,6 +3998,30 @@ namespace Fuji.RISLite.Site
                 mdl.intTipoAdicionalID = Convert.ToInt32(ddlTipoVariable.SelectedValue);
                 mdl.intTipoBotonID = Convert.ToInt32(ddlTipoControl.SelectedValue);
                 mdl.vchNombreAdicional = txtNomAdi.Text;
+                var items = radComboxGenero.CheckedItems;
+                var items2 = radComboEdad.CheckedItems;
+                foreach (var item in items)
+                {
+                    if (item.Value != "1")
+                    {
+                        mdl.intHombre = 1;
+                    }
+                    if (item.Value != "2")
+                    {
+                        mdl.intMujer = 2;
+                    }
+                }
+                foreach (var item in items2)
+                {
+                    if (item.Value != "3")
+                    {
+                        mdl.intMayor = 3;
+                    }
+                    if (item.Value != "4")
+                    {
+                        mdl.intMenor = 4;
+                    }
+                }
                 string folderPath = Server.MapPath("~/Iconos/" + "/" + ddlSitioAdicionales.SelectedValue + "/");
                 foreach (UploadedFile f in RadFileUp.UploadedFiles)
                 {
@@ -4155,12 +4182,77 @@ namespace Fuji.RISLite.Site
                             ShowMessage("Favor de revisar la información.", MessageType.Error, "alert_container");
                         }
                         break;
+                    case "Activar":
+                        intAdicionalesID = Convert.ToInt32(e.CommandArgument.ToString());
+                        lblAdicionalItem.Text = lstAdicionales.Where(x => x.intAdicionalesID == intAdicionalesID).First().vchNombreAdicional;
+                        cargarAdicionalesPor(intAdicionalesID);
+                        ScriptManager.RegisterStartupScript(Page, Page.GetType(), "mdlActivos", "$('#mdlActivos').modal();", true);
+                        break;
                 }
             }
             catch (Exception eRU)
             {
                 ShowMessage("Favor de revisar la información: " + eRU.Message, MessageType.Error, "alert_container");
                 Log.EscribeLog("Existe un error grvAdicional_RowCommand: " + eRU.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargarAdicionalesPor(int intAdicionalesID)
+        {
+            try
+            {
+                AdicionalesRequest request = new AdicionalesRequest();
+                List<clsAdicionales> lst = new List<clsAdicionales>();
+                request.intAdicionalesID = intAdicionalesID;
+                request.mdlUser = Usuario;
+                lst = RisService.getAdicionalesREL(request);
+                int uno = 0;
+                int dos = 0;
+                int tres = 0;
+                int cuatro = 0;
+
+                if (lst.Count > 0)
+                {
+                    foreach(clsAdicionales item in lst)
+                    {
+                        RadComboBoxItem itemCbx = new RadComboBoxItem();
+                        switch (item.intAdiEspecificoID)
+                        {
+                            case 1:
+                                uno = 1;
+                                itemCbx = radComboGeneroItem.Items.FindItemByValue("1");
+                                itemCbx.Selected = true;
+                                itemCbx.Checked = true;
+                                radComboGeneroItem.CheckBoxes = itemCbx.Checked;
+                                break;
+                            case 2:
+                                dos = 2;
+                                itemCbx = radComboGeneroItem.Items.FindItemByValue("2");
+                                itemCbx.Selected = true;
+                                itemCbx.Checked = true;
+                                radComboGeneroItem.CheckBoxes = itemCbx.Checked;
+                                break;
+                            case 3:
+                                tres = 3;
+                                itemCbx = radComboEdadItem.Items.FindItemByValue("3");
+                                itemCbx.Selected = true;
+                                itemCbx.Checked = true;
+                                radComboEdadItem.CheckBoxes = itemCbx.Checked;
+                                break;
+                            case 4:
+                                cuatro = 4;
+                                itemCbx = radComboEdadItem.Items.FindItemByValue("4");
+                                itemCbx.Selected = true;
+                                itemCbx.Checked = true;
+                                radComboEdadItem.CheckBoxes = itemCbx.Checked;
+                                break;
+                        }
+                    }
+                }
+            }
+            catch(Exception eCAPor)
+            {
+                Log.EscribeLog("Existe un error en cargarAdicionalesPor: " + eCAPor.Message, 3, Usuario.vchUsuario);
             }
         }
 
@@ -4979,6 +5071,104 @@ namespace Fuji.RISLite.Site
             {
                 Log.EscribeLog("Existe un error txtBandejaMT_TextChanged de frmConfiguracion: " + ex.Message, 3, Usuario.vchUsuario);
             }
+        }
+
+        protected void btnGuardarActivos_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                clsAdicionales adi = new clsAdicionales();
+                adi = obtenerAdicionalesRel();
+                AdicionalesRequest request = new AdicionalesRequest();
+                AdicionalesResponse response = new AdicionalesResponse();
+                request.mdlUser = Usuario;
+                request.mdlAdicional = adi;
+                response = RisService.setAdicionalesREL(request);
+                if(response!= null)
+                {
+                    if (response.Success)
+                    {
+                        ShowMessage("Se guardo correctamente.", MessageType.Correcto, "alert_container");
+                        limpiarControlesAdicionalREL();
+                        ScriptManager.RegisterStartupScript(Page, Page.GetType(), "mdlActivos", "$('#mdlActivos').modal('hide');", true);
+                    }
+                    else
+                    {
+                        ShowMessage("Verificar la información: " + response.Mensaje, MessageType.Error, "alert_container");
+                    }
+                }
+                else
+                {
+                    ShowMessage("Verificar la información.", MessageType.Error, "alert_container");
+                }
+            }
+            catch(Exception eGAc)
+            {
+                Log.EscribeLog("Existe un error al guardar: " + eGAc.Message, 3, Usuario.vchUsuario);
+                ShowMessage("Existe un error al guardar: " + eGAc.Message, MessageType.Error, "alert_container");
+            }
+        }
+
+        private void limpiarControlesAdicionalREL()
+        {
+            try
+            {
+                lblintAdicionalID.Text = "";
+                foreach(RadComboBoxItem item in radComboGeneroItem.Items)
+                {
+                    item.Checked = false;
+                    item.Selected = false;
+                    radComboGeneroItem.CheckBoxes = item.Checked;
+                }
+                foreach (RadComboBoxItem item in radComboEdadItem.Items)
+                {
+                    item.Checked = false;
+                    item.Selected = false;
+                    radComboEdadItem.CheckBoxes = item.Checked;
+                }
+            }
+            catch (Exception eGAc)
+            {
+                Log.EscribeLog("Existe un error en limpiarControlesAdicionalREL: " + eGAc.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private clsAdicionales obtenerAdicionalesRel()
+        {
+            clsAdicionales mdl = new clsAdicionales();
+            try
+            {
+                mdl.intAdicionalesID = Convert.ToInt32(lblintAdicionalID.Text.ToString());
+                var items = radComboxGenero.CheckedItems;
+                var items2 = radComboEdad.CheckedItems;
+                foreach (var item in items)
+                {
+                    if (item.Value != "1")
+                    {
+                        mdl.intHombre = 1;
+                    }
+                    if (item.Value != "2")
+                    {
+                        mdl.intMujer = 2;
+                    }
+                }
+                foreach (var item in items2)
+                {
+                    if (item.Value != "3")
+                    {
+                        mdl.intMayor = 3;
+                    }
+                    if (item.Value != "4")
+                    {
+                        mdl.intMenor = 4;
+                    }
+                }
+            }
+            catch (Exception eGAc)
+            {
+                Log.EscribeLog("Existe un error en obtenerAdicionalesRel: " + eGAc.Message, 3, Usuario.vchUsuario);
+            }
+            return mdl;
         }
     }
 }

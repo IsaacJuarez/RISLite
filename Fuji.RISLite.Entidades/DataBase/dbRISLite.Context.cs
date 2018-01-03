@@ -83,6 +83,8 @@ namespace Fuji.RISLite.Entidades.DataBase
         public DbSet<tbl_DET_Cita> tbl_DET_Cita { get; set; }
         public DbSet<tbl_REL_ModalidadesTecnico> tbl_REL_ModalidadesTecnico { get; set; }
         public DbSet<tbl_REL_EstudioTecnico> tbl_REL_EstudioTecnico { get; set; }
+        public DbSet<tbl_REL_AdicionalEspecificaciones> tbl_REL_AdicionalEspecificaciones { get; set; }
+        public DbSet<tbl_CAT_AdicionalEspecifico> tbl_CAT_AdicionalEspecifico { get; set; }
     
         public virtual ObjectResult<stp_updateCatEstatus_Result> stp_updateCatEstatus(Nullable<int> intCatalogoID, Nullable<bool> bitActivo, Nullable<int> intPrimaryKey)
         {
@@ -247,31 +249,6 @@ namespace Fuji.RISLite.Entidades.DataBase
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getCitaReporte_Result>("stp_getCitaReporte", intCitaIDParameter);
         }
     
-        public virtual ObjectResult<stp_getCitas_Result> stp_getCitas(string vchNombre, Nullable<int> intModalidadID, Nullable<System.DateTime> datFechaInicio, Nullable<System.DateTime> datFechaFin, Nullable<int> intSitioID)
-        {
-            var vchNombreParameter = vchNombre != null ?
-                new ObjectParameter("vchNombre", vchNombre) :
-                new ObjectParameter("vchNombre", typeof(string));
-    
-            var intModalidadIDParameter = intModalidadID.HasValue ?
-                new ObjectParameter("intModalidadID", intModalidadID) :
-                new ObjectParameter("intModalidadID", typeof(int));
-    
-            var datFechaInicioParameter = datFechaInicio.HasValue ?
-                new ObjectParameter("datFechaInicio", datFechaInicio) :
-                new ObjectParameter("datFechaInicio", typeof(System.DateTime));
-    
-            var datFechaFinParameter = datFechaFin.HasValue ?
-                new ObjectParameter("datFechaFin", datFechaFin) :
-                new ObjectParameter("datFechaFin", typeof(System.DateTime));
-    
-            var intSitioIDParameter = intSitioID.HasValue ?
-                new ObjectParameter("intSitioID", intSitioID) :
-                new ObjectParameter("intSitioID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getCitas_Result>("stp_getCitas", vchNombreParameter, intModalidadIDParameter, datFechaInicioParameter, datFechaFinParameter, intSitioIDParameter);
-        }
-    
         public virtual ObjectResult<stp_getEstudiosPaciente_Result> stp_getEstudiosPaciente(Nullable<int> intPacienteID)
         {
             var intPacienteIDParameter = intPacienteID.HasValue ?
@@ -383,6 +360,44 @@ namespace Fuji.RISLite.Entidades.DataBase
         public virtual ObjectResult<string> stp_updateCita()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("stp_updateCita");
+        }
+    
+        public virtual ObjectResult<stp_getBusquedaPacienteMod_Result> stp_getBusquedaPacienteMod(string vchCadena, Nullable<int> intSitioID)
+        {
+            var vchCadenaParameter = vchCadena != null ?
+                new ObjectParameter("vchCadena", vchCadena) :
+                new ObjectParameter("vchCadena", typeof(string));
+    
+            var intSitioIDParameter = intSitioID.HasValue ?
+                new ObjectParameter("intSitioID", intSitioID) :
+                new ObjectParameter("intSitioID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getBusquedaPacienteMod_Result>("stp_getBusquedaPacienteMod", vchCadenaParameter, intSitioIDParameter);
+        }
+    
+        public virtual ObjectResult<stp_getCitas_Result> stp_getCitas(string vchNombre, Nullable<int> intModalidadID, Nullable<System.DateTime> datFechaInicio, Nullable<System.DateTime> datFechaFin, Nullable<int> intSitioID)
+        {
+            var vchNombreParameter = vchNombre != null ?
+                new ObjectParameter("vchNombre", vchNombre) :
+                new ObjectParameter("vchNombre", typeof(string));
+    
+            var intModalidadIDParameter = intModalidadID.HasValue ?
+                new ObjectParameter("intModalidadID", intModalidadID) :
+                new ObjectParameter("intModalidadID", typeof(int));
+    
+            var datFechaInicioParameter = datFechaInicio.HasValue ?
+                new ObjectParameter("datFechaInicio", datFechaInicio) :
+                new ObjectParameter("datFechaInicio", typeof(System.DateTime));
+    
+            var datFechaFinParameter = datFechaFin.HasValue ?
+                new ObjectParameter("datFechaFin", datFechaFin) :
+                new ObjectParameter("datFechaFin", typeof(System.DateTime));
+    
+            var intSitioIDParameter = intSitioID.HasValue ?
+                new ObjectParameter("intSitioID", intSitioID) :
+                new ObjectParameter("intSitioID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getCitas_Result>("stp_getCitas", vchNombreParameter, intModalidadIDParameter, datFechaInicioParameter, datFechaFinParameter, intSitioIDParameter);
         }
     }
 }

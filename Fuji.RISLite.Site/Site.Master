@@ -107,7 +107,7 @@
                 try { ace.settings.loadState('sidebar') } catch (e) { }
 			</script>
 
-			<div class="sidebar-shortcuts" id="sidebar-shortcuts">
+			<%--<div class="sidebar-shortcuts" id="sidebar-shortcuts">
 				<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
 					<a class="btn btn-success" title="" runat="server" id="btnShort1" disabled="true">
 						<i class="" id="btn1" runat="server" ></i>
@@ -135,7 +135,7 @@
 
 					<span class="btn btn-danger"></span>
 				</div>
-			</div><!-- /.sidebar-shortcuts -->
+			</%--div><!-- /.sidebar-shortcuts -->--%>
 
             <ul class="nav nav-list">
                 <li class="" id="li1" style="">
@@ -170,13 +170,45 @@
 					<b class="arrow"></b>
 				</li>
 
-                <%--<li class="" id="li5">
-					<a runat="server" id="A1" href="frmConfiguracion.aspx">
-						<i class="menu-icon fa fa-wrench"  runat="server" id="i1"></i>
-						<span class="menu-text"> <asp:Label runat="server" Text="Nueva Configuración" ID="Label1"></asp:Label> </span>
+                <li class="" id="li5">
+					<a runat="server" id="Menu5" href="#"  visible="false">
+						<i class="menu-icon fa fa-wrench"  runat="server" id="imgMenu5"></i>
+						<span class="menu-text"> <asp:Label runat="server" Text="" ID="lblMenu5"></asp:Label> </span>
 					</a>
 					<b class="arrow"></b>
-				</li>--%>
+				</li>
+
+                <li class="" id="li6">
+					<a runat="server" id="Menu6" href="#"  visible="false">
+						<i class="menu-icon fa fa-wrench"  runat="server" id="imgMenu6"></i>
+						<span class="menu-text"> <asp:Label runat="server" Text="" ID="lblMenu6"></asp:Label> </span>
+					</a>
+					<b class="arrow"></b>
+				</li>
+
+                <li class="" id="li7">
+					<a runat="server" id="Menu7" href="#"  visible="false">
+						<i class="menu-icon fa fa-wrench"  runat="server" id="imgMenu7"></i>
+						<span class="menu-text"> <asp:Label runat="server" Text="" ID="lblMenu7"></asp:Label> </span>
+					</a>
+					<b class="arrow"></b>
+				</li>
+
+                <li class="" id="li8">
+					<a runat="server" id="Menu8" href="#"  visible="false">
+						<i class="menu-icon fa fa-wrench"  runat="server" id="imgMenu8"></i>
+						<span class="menu-text"> <asp:Label runat="server" Text="" ID="lblMenu8"></asp:Label> </span>
+					</a>
+					<b class="arrow"></b>
+				</li>
+
+                <li class="" id="li9">
+					<a runat="server" id="Menu9" href="#"  visible="false">
+						<i class="menu-icon fa fa-wrench"  runat="server" id="imgMenu9"></i>
+						<span class="menu-text"> <asp:Label runat="server" Text="" ID="lblMenu9"></asp:Label> </span>
+					</a>
+					<b class="arrow"></b>
+				</li>
             </ul><!-- /.nav-list -->
 
             <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">

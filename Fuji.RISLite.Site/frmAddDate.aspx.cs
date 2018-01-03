@@ -166,8 +166,22 @@ namespace Fuji.RISLite.Site
                                     bitEditar = false;
                                     if (Request.QueryString.Count > 0)
                                     {
-                                        if (Request.QueryString["var"] != null)
-                                            nuevaCita(Request.QueryString["var"].ToString());
+
+                                       string parametros = Security.Decrypt(Request.QueryString["var"].ToString());
+
+                                        string[] lista_par = parametros.Split('|');
+
+                                        if (lista_par.Count() == 2)
+                                        {
+                                            ModificacionCita(Request.QueryString["var"].ToString());
+                                        }
+
+                                        else
+                                        {
+                                            if (Request.QueryString["var"] != null)
+                                                nuevaCita(Request.QueryString["var"].ToString());
+                                        }
+                                        
                                     }
                                 }
                                 else
@@ -214,11 +228,18 @@ namespace Fuji.RISLite.Site
                     request.mdlUser = Usuario;
                     request.intSitioID = Usuario.intSitioID;
                     request.busqueda = prefixText;
-                    response = service.getBusquedaPacientes(request);
+                    response = service.getBusquedaPacientesMod(request);
                     if (response != null)
                     {
-                        if (response.lstCadenas.Count > 0)
-                            lstPaciente = response.lstCadenas;
+                        if (response.lstPacientes.Count > 0)
+                        {
+                            foreach(clsPaciente item in response.lstPacientes)
+                            {
+                                string cadena = AjaxControlToolkit.AutoCompleteExtender.CreateAutoCompleteItem(item.vchNombre, item.intPacienteID.ToString());
+                                lstPaciente.Add(cadena);
+                            }
+                        }
+                            
                     }
                 }
 
@@ -1017,8 +1038,8 @@ namespace Fuji.RISLite.Site
                         Session["intModSug"] = do_stEstudios.First(x => x.intRelModPres == inrRelModPres).intModalidadID.ToString();
                         carga_tabla_citas(do_stEstudios.First(x => x.intRelModPres == inrRelModPres).intModalidadID.ToString(), DateTime.Today, IDMODALIDAD, ID_modalidad_seleccionada, Usuario.intSitioID);
 
-                        RB_antes_fecha.Enabled = true;
-                        RB_despues_feha.Enabled = true;
+                        //RB_antes_fecha.Enabled = true;
+                        //RB_despues_feha.Enabled = true;
                         calFecIni.SelectedDate = DateTime.Today;
                         calFecFin.SelectedDate = DateTime.Today.AddDays(7);
                         btnCargarSug.Enabled = true;
@@ -1169,81 +1190,88 @@ namespace Fuji.RISLite.Site
         {
             try
             {
-                clsPaciente mdlPaciente = new clsPaciente();
-                clsDireccion mdlDireccion = new clsDireccion();
-                List<tbl_REL_IdentificacionPaciente> lstIden = new List<tbl_REL_IdentificacionPaciente>();
-                List<tbl_DET_PacienteDinamico> lstVar = new List<tbl_DET_PacienteDinamico>();
-                mdlPaciente = obtenerPacienteDet();
-                mdlDireccion = obtenerDireccion();
-                lstIden = obtenerIdentificaciones();
-                lstVar = obtenerVarAdicionales();                
-                if (mdlPaciente != null)
+                if (validaFechaNac())
                 {
-                    PacienteRequest request = new PacienteRequest();
-                    PacienteResponse response = new PacienteResponse();
-                    request.mdlUser = Usuario;
-                    request.intSitioID = Usuario.intSitioID;
-                    request.mdlDireccion = mdlDireccion;
-                    request.mdlPaciente = mdlPaciente;
-                    request.mdlPaciente.intSitioID = Usuario.intSitioID;
-                    request.lstIdent = lstIden;
-                    request.lstVarAdic = lstVar;
-                    if (request != null)
+                    clsPaciente mdlPaciente = new clsPaciente();
+                    clsDireccion mdlDireccion = new clsDireccion();
+                    List<tbl_REL_IdentificacionPaciente> lstIden = new List<tbl_REL_IdentificacionPaciente>();
+                    List<tbl_DET_PacienteDinamico> lstVar = new List<tbl_DET_PacienteDinamico>();
+                    mdlPaciente = obtenerPacienteDet();
+                    mdlDireccion = obtenerDireccion();
+                    lstIden = obtenerIdentificaciones();
+                    lstVar = obtenerVarAdicionales();
+                    if (mdlPaciente != null)
                     {
-                        if (bitEditar)
+                        PacienteRequest request = new PacienteRequest();
+                        PacienteResponse response = new PacienteResponse();
+                        request.mdlUser = Usuario;
+                        request.intSitioID = Usuario.intSitioID;
+                        request.mdlDireccion = mdlDireccion;
+                        request.mdlPaciente = mdlPaciente;
+                        request.mdlPaciente.intSitioID = Usuario.intSitioID;
+                        request.lstIdent = lstIden;
+                        request.lstVarAdic = lstVar;
+                        if (request != null)
                         {
-                            if (request.mdlDireccion != null)
+                            if (bitEditar)
                             {
-                                request.mdlDireccion.intDireccionID = Convert.ToInt32(Session["intDireccionID"]);
-                            }
-
-                            if (request.mdlPaciente != null && lblIDs.Text != "")
-                            {
-                                request.mdlPaciente.intPacienteID = Convert.ToInt32(lblIDs.Text);
-                            }
-                            response = RisService.setActualizaPaciente(request);
-                            if (response != null)
-                            {
-                                if (response.Success)
+                                if (request.mdlDireccion != null)
                                 {
-                                    ShowMessage("Se actualizó correctamente el paciente." + response.Mensaje, MessageType.Correcto, "alert_container");
-                                    cargarDetallePaciente(request.mdlPaciente.intPacienteID);
-                                    lblIDs.Text = request.mdlPaciente.intPacienteID.ToString();
-                                    lblIDs.Visible = true;
-                                    btnEditPaciente.Visible = true;
+                                    request.mdlDireccion.intDireccionID = Convert.ToInt32(Session["intDireccionID"]);
+                                }
+
+                                if (request.mdlPaciente != null && lblIDs.Text != "")
+                                {
+                                    request.mdlPaciente.intPacienteID = Convert.ToInt32(lblIDs.Text);
+                                }
+                                response = RisService.setActualizaPaciente(request);
+                                if (response != null)
+                                {
+                                    if (response.Success)
+                                    {
+                                        ShowMessage("Se actualizó correctamente el paciente." + response.Mensaje, MessageType.Correcto, "alert_container");
+                                        cargarDetallePaciente(request.mdlPaciente.intPacienteID);
+                                        lblIDs.Text = request.mdlPaciente.intPacienteID.ToString();
+                                        lblIDs.Visible = true;
+                                        btnEditPaciente.Visible = true;
+                                    }
+                                    else
+                                    {
+                                        ShowMessage("Verificar la informacion: " + response.Mensaje, MessageType.Advertencia, "alert_container");
+                                    }
                                 }
                                 else
                                 {
-                                    ShowMessage("Verificar la informacion: " + response.Mensaje, MessageType.Advertencia, "alert_container");
+                                    ShowMessage("Verificar la informacion. ", MessageType.Advertencia, "alert_container");
                                 }
                             }
                             else
                             {
-                                ShowMessage("Verificar la informacion. ", MessageType.Advertencia, "alert_container");
+                                response = RisService.setPaciente(request);
+                                if (response != null)
+                                {
+                                    if (response.Success)
+                                    {
+                                        ShowMessage("Se agregó correctamente el paciente." + response.Mensaje, MessageType.Correcto, "alert_container");
+                                        cargarDetallePaciente(response.intPacienteID);
+                                        lblIDs.Text = response.intPacienteID.ToString();
+                                        lblIDs.Visible = true;
+                                        btnEditPaciente.Visible = true;
+                                    }
+                                    else
+                                    {
+                                        ShowMessage("Verificar la informacion: " + response.Mensaje, MessageType.Advertencia, "alert_container");
+                                    }
+                                }
+                                else
+                                {
+                                    ShowMessage("Verificar la informacion. ", MessageType.Advertencia, "alert_container");
+                                }
                             }
                         }
                         else
                         {
-                            response = RisService.setPaciente(request);
-                            if (response != null)
-                            {
-                                if (response.Success)
-                                {
-                                    ShowMessage("Se agregó correctamente el paciente." + response.Mensaje, MessageType.Correcto, "alert_container");
-                                    cargarDetallePaciente(response.intPacienteID);
-                                    lblIDs.Text = response.intPacienteID.ToString();
-                                    lblIDs.Visible = true;
-                                    btnEditPaciente.Visible = true;
-                                }
-                                else
-                                {
-                                    ShowMessage("Verificar la informacion: " + response.Mensaje, MessageType.Advertencia, "alert_container");
-                                }
-                            }
-                            else
-                            {
-                                ShowMessage("Verificar la informacion. ", MessageType.Advertencia, "alert_container");
-                            }
+                            ShowMessage("Verificar la informacion. ", MessageType.Advertencia, "alert_container");
                         }
                     }
                     else
@@ -1253,7 +1281,7 @@ namespace Fuji.RISLite.Site
                 }
                 else
                 {
-                    ShowMessage("Verificar la informacion. ", MessageType.Advertencia, "alert_container");
+                    ShowMessage("Verificar el formato de fecha de naciemiento. ", MessageType.Advertencia, "alert_container");
                 }
             }
             catch (Exception eAP)
@@ -1261,6 +1289,22 @@ namespace Fuji.RISLite.Site
                 ShowMessage("Existe un error al agregar el paciente: " + eAP.Message, MessageType.Error, "alert_container");
                 Log.EscribeLog("Existe un error en bntAddPacienteDEt_Click: " + eAP.Message, 3, Usuario.vchUsuario);
             }
+        }
+
+        private bool validaFechaNac()
+        {
+            bool valido = false;
+            try
+            {
+                DateTime dateValue;
+                valido = DateTime.TryParse(txtFecNacDet.Text, out dateValue);
+            }
+            catch(Exception evFN)
+            {
+                valido = false;
+                Log.EscribeLog("Existe un errro validaFechaNac: " + evFN.Message, 3, Usuario.vchUsuario);
+            }
+            return valido;
         }
 
         private List<tbl_DET_PacienteDinamico> obtenerVarAdicionales()
@@ -1613,6 +1657,37 @@ namespace Fuji.RISLite.Site
             }
         }
 
+        public void ModificacionCita(string id_s)
+        {
+            try
+            {
+                int contador_tabla = 1;
+
+                if (Lcontador.Text != "")
+                {
+                    contador_tabla = Convert.ToInt32(Lcontador.Text);
+                }
+
+                string parametros = Security.Decrypt(id_s);
+                string[] lista_parametros = parametros.Split('|');
+
+
+                AsignacionModalidadNuevaCita_Response response = new AsignacionModalidadNuevaCita_Response();
+                CitaNuevaRequest_Modif_Cita request = new CitaNuevaRequest_Modif_Cita();
+                request.mdlUser = Usuario;
+                response = RisService.getEstudioDetalle_ModificacionCIta(request, lista_parametros[0], contador_tabla);
+
+              
+                cargarDetallePaciente(Convert.ToInt32(lista_parametros[1]));
+                cargarEstudioGrid_modificacionCita(response);
+            }
+            catch (Exception eNC)
+            {
+                ShowMessage("Existe un error al consultar el paciente: " + eNC.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error en nuevaCita: " + eNC.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
         protected void txtBusquedaEstudio_TextChanged(object sender, EventArgs e)
         {
             try
@@ -1632,6 +1707,33 @@ namespace Fuji.RISLite.Site
             catch (Exception etC)
             {
                 Log.EscribeLog("Existe un error en txtBusquedaEstudio_TextChanged: " + etC.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargarEstudioGrid_modificacionCita(AsignacionModalidadNuevaCita_Response response)
+        {           
+            try
+            {                
+                if (response != null)
+                {
+                    int contador_tabla = 0;
+                    contador_tabla++;
+                    //HF_contador_tabla_modalidad.Value = Convert.ToString(contador_tabla);
+                    Lcontador.Text = Convert.ToString(contador_tabla);
+
+                    HFIDModalidad_calendario.Value = "";
+
+                    do_stEstudios.Clear();
+                    do_stEstudios.Add(response.mdlEstudio);
+                    grvEstudios.DataSource = null;
+                    grvEstudios.DataBind();
+                    grvEstudios.DataSource = do_stEstudios;
+                    grvEstudios.DataBind();
+                }
+            }
+            catch (Exception ecEG)
+            {
+                Log.EscribeLog("Existe un error en cargarEstudioGrid: " + ecEG.Message, 3, Usuario.vchUsuario);
             }
         }
 
@@ -2227,6 +2329,9 @@ namespace Fuji.RISLite.Site
         {
             try
             {
+                RC_Agenda.Visible = true;
+                RC_Agenda.SelectedDate = fecha;                
+
                 L_modalidad_seleccion.Text = id_modalidad_seleccionada;
 
                 int id_mod = Convert.ToInt32(id);
@@ -2532,20 +2637,20 @@ namespace Fuji.RISLite.Site
                                             dt_citas_generadas.Rows.Add(1, i, contador + " / " + estudios_posibles_x_modalidad, (estudios_posibles_x_modalidad - contador), porcen_Rating);
                                             break;
                                         case 1:
-                                            LDia2.Text = fecha_revision.ToShortDateString();
-                                            dt_dia2.Rows.Add(2, i, contador + " / " + estudios_posibles_x_modalidad, (estudios_posibles_x_modalidad - contador), porcen_Rating);
+                                            //LDia2.Text = fecha_revision.ToShortDateString();
+                                            //dt_dia2.Rows.Add(2, i, contador + " / " + estudios_posibles_x_modalidad, (estudios_posibles_x_modalidad - contador), porcen_Rating);
                                             break;
                                         case 2:
-                                            LDia3.Text = fecha_revision.ToShortDateString();
-                                            dt_dia3.Rows.Add(3, i, contador + " / " + estudios_posibles_x_modalidad, (estudios_posibles_x_modalidad - contador), porcen_Rating);
+                                            //LDia3.Text = fecha_revision.ToShortDateString();
+                                            //dt_dia3.Rows.Add(3, i, contador + " / " + estudios_posibles_x_modalidad, (estudios_posibles_x_modalidad - contador), porcen_Rating);
                                             break;
                                         case 3:
-                                            LDia4.Text = fecha_revision.ToShortDateString();
-                                            dt_dia4.Rows.Add(4, i, contador + " / " + estudios_posibles_x_modalidad, (estudios_posibles_x_modalidad - contador), porcen_Rating);
+                                            //LDia4.Text = fecha_revision.ToShortDateString();
+                                            //dt_dia4.Rows.Add(4, i, contador + " / " + estudios_posibles_x_modalidad, (estudios_posibles_x_modalidad - contador), porcen_Rating);
                                             break;
                                         case 4:
-                                            LDia5.Text = fecha_revision.ToShortDateString();
-                                            dt_dia5.Rows.Add(5, i, contador + " / " + estudios_posibles_x_modalidad, (estudios_posibles_x_modalidad - contador), porcen_Rating);
+                                            //LDia5.Text = fecha_revision.ToShortDateString();
+                                            //dt_dia5.Rows.Add(5, i, contador + " / " + estudios_posibles_x_modalidad, (estudios_posibles_x_modalidad - contador), porcen_Rating);
                                             break;
                                     }
                                 }
@@ -2555,17 +2660,17 @@ namespace Fuji.RISLite.Site
                         RG_Dia1.DataSource = dt_citas_generadas;
                         RG_Dia1.DataBind();
 
-                        RG_Dia2.DataSource = dt_dia2;
-                        RG_Dia2.DataBind();
+                        //RG_Dia2.DataSource = dt_dia2;
+                        //RG_Dia2.DataBind();
 
-                        RG_Dia3.DataSource = dt_dia3;
-                        RG_Dia3.DataBind();
+                        //RG_Dia3.DataSource = dt_dia3;
+                        //RG_Dia3.DataBind();
 
-                        RG_Dia4.DataSource = dt_dia4;
-                        RG_Dia4.DataBind();
+                        //RG_Dia4.DataSource = dt_dia4;
+                        //RG_Dia4.DataBind();
 
-                        RG_Dia5.DataSource = dt_dia5;
-                        RG_Dia5.DataBind();
+                        //RG_Dia5.DataSource = dt_dia5;
+                        //RG_Dia5.DataBind();
                     }
                     catch (Exception ecU)
                     {
@@ -2777,7 +2882,7 @@ namespace Fuji.RISLite.Site
         {
             if (e.CommandName == "Agregar_cita")
             {
-
+                RC_Agenda.Visible = false;
                 string IDMOD = HFIDModalidad_calendario.Value;
                 GridDataItem item = (GridDataItem)e.Item;
                 string strtxt = item["ID_tabla"].Text;
@@ -2792,16 +2897,16 @@ namespace Fuji.RISLite.Site
                         dia_cita = LDia1.Text;
                         break;
                     case (2):
-                        dia_cita = LDia2.Text;
+                        //dia_cita = LDia2.Text;
                         break;
                     case (3):
-                        dia_cita = LDia3.Text;
+                        //dia_cita = LDia3.Text;
                         break;
                     case (4):
-                        dia_cita = LDia4.Text;
+                        //dia_cita = LDia4.Text;
                         break;
                     case (5):
-                        dia_cita = LDia5.Text;
+                        //dia_cita = LDia5.Text;
                         break;
                 }
 
@@ -2827,29 +2932,29 @@ namespace Fuji.RISLite.Site
                     RG_Dia1.DataSourceID = null;
                     RG_Dia1.DataBind();
                     LDia1.Text = "";
-                    RG_Dia2.DataSource = null;
-                    RG_Dia2.DataSourceID = null;
-                    RG_Dia2.DataBind();
-                    LDia2.Text = "";
-                    RG_Dia3.DataSource = null;
-                    RG_Dia3.DataSourceID = null;
-                    RG_Dia3.DataBind();
-                    LDia3.Text = "";
-                    RG_Dia4.DataSource = null;
-                    RG_Dia4.DataSourceID = null;
-                    RG_Dia4.DataBind();
-                    LDia4.Text = "";
-                    RG_Dia5.DataSource = null;
-                    RG_Dia5.DataSourceID = null;
-                    RG_Dia5.DataBind();
-                    LDia5.Text = "";
+                    //RG_Dia2.DataSource = null;
+                    //RG_Dia2.DataSourceID = null;
+                    //RG_Dia2.DataBind();
+                    //LDia2.Text = "";
+                    //RG_Dia3.DataSource = null;
+                    //RG_Dia3.DataSourceID = null;
+                    //RG_Dia3.DataBind();
+                    //LDia3.Text = "";
+                    //RG_Dia4.DataSource = null;
+                    //RG_Dia4.DataSourceID = null;
+                    //RG_Dia4.DataBind();
+                    //LDia4.Text = "";
+                    //RG_Dia5.DataSource = null;
+                    //RG_Dia5.DataSourceID = null;
+                    //RG_Dia5.DataBind();
+                    //LDia5.Text = "";
 
                     Ltitulo.Text = "";
                     IMG_encabezado.ImageUrl = "";
                     Image1.Style["Background"] = "White";
 
-                    RB_antes_fecha.Enabled = false;
-                    RB_despues_feha.Enabled = false;
+                    //RB_antes_fecha.Enabled = false;
+                    //RB_despues_feha.Enabled = false;
 
                     //string z = "";
                 }
@@ -2865,18 +2970,18 @@ namespace Fuji.RISLite.Site
                 RG_Dia1.DataSource = null;
                 RG_Dia1.DataSourceID = null;
                 RG_Dia1.DataBind();
-                RG_Dia2.DataSource = null;
-                RG_Dia2.DataSourceID = null;
-                RG_Dia2.DataBind();
-                RG_Dia3.DataSource = null;
-                RG_Dia3.DataSourceID = null;
-                RG_Dia3.DataBind();
-                RG_Dia4.DataSource = null;
-                RG_Dia4.DataSourceID = null;
-                RG_Dia4.DataBind();
-                RG_Dia5.DataSource = null;
-                RG_Dia5.DataSourceID = null;
-                RG_Dia5.DataBind();
+                //RG_Dia2.DataSource = null;
+                //RG_Dia2.DataSourceID = null;
+                //RG_Dia2.DataBind();
+                //RG_Dia3.DataSource = null;
+                //RG_Dia3.DataSourceID = null;
+                //RG_Dia3.DataBind();
+                //RG_Dia4.DataSource = null;
+                //RG_Dia4.DataSourceID = null;
+                //RG_Dia4.DataBind();
+                //RG_Dia5.DataSource = null;
+                //RG_Dia5.DataSourceID = null;
+                //RG_Dia5.DataBind();
 
                 DateTime FECHA = Convert.ToDateTime(LDia1.Text).AddDays(-5);
 
@@ -2886,23 +2991,23 @@ namespace Fuji.RISLite.Site
 
         protected void RB_despues_feha_Click(object sender, EventArgs e)
         {
-            RB_antes_fecha.Enabled = true;
-            RB_despues_feha.Enabled = true;
+            //RB_antes_fecha.Enabled = true;
+            //RB_despues_feha.Enabled = true;
             RG_Dia1.DataSource = null;
             RG_Dia1.DataSourceID = null;
             RG_Dia1.DataBind();
-            RG_Dia2.DataSource = null;
-            RG_Dia2.DataSourceID = null;
-            RG_Dia2.DataBind();
-            RG_Dia3.DataSource = null;
-            RG_Dia3.DataSourceID = null;
-            RG_Dia3.DataBind();
-            RG_Dia4.DataSource = null;
-            RG_Dia4.DataSourceID = null;
-            RG_Dia4.DataBind();
-            RG_Dia5.DataSource = null;
-            RG_Dia5.DataSourceID = null;
-            RG_Dia5.DataBind();
+            //RG_Dia2.DataSource = null;
+            //RG_Dia2.DataSourceID = null;
+            //RG_Dia2.DataBind();
+            //RG_Dia3.DataSource = null;
+            //RG_Dia3.DataSourceID = null;
+            //RG_Dia3.DataBind();
+            //RG_Dia4.DataSource = null;
+            //RG_Dia4.DataSourceID = null;
+            //RG_Dia4.DataBind();
+            //RG_Dia5.DataSource = null;
+            //RG_Dia5.DataSourceID = null;
+            //RG_Dia5.DataBind();
 
             RG_Dia1.Dispose();
             DateTime FECHA = Convert.ToDateTime(LDia1.Text).AddDays(5);
@@ -2962,6 +3067,18 @@ namespace Fuji.RISLite.Site
             {
                 Log.EscribeLog("Existe un error en radAjaxPanelPaciente_AjaxRequest: " + etC.Message, 3, Usuario.vchUsuario);
             }
+        }
+
+        protected void RC_Agenda_SelectionChanged(object sender, Telerik.Web.UI.Calendar.SelectedDatesEventArgs e)
+        {
+            DateTime fecha_calendario = ((Telerik.Web.UI.RadCalendar)sender).SelectedDate;
+
+            RG_Dia1.DataSourceID = null;
+            RG_Dia1.DataBind();         
+            RG_Dia1.Dispose();
+            //DateTime FECHA = Convert.ToDateTime(LDia1.Text).AddDays(5);
+            carga_tabla_citas(LIDModalidad.Text, fecha_calendario, LIDModalidad.Text, L_modalidad_seleccion.Text, Usuario.intSitioID);
+
         }
     }
 }

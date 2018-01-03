@@ -1831,6 +1831,24 @@ namespace Fuji.RISLite.Site.Services
             return response;
         }
 
+        public PacienteResponse getBusquedaPacientesMod(PacienteRequest request)
+        {
+            PacienteResponse response = new PacienteResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response.lstPacientes = controller.getBusquedaPacientesMod(request.busqueda, request.intSitioID, request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getBusquedaPacientesMod: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
         public PacienteResponse getBusquedaPacientesList(PacienteRequest request)
         {
             PacienteResponse response = new PacienteResponse();
@@ -1899,6 +1917,24 @@ namespace Fuji.RISLite.Site.Services
             catch (Exception egU)
             {
                 Log.EscribeLog("Existe un error en getEstudioDetalle: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public AsignacionModalidadNuevaCita_Response getEstudioDetalle_ModificacionCIta(CitaNuevaRequest_Modif_Cita request, string id_estudio, int id_tabla_modalidad)
+        {
+            AsignacionModalidadNuevaCita_Response response = new AsignacionModalidadNuevaCita_Response();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response.mdlEstudio = controller.getEstudioDetalle_ModificacionCIta(request.mdlUser.vchUsuario, id_estudio, id_tabla_modalidad);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getEstudioDetalle_ModificacionCIta: " + egU.Message, 3, "");
             }
             return response;
         }
@@ -2301,9 +2337,47 @@ namespace Fuji.RISLite.Site.Services
             return response;
         }
 
+        public List<clsAdicionales> getAdicionalesREL(AdicionalesRequest request)
+        {
+            List<clsAdicionales> response = new List<clsAdicionales>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getAdicionalesREL(request.intAdicionalesID, request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getAdicionalesREL: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public AdicionalesResponse setAdicionalesREL(AdicionalesRequest request)
+        {
+            AdicionalesResponse response = new AdicionalesResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    response.Success = controller.setAdicionalesREL(request.mdlAdicional, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setAdicionalesREL: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
         #endregion Adicionales
-		
-		#region SugerenciasCita
+
+        #region SugerenciasCita
         public List<stp_getCitaDisponible_Result> getSugerenciasCita(SugerenciasRequest request)
         {
             List<stp_getCitaDisponible_Result> response = new List<stp_getCitaDisponible_Result>();
