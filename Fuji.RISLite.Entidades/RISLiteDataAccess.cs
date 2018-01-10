@@ -6254,6 +6254,7 @@ namespace Fuji.RISLite.DataAccess
                     if (dbRisDA.tbl_CAT_Modalidad.Any())
                     {
                         var query = (from x in dbRisDA.tbl_CAT_EstatusEstudio
+                                     where x.bitActivo == true
                                      select new { x.intEstatusEstudio, x.vchEstatus }).ToList();
                         if (query != null)
                         {

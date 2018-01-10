@@ -339,20 +339,7 @@ namespace Fuji.RISLite.Site
                     DateTime dt_inicio = Convert.ToDateTime(_mdl.datFechaInicio);
                     DateTime dt_hoy = DateTime.Now;
 
-                    int result = DateTime.Compare(dt_inicio, dt_hoy);
-
-                    if (result < 0)
-                    {
-                        string x = "";
-                    }
-                    else if (result == 0)
-                    {
-                        string y = "";
-                    }
-                    else
-                    {
-
-                    }
+                    int result = DateTime.Compare(dt_inicio, dt_hoy);                   
                     
                     switch (Estatus_)
                     {
@@ -383,8 +370,8 @@ namespace Fuji.RISLite.Site
                         case 3:
                             boton_entrega.Enabled = false;
                             boton_entrega.Visible = false;
-                            boton_agregar.Enabled = false;
-                            boton_agregar.Visible = false;
+                            boton_agregar.Enabled = true;
+                            boton_agregar.Visible = true;
                             boton_renviarEMail.Enabled = false;
                             boton_renviarEMail.Visible = false;
                             boton_imprimir.Enabled = false;

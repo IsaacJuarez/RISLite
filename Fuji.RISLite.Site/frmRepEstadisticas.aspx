@@ -50,6 +50,22 @@
                 </UpdatedControls>
             </telerik:AjaxSetting>
 
+             <telerik:AjaxSetting AjaxControlID="btnCargarSug">
+                <UpdatedControls>
+                    <telerik:AjaxUpdatedControl ControlID="RCH_Personal" />
+                    <telerik:AjaxUpdatedControl ControlID="RG_Usuarios" />                   
+                </UpdatedControls>
+            </telerik:AjaxSetting>
+
+            <telerik:AjaxSetting AjaxControlID="Buscar_grafica">
+                <UpdatedControls>
+                    <telerik:AjaxUpdatedControl ControlID="RHC_grafica_modalidad" />
+                    <telerik:AjaxUpdatedControl ControlID="RG_modalidad" />                   
+                </UpdatedControls>
+            </telerik:AjaxSetting>
+
+            
+
             <%--  <telerik:AjaxSetting AjaxControlID="RB_export">
                 <UpdatedControls>                    
                     <telerik:AjaxUpdatedControl ControlID=" RB_export" />                    
@@ -131,9 +147,9 @@
 
                                                     <div class="col-sm-4 right">
                                                         <telerik:RadComboBox ID="RCB_Modalidad" runat="server"
-                                                            AutoPostBack="true" CheckBoxes="true" Width="100%"
+                                                            AutoPostBack="true" CheckBoxes="true" Width="100%" EnableCheckAllItemsCheckBox="true"
                                                             DataTextField="vchModalidad" DataValueField="intModalidadID" RenderMode="Lightweight" ForeColor="DarkGreen">
-                                                            <Localization AllItemsCheckedString="Todas seleccionadas" ItemsCheckedString="Seleccionadas" />
+                                                            <Localization AllItemsCheckedString="Todas seleccionadas" ItemsCheckedString="Seleccionadas" CheckAllString="Seleccionar todas" />
                                                         </telerik:RadComboBox>
                                                     </div>
                                                     <div class="col-sm-1 center-block">
@@ -172,9 +188,9 @@
                                                     </div>
                                                     <div class="col-sm-4 center-block">
                                                         <telerik:RadComboBox ID="RCB_Estatus" runat="server"
-                                                            AutoPostBack="true" CheckBoxes="true" Width="100%"
+                                                            AutoPostBack="true" CheckBoxes="true" Width="100%" EnableCheckAllItemsCheckBox="true"
                                                             DataTextField="vchEstatus" DataValueField="intEstatusEstudio" RenderMode="Lightweight" ForeColor="DarkGreen">
-                                                            <Localization AllItemsCheckedString="Todos seleccionados" ItemsCheckedString="Seleccionados" />
+                                                            <Localization AllItemsCheckedString="Todos seleccionados" ItemsCheckedString="Seleccionados" CheckAllString="Seleccionar todos" />
                                                         </telerik:RadComboBox>
                                                     </div>
                                                     <div class="col-sm-1 center-block">
@@ -182,7 +198,8 @@
                                                     <div class="col-sm-1 center-block">
                                                     </div>
                                                     <div class="col-sm-4 center-block">
-                                                        <telerik:RadButton ID="RB_Buscar" runat="server" Text="Buscar" Width="100%" OnClick="RB_Buscar_Click"></telerik:RadButton>
+                                                        <%--<telerik:RadButton ID="RB_Buscar" runat="server" Text="Buscar" Width="100%" OnClick="RB_Buscar_Click" CssClass="btn btn-success"></telerik:RadButton>--%>
+                                                        <asp:Button runat="server" Width="100%" ID="Buscar_grafica" Text="Cargar grafica" CssClass="btn btn-success" OnClick="RB_Buscar_Click" />
                                                     </div>
                                                     <div class="col-sm-1 center-block">
                                                     </div>
@@ -279,7 +296,7 @@
                                                     </div>
                                                     <div class="col-sm-4 center">
                                                         <telerik:RadComboBox ID="RCB_Sitio_Personal" runat="server" Width="100%"
-                                                            OnSelectedIndexChanged="RCB_Sitio_Personal_SelectedIndexChanged" AutoPostBack="true"
+                                                            OnSelectedIndexChanged="RCB_Sitio_Personal_SelectedIndexChanged" AutoPostBack="true" EnableCheckAllItemsCheckBox="true"
                                                             DataTextField="vchNombreSitio" DataValueField="intSitioID" RenderMode="Lightweight" ForeColor="DarkGreen">
                                                         </telerik:RadComboBox>
                                                     </div>
@@ -293,9 +310,9 @@
 
                                                     <div class="col-sm-4 right">
                                                         <telerik:RadComboBox ID="RCB_Personal" runat="server"
-                                                            AutoPostBack="true" CheckBoxes="true" Width="100%"
+                                                            AutoPostBack="true" CheckBoxes="true" Width="100%" EnableCheckAllItemsCheckBox="true"
                                                             DataTextField="vchUsuario" DataValueField="intUsuarioID" RenderMode="Lightweight" ForeColor="DarkGreen">
-                                                            <Localization AllItemsCheckedString="Todas seleccionadas" ItemsCheckedString="Seleccionadas" />
+                                                            <Localization AllItemsCheckedString="Todas seleccionadas" ItemsCheckedString="Seleccionadas" CheckAllString="Seleccionar todos"/>
                                                         </telerik:RadComboBox>
                                                     </div>
                                                     <div class="col-sm-1 center-block">
@@ -334,9 +351,9 @@
                                                     </div>
                                                     <div class="col-sm-4 center-block">
                                                         <telerik:RadComboBox ID="RCB_Estatus_Personal" runat="server"
-                                                            AutoPostBack="true" CheckBoxes="true" Width="100%"
+                                                            AutoPostBack="true" CheckBoxes="true" Width="100%" EnableCheckAllItemsCheckBox="true"
                                                             DataTextField="vchEstatus" DataValueField="intEstatusEstudio" RenderMode="Lightweight" ForeColor="DarkGreen">
-                                                            <Localization AllItemsCheckedString="Todos seleccionados" ItemsCheckedString="Seleccionados" />
+                                                            <Localization AllItemsCheckedString="Todos seleccionados" ItemsCheckedString="Seleccionados" CheckAllString="Seleccionar todos"/>
                                                         </telerik:RadComboBox>
                                                     </div>
                                                     <div class="col-sm-1 center-block">
@@ -344,7 +361,8 @@
                                                     <div class="col-sm-1 center-block">
                                                     </div>
                                                     <div class="col-sm-4 center-block">
-                                                        <telerik:RadButton ID="RB_Buscar_Personal" runat="server" Text="Buscar" Width="100%" OnClick="RB_Buscar_Personal_Click"></telerik:RadButton>
+                                                       <%-- <telerik:RadButton ID="RB_Buscar_Personal" runat="server" Text="Buscar" Width="100%" OnClick="RB_Buscar_Personal_Click"></telerik:RadButton>--%>
+                                                         <asp:Button runat="server" Width="100%" ID="btnCargarSug" Text="Cargar grafica" CssClass="btn btn-success" OnClick="RB_Buscar_Personal_Click" />
                                                     </div>
                                                     <div class="col-sm-1 center-block">
                                                     </div>
