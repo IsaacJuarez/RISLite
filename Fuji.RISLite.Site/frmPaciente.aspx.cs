@@ -33,9 +33,9 @@ namespace Fuji.RISLite.Site
                 String var = "";
                 //if (!IsPostBack)
                 //{
-                if (Session["User"] != null && Session["lstVistas"] != null)
+                if (Session["UserRISAxon"] != null && Session["lstVistas"] != null)
                 {
-                    Usuario = (clsUsuario)Session["User"];
+                    Usuario = (clsUsuario)Session["UserRISAxon"];
                     if (Security.ValidateToken(Usuario.Token, Usuario.intUsuarioID.ToString(), Usuario.vchUsuario))
                     {
                         List<clsVistasUsuarios> lstVista = (List<clsVistasUsuarios>)Session["lstVistas"];
@@ -44,7 +44,7 @@ namespace Fuji.RISLite.Site
                             string vista = "frmPaciente.aspx";
                             if (lstVista.Any(x => x.vchVistaIdentificador == vista))
                             {
-                                Usuario = (clsUsuario)Session["User"];
+                                Usuario = (clsUsuario)Session["UserRISAxon"];
                                 if (Usuario != null)
                                 {
                                     cargaFormaDetalle();
@@ -91,7 +91,7 @@ namespace Fuji.RISLite.Site
                 String var = "";
                 if (!IsPostBack)
                 {
-                    if (Session["User"] != null && Session["lstVistas"] != null)
+                    if (Session["UserRISAxon"] != null && Session["lstVistas"] != null)
                     {
                         List<clsVistasUsuarios> lstVista = (List<clsVistasUsuarios>)Session["lstVistas"];
                         if (lstVista != null)
@@ -99,7 +99,7 @@ namespace Fuji.RISLite.Site
                             string vista = "frmPaciente.aspx";
                             if (lstVista.Any(x => x.vchVistaIdentificador == vista))
                             {
-                                Usuario = (clsUsuario)Session["User"];
+                                Usuario = (clsUsuario)Session["UserRISAxon"];
                                 if (Usuario != null)
                                 {
                                     if (Request.QueryString.Count > 0)

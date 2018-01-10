@@ -925,13 +925,13 @@
                                                     <div class="col-lg-10 col-md-10 col-sm-10 text-center">
                                                         <div class="row">
                                                             <div class="col-lg-4 col-md-12 col-sm-12">
-                                                                <asp:CheckBox runat="server" CssClass="checkbox text-right" ID="chkOpManana" Text="Mañana" />
+                                                                <asp:CheckBox runat="server" CssClass="checkbox text-right" ID="chkOpManana" Text="Mañana" ToolTip="4:00 am a 11:59 am"/>
                                                             </div>
                                                             <div class="col-lg-4 col-md-12 col-sm-12">
-                                                                <asp:CheckBox runat="server" CssClass="checkbox text-right" ID="chkOpTarde" Text="Tarde" />
+                                                                <asp:CheckBox runat="server" CssClass="checkbox text-right" ID="chkOpTarde" Text="Tarde" ToolTip="12:00 pm a 7:59 pm"/>
                                                             </div>
                                                             <div class="col-lg-4 col-md-12 col-sm-12">
-                                                                <asp:CheckBox runat="server" CssClass="checkbox text-right" ID="chkOpNoche" Text="Noche" />
+                                                                <asp:CheckBox runat="server" CssClass="checkbox text-right" ID="chkOpNoche" Text="Noche" ToolTip="8:00 pm a 3:59 am"/>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -990,10 +990,9 @@
                                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right">
                                                         <telerik:RadAjaxPanel runat="server" ID="radAjaxPanelSugerencia" OnAjaxRequest="radAjaxPanelSugerencia_AjaxRequest">
                                                             <asp:GridView ID="grvSugerencia" runat="server" AllowPaging="true" CssClass="table table-striped table-bordered"
-                                                                PageSize="10" AutoGenerateColumns="false" OnRowDataBound="grvSugerencia_RowDataBound" Font-Size="10px"
-                                                                OnPageIndexChanging="grvSugerencia_PageIndexChanging" DataKeyNames="intSugerenciaID" OnRowCancelingEdit="grvSugerencia_RowCancelingEdit"
-                                                                OnRowCommand="grvSugerencia_RowCommand" OnRowEditing="grvSugerencia_RowEditing" OnRowUpdating="grvSugerencia_RowUpdating"
-                                                                OnRowDeleting="grvSugerencia_RowDeleting" EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
+                                                                PageSize="5" AutoGenerateColumns="false" OnRowDataBound="grvSugerencia_RowDataBound" Font-Size="10px"
+                                                                OnPageIndexChanging="grvSugerencia_PageIndexChanging" DataKeyNames="intSugerenciaID"
+                                                                OnRowCommand="grvSugerencia_RowCommand" EmptyDataText="No hay sugerencias bajo el criterio de búsqueda.">
                                                                 <Columns>
                                                                     <asp:TemplateField HeaderText="Fecha" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
                                                                         <ItemTemplate>
@@ -1028,9 +1027,9 @@
                                                                     <asp:Label ID="lblBandejaTotal" runat="server" />
                                                                     &nbsp;
                                                                     <asp:Button ID="btnBandeja_I" runat="server" CommandName="Page" CausesValidation="false"
-                                                                        ToolTip="Página Anterior" CommandArgument="Prev" CssClass="previous" />
+                                                                        ToolTip="Página Anterior" CommandArgument="Prev" CssClass="previous" Style="background: url(../Images/previous.gif)" />
                                                                     <asp:Button ID="btnBandeja_II" runat="server" CommandName="Page" CausesValidation="false"
-                                                                        ToolTip="Página Siguiente" CommandArgument="Next" CssClass="next" />
+                                                                        ToolTip="Página Siguiente" CommandArgument="Next" CssClass="next" Style="background: url(../Images/next.gif)" />
                                                                 </PagerTemplate>
                                                                 <HeaderStyle CssClass="headerstyle" />
                                                                 <FooterStyle CssClass="text-center" />
@@ -1044,24 +1043,6 @@
                                     </div>
                                 </div>
                                 <div id="AgendaManual" class="tab-pane fade">
-                                    <%-- <div id="botones" runat="server" class="row">
-                                        <div class="col-md-4">
-                                            <telerik:RadButton ID="RB_antes_fecha" runat="server" Text="Fecha Anterior" CssClass="btn btn-success" OnClick="RB_antes_fecha_Click" Enabled="false">
-                                            </telerik:RadButton>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <asp:Label ID="Label4" runat="server" Text=" " Height="50px" Width="100%" CssClass="center"></asp:Label>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <telerik:RadButton ID="RB_despues_feha" runat="server" Text="Fecha Despues" CssClass="btn btn-success top-right" OnClick="RB_despues_feha_Click" Enabled="false">
-                                            </telerik:RadButton>
-                                        </div>
-                                    </div>
-
-                                    <br />--%>
-
                                     <div id="encabezado_agenda" runat="server">
                                         <div class="row">
                                             <asp:Label ID="LIDModalidad" runat="server" Text="" Height="50px" Width="100%" CssClass="center" Visible="false"></asp:Label>
@@ -1119,81 +1100,6 @@
                                         </MasterTableView>
                                     </telerik:RadGrid>
                                     <br />
-                                    <%--<asp:Label ID="LDia2" runat="server" Text="" CssClass="center"></asp:Label>
-                                    <telerik:RadGrid ID="RG_Dia2" runat="server" AutoGenerateColumns="false" OnItemCommand="RG_Dia1_ItemCommand">
-                                        <MasterTableView TableLayout="Fixed">
-                                            <Columns>
-                                                <telerik:GridBoundColumn DataField="ID_tabla" HeaderText="" DataType="System.Int32" HeaderStyle-Width="0%" ItemStyle-CssClass="center" HeaderStyle-CssClass="center">
-                                                </telerik:GridBoundColumn>
-                                                <telerik:GridBoundColumn DataField="Hr" HeaderText="Horas" DataType="System.Int32" HeaderStyle-Width="20%" ItemStyle-CssClass="center" HeaderStyle-CssClass="center">
-                                                </telerik:GridBoundColumn>
-                                                <telerik:GridBoundColumn DataField="Capacidad" HeaderText="Capacidad" DataType="System.String" HeaderStyle-Width="20%" ItemStyle-CssClass="center" HeaderStyle-CssClass="center">
-                                                </telerik:GridBoundColumn>
-                                                <telerik:GridBoundColumn DataField="Libres" HeaderText="Libres" DataType="System.String" HeaderStyle-Width="20%" ItemStyle-CssClass="center" HeaderStyle-CssClass="center">
-                                                </telerik:GridBoundColumn>
-                                                <telerik:GridRatingColumn UniqueName="Rating" HeaderText=" " HeaderStyle-Width="30%" DataField="Rating" ItemStyle-CssClass="center" HeaderStyle-CssClass="center">
-                                                </telerik:GridRatingColumn>
-                                                <telerik:GridButtonColumn UniqueName="btnElegir" HeaderText="" HeaderStyle-Width="10%" Text="Elegir" ItemStyle-CssClass="center" ItemStyle-ForeColor="DarkGreen" CommandName="Agregar_cita"></telerik:GridButtonColumn>
-                                            </Columns>
-                                        </MasterTableView>
-                                    </telerik:RadGrid>
-                                    <br />
-                                    <asp:Label ID="LDia3" runat="server" Text=""></asp:Label>
-                                    <telerik:RadGrid ID="RG_Dia3" runat="server" AutoGenerateColumns="false" OnItemCommand="RG_Dia1_ItemCommand">
-                                        <MasterTableView TableLayout="Fixed">
-                                            <Columns>
-                                                <telerik:GridBoundColumn DataField="ID_tabla" HeaderText="" DataType="System.Int32" HeaderStyle-Width="0%" ItemStyle-CssClass="center" HeaderStyle-CssClass="center">
-                                                </telerik:GridBoundColumn>
-                                                <telerik:GridBoundColumn DataField="Hr" HeaderText="Horas" DataType="System.Int32" HeaderStyle-Width="20%" ItemStyle-CssClass="center" HeaderStyle-CssClass="center">
-                                                </telerik:GridBoundColumn>
-                                                <telerik:GridBoundColumn DataField="Capacidad" HeaderText="Capacidad" DataType="System.String" HeaderStyle-Width="20%" ItemStyle-CssClass="center" HeaderStyle-CssClass="center">
-                                                </telerik:GridBoundColumn>
-                                                <telerik:GridBoundColumn DataField="Libres" HeaderText="Libres" DataType="System.String" HeaderStyle-Width="20%" ItemStyle-CssClass="center" HeaderStyle-CssClass="center">
-                                                </telerik:GridBoundColumn>
-                                                <telerik:GridRatingColumn UniqueName="Rating" HeaderText=" " HeaderStyle-Width="30%" DataField="Rating" ItemStyle-CssClass="center" HeaderStyle-CssClass="center">
-                                                </telerik:GridRatingColumn>
-                                                <telerik:GridButtonColumn UniqueName="btnElegir" HeaderText="" HeaderStyle-Width="10%" Text="Elegir" ItemStyle-CssClass="center" ItemStyle-ForeColor="DarkGreen" CommandName="Agregar_cita"></telerik:GridButtonColumn>
-                                            </Columns>
-                                        </MasterTableView>
-                                    </telerik:RadGrid>
-                                    <br />
-                                    <asp:Label ID="LDia4" runat="server" Text=""></asp:Label>
-                                    <telerik:RadGrid ID="RG_Dia4" runat="server" AutoGenerateColumns="false" OnItemCommand="RG_Dia1_ItemCommand">
-                                        <MasterTableView TableLayout="Fixed">
-                                            <Columns>
-                                                <telerik:GridBoundColumn DataField="ID_tabla" HeaderText="" DataType="System.Int32" HeaderStyle-Width="0%" ItemStyle-CssClass="center" HeaderStyle-CssClass="center">
-                                                </telerik:GridBoundColumn>
-                                                <telerik:GridBoundColumn DataField="Hr" HeaderText="Horas" DataType="System.Int32" HeaderStyle-Width="20%" ItemStyle-CssClass="center" HeaderStyle-CssClass="center">
-                                                </telerik:GridBoundColumn>
-                                                <telerik:GridBoundColumn DataField="Capacidad" HeaderText="Capacidad" DataType="System.String" HeaderStyle-Width="20%" ItemStyle-CssClass="center" HeaderStyle-CssClass="center">
-                                                </telerik:GridBoundColumn>
-                                                <telerik:GridBoundColumn DataField="Libres" HeaderText="Libres" DataType="System.String" HeaderStyle-Width="20%" ItemStyle-CssClass="center" HeaderStyle-CssClass="center">
-                                                </telerik:GridBoundColumn>
-                                                <telerik:GridRatingColumn UniqueName="Rating" HeaderText=" " HeaderStyle-Width="30%" DataField="Rating" ItemStyle-CssClass="center" HeaderStyle-CssClass="center">
-                                                </telerik:GridRatingColumn>
-                                                <telerik:GridButtonColumn UniqueName="btnElegir" HeaderText="" HeaderStyle-Width="10%" Text="Elegir" ItemStyle-CssClass="center" ItemStyle-ForeColor="DarkGreen" CommandName="Agregar_cita"></telerik:GridButtonColumn>
-                                            </Columns>
-                                        </MasterTableView>
-                                    </telerik:RadGrid>
-                                    <br />
-                                    <asp:Label ID="LDia5" runat="server" Text=""></asp:Label>
-                                    <telerik:RadGrid ID="RG_Dia5" runat="server" AutoGenerateColumns="false" OnItemCommand="RG_Dia1_ItemCommand">
-                                        <MasterTableView TableLayout="Fixed">
-                                            <Columns>
-                                                <telerik:GridBoundColumn DataField="ID_tabla" HeaderText="" DataType="System.Int32" HeaderStyle-Width="0%" ItemStyle-CssClass="center" HeaderStyle-CssClass="center">
-                                                </telerik:GridBoundColumn>
-                                                <telerik:GridBoundColumn DataField="Hr" HeaderText="Horas" DataType="System.Int32" HeaderStyle-Width="20%" ItemStyle-CssClass="center" HeaderStyle-CssClass="center">
-                                                </telerik:GridBoundColumn>
-                                                <telerik:GridBoundColumn DataField="Capacidad" HeaderText="Capacidad" DataType="System.String" HeaderStyle-Width="20%" ItemStyle-CssClass="center" HeaderStyle-CssClass="center">
-                                                </telerik:GridBoundColumn>
-                                                <telerik:GridBoundColumn DataField="Libres" HeaderText="Libres" DataType="System.String" HeaderStyle-Width="20%" ItemStyle-CssClass="center" HeaderStyle-CssClass="center">
-                                                </telerik:GridBoundColumn>
-                                                <telerik:GridRatingColumn UniqueName="Rating" HeaderText=" " HeaderStyle-Width="30%" DataField="Rating" ItemStyle-CssClass="center" HeaderStyle-CssClass="center">
-                                                </telerik:GridRatingColumn>
-                                                <telerik:GridButtonColumn UniqueName="btnElegir" HeaderText="" HeaderStyle-Width="10%" Text="Elegir" ItemStyle-CssClass="center" ItemStyle-ForeColor="DarkGreen" CommandName="Agregar_cita"></telerik:GridButtonColumn>
-                                            </Columns>
-                                        </MasterTableView>
-                                    </telerik:RadGrid>--%>
                                 </div>
                             </div>
                         </div>

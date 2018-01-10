@@ -62,9 +62,9 @@ namespace Fuji.RISLite.Site
                 String var = "";
                 if (!IsPostBack)
                 {
-                    if (Session["User"] != null)
+                    if (Session["UserRISAxon"] != null)
                     {
-                        Usuario = (clsUsuario)Session["User"];
+                        Usuario = (clsUsuario)Session["UserRISAxon"];
                         if (Usuario != null)
                         {
                             if (Security.ValidateToken(Usuario.Token, Usuario.intUsuarioID.ToString(), Usuario.vchUsuario))

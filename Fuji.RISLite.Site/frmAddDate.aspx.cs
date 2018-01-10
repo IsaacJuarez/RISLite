@@ -100,9 +100,9 @@ namespace Fuji.RISLite.Site
             try
             {
                 String var = "";
-                if (Session["User"] != null)
+                if (Session["UserRISAxon"] != null)
                 {
-                    Usuario = (clsUsuario)Session["User"];
+                    Usuario = (clsUsuario)Session["UserRISAxon"];
                     if (Security.ValidateToken(Usuario.Token, Usuario.intUsuarioID.ToString(), Usuario.vchUsuario))
                     {
                         if (Usuario != null)
@@ -152,7 +152,7 @@ namespace Fuji.RISLite.Site
                     grvEstudios.DataBind();
                     lstSug = null;
 
-                    if (Session["User"] != null && Session["lstVistas"] != null)
+                    if (Session["UserRISAxon"] != null && Session["lstVistas"] != null)
                     {
                         List<clsVistasUsuarios> lstVista = (List<clsVistasUsuarios>)Session["lstVistas"];
                         if (lstVista != null)
@@ -160,7 +160,7 @@ namespace Fuji.RISLite.Site
                             string vista = "frmAddDate.aspx";
                             if (lstVista.Any(x => x.vchVistaIdentificador == vista))
                             {
-                                Usuario = (clsUsuario)Session["User"];
+                                Usuario = (clsUsuario)Session["UserRISAxon"];
                                 if (Usuario != null)
                                 {
                                     lstObser.Clear();
@@ -2703,6 +2703,19 @@ namespace Fuji.RISLite.Site
         {
             try
             {
+                cargarSugerencias();
+            }
+            catch(Exception eCS)
+            {
+                ShowMessage("No se pudieron cargar las sugerencias: " + eCS.Message, MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error al cargar las sugerencias: " + eCS.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargarSugerencias()
+        {
+            try
+            {
                 List<stp_getCitaDisponible_Result> response = new List<stp_getCitaDisponible_Result>();
                 SugerenciasRequest request = new SugerenciasRequest();
                 request = obtenerBusquedaSug();
@@ -2710,7 +2723,7 @@ namespace Fuji.RISLite.Site
                 if (request != null)
                 {
                     response = RisService.getSugerenciasCita(request);
-                    if(response != null)
+                    if (response != null)
                     {
                         lstSug = response;
                         grvSugerencia.DataSource = response;
@@ -2718,10 +2731,9 @@ namespace Fuji.RISLite.Site
                 }
                 grvSugerencia.DataBind();
             }
-            catch(Exception eCS)
+            catch(Exception ecS)
             {
-                ShowMessage("No se pudieron cargar las sugerencias: " + eCS.Message, MessageType.Error, "alert_container");
-                Log.EscribeLog("Existe un error al cargar las sugerencias: " + eCS.Message, 3, Usuario.vchUsuario);
+                Log.EscribeLog("Existe un error en cargarSugerencias: " + ecS.Message, 3, Usuario.vchUsuario);
             }
         }
 
@@ -2824,12 +2836,18 @@ namespace Fuji.RISLite.Site
 
         protected void grvSugerencia_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
-
-        }
-
-        protected void grvSugerencia_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
-        {
-
+            try
+            {
+                if (e.NewPageIndex >= 0)
+                {
+                    this.grvSugerencia.PageIndex = e.NewPageIndex;
+                    cargarSugerencias();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.EscribeLog("Existe un error grvSugerencia_PageIndexChanging: " + ex.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void grvSugerencia_RowCommand(object sender, GridViewCommandEventArgs e)
@@ -2863,29 +2881,42 @@ namespace Fuji.RISLite.Site
             }
         }
 
-        protected void grvSugerencia_RowEditing(object sender, GridViewEditEventArgs e)
-        {
-
-        }
-
-        protected void grvSugerencia_RowUpdating(object sender, GridViewUpdateEventArgs e)
-        {
-
-        }
-
-        protected void grvSugerencia_RowDeleting(object sender, GridViewDeleteEventArgs e)
-        {
-
-        }
-
         protected void ddlBandejaS_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            try
+            {
+                DropDownList dropDownList = (DropDownList)sender;
+                if (int.Parse(dropDownList.SelectedValue) != 0)
+                {
+                    this.grvSugerencia.AllowPaging = true;
+                    this.grvSugerencia.PageSize = int.Parse(dropDownList.SelectedValue);
+                }
+                else
+                    this.grvSugerencia.AllowPaging = false;
+                this.cargarSugerencias();
+            }
+            catch (Exception eddS)
+            {
+                Log.EscribeLog("Existe un error ddlBandejaS_SelectedIndexChanged de frmAddDate: " + eddS.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void txtBandejaS_TextChanged(object sender, EventArgs e)
         {
-
+            try
+            {
+                TextBox txtBandejaAvaluosGoToPage = (TextBox)sender;
+                int numeroPagina;
+                if (int.TryParse(txtBandejaAvaluosGoToPage.Text.Trim(), out numeroPagina))
+                    this.grvSugerencia.PageIndex = numeroPagina - 1;
+                else
+                    this.grvSugerencia.PageIndex = 0;
+                this.cargarSugerencias();
+            }
+            catch (Exception ex)
+            {
+                Log.EscribeLog("Existe un error txtBandejaS_TextChanged de frmAddDate: " + ex.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void RG_Dia1_ItemCommand(object sender, GridCommandEventArgs e)

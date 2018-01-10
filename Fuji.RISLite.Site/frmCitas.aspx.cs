@@ -88,9 +88,9 @@ namespace Fuji.RISLite.Site
                 String var = "";
                 if (!IsPostBack)
                 {
-                    if (Session["User"] != null && Session["lstVistas"] != null)
+                    if (Session["UserRISAxon"] != null && Session["lstVistas"] != null)
                     {
-                        Usuario = (clsUsuario)Session["User"];
+                        Usuario = (clsUsuario)Session["UserRISAxon"];
                         if (Security.ValidateToken(Usuario.Token, Usuario.intUsuarioID.ToString(), Usuario.vchUsuario))
                         {
                             List<clsVistasUsuarios> lstVista = (List<clsVistasUsuarios>)Session["lstVistas"];
@@ -99,7 +99,7 @@ namespace Fuji.RISLite.Site
                                 string vista = "frmCitas.aspx";
                                 if (lstVista.Any(x => x.vchVistaIdentificador == vista))
                                 {
-                                    Usuario = (clsUsuario)Session["User"];
+                                    Usuario = (clsUsuario)Session["UserRISAxon"];
                                     if (Usuario != null)
                                     {
                                         RisService.updateEstatusCitaAutomatica(Usuario.vchUsuario);
@@ -208,8 +208,8 @@ namespace Fuji.RISLite.Site
             clsEstudioCita busqueda = new clsEstudioCita();
             try
             {
-                busqueda.datFechaCita = Convert.ToDateTime(RadDatePicker1.SelectedDate);
-                busqueda.datFechaCitaFin = Convert.ToDateTime(RadDatePicker2.SelectedDate);
+                busqueda.datFechaCita = Convert.ToDateTime("2017-01-01");
+                busqueda.datFechaCitaFin = DateTime.Now.AddDays(7);
                 busqueda.vchNombrePaciente = txtNombreBus.Text;
                 busqueda.intModalidadID = Convert.ToInt32(ddlModalidadBuesqueda.SelectedValue);
             }
@@ -225,8 +225,8 @@ namespace Fuji.RISLite.Site
             clsEstudioCita busqueda = new clsEstudioCita();
             try
             {
-                busqueda.datFechaCita = Convert.ToDateTime("2017-01-01");
-                busqueda.datFechaCitaFin = DateTime.Now.AddDays(7);
+                busqueda.datFechaCita = Convert.ToDateTime(RadDatePicker1.SelectedDate);
+                busqueda.datFechaCitaFin = Convert.ToDateTime(RadDatePicker2.SelectedDate);
                 busqueda.vchNombrePaciente = txtNombreBus.Text;
                 busqueda.intModalidadID = Convert.ToInt32(ddlModalidadBuesqueda.SelectedValue);
             }

@@ -55,9 +55,9 @@ namespace Fuji.RISLite.Site
                     //response = RisService.getUser(request);
                     //if (response != null)
                     //{
-                    if (Session["User"] != null && Session["lstVistas"] != null)
+                    if (Session["UserRISAxon"] != null && Session["lstVistas"] != null)
                     {
-                        usuario = (clsUsuario)Session["User"];
+                        usuario = (clsUsuario)Session["UserRISAxon"];
                         if (Security.ValidateToken(usuario.Token, usuario.intUsuarioID.ToString(), usuario.vchUsuario))
                         {
                             imgUser.Src = "/Users/" + usuario.vchRutaIcono;
@@ -282,11 +282,12 @@ namespace Fuji.RISLite.Site
         {
             try
             {
-                Response.Redirect(URL + "/frmAdminCatalogo.aspx");
+                Session.Clear();
+                Response.Redirect(URL + "/frmLogin.aspx", false);
             }
-            catch(Exception eab)
+            catch (Exception ebc)
             {
-                Log.EscribeLog("Existe un error en btnAdminCatalogo_Click: " + eab.Message, 3, usuario.vchUsuario);
+                Log.EscribeLog("Existe un error al cerrar la sesion: " + ebc.Message, 3, "SALIR");
             }
         }
 

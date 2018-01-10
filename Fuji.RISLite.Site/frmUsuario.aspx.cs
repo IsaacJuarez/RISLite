@@ -30,9 +30,9 @@ namespace Fuji.RISLite.Site
                 //Validar Token
                 if (!IsPostBack)
                 {
-                    if (Session["User"] != null && Session["lstVistas"] != null)
+                    if (Session["UserRISAxon"] != null && Session["lstVistas"] != null)
                     {
-                        Usuario = (clsUsuario)Session["User"];
+                        Usuario = (clsUsuario)Session["UserRISAxon"];
                         if (Usuario != null)
                         {
                             if (Security.ValidateToken(Usuario.Token, Usuario.intUsuarioID.ToString(), Usuario.vchUsuario))
@@ -98,7 +98,7 @@ namespace Fuji.RISLite.Site
                         Usuario.vchRutaIcono = request.mdlPerfil.vchRutaIcono;
                         Usuario.vchPassword = request.mdlPerfil.vchPassword;
                         Usuario.vchNombre = request.mdlPerfil.vchNombre;
-                        Session["User"] = Usuario;
+                        Session["UserRISAxon"] = Usuario;
                         ShowMessage("Se actualizó correctamente la imagen de usuario.", MessageType.Correcto, "alert_container");
                     }
                     else
@@ -143,7 +143,7 @@ namespace Fuji.RISLite.Site
                     if (response.success)
                     {
                         Usuario.vchRutaIcono = request.mdlPerfil.vchRutaIcono;
-                        Session["User"] = Usuario;
+                        Session["UserRISAxon"] = Usuario;
                         ShowMessage("Se actualizó correctamente la imagen de usuario.", MessageType.Correcto, "alert_container");
                     }
                     else

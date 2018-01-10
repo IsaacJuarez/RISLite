@@ -47,9 +47,9 @@ namespace Fuji.RISLite.Site
                     //if (debug == "1")
                     //    user = "ijuarez";
                     string var = "";
-                    if (Session["User"] != null && Session["lstVistas"] != null)
+                    if (Session["UserRISAxon"] != null && Session["lstVistas"] != null)
                     {
-                        Usuario = (clsUsuario)Session["User"];
+                        Usuario = (clsUsuario)Session["UserRISAxon"];
                         if (Security.ValidateToken(Usuario.Token, Usuario.intUsuarioID.ToString(), Usuario.vchUsuario))
                         {
                             SqlDataSource1.SelectParameters.Add("@idsitioss_", System.Data.DbType.String, Convert.ToString(Usuario.intSitioID));
@@ -86,8 +86,8 @@ namespace Fuji.RISLite.Site
         {
             try
             {
-                //    //Usuario_ = (clsUsuario)Session["User"];
-                //    //Usuario_ = (clsUsuario)Session["User"];
+                //    //Usuario_ = (clsUsuario)Session["UserRISAxon"];
+                //    //Usuario_ = (clsUsuario)Session["UserRISAxon"];
 
                 //    //Validar Token
                 //    if (!IsPostBack)
@@ -111,7 +111,7 @@ namespace Fuji.RISLite.Site
                 //            {
                 //                if (response.Success)
                 //                {
-                //                    Session["User"] = response.mdlUser;
+                //                    Session["UserRISAxon"] = response.mdlUser;
                 //                    Usuario = response.mdlUser;
                 //                    //cargarAgenda();
                 //                    RS_Agenda.SelectedDate = DateTime.Now;

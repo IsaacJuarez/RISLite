@@ -31,9 +31,9 @@ namespace Fuji.RISLite.Site
             {
                 if (!IsPostBack)
                 {
-                    if (Session["User"] != null)
+                    if (Session["UserRISAxon"] != null)
                     {
-                        Usuario = (clsUsuario)Session["User"];
+                        Usuario = (clsUsuario)Session["UserRISAxon"];
                     }
                     else
                     {
@@ -236,9 +236,9 @@ namespace Fuji.RISLite.Site
             {
                 if (validarCheck())
                 {
-                    if (Session["User"] != null)
+                    if (Session["UserRISAxon"] != null)
                     {
-                        Usuario = (clsUsuario)Session["User"];
+                        Usuario = (clsUsuario)Session["UserRISAxon"];
                         actualizarEstudios();
                     }
                     else
@@ -297,7 +297,7 @@ namespace Fuji.RISLite.Site
                     {
                         if (response.Success)
                         {
-                            Session["User"] = response.mdlUser;
+                            Session["UserRISAxon"] = response.mdlUser;
                             Session["lstVistas"] = response.lstVistas;
                             Label1.Text = "Usuario Correcto.";
                             Log.EscribeLog("Usuario logueado: " + response.mdlUser.vchUsuario, 1, "LOGIN");

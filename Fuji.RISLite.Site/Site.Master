@@ -86,7 +86,7 @@
 							<li class="divider"></li>
 
 							<li>
-								<a id="btnSalir" runat="server" href="frmSalir.aspx?var=4f55354337364b2f79534d3d">
+								<a id="btnSalir" runat="server" onclick="return cerrarpagina();">
 									<i id="imgSalir" runat="server" class="ace-icon fa fa-power-off"></i>
 									Salir
 								</a>
@@ -296,7 +296,6 @@
     <script type="text/javascript" >
         function cerrarpagina() {
             document.getElementById('btnAdminCatalogo').click();
-            //window.location.assign("~/frmAdminCatalogo.aspx");
                 }
 
         function changeClass(menu) {
@@ -304,6 +303,10 @@
             document.getElementById('li2').className.replace = '';
             document.getElementById('li3').className.replace = '';
             document.getElementById('li4').className.replace = '';
+            document.getElementById('li5').className.replace = '';
+            document.getElementById('li6').className.replace = '';
+            document.getElementById('li7').className.replace = '';
+            document.getElementById('li8').className.replace = '';
             document.getElementById(menu).className = 'active';
             
         }

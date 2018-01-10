@@ -44,7 +44,7 @@ namespace Fuji.RISLite.Site
                     {
                         if (response.Success)
                         {
-                            Session["User"] = response.mdlUser;
+                            Session["UserRISAxon"] = response.mdlUser;
                             Session["lstVistas"] = response.lstVistas;
                             Log.EscribeLog("Usuario logueado: " + response.mdlUser.vchUsuario, 1, "LOGIN");
                             Response.Redirect(URL + "/Default.aspx", false);
