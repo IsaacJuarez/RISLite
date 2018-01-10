@@ -19,7 +19,14 @@ namespace Fuji.RISLite.Site
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            try
+            {
 
+            }
+            catch(Exception ePL)
+            {
+                Log.EscribeLog("Existe un error en Page_Load de frmLogin: " + ePL.Message, 3, "Login");
+            }
         }
 
         protected void btnLogin_Click(object sender, EventArgs e)

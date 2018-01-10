@@ -1349,6 +1349,9 @@ advertencia 6002: La tabla o vista 'RISLite.dbo.tbl_CAT_DuracionModalidad' no ti
         <Function Name="stp_getDetalleCita" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="intCitaID" Type="int" Mode="In" />
         </Function>
+        <Function Name="stp_getDetalleCitaPaciente" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intCitaID" Type="int" Mode="In" />
+        </Function>
         <Function Name="stp_getEstudiosPaciente" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="intPacienteID" Type="int" Mode="In" />
         </Function>
@@ -2058,6 +2061,9 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
             <Parameter Name="datFechaInicio" Mode="In" Type="DateTime" />
             <Parameter Name="datFechaFin" Mode="In" Type="DateTime" />
             <Parameter Name="intSitioID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="stp_getDetalleCitaPaciente" ReturnType="Collection(RISLiteModel.stp_getDetalleCitaPaciente_Result)">
+            <Parameter Name="intCitaID" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <EntityType Name="tbl_CAT_TipoMensaje">
@@ -3763,6 +3769,20 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
           <Property Type="String" Name="vchEstatus" Nullable="true" MaxLength="200" />
           <Property Type="String" Name="vchColor" Nullable="true" MaxLength="100" />
         </ComplexType>
+        <ComplexType Name="stp_getDetalleCitaPaciente_Result">
+          <Property Type="Int64" Name="intCitaID" Nullable="false" />
+          <Property Type="DateTime" Name="datFechaCita" Nullable="true" Precision="23" />
+          <Property Type="Int64" Name="intPacienteID" Nullable="false" />
+          <Property Type="String" Name="vchNombrePaciente" Nullable="false" MaxLength="401" />
+          <Property Type="Int64" Name="intEstudioID" Nullable="false" />
+          <Property Type="DateTime" Name="datFechaFin" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="intRELModPres" Nullable="true" />
+          <Property Type="String" Name="vchModalidad" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="vchPrestacion" Nullable="true" MaxLength="200" />
+          <Property Type="DateTime" Name="datFechaInicio" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="intEstatusEstudio" Nullable="true" />
+          <Property Type="String" Name="vchEstatus" Nullable="true" MaxLength="200" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4795,6 +4815,24 @@ FROM [dbo].[tbl_CAT_DuracionModalidad] AS [tbl_CAT_DuracionModalidad]</DefiningQ
                 <ScalarProperty Name="intEstatusEstudio" ColumnName="intEstatusEstudio" />
                 <ScalarProperty Name="vchEstatus" ColumnName="vchEstatus" />
                 <ScalarProperty Name="vchColor" ColumnName="vchColor" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="stp_getDetalleCitaPaciente" FunctionName="RISLiteModel.Store.stp_getDetalleCitaPaciente">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RISLiteModel.stp_getDetalleCitaPaciente_Result">
+                <ScalarProperty Name="intCitaID" ColumnName="intCitaID" />
+                <ScalarProperty Name="datFechaCita" ColumnName="datFechaCita" />
+                <ScalarProperty Name="intPacienteID" ColumnName="intPacienteID" />
+                <ScalarProperty Name="vchNombrePaciente" ColumnName="vchNombrePaciente" />
+                <ScalarProperty Name="intEstudioID" ColumnName="intEstudioID" />
+                <ScalarProperty Name="datFechaFin" ColumnName="datFechaFin" />
+                <ScalarProperty Name="intRELModPres" ColumnName="intRELModPres" />
+                <ScalarProperty Name="vchModalidad" ColumnName="vchModalidad" />
+                <ScalarProperty Name="vchPrestacion" ColumnName="vchPrestacion" />
+                <ScalarProperty Name="datFechaInicio" ColumnName="datFechaInicio" />
+                <ScalarProperty Name="intEstatusEstudio" ColumnName="intEstatusEstudio" />
+                <ScalarProperty Name="vchEstatus" ColumnName="vchEstatus" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

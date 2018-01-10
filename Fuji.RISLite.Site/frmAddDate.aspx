@@ -620,6 +620,12 @@
                 </UpdatedControls>
             </telerik:AjaxSetting>
 
+            <telerik:AjaxSetting AjaxControlID="btnCargarSug">
+                <UpdatedControls>
+                    <telerik:AjaxUpdatedControl ControlID="grvSugerencia" />
+                </UpdatedControls>
+            </telerik:AjaxSetting>
+
 
         </AjaxSettings>
     </telerik:RadAjaxManager>
@@ -802,7 +808,7 @@
                                             PageSize="10" AutoGenerateColumns="false" OnRowDataBound="grvEstudios_RowDataBound" Font-Size="10px"
                                             OnPageIndexChanging="grvEstudios_PageIndexChanging" DataKeyNames="intRELModPres, intEstudioID, intPrestacionID" OnRowCancelingEdit="grvEstudios_RowCancelingEdit"
                                             OnRowCommand="grvEstudios_RowCommand" OnRowEditing="grvEstudios_RowEditing" OnRowUpdating="grvEstudios_RowUpdating"
-                                            OnRowDeleting="grvEstudios_RowDeleting" EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
+                                            OnRowDeleting="grvEstudios_RowDeleting" EmptyDataText="Sin estudios seleccionados.">
                                             <Columns>
                                                 <asp:BoundField DataField="intconsecutivo_Modalidad" HeaderText="Estudio" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md" />
                                                 <asp:BoundField DataField="vchPrestacion" HeaderText="Estudio" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md" />
@@ -945,7 +951,7 @@
                                                                 </telerik:RadCheckBox>
                                                             </div>
                                                             <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
-                                                                <telerik:RadCheckBox runat="server" ID="chkMiercoles" ToolTip="Miércoles" Text="Martes">
+                                                                <telerik:RadCheckBox runat="server" ID="chkMiercoles" ToolTip="Miércoles" Text="Miércoles">
                                                                 </telerik:RadCheckBox>
                                                             </div>
                                                             <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">

@@ -1888,6 +1888,8 @@
     <Compile Include="Services\DataContract\AdminUserResponse.cs" />
     <Compile Include="Services\DataContract\AgendaRequest.cs" />
     <Compile Include="Services\DataContract\AgendaResponse.cs" />
+    <Compile Include="Services\DataContract\ArriboRequest.cs" />
+    <Compile Include="Services\DataContract\ArriboResponse.cs" />
     <Compile Include="Services\DataContract\AsignacionModalidadNuevaCita_Request.cs" />
     <Compile Include="Services\DataContract\AsignacionModalidadNuevaCita_Response.cs" />
     <Compile Include="Services\DataContract\CatalogoRequest.cs" />

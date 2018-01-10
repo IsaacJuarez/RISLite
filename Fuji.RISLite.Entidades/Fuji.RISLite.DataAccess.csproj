@@ -75,6 +75,9 @@
     <Compile Include="DataBase\stp_getCitas_Result.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>
+    <Compile Include="DataBase\stp_getDetalleCitaPaciente_Result.cs">
+      <DependentUpon>dbRISLite.tt</DependentUpon>
+    </Compile>
     <Compile Include="DataBase\stp_getDetalleCita_Result.cs">
       <DependentUpon>dbRISLite.tt</DependentUpon>
     </Compile>

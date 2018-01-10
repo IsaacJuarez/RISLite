@@ -5931,8 +5931,8 @@ namespace Fuji.RISLite.DataAccess
             {
                 using (dbRisDA = new RISLiteEntities())
                 {
-                    if (dbRisDA.tbl_MST_Estudio.Any())
-                    {
+                    //if (dbRisDA.tbl_MST_Estudio.Any())
+                    //{
                         var query = dbRisDA.stp_getListaTrabajo_Sitio(idsitio).ToList();
 
                         if (query != null)
@@ -5957,7 +5957,7 @@ namespace Fuji.RISLite.DataAccess
                                 }
                             }
                         }
-                    }
+                    //}
                 }
             }
             catch (Exception eLT)
@@ -6343,5 +6343,79 @@ namespace Fuji.RISLite.DataAccess
             return list;
         }
         #endregion
+
+        #region Arribo
+        public bool getDetalleCitaPaciente(int intCitaID, string user, ref string mensaje, ref clsEstudioCita cita, ref List<clsEstudio> lstEstudios)
+        {
+            bool valido = false;
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    if(dbRisDA.tbl_MST_Cita.Any(x=> x.intCitaID == intCitaID))
+                    {
+                        var query = dbRisDA.stp_getDetalleCitaPaciente(intCitaID).ToList();
+                        if(query != null)
+                        {
+                            if (query.Count > 0)
+                            {
+                                cita.datFechaCita = (DateTime)query.First().datFechaCita;
+                                cita.intCitaID = intCitaID;
+                                cita.intPacienteID = (int)query.First().intPacienteID;
+                                cita.vchNombrePaciente = query.First().vchNombrePaciente;
+                                foreach(stp_getDetalleCitaPaciente_Result item in query)
+                                {
+                                    clsEstudio mdlEstudio = new clsEstudio();
+                                    mdlEstudio.fechaInicio = (DateTime)item.datFechaInicio;
+                                    mdlEstudio.fechaFin = (DateTime)item.datFechaFin;
+                                    mdlEstudio.intEstudioID = (int)item.intEstudioID;
+                                    mdlEstudio.intRelModPres = (int)item.intRELModPres;
+                                    mdlEstudio.vchModalidad = item.vchModalidad;
+                                    mdlEstudio.vchPrestacion = item.vchPrestacion;
+                                    mdlEstudio.vchEstatus = item.vchEstatus;
+                                    lstEstudios.Add(mdlEstudio);
+                                }
+                            }
+                        }
+                    }
+                    valido = true;
+                }
+            }
+            catch(Exception egDC)
+            {
+                mensaje = egDC.Message;
+                Log.EscribeLog("Existe un error en getDetalleCitaPaciente: " + egDC.Message, 3, user);
+            }
+            return valido;
+        }
+
+        public bool setActualizaEstudioEstatus(int intEstudioID, int intEstatusID, string  user, ref string mensaje)
+        {
+            bool valido = false;
+            try
+            {
+                using(dbRisDA = new RISLiteEntities())
+                {
+                    if(dbRisDA.tbl_MST_Estudio.Any(x => x.intEstudioID == intEstudioID && (bool)x.bitActivo))
+                    {
+                        tbl_MST_Estudio mdlEstudio = new tbl_MST_Estudio();
+                        mdlEstudio = dbRisDA.tbl_MST_Estudio.First(x => x.intEstudioID == intEstudioID && (bool)x.bitActivo);
+                        mdlEstudio.intEstatusEstudio = intEstatusID;
+                        mdlEstudio.vchUserAdmin = user;
+                        mdlEstudio.datFecha = DateTime.Now;
+                        dbRisDA.SaveChanges();
+                        valido = true;
+                    }
+                }
+            }
+            catch(Exception esAE)
+            {
+                valido = false;
+                mensaje = esAE.Message;
+                Log.EscribeLog("Existe un error en setActualizaEstudioEstatus: " + esAE.Message, 3, user);
+            }
+            return valido;
+        }
+        #endregion Arribo
     }
 }

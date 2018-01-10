@@ -211,7 +211,7 @@
                         <li>
                             <a data-toggle="tab" href="#ModalityConfig">
                                 <i class="purple ace-icon fa fa-cogs"></i>
-                                Modalidades, Prestaciones y Equipos
+                                Prestaciones y Equipos
                             </a>
                         </li>
 
@@ -610,12 +610,12 @@
                                                 <asp:Label runat="server" Text="Versión del Sistema" AssociatedControlID="txtPathRepositorio"></asp:Label>
                                             </div>
                                             <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12">
-                                                <asp:TextBox runat="server" Text="" ID="txtPathRepositorio" placeholder="Versión dels Sistema" CssClass="form-control"></asp:TextBox>
+                                                <asp:TextBox runat="server" Text="" ID="txtPathRepositorio" placeholder="Versión dels Sistema" CssClass="form-control"  Enabled="false"></asp:TextBox>
                                             </div>
                                         </div>
                                         <div class="row form-group">
                                             <div class="col-lg-12 text-right">
-                                                <asp:Button ID="btnSaveConfig" runat="server" Text="Guardar" CssClass="btn btn-success" OnClick="btnSaveConfig_Click" ValidationGroup="vgConfigSistema" />
+                                                <asp:Button ID="btnSaveConfig" runat="server" Text="Guardar" CssClass="btn btn-success" OnClick="btnSaveConfig_Click" ValidationGroup="vgConfigSistema"/>
                                             </div>
                                         </div>
                                     </div>
@@ -720,10 +720,15 @@
                                         </div>
                                         <hr />
                                         <div class="row">
-                                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                            <div class="col-lg-12 col-md-12 col-sm-12">
                                                 <div class="widget-box">
                                                     <div class="widget-header">
                                                         <h4 class="widget-title">Paciente</h4>
+                                                        <div class="widget-toolbar">
+                                                            <a href="#" data-action="collapse">
+                                                                <i class="ace-icon fa fa-chevron-up"></i>
+                                                            </a>
+                                                        </div>
                                                     </div>
 
                                                     <div class="widget-body">
@@ -819,10 +824,15 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                            <div class="col-lg-12 col-md-12 col-sm-12">
                                                 <div class="widget-box">
                                                     <div class="widget-header">
                                                         <h4 class="widget-title">Cita</h4>
+                                                        <div class="widget-toolbar">
+                                                            <a href="#" data-action="collapse">
+                                                                <i class="ace-icon fa fa-chevron-up"></i>
+                                                            </a>
+                                                        </div>
                                                     </div>
 
                                                     <div class="widget-body">
@@ -918,10 +928,15 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                            <div class="col-lg-12 col-md-12 col-sm-12">
                                                 <div class="widget-box">
                                                     <div class="widget-header">
                                                         <h4 class="widget-title">Identificaciones Requeridas para el Paciente</h4>
+                                                        <div class="widget-toolbar">
+                                                            <a href="#" data-action="collapse">
+                                                                <i class="ace-icon fa fa-chevron-up"></i>
+                                                            </a>
+                                                        </div>
                                                     </div>
 
                                                     <div class="widget-body">
@@ -1037,13 +1052,13 @@
                                             <div class="col-lg-3 col-md-12 col-sm-12">
                                                 <div class="row">
                                                     <div class="col-lg-12 col-md-12 col-sm-12">
-                                                        <asp:Label runat="server" Text="Item del Catálogo" AssociatedControlID="txtItemCat" Width="100%"></asp:Label>
+                                                        <asp:Label runat="server" Text="Elemento del Catálogo" AssociatedControlID="txtItemCat" Width="100%"></asp:Label>
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" Text="* Capturar Nombre." ForeColor="Red" ControlToValidate="txtItemCat" ValidationGroup="vgAddCat"></asp:RequiredFieldValidator>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-lg-12 col-md-12 col-sm-12">
-                                                        <asp:TextBox runat="server" ID="txtItemCat" Text="" CssClass="form-control" placeholder="Item del Catálogo"></asp:TextBox>
+                                                        <asp:TextBox runat="server" ID="txtItemCat" Text="" CssClass="form-control" placeholder="Elemento del Catálogo"></asp:TextBox>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1157,7 +1172,7 @@
                         <div id="ModalityConfig" class="tab-pane">
                             <div class="widget-box">
                                 <div class="widget-header">
-                                    <h4 class="widget-title">Administración de Modalidades, Prestaciones y Equipos</h4>
+                                    <h4 class="widget-title">Administración de Prestaciones y Equipos</h4>
                                 </div>
 
                                 <div class="widget-body">
@@ -1178,9 +1193,9 @@
                                                     <div class="widget-body">
                                                         <div class="widget-main">
                                                             <div class="row form-group">
-                                                                <div class="col-lg-3 col-sm-12 text-left">
+                                                                <div class="col-lg-3 col-md-12 col-sm-12 text-left">
                                                                     <div class="row">
-                                                                        <div class="col-lg-12">
+                                                                        <div class="col-lg-12 col-md-12 col-sm-12">
                                                                             <asp:Label runat="server" Text="Nombre de la prestación" AssociatedControlID="txtPrestacion" Width="100%"></asp:Label>
                                                                             <asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server" Text="* Campo requerido." ForeColor="Red" ControlToValidate="txtPrestacion" ValidationGroup="vgAddPres"></asp:RequiredFieldValidator>
                                                                         </div>
@@ -1191,7 +1206,7 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-lg-2 col-sm-12 text-left">
+                                                                <div class="col-lg-2 col-md-12 col-sm-12 text-left">
                                                                     <div class="row">
                                                                         <div class="col-lg-12 col-md-12 col-sm-12">
                                                                             <asp:Label runat="server" Text="Duración de la prestación" AssociatedControlID="txtDuracionPres" Width="100%"></asp:Label>
@@ -1205,7 +1220,7 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-lg-3 col-sm-12 text-left">
+                                                                <div class="col-lg-3 col-md-12 col-sm-12 text-left">
                                                                     <div class="row">
                                                                         <div class="col-lg-12 col-md-12 col-sm-12">
                                                                             <asp:Label runat="server" ID="Label3" Text="Sitio: " ForeColor="DarkGreen" AssociatedControlID="ddlSitioMod"></asp:Label>
@@ -1213,11 +1228,12 @@
                                                                     </div>
                                                                     <div class="row">
                                                                         <div class="col-lg-12 col-md-12 col-sm-12">
+                                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator16" runat="server" Text="* Seleccionar Sitio." ForeColor="Red" InitialValue="0" ControlToValidate="ddlSitioMod" ValidationGroup="vgAddPres"></asp:RequiredFieldValidator>
                                                                             <telerik:RadComboBox runat="server" ID="ddlSitioMod" OnClientSelectedIndexChanged="Combo_SitioMod" RenderMode="Lightweight" ForeColor="DarkGreen" Width="100%"></telerik:RadComboBox>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-lg-3 col-sm-12 text-left">
+                                                                <div class="col-lg-3 col-md-12 col-sm-12 text-left">
                                                                     <div class="row">
                                                                         <div class="col-lg-12 col-md-12 col-sm-12">
                                                                             <asp:Label runat="server" Text="Modalidad" AssociatedControlID="ddlModalidad" Width="100%"></asp:Label>
@@ -1230,7 +1246,7 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-lg-1 col-sm-12 text-center">
+                                                                <div class="col-lg-1 col-md-12 col-sm-12 text-center">
                                                                     <asp:Button runat="server" ID="btnAddPres" Text="Agregar" OnClick="btnAddPres_Click" CssClass="btn btn-success" ValidationGroup="vgAddPres" />
                                                                 </div>
                                                             </div>
@@ -1398,6 +1414,7 @@
                                                                     </div>
                                                                     <div class="row">
                                                                         <div class="col-lg-12 col-md-12 col-sm-12">
+                                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator17" runat="server" Text="* Seleccionar Sitio." ForeColor="Red" InitialValue="0" ControlToValidate="ddlSitioModEquipo" ValidationGroup="vgAddEquipo"></asp:RequiredFieldValidator>
                                                                             <telerik:RadComboBox runat="server" ID="ddlSitioModEquipo" OnClientSelectedIndexChanged="ddlSitioModEquipo_SelectedIndexChanged" RenderMode="Lightweight" ForeColor="DarkGreen" Width="100%"></telerik:RadComboBox>
                                                                         </div>
                                                                     </div>

@@ -7,4 +7,9 @@
     <asp:Button ID="btnUpload" Text="Upload" runat="server" OnClick="btnUpload_Click" />
     <br />
     <asp:Label ID="lblMessage" ForeColor="Green" runat="server" />
+    <asp:UpdatePanel runat="server">
+        <ContentTemplate>
+            <asp:Label ID="lblEncript" ForeColor="DarkGreen" runat="server"></asp:Label>
+        </ContentTemplate>
+    </asp:UpdatePanel>
 </asp:Content>

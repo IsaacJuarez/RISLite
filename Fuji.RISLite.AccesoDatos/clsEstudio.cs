@@ -17,6 +17,7 @@ namespace Fuji.RISLite.Entities
         public int intPrestacionID { get; set; }
         public string vchCodigo { get; set; }
         public int intDuracionMin { get; set; }
+        public string vchEstatus { get; set; }
 
         public clsEstudio()
         {
@@ -33,6 +34,7 @@ namespace Fuji.RISLite.Entities
             intPrestacionID = int.MinValue;
             vchCodigo = string.Empty;
             intDuracionMin = int.MinValue;
+            vchEstatus = string.Empty;
         }
     }
 }

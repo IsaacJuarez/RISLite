@@ -364,17 +364,68 @@ namespace Fuji.RISLite.Site
 
         protected void btnAgregar_Click(object sender, EventArgs e)
         {
+            try
+            {
 
+            }
+            catch (Exception eARVB)
+            {
+                ShowMessage("Existe un error al agregar la vista.", MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error en btnAgregar_Click: " + eARVB.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void btnCancelAdd_Click(object sender, EventArgs e)
         {
+            try
+            {
+                limpiarControlesVista();
+            }
+            catch (Exception eARVB)
+            {
+                ShowMessage("Existe un error al limpiar los controles.", MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error en btnCancelAdd_Click: " + eARVB.Message, 3, Usuario.vchUsuario);
+            }
+        }
 
+        private void limpiarControlesVista()
+        {
+            try
+            {
+
+            }
+            catch (Exception eARVB)
+            {
+                Log.EscribeLog("Existe un error en limpiarControlesVista: " + eARVB.Message, 3, Usuario.vchUsuario);
+            }
         }
 
         protected void btnAddRelVistaBoton_Click(object sender, EventArgs e)
         {
+            try
+            {
 
+            }
+            catch(Exception eARVB)
+            {
+                ShowMessage("Existe un error al agregar la vista.", MessageType.Error, "alert_container");
+                Log.EscribeLog("Existe un error en btnAddRelVistaBoton_Click: " + eARVB.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        public enum MessageType { Correcto, Error, Informacion, Advertencia };
+
+        protected void ShowMessage(string Message, MessageType type, String container)
+        {
+            try
+            {
+                Message = Message.Replace("'", " ");
+                ScriptManager.RegisterStartupScript(this, this.GetType(), System.Guid.NewGuid().ToString(), "ShowMessage('" + Message + "','" + type + "','" + container + "');", true);
+            }
+            catch (Exception eSM)
+            {
+                throw eSM;
+            }
         }
 
         protected void radAjaxPanelVista_AjaxRequest(object sender, Telerik.Web.UI.AjaxRequestEventArgs e)

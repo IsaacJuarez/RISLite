@@ -145,7 +145,9 @@ namespace Fuji.RISLite.Site
                 {
                     //Busqueda_estudio();
                     //getEstudioDetalle_citaNueva();
-
+                    limpiarControlesIniciales();
+                    calFecIni.MinDate = DateTime.Today.Date;
+                    calFecFin.MinDate = DateTime.Today.Date;
                     grvEstudios.DataSource = null;
                     grvEstudios.DataBind();
                     lstSug = null;
@@ -693,6 +695,7 @@ namespace Fuji.RISLite.Site
                 pnlIDContenido.Controls.Clear();
                 VarAdicionalRequest request = new VarAdicionalRequest();
                 request.mdlUser = Usuario;
+                request.intSitioID = Usuario.intSitioID;
                 List<tbl_CAT_Identificacion> lst = new List<tbl_CAT_Identificacion>();
                 lst = RisService.getVariablesAdicionalID(request);
                 if (lst != null)
@@ -847,6 +850,7 @@ namespace Fuji.RISLite.Site
                 pnlDinamicoContenido.Controls.Clear();
                 VarAdicionalRequest request = new VarAdicionalRequest();
                 request.mdlUser = Usuario;
+                request.intSitioID = Usuario.intSitioID;
                 List<clsVarAcicionales> lst = new List<clsVarAcicionales>();
                 lst = RisService.getVariablesAdicionalPaciente(request);
                 if (lst != null)
@@ -1215,6 +1219,7 @@ namespace Fuji.RISLite.Site
                         {
                             if (bitEditar)
                             {
+                                Log.EscribeLog("Paciente Editado", 3, Usuario.vchUsuario);
                                 if (request.mdlDireccion != null)
                                 {
                                     request.mdlDireccion.intDireccionID = Convert.ToInt32(Session["intDireccionID"]);
@@ -1247,6 +1252,7 @@ namespace Fuji.RISLite.Site
                             }
                             else
                             {
+                                Log.EscribeLog("Paciente Insertado", 3, Usuario.vchUsuario);
                                 response = RisService.setPaciente(request);
                                 if (response != null)
                                 {
@@ -2236,6 +2242,8 @@ namespace Fuji.RISLite.Site
                 lstObser.Clear();
                 pnlObservaciones.Controls.Clear();
                 cargaAdicionales();
+                txtBusquedaPaciente.Text = "";
+                txtBusquedaEstudio.Text = "";
             }
             catch (Exception eSOBs)
             {
@@ -2698,16 +2706,17 @@ namespace Fuji.RISLite.Site
                 List<stp_getCitaDisponible_Result> response = new List<stp_getCitaDisponible_Result>();
                 SugerenciasRequest request = new SugerenciasRequest();
                 request = obtenerBusquedaSug();
-                if(request != null)
+                grvSugerencia.DataSource = null;
+                if (request != null)
                 {
                     response = RisService.getSugerenciasCita(request);
                     if(response != null)
                     {
                         lstSug = response;
                         grvSugerencia.DataSource = response;
-                        grvSugerencia.DataBind();
                     }
                 }
+                grvSugerencia.DataBind();
             }
             catch(Exception eCS)
             {
@@ -2742,6 +2751,7 @@ namespace Fuji.RISLite.Site
                 mdl.vchHoras = horas;
                 if (mdl != null)
                     sug.mdlSug = mdl;
+                mdl.intSitioID = Usuario.intSitioID;
             }
             catch(Exception eoBS)
             {

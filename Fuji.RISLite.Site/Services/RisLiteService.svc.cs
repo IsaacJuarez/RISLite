@@ -2766,5 +2766,46 @@ namespace Fuji.RISLite.Site.Services
         }
         #endregion
 
+
+        #region arribo
+        public ArriboResponse getDetalleCitaPaciente(ArriboRequest request)
+        {
+            ArriboResponse response = new ArriboResponse();
+            try
+            {
+                RISLiteDataAccess controller = new RISLiteDataAccess();
+                string mensaje = "";
+                clsEstudioCita mdlCita = new clsEstudioCita();
+                List<clsEstudio> lstEstudios = new List<clsEstudio>();
+                response.Success = controller.getDetalleCitaPaciente(request.intCitaID, request.mdlUser.vchUsuario, ref mensaje, ref mdlCita, ref lstEstudios);
+                response.mdlCita = mdlCita;
+                response.lstEstudio = lstEstudios;
+                response.mensaje = mensaje;
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getDetalleCitaPaciente: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
+        public ArriboResponse setActualizaEstudioEstatus(ArriboRequest request)
+        {
+            ArriboResponse response = new ArriboResponse();
+            try
+            {
+                RISLiteDataAccess controller = new RISLiteDataAccess();
+                string mensaje = "";
+                response.Success = controller.setActualizaEstudioEstatus(request.intEstudioID, request.intEstatusID, request.mdlUser.vchUsuario, ref mensaje);
+                response.mensaje = mensaje;
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setActualizaEstudioEstatus: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+        #endregion arribo
+
     }
 }

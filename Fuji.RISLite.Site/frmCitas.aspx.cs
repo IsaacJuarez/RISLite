@@ -336,31 +336,49 @@ namespace Fuji.RISLite.Site
 
                     int Estatus_ = Convert.ToInt32(_mdl.intEstatusEstudio);
 
+                    DateTime dt_inicio = Convert.ToDateTime(_mdl.datFechaInicio);
+                    DateTime dt_hoy = DateTime.Now;
+
+                    int result = DateTime.Compare(dt_inicio, dt_hoy);
+
+                    if (result < 0)
+                    {
+                        string x = "";
+                    }
+                    else if (result == 0)
+                    {
+                        string y = "";
+                    }
+                    else
+                    {
+
+                    }
+                    
                     switch (Estatus_)
                     {
                         case 1:
-                            boton_entrega.Enabled = true;
-                            boton_entrega.Visible = true;
+                            boton_entrega.Enabled = false;
+                            boton_entrega.Visible = false;
                             boton_agregar.Enabled = true;
                             boton_agregar.Visible = true;
                             boton_renviarEMail.Enabled = true;
                             boton_renviarEMail.Visible = true;
                             boton_imprimir.Enabled = true;
                             boton_imprimir.Visible = true;
-                            boton_cancelar.Enabled = false;
-                            boton_cancelar.Visible = false;
+                            boton_cancelar.Enabled = true;
+                            boton_cancelar.Visible = true;
                             break;
                         case 2:
-                            boton_entrega.Enabled = true;
-                            boton_entrega.Visible = true;
+                            boton_entrega.Enabled = false;
+                            boton_entrega.Visible = false;
                             boton_agregar.Enabled = true;
                             boton_agregar.Visible = true;
                             boton_renviarEMail.Enabled = false;
                             boton_renviarEMail.Visible = false;
                             boton_imprimir.Enabled = false;
                             boton_imprimir.Visible = false;
-                            boton_cancelar.Enabled = false;
-                            boton_cancelar.Visible = false;
+                            boton_cancelar.Enabled = true;
+                            boton_cancelar.Visible = true;
                             break;
                         case 3:
                             boton_entrega.Enabled = false;
@@ -371,20 +389,20 @@ namespace Fuji.RISLite.Site
                             boton_renviarEMail.Visible = false;
                             boton_imprimir.Enabled = false;
                             boton_imprimir.Visible = false;
-                            boton_cancelar.Enabled = false;
-                            boton_cancelar.Visible = false;
+                            boton_cancelar.Enabled = true;
+                            boton_cancelar.Visible = true;
                             break;
                         case 4:
-                            boton_entrega.Enabled = false;
-                            boton_entrega.Visible = false;
+                            boton_entrega.Enabled = true;
+                            boton_entrega.Visible = true;
                             boton_agregar.Enabled = false;
                             boton_agregar.Visible = false;
                             boton_renviarEMail.Enabled = false;
                             boton_renviarEMail.Visible = false;
                             boton_imprimir.Enabled = false;
                             boton_imprimir.Visible = false;
-                            boton_cancelar.Enabled = false;
-                            boton_cancelar.Visible = false;
+                            boton_cancelar.Enabled = true;
+                            boton_cancelar.Visible = true;
                             break;
                         case 5:
                             boton_entrega.Enabled = false;
@@ -395,10 +413,39 @@ namespace Fuji.RISLite.Site
                             boton_renviarEMail.Visible = false;
                             boton_imprimir.Enabled = false;
                             boton_imprimir.Visible = false;
-                            boton_cancelar.Enabled = false;
-                            boton_cancelar.Visible = false;
+                            boton_cancelar.Enabled = true;
+                            boton_cancelar.Visible = true;
                             break;
                         case 6:
+                            boton_entrega.Enabled = false;
+                            boton_entrega.Visible = false;
+                            boton_agregar.Enabled = false;
+                            boton_agregar.Visible = false;
+                            boton_renviarEMail.Enabled = false;
+                            boton_renviarEMail.Visible = false;
+                            boton_imprimir.Enabled = false;
+                            boton_imprimir.Visible = false;
+                            boton_cancelar.Enabled = true;
+                            boton_cancelar.Visible = true;
+                            break;
+                        case 7:
+
+                            if (result < 0)
+                            {
+                                string x = "";
+                            }
+                            else if (result == 0)
+                            {
+                                string y = "";
+                            }
+                            else
+                            {
+                                ibtEstatus.ToolTip = "Marcar arribo del paciente a realizar estudio.";
+                                ibtEstatus.Text = "<i class='fa fa-hand-pointer-o' aria-hidden='true' title='Marcar arribo del paciente a realizar estudio.' style='font-size:25px;'></i>";
+                                ibtEstatus.Enabled = true;
+                                ibtEstatus.Visible = true;
+                            }
+
                             boton_entrega.Enabled = false;
                             boton_entrega.Visible = false;
                             boton_agregar.Enabled = false;
@@ -410,18 +457,6 @@ namespace Fuji.RISLite.Site
                             boton_cancelar.Enabled = false;
                             boton_cancelar.Visible = false;
                             break;
-                        case 7:
-                            boton_entrega.Enabled = false;
-                            boton_entrega.Visible = false;
-                            boton_agregar.Enabled = false;
-                            boton_agregar.Visible = false;
-                            boton_renviarEMail.Enabled = false;
-                            boton_renviarEMail.Visible = false;
-                            boton_imprimir.Enabled = true;
-                            boton_imprimir.Visible = true;
-                            boton_cancelar.Enabled = true;
-                            boton_cancelar.Visible = true;
-                            break;
                         case 8:
                             boton_entrega.Enabled = false;
                             boton_entrega.Visible = false;
@@ -429,10 +464,10 @@ namespace Fuji.RISLite.Site
                             boton_agregar.Visible = false;
                             boton_renviarEMail.Enabled = false;
                             boton_renviarEMail.Visible = false;
-                            boton_imprimir.Enabled = true;
-                            boton_imprimir.Visible = true;
-                            boton_cancelar.Enabled = true;
-                            boton_cancelar.Visible = true;
+                            boton_imprimir.Enabled = false;
+                            boton_imprimir.Visible = false;
+                            boton_cancelar.Enabled = false;
+                            boton_cancelar.Visible = false;
                             break;
                     }
 

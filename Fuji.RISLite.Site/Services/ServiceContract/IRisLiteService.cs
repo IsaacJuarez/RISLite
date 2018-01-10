@@ -335,5 +335,10 @@ namespace Fuji.RISLite.Site.Services
         PerfilResponse setPerfil(PerfilRequest request);
         #endregion Perfil
 
+        [OperationContract]
+        ArriboResponse getDetalleCitaPaciente(ArriboRequest request);
+
+        [OperationContract]
+        ArriboResponse setActualizaEstudioEstatus(ArriboRequest request);
     }
 }

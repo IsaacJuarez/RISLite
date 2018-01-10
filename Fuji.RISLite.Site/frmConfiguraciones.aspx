@@ -38,6 +38,7 @@
 
     <div class="page-content">
         <div class="page-header">
+            <div class="messagealert" id="alert_container"></div>
 		    <h1>
 			    Configuración 
 			    <small>
@@ -47,7 +48,7 @@
 		    </h1>
 	    </div><!-- /.page-header -->
         <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="col-lg-6 col-md-12 col-sm-12">
                 <div class="row">
                     <div class="widget-box">
                         <div class="widget-header widget-header-flat widget-header-small">
@@ -62,34 +63,39 @@
                                     <div class="modal-body">
                                         <div class="row">
                                             <div class="form-group">
-	                                            <label class="col-sm-3 control-label no-padding-right" for="form-field-1"> Nombre de Vista</label>
-	                                            <div class="col-sm-9">
-		                                            <input type="text" id="form-field-12" placeholder="Nombre" class="col-xs-10 col-sm-5" />
+	                                            <label class="col-lg-3 col-md-3 col-sm-3 control-label no-padding-right" for="form-field-1"> Nombre de Vista</label>
+	                                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                                    <asp:TextBox runat="server" ID="txtNombreVista" Text="" placeholader="Nombre de la vista" CssClass="form-control"></asp:TextBox>
+                                                    <asp:RequiredFieldValidator runat="server" ID="rfvNOmbreVista" ControlToValidate="txtNombreVista" ErrorMessage="*" Text="*" ForeColor="Red" ValidationGroup="vgAddVista"></asp:RequiredFieldValidator>
 	                                            </div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group">
-	                                            <label class="col-sm-3 control-label no-padding-right" for="form-field-1"> Identificador de Vista</label>
-	                                            <div class="col-sm-9">
-		                                            <input type="text" id="form-field-13" placeholder="Identificador" class="col-xs-10 col-sm-5" />
+	                                            <label class="col-lg-3 col-md-3 col-sm-3 control-label no-padding-right" for="form-field-1"> Identificador de Vista</label>
+	                                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                                    <asp:TextBox runat="server" ID="txtIdentificador" Text="" placeholader="Identificador de la vista" CssClass="form-control"></asp:TextBox>
+                                                    <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator1" ControlToValidate="txtIdentificador" ErrorMessage="*" Text="*" ForeColor="Red" ValidationGroup="vgAddVista"></asp:RequiredFieldValidator>
 	                                            </div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group">
-	                                            <label class="col-sm-3 control-label no-padding-right" for="form-field-1"> Icono de Vista</label>
-	                                            <div class="col-sm-9">
-		                                            <input type="text" id="form-field-14" placeholder="Icono" class="col-xs-10 col-sm-5" />
+	                                            <label class="col-lg-3 col-md-3 col-sm-3 control-label no-padding-right" for="form-field-1"> Icono de Vista</label>
+	                                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                                    <asp:TextBox runat="server" ID="txtIconoVista" Text="" placeholader="Icono de la vista" CssClass="form-control"></asp:TextBox>
+                                                    <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator2" ControlToValidate="txtIconoVista" ErrorMessage="*" Text="*" ForeColor="Red" ValidationGroup="vgAddVista"></asp:RequiredFieldValidator>
 	                                            </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="text-right">
-                                        <asp:Button runat="server" ID="btnCancelarVista" Text="Cancelar" CssClass="btn btn-danger" OnClick="btnCancelarVista_Click" />
-                                        <asp:Button runat="server" ID="btnAgregar" Text="Agregar" CssClass="btn btn-success" OnClick="btnAgregar_Click"/>
+                                        <div class="row">
+                                            <div class="form-group text-right">
+                                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                                    <asp:Button runat="server" ID="btnCancelarVista" Text="Cancelar" CssClass="btn btn-danger" OnClick="btnCancelarVista_Click" />
+                                                    <asp:Button runat="server" ID="btnAgregar" Text="Agregar" CssClass="btn btn-success" OnClick="btnAgregar_Click" ValidationGroup="vgAddVista"/>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -132,12 +138,14 @@
 	                                            </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="text-right">
-                                        <asp:Button runat="server" ID="btnCancelAdd" Text="Cancelar" CssClass="btn btn-danger" OnClick="btnCancelAdd_Click" />
-                                        <asp:Button runat="server" ID="btnAddRelVistaBoton" Text="Agregar" CssClass="btn btn-success" OnClick="btnAddRelVistaBoton_Click"/>
+                                        <div class="row">
+                                            <div class="form-group text-right">
+                                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                                    <asp:Button runat="server" ID="btnCancelAdd" Text="Cancelar" CssClass="btn btn-danger" OnClick="btnCancelAdd_Click" />
+                                                    <asp:Button runat="server" ID="btnAddRelVistaBoton" Text="Agregar" CssClass="btn btn-success" OnClick="btnAddRelVistaBoton_Click"/>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -145,7 +153,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="col-lg-6 col-md-12 col-sm-12">
                 <div class="widget-box">
 					<div class="widget-header widget-header-flat widget-header-small">
 						<h5 class="widget-title">
@@ -155,63 +163,73 @@
                     </div>
                     <div class="widget-body">
                         <div class="row">
-                            <div class="col-lg-6 text-right">
+                            <div class="col-lg-6 col-md-12 col-sm-12 text-right">
                             </div>
-                            <div class="col-lg-6 text-right">
-                                <telerik:RadComboBox runat="server" ID="ddlTipoUsuario"  RenderMode="Lightweight" ForeColor="DarkGreen" Width="100%"  OnClientSelectedIndexChanged="ComboTipoUsuario"></telerik:RadComboBox>
+                            <div class="col-lg-6 col-md-12 col-sm-12 text-right">
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                            <telerik:RadComboBox runat="server" ID="ddlTipoUsuario"  RenderMode="Lightweight" ForeColor="DarkGreen" Width="100%"  OnClientSelectedIndexChanged="ComboTipoUsuario"></telerik:RadComboBox>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <hr />
                         <div class="row">
-                            <div class="col-lg-12 col-md-12 ">
-                                <telerik:RadAjaxPanel ID="radAjaxPanelVista" runat="server" OnAjaxRequest="radAjaxPanelVista_AjaxRequest">
-                                    <asp:GridView ID="grvVista" runat="server" AllowPaging="true" CssClass="table table-striped table-bordered"
-                                        PageSize="10" AutoGenerateColumns="false" OnRowDataBound="grvVista_RowDataBound" Font-Size="10px"
-                                        OnPageIndexChanging="grvVista_PageIndexChanging" DataKeyNames="intRELUsuarioBotonID"
-                                        OnRowCommand="grvVista_RowCommand"
-                                        EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
-                                        <Columns>
-                                            <asp:BoundField DataField="intRELUsuarioBotonID" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>
-                                            <asp:BoundField DataField="vchNombreBoton"  HeaderText="Botón" ReadOnly="true" />
-                                            <asp:BoundField DataField="vchNombreVista"  HeaderText="Vista" ReadOnly="true" />
-                                            <asp:TemplateField HeaderText="Editar" ItemStyle-HorizontalAlign="Center">
-                                                <ItemTemplate>      
-                                                    <asp:LinkButton ID="btnVisualizar" CausesValidation="false" CommandName="viewEditar" CommandArgument='<%# Bind("intRELUsuarioBotonID") %>' runat="server">
-                                                        <asp:Image ID="ImageVisializa" runat="server" ImageUrl="~/images/ic_action_edit.png" Height="25px" Width="25px" ToolTip="Editar"/>
-                                                    </asp:LinkButton>
-                                                </ItemTemplate>
-                                            </asp:TemplateField>
-                                            <asp:TemplateField HeaderText="Estatus" ItemStyle-HorizontalAlign="Center">
-                                                <ItemTemplate>
-                                                    <asp:ImageButton ID="imbEstatus" runat="server" BackColor="Transparent"  Height="25px" Width="25px" 
-                                                        CommandArgument='<%#Eval("intRELUsuarioBotonID") %>' CommandName="Estatus" ToolTip="Cambia el estatus del Sitio" />
-                                                </ItemTemplate>
-                                            </asp:TemplateField>
-                                        </Columns>
-                                        <PagerTemplate>
-                                            <asp:Label ID="lblTemplate" runat="server" Text="Muestra Filas: " CssClass="Label" />
-                                            <asp:DropDownList ID="ddlBandeja" runat="server" AutoPostBack="true" CausesValidation="false"
-                                                Enabled="true" OnSelectedIndexChanged="ddlBandeja_SelectedIndexChanged">
-                                                    <asp:ListItem Value="10" />
-                                                    <asp:ListItem Value="15" />
-                                                    <asp:ListItem Value="20" />
-                                            </asp:DropDownList>
-                                            &nbsp;Página
-                                            <asp:TextBox ID="txtBandeja" runat="server" AutoPostBack="true" OnTextChanged="txtBandeja_TextChanged"
-                                                Width="40" MaxLength="10" />
-                                            de
-                                            <asp:Label ID="lblBandejaTotal" runat="server" />
-                                            &nbsp;
-                                            <asp:Button ID="btnBandeja_I" runat="server" CommandName="Page" CausesValidation="false"
-                                                ToolTip="Página Anterior" CommandArgument="Prev" CssClass="previous" />
-                                            <asp:Button ID="btnBandeja_II" runat="server" CommandName="Page" CausesValidation="false"
-                                                ToolTip="Página Siguiente" CommandArgument="Next" CssClass="next" />
-                                        </PagerTemplate>
-                                        <HeaderStyle CssClass="headerstyle" />
-                                        <FooterStyle CssClass="text-center" />
-                                        <PagerStyle CssClass="text-center" />
-                                    </asp:GridView>
-                               </telerik:RadAjaxPanel>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <telerik:RadAjaxPanel ID="radAjaxPanelVista" runat="server" OnAjaxRequest="radAjaxPanelVista_AjaxRequest">
+                                            <asp:GridView ID="grvVista" runat="server" AllowPaging="true" CssClass="table table-striped table-bordered"
+                                                PageSize="10" AutoGenerateColumns="false" OnRowDataBound="grvVista_RowDataBound" Font-Size="10px"
+                                                OnPageIndexChanging="grvVista_PageIndexChanging" DataKeyNames="intRELUsuarioBotonID"
+                                                OnRowCommand="grvVista_RowCommand"
+                                                EmptyDataText="No hay resultado bajo el criterio de búsqueda.">
+                                                <Columns>
+                                                    <%--<asp:BoundField DataField="intRELUsuarioBotonID" HeaderText="ID" ReadOnly="true" ItemStyle-CssClass="hidden-md" HeaderStyle-CssClass="hidden-md"/>--%>
+                                                    <asp:BoundField DataField="vchNombreBoton"  HeaderText="Botón" ReadOnly="true" />
+                                                    <asp:BoundField DataField="vchNombreVista"  HeaderText="Vista" ReadOnly="true" />
+                                                    <asp:TemplateField HeaderText="Editar" ItemStyle-HorizontalAlign="Center">
+                                                        <ItemTemplate>      
+                                                            <asp:LinkButton ID="btnVisualizar" CausesValidation="false" CommandName="viewEditar" CommandArgument='<%# Bind("intRELUsuarioBotonID") %>' runat="server">
+                                                                <asp:Image ID="ImageVisializa" runat="server" ImageUrl="~/images/ic_action_edit.png" Height="25px" Width="25px" ToolTip="Editar"/>
+                                                            </asp:LinkButton>
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+                                                    <asp:TemplateField HeaderText="Estatus" ItemStyle-HorizontalAlign="Center">
+                                                        <ItemTemplate>
+                                                            <asp:ImageButton ID="imbEstatus" runat="server" BackColor="Transparent"  Height="25px" Width="25px" 
+                                                                CommandArgument='<%#Eval("intRELUsuarioBotonID") %>' CommandName="Estatus" ToolTip="Cambia el estatus del Sitio" />
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+                                                </Columns>
+                                                <PagerTemplate>
+                                                    <asp:Label ID="lblTemplate" runat="server" Text="Muestra Filas: " CssClass="Label" />
+                                                    <asp:DropDownList ID="ddlBandeja" runat="server" AutoPostBack="true" CausesValidation="false"
+                                                        Enabled="true" OnSelectedIndexChanged="ddlBandeja_SelectedIndexChanged">
+                                                            <asp:ListItem Value="10" />
+                                                            <asp:ListItem Value="15" />
+                                                            <asp:ListItem Value="20" />
+                                                    </asp:DropDownList>
+                                                    &nbsp;Página
+                                                    <asp:TextBox ID="txtBandeja" runat="server" AutoPostBack="true" OnTextChanged="txtBandeja_TextChanged"
+                                                        Width="40" MaxLength="10" />
+                                                    de
+                                                    <asp:Label ID="lblBandejaTotal" runat="server" />
+                                                    &nbsp;
+                                                    <asp:Button ID="btnBandeja_I" runat="server" CommandName="Page" CausesValidation="false"
+                                                        ToolTip="Página Anterior" CommandArgument="Prev" CssClass="previous" />
+                                                    <asp:Button ID="btnBandeja_II" runat="server" CommandName="Page" CausesValidation="false"
+                                                        ToolTip="Página Siguiente" CommandArgument="Next" CssClass="next" />
+                                                </PagerTemplate>
+                                                <HeaderStyle CssClass="headerstyle" />
+                                                <FooterStyle CssClass="text-center" />
+                                                <PagerStyle CssClass="text-center" />
+                                            </asp:GridView>
+                                       </telerik:RadAjaxPanel>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -265,6 +283,28 @@
     <script type="text/javascript">
         function openModal() {
             $('#myModal').modal('show');
+        }
+
+        function ShowMessage(message, messagetype, idControl) {
+            var cssclass;
+            switch (messagetype) {
+                case 'Correcto':
+                    cssclass = 'alert-success'
+                    break;
+                case 'Error':
+                    cssclass = 'alert-danger'
+                    break;
+                case 'Advertencia':
+                    cssclass = 'alert-warning'
+                    break;
+                default:
+                    cssclass = 'alert-info'
+            }
+            var control = "#" + idControl;
+            $(control).append('<div id="' + idControl + '" style="margin: 0 0.5%; -webkit-box-shadow: 3px 4px 6px #999;" class="alert fade in ' + cssclass + '"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>' + messagetype + '!</strong> <span>' + message + '</span></div>');
+            $(control).fadeTo(2000, 700).slideUp(700, function () {
+                $(control).slideUp(700);
+            });
         }
     </script>
 
