@@ -1,9 +1,13 @@
 ﻿using Fuji.RISLite.Entidades.DataBase;
 using Fuji.RISLite.Entidades.Extensions;
 using Fuji.RISLite.Entities;
+using Spire.Barcode;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 
 namespace Fuji.RISLite.DataAccess
@@ -4959,7 +4963,46 @@ namespace Fuji.RISLite.DataAccess
             }
             catch (Exception egV)
             {
-                Log.EscribeLog("Existe un error en getAdicionalClinicos: " + egV.Message, 3, user);
+                Log.EscribeLog("Existe un error en getAdicionales: " + egV.Message, 3, user);
+            }
+            return lstreturn;
+        }
+
+        public List<clsAdicionales> getAdicionalesPac(int intSitioID, int MASCULINO, int FEMENINO, int MAYOR, int MENOR, string user)
+        {
+            List<clsAdicionales> lstreturn = new List<clsAdicionales>();
+            try
+            {
+                using (dbRisDA = new RISLiteEntities())
+                {
+                    var query = dbRisDA.stp_getAdicionalesPac(intSitioID, MASCULINO, FEMENINO, MAYOR, MENOR).ToList();
+                    if (query != null)
+                    {
+                        if (query.Count > 0)
+                        {
+                            foreach (var item in query)
+                            {
+                                clsAdicionales mdl = new clsAdicionales();
+                                mdl.bitActivo = (bool)item.bitActivo;
+                                mdl.datFecha = (DateTime)item.datFecha;
+                                mdl.bitObservaciones = (bool)item.bitObservaciones;
+                                mdl.intAdicionalesID = item.intAdicionalesID;
+                                mdl.intTipoAdicionalID = (int)item.intTipoAdicional;
+                                mdl.intTipoBotonID = (int)item.intTipoBotonID;
+                                mdl.vchNombreAdicional = item.vchNombreAdicional;
+                                mdl.vchUserAdmin = item.vchUserAdmin;
+                                mdl.vchTipoAdicional = item.vchTipoAdicional;
+                                mdl.vchTipoBoton = item.vchTipoBoton;
+                                mdl.vchURLImagen = item.vchURLImagen;
+                                lstreturn.Add(mdl);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception egV)
+            {
+                Log.EscribeLog("Existe un error en getAdicionalesPac: " + egV.Message, 3, user);
             }
             return lstreturn;
         }
@@ -5447,6 +5490,7 @@ namespace Fuji.RISLite.DataAccess
                     if (!dbRisDA.tbl_CAT_Equipo.Any(x => x.vchNombreEquipo.ToUpper() == equipo.vchNombreEquipo.ToUpper()))
                     {
                         mdlCat.bitActivo = equipo.bitActivo;
+                        mdlCat.intSitioID = equipo.intSitioID;
                         mdlCat.datFecha = DateTime.Now;
                         mdlCat.intModalidadID = equipo.intModalidadID;
                         mdlCat.vchAETitle = equipo.vchAETitle;
@@ -5474,7 +5518,8 @@ namespace Fuji.RISLite.DataAccess
             return valido;
         }
 
-        public bool Set_Prestacion_Import(clsPrestacion prestacion, string user, ref string mensaje)
+        public bool Set_Prestacion_Import(clsPrestacion prestacion, clsDetCuestionario detcuestionario, clsDetRestriccion detrestriccion, clsDetIndicacionPrestacion detindicacionprestacion,
+            string user, ref string mensaje)
         {
             bool valido = false;
             try
@@ -5491,6 +5536,7 @@ namespace Fuji.RISLite.DataAccess
                         mdlCat.datFecha = DateTime.Now;
                         mdlCat.intDuracionMin = prestacion.intDuracionMin;
                         mdlCat.vchPrestacion = prestacion.vchPrestacion;
+                        mdlCat.intSitioID = prestacion.intSitioId;
                         mdlCat.vchUserAdmin = user;
                         dbRisDA.tbl_CAT_Prestacion.Add(mdlCat);
                         dbRisDA.SaveChanges();
@@ -5502,6 +5548,7 @@ namespace Fuji.RISLite.DataAccess
                         valido = false;
                     }
                 }
+
 
                 if (validoCat && mdlCat.intPrestacionID > 0)
                 {
@@ -5527,6 +5574,57 @@ namespace Fuji.RISLite.DataAccess
                         }
                     }
                 }
+
+                if (validoCat && mdlCat.intPrestacionID > 0)
+                {
+                    using (dbRisDA = new RISLiteEntities())
+                    {
+                        tbl_DET_IndicacionPrestacion mdlDetIndPrestaion = new tbl_DET_IndicacionPrestacion();
+                        mdlDetIndPrestaion.intPrestacionID = mdlCat.intPrestacionID;
+                        mdlDetIndPrestaion.vchIndicacion = detindicacionprestacion.vchIndicacion;
+                        mdlDetIndPrestaion.vchComentario = detindicacionprestacion.vchComentario;
+                        mdlDetIndPrestaion.bitActivo = true;
+                        mdlDetIndPrestaion.datFecha = DateTime.Now;
+                        mdlDetIndPrestaion.vchUserAdmin = user;
+                        dbRisDA.tbl_DET_IndicacionPrestacion.Add(mdlDetIndPrestaion);
+                        dbRisDA.SaveChanges();
+                    }
+                }
+
+                if (validoCat && mdlCat.intPrestacionID > 0)
+                {
+                    using (dbRisDA = new RISLiteEntities())
+                    {
+                        tbl_DET_Restriccion mdlrestriccion = new tbl_DET_Restriccion();
+
+                        mdlrestriccion.intPrestacionID = mdlCat.intPrestacionID;
+                        mdlrestriccion.vchNombreReestriccion = detrestriccion.vchNombreReestriccion;
+                        mdlrestriccion.vchDetalle = detrestriccion.vchDetalle;
+                        mdlrestriccion.bitActivo = true;
+                        mdlrestriccion.datFecha = DateTime.Now;
+                        mdlrestriccion.vchUserAdmin = user;
+                        dbRisDA.tbl_DET_Restriccion.Add(mdlrestriccion);
+                        dbRisDA.SaveChanges();
+                    }
+                }
+
+                if (validoCat && mdlCat.intPrestacionID > 0)
+                {
+                    using (dbRisDA = new RISLiteEntities())
+                    {
+                        tbl_DET_Cuestionario mdlcuestionario = new tbl_DET_Cuestionario();
+
+                        mdlcuestionario.intPrestacionID = mdlCat.intPrestacionID;
+                        mdlcuestionario.vchCuestionario = detcuestionario.vchCuestionario;
+                        mdlcuestionario.bitActivo = true;
+                        mdlcuestionario.datFecha = DateTime.Now;
+                        mdlcuestionario.vchUserAdmin = user;
+                        dbRisDA.tbl_DET_Cuestionario.Add(mdlcuestionario);
+                        dbRisDA.SaveChanges();
+                    }
+                }
+
+
             }
             catch (Exception eSU)
             {
@@ -5601,6 +5699,24 @@ namespace Fuji.RISLite.DataAccess
 
                 if (_cita.intCitaID > 0)
                 {
+                    //Actualizar QR en el master de cita
+                    try
+                    {
+                        using (dbRisDA = new RISLiteEntities())
+                        {
+                            if(dbRisDA.tbl_MST_Cita.Any(x=>x.intCitaID == _cita.intCitaID))
+                            {
+                                tbl_MST_Cita mdlCita = (dbRisDA.tbl_MST_Cita.First(x => x.intCitaID == _cita.intCitaID));
+                                mdlCita.vbQRImage = crearQR(_cita.intCitaID, user);
+                                dbRisDA.SaveChanges();
+                            }
+                        }
+                    }
+                    catch (Exception eQR)
+                    {
+                        Log.EscribeLog("Existe un error al crear el Codigo QR de la cita: " + eQR.Message, 3, user);
+                    }
+
                     cita = _cita;
                     //REL_PacienteCita
                     try
@@ -5749,6 +5865,44 @@ namespace Fuji.RISLite.DataAccess
                 Log.EscribeLog("Existe un error en setCitaNueva: " + esCN.Message, 3, user);
             }
             return valido;
+        }
+
+        private byte[] crearQR(long intCitaID, string user)
+        {
+            byte[] QRImage = null;
+            try
+            {
+                string url = ConfigurationManager.AppSettings["URL"] + "\frmArribo.aspx?var=" + Security.Decrypt(intCitaID.ToString());
+                BarcodeSettings.ApplyKey("your key");//you need a key from e-iceblue, otherwise the watermark 'E-iceblue' will be shown in barcode
+                BarcodeSettings settings = new BarcodeSettings();
+                settings.Type = BarCodeType.QRCode;
+                settings.Unit = GraphicsUnit.Pixel;
+                settings.ShowText = false;
+                settings.ResolutionType = ResolutionType.UseDpi;
+                settings.Data = url;
+                settings.ForeColor = Color.DarkGreen;
+                settings.BackColor = Color.White;
+                settings.X = 4;
+                settings.QRCodeECL = QRCodeECL.L;
+                BarCodeGenerator generator = new BarCodeGenerator(settings);
+                Image QRbarcode = generator.GenerateImage();
+                QRbarcode.Save("c:\\button.jpeg", System.Drawing.Imaging.ImageFormat.Jpeg);
+                QRImage = ImageToByteArray(QRbarcode);
+            }
+            catch(Exception eCQR)
+            {
+                Log.EscribeLog("Existe un error en crearQR: " + eCQR.Message, 3, user);
+            }
+            return QRImage;
+        }
+
+        public byte[] ImageToByteArray(System.Drawing.Image imageIn)
+        {
+            using (var ms = new MemoryStream())
+            {
+                imageIn.Save(ms, System.Drawing.Imaging.ImageFormat.Gif);
+                return ms.ToArray();
+            }
         }
 
         #endregion InsertCita

@@ -1249,7 +1249,22 @@
                                                                 <div class="col-lg-1 col-md-12 col-sm-12 text-center">
                                                                     <asp:Button runat="server" ID="btnAddPres" Text="Agregar" OnClick="btnAddPres_Click" CssClass="btn btn-success" ValidationGroup="vgAddPres" />
                                                                 </div>
+                                                                <div class="rcontainer">
+                                                                    <div class="row">
+                                                                        <div class="col-sm-1">
+                                                                        </div>
+                                                                        <div class="col-sm-7">
+                                                                            <asp:FileUpload ID="FU_Modalidad" runat="server" Width="100%" />
+                                                                        </div>
+                                                                        <div class="col-sm-3">
+                                                                            <telerik:RadButton ID="RB_import_modalidad" runat="server" Text="Importar" OnClick="RB_import_modalidad_Click" Width="100%"></telerik:RadButton>
+                                                                        </div>
+                                                                        <div class="col-sm-1">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
+                                                            <br />
                                                             <telerik:RadAjaxPanel runat="server" OnAjaxRequest="radAjaxPanel2_AjaxRequest" ID="radAjaxPanel2">
                                                                 <div class="row">
                                                                     <asp:GridView ID="grvPrestaciones" runat="server" AllowPaging="true" CssClass="table table-striped table-bordered"
@@ -1437,6 +1452,22 @@
                                                                 <div class="col-lg-2 col-sm-12  text-center">
                                                                     <asp:Button runat="server" ID="btnAddEquipo" Text="Agregar" OnClick="btnAddEquipo_Click" CssClass="btn btn-success" ValidationGroup="vgAddEquipo" />
                                                                     <asp:Button runat="server" ID="btnSearchEquipo" Text="Buscar" OnClick="btnSearchEquipo_Click" CssClass="btn btn-info" />
+                                                                </div>
+                                                                <div class="rcontainer">
+                                                                    <div class="row">
+                                                                        <div class="col-sm-1">
+                                                                            <asp:Label ID="Label6" runat="server" Text=" " Width="100%" ></asp:Label>
+                                                                        </div>
+                                                                        <div class="col-sm-7">
+                                                                            <asp:FileUpload ID="FU_Equipo" runat="server" Width="100%" />
+                                                                        </div>
+                                                                        <div class="col-sm-3">
+                                                                            <telerik:RadButton ID="RB_import_equipo" runat="server" Text="Importar" OnClick="RB_import_equipo_Click" Width="100%"></telerik:RadButton>
+                                                                        </div>
+                                                                        <div class="col-sm-1">
+                                                                            <asp:Label ID="Label7" runat="server" Text=" " Width="100%"></asp:Label>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <div class="row">
@@ -2157,9 +2188,9 @@
     <!-- modals -->
     <div class="modal fade bs-example-modal-sm" id="mdlActivos" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" style="width:50%">
-            <div class="modal-content">
-                <asp:UpdatePanel runat="server">
-                    <ContentTemplate>
+            <asp:UpdatePanel runat="server">
+                <ContentTemplate>
+                    <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
                             </button>
@@ -2182,13 +2213,13 @@
                                 </Items>
                             </telerik:RadComboBox>
                         </div>
-                    </ContentTemplate>
-                </asp:UpdatePanel>
-                <div class="modal-footer">
-                    <asp:Button runat="server" ID="btnCerrar" class="btn btn-default" Text="Cerrar" data-dismiss="modal"></asp:Button>
-                    <asp:Button runat="server" ID="btnGuardarActivos" class="btn btn-success" Text="Guardar" OnClick="btnGuardarActivos_Click"></asp:Button>
-                </div>
-            </div>
+                        <div class="modal-footer">
+                            <asp:Button runat="server" ID="btnCerrar" class="btn btn-default" Text="Cerrar" OnClick="btnCerrar_Click"></asp:Button>
+                            <asp:Button runat="server" ID="btnGuardarActivos" class="btn btn-success" Text="Guardar" OnClick="btnGuardarActivos_Click"></asp:Button>
+                        </div>
+                    </div>
+                </ContentTemplate>
+            </asp:UpdatePanel>
         </div>
     </div>
     <!-- /modals -->

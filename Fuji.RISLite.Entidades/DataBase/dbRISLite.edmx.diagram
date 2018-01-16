@@ -100,16 +100,8 @@
         <EntityTypeShape EntityType="RISLiteModel.tbl_REL_DiaSemana" Width="1.5" PointX="19.625" PointY="19.75" />
         <AssociationConnector Association="RISLiteModel.FK_TBL_REL__REFERENCE_TBL_CAT_" />
         <AssociationConnector Association="RISLiteModel.FK_REL_DiaSemana_CAT_Sitio" />
-        <EntityTypeShape EntityType="RISLiteModel.tbl_MST_Cita" Width="1.5" PointX="18" PointY="23.625" />
-        <AssociationConnector Association="RISLiteModel.FK_MST_Cita_CAT_EstatusCita" />
-        <AssociationConnector Association="RISLiteModel.FK_MST_Cita_CAT_InstitucionProc" />
-        <AssociationConnector Association="RISLiteModel.FK_MST_Cita_CAT_MedicoTratante" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_DET_CitaDinamico" Width="1.5" PointX="20.25" PointY="15.125" />
         <AssociationConnector Association="RISLiteModel.FK_TBL_DET__REFERENCE_TBL_CONF" />
-        <AssociationConnector Association="RISLiteModel.FK_DET_CitaDinamico_MST_Cita" />
-        <EntityTypeShape EntityType="RISLiteModel.tbl_DET_Cita" Width="1.5" PointX="22.25" PointY="20.625" />
-        <AssociationConnector Association="RISLiteModel.FK_DET_Cita_MST_Adicionales" />
-        <AssociationConnector Association="RISLiteModel.FK_DET_Cita_MST_Cita" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_REL_ModalidadesTecnico" Width="1.5" PointX="10.25" PointY="5" />
         <AssociationConnector Association="RISLiteModel.FK_REL_ModalidadesTecnico_CAT_Modalidad" />
         <AssociationConnector Association="RISLiteModel.FK_REL_ModalidadesTecnico_CAT_Usuario" />
@@ -120,6 +112,14 @@
         <AssociationConnector Association="RISLiteModel.FK_REL_AdicionalEsp_MST_Adicionales" />
         <EntityTypeShape EntityType="RISLiteModel.tbl_CAT_AdicionalEspecifico" Width="1.5" PointX="12.375" PointY="0.875" />
         <AssociationConnector Association="RISLiteModel.FK_REL_AdicionalEspecifi_CAT_AdicionalEsp" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_MST_Cita" Width="1.5" PointX="18" PointY="23.625" />
+        <AssociationConnector Association="RISLiteModel.FK_MST_Cita_CAT_EstatusCita" />
+        <AssociationConnector Association="RISLiteModel.FK_MST_Cita_CAT_InstitucionProc" />
+        <AssociationConnector Association="RISLiteModel.FK_MST_Cita_CAT_MedicoTratante" />
+        <AssociationConnector Association="RISLiteModel.FK_DET_CitaDinamico_MST_Cita" />
+        <EntityTypeShape EntityType="RISLiteModel.tbl_DET_Cita" Width="1.5" PointX="22.25" PointY="20.625" />
+        <AssociationConnector Association="RISLiteModel.FK_DET_Cita_MST_Adicionales" />
+        <AssociationConnector Association="RISLiteModel.FK_DET_Cita_MST_Cita" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

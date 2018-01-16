@@ -47,6 +47,9 @@
     <Compile Include="clsconfscheduler_addcita.cs" />
     <Compile Include="clsCorreo.cs" />
     <Compile Include="clsDetalleCita.cs" />
+    <Compile Include="clsDetCuestionario.cs" />
+    <Compile Include="clsDetIndicacionPrestacion.cs" />
+    <Compile Include="clsDetRestriccion.cs" />
     <Compile Include="clsDiaFeriado.cs" />
     <Compile Include="clsDiaSemana.cs" />
     <Compile Include="clsDireccion.cs" />

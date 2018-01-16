@@ -259,6 +259,9 @@ namespace Fuji.RISLite.Site.Services
         List<clsAdicionales> getAdicionales(AdicionalesRequest request);
 
         [OperationContract]
+        List<clsAdicionales> getAdicionalesPac(AdicionalesRequest request);
+
+        [OperationContract]
         AdicionalesResponse setAdicionales(AdicionalesRequest request);
 
         [OperationContract]

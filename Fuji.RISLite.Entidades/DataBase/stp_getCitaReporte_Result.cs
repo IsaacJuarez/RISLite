@@ -27,5 +27,6 @@ namespace Fuji.RISLite.Entidades.DataBase
         public string vchNombreReestriccion { get; set; }
         public string vchDetalleRestriccion { get; set; }
         public string vchIndicacion { get; set; }
+        public byte[] vbQRImage { get; set; }
     }
 }

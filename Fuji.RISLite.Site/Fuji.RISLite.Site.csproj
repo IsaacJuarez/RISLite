@@ -1929,6 +1929,7 @@
     <Compile Include="Services\DataContract\PacienteResponse.cs" />
     <Compile Include="Services\DataContract\PerfilRequest.cs" />
     <Compile Include="Services\DataContract\PerfilResponse.cs" />
+    <Compile Include="Services\DataContract\PrestacionImportRequest.cs" />
     <Compile Include="Services\DataContract\PrestacionRequest.cs" />
     <Compile Include="Services\DataContract\PrestacionResponse.cs" />
     <Compile Include="Services\DataContract\RestriccionRequest.cs" />

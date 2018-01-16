@@ -9,6 +9,10 @@ namespace Fuji.RISLite.Site.Services.DataContract
         public int intTipoAdicional { get; set; }
         public int intAdicionalesID { get; set; }
         public int intSitioID { get; set; }
+        public int intMasculino { get; set; }
+        public int intFemenino { get; set; }
+        public int intMayor { get; set; }
+        public int intMenor { get; set; }
 
         public AdicionalesRequest()
         {
@@ -17,6 +21,10 @@ namespace Fuji.RISLite.Site.Services.DataContract
             intTipoAdicional = int.MinValue;
             intAdicionalesID = int.MinValue;
             intSitioID = int.MinValue;
+            intMasculino = int.MinValue;
+            intFemenino = int.MinValue;
+            intMayor = int.MinValue;
+            intMenor = int.MinValue;
         }
     }
 }

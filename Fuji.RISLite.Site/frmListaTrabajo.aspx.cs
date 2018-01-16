@@ -110,7 +110,7 @@ namespace Fuji.RISLite.Site
                 {
                     if (lstTec.Count > 0)
                     {
-                        lstTec = lstTec.Where(x => x.datFechaInicio.Day == DateTime.Today.Day && x.datFechaInicio.Month == DateTime.Today.Month && x.datFechaInicio.Year == DateTime.Today.Year && x.intEstatusID != 2).OrderBy(x=> x.datFecha).ToList();
+                        lstTec = lstTec.Where(x => x.datFechaInicio.Day == DateTime.Today.Day && x.datFechaInicio.Month == DateTime.Today.Month && x.datFechaInicio.Year == DateTime.Today.Year && x.intEstatusID != 1).OrderBy(x=> x.datFecha).ToList();
                         lstTec = lstTec.Where(x => lstModTec.Any(p2 => p2.intModalidadID == x.intModalidadID)).ToList();
                         GV_ListaTrabajo.DataSource = lstTec;
                     }

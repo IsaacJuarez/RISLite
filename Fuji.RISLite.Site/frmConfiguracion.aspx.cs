@@ -4201,6 +4201,7 @@ namespace Fuji.RISLite.Site
         {
             try
             {
+                lblintAdicionalID.Text = intAdicionalesID.ToString();
                 AdicionalesRequest request = new AdicionalesRequest();
                 List<clsAdicionales> lst = new List<clsAdicionales>();
                 request.intAdicionalesID = intAdicionalesID;
@@ -4215,36 +4216,44 @@ namespace Fuji.RISLite.Site
                 {
                     foreach(clsAdicionales item in lst)
                     {
-                        RadComboBoxItem itemCbx = new RadComboBoxItem();
+                        
                         switch (item.intAdiEspecificoID)
                         {
                             case 1:
                                 uno = 1;
-                                itemCbx = radComboGeneroItem.Items.FindItemByValue("1");
-                                itemCbx.Selected = true;
-                                itemCbx.Checked = true;
-                                radComboGeneroItem.CheckBoxes = itemCbx.Checked;
+                                //RadComboBoxItem itemCbx = new RadComboBoxItem();
+                                //itemCbx = radComboGeneroItem.Items.FindItemByValue("1");
+                                //itemCbx.Selected = true;
+                                //itemCbx.Checked = true;
+                                //radComboGeneroItem.CheckBoxes = itemCbx.Checked;
+                                radComboGeneroItem.Items.FindItemByValue("1").Checked = true;
                                 break;
                             case 2:
                                 dos = 2;
-                                itemCbx = radComboGeneroItem.Items.FindItemByValue("2");
-                                itemCbx.Selected = true;
-                                itemCbx.Checked = true;
-                                radComboGeneroItem.CheckBoxes = itemCbx.Checked;
+                                //RadComboBoxItem itemCbx2 = new RadComboBoxItem();
+                                //itemCbx2 = radComboGeneroItem.Items.FindItemByValue("2");
+                                //itemCbx2.Selected = true;
+                                //itemCbx2.Checked = true;
+                                //radComboGeneroItem.CheckBoxes = itemCbx2.Checked;
+                                radComboGeneroItem.Items.FindItemByValue("2").Checked = true;
                                 break;
                             case 3:
                                 tres = 3;
-                                itemCbx = radComboEdadItem.Items.FindItemByValue("3");
-                                itemCbx.Selected = true;
-                                itemCbx.Checked = true;
-                                radComboEdadItem.CheckBoxes = itemCbx.Checked;
+                                //RadComboBoxItem itemCbx3 = new RadComboBoxItem();
+                                //itemCbx3 = radComboEdadItem.Items.FindItemByValue("3");
+                                //itemCbx3.Selected = true;
+                                //itemCbx3.Checked = true;
+                                //radComboEdadItem.CheckBoxes = itemCbx3.Checked;
+                                radComboEdadItem.Items.FindItemByValue("3").Checked = true;
                                 break;
                             case 4:
+                                //RadComboBoxItem itemCbx4 = new RadComboBoxItem();
                                 cuatro = 4;
-                                itemCbx = radComboEdadItem.Items.FindItemByValue("4");
-                                itemCbx.Selected = true;
-                                itemCbx.Checked = true;
-                                radComboEdadItem.CheckBoxes = itemCbx.Checked;
+                                //itemCbx4 = radComboEdadItem.Items.FindItemByValue("4");
+                                //itemCbx4.Selected = true;
+                                //itemCbx4.Checked = true;
+                                //radComboEdadItem.CheckBoxes = itemCbx4.Checked;
+                                radComboEdadItem.Items.FindItemByValue("4").Checked = true;
                                 break;
                         }
                     }
@@ -5118,13 +5127,13 @@ namespace Fuji.RISLite.Site
                 {
                     item.Checked = false;
                     item.Selected = false;
-                    radComboGeneroItem.CheckBoxes = item.Checked;
+                    //radComboGeneroItem.CheckBoxes = item.Checked;
                 }
                 foreach (RadComboBoxItem item in radComboEdadItem.Items)
                 {
                     item.Checked = false;
                     item.Selected = false;
-                    radComboEdadItem.CheckBoxes = item.Checked;
+                    //radComboEdadItem.CheckBoxes = item.Checked;
                 }
             }
             catch (Exception eGAc)
@@ -5139,26 +5148,26 @@ namespace Fuji.RISLite.Site
             try
             {
                 mdl.intAdicionalesID = Convert.ToInt32(lblintAdicionalID.Text.ToString());
-                var items = radComboxGenero.CheckedItems;
-                var items2 = radComboEdad.CheckedItems;
+                var items = radComboGeneroItem.CheckedItems;
+                var items2 = radComboEdadItem.CheckedItems;
                 foreach (var item in items)
                 {
-                    if (item.Value != "1")
+                    if (item.Value == "1")
                     {
                         mdl.intHombre = 1;
                     }
-                    if (item.Value != "2")
+                    if (item.Value == "2")
                     {
                         mdl.intMujer = 2;
                     }
                 }
                 foreach (var item in items2)
                 {
-                    if (item.Value != "3")
+                    if (item.Value == "3")
                     {
                         mdl.intMayor = 3;
                     }
-                    if (item.Value != "4")
+                    if (item.Value == "4")
                     {
                         mdl.intMenor = 4;
                     }
@@ -5169,6 +5178,167 @@ namespace Fuji.RISLite.Site
                 Log.EscribeLog("Existe un error en obtenerAdicionalesRel: " + eGAc.Message, 3, Usuario.vchUsuario);
             }
             return mdl;
+        }
+
+        protected void RB_import_modalidad_Click(object sender, EventArgs e)
+        {
+            Boolean fileOK = false;
+            String path = Server.MapPath("~/Images/");
+            String path_completo = Server.MapPath("~/Images/");
+            if (FU_Modalidad.HasFile)
+            {
+                String fileExtension = System.IO.Path.GetExtension(FU_Modalidad.FileName).ToLower();
+                path_completo = path_completo + FU_Modalidad.FileName;
+                String[] allowedExtensions = { ".csv" };
+
+                for (int i = 0; i < allowedExtensions.Length; i++)
+                {
+                    if (fileExtension == allowedExtensions[i])
+                    {
+                        fileOK = true;
+                    }
+                }
+            }
+
+            if (fileOK)
+            {
+                FU_Modalidad.PostedFile.SaveAs(path + FU_Modalidad.FileName);
+
+                string line;
+                System.IO.StreamReader file = new System.IO.StreamReader(path_completo);
+                int contador_archivo = 0;
+
+                while ((line = file.ReadLine()) != null)
+                {
+                    if (contador_archivo > 0)
+                    {
+                        string[] lista_prestacion = line.Split(';');
+
+                        try
+                        {
+                            PrestacionImportRequest request = new PrestacionImportRequest();
+                            clsPrestacion prestacion = new clsPrestacion();
+
+                            prestacion.intDuracionMin = Convert.ToInt32(lista_prestacion[1].ToString());
+                            prestacion.vchPrestacion = lista_prestacion[0].ToString();
+                            prestacion.intModalidadID = Convert.ToInt32(ddlModalidad.SelectedValue);
+                            prestacion.intSitioId = Convert.ToInt32(ddlSitioMod.SelectedValue);
+                            prestacion.bitActivo = true;
+                            request.mdlPres = prestacion;
+                            request.mdlUser = Usuario;
+
+                            clsDetCuestionario mdlDetCuest = new clsDetCuestionario();
+                            mdlDetCuest.vchCuestionario = lista_prestacion[2].ToString();
+                            request.mdlDetCuest = mdlDetCuest;
+
+                            clsDetIndicacionPrestacion mdlDetIndPres = new clsDetIndicacionPrestacion();
+                            mdlDetIndPres.vchIndicacion = lista_prestacion[3].ToString();
+                            mdlDetIndPres.vchComentario = lista_prestacion[4].ToString();
+                            request.mdlDetIndPres = mdlDetIndPres;
+
+                            clsDetRestriccion mdlDetRest = new clsDetRestriccion();
+                            mdlDetRest.vchNombreReestriccion = lista_prestacion[5].ToString();
+                            mdlDetRest.vchDetalle = lista_prestacion[6].ToString();
+                            request.mdlDetRest = mdlDetRest;
+
+                            PrestacionResponse response = new PrestacionResponse();
+                            response = RisService.Set_Prestacion_Import(request);
+
+                            if (response != null)
+                            {
+                                if (response.Success)
+                                {
+                                    cargarPrestacion();
+                                    ShowMessage("Importacion correcta de prestaciones.", MessageType.Correcto, "alert_container");
+                                }
+                                else
+                                {
+                                    ShowMessage("Error en la importacion de prestaciones: " + response.Mensaje, MessageType.Error, "alert_container");
+                                }
+                            }
+                        }
+
+                        catch (Exception eAddUser)
+                        {
+                            Log.EscribeLog("Existe un error al insertar nuevo equipo en Import: " + eAddUser.Message, 3, Usuario.vchUsuario);
+                        }
+
+                    }
+                    contador_archivo++;
+                }
+
+            }
+        }
+
+        protected void RB_import_equipo_Click(object sender, EventArgs e)
+        {
+            Boolean fileOK = false;
+            String path = Server.MapPath("~/Images/");
+            String path_completo = Server.MapPath("~/Images/");
+            if (FU_Equipo.HasFile)
+            {
+                String fileExtension = System.IO.Path.GetExtension(FU_Equipo.FileName).ToLower();
+                path_completo = path_completo + FU_Equipo.FileName;
+                String[] allowedExtensions = { ".csv" };
+
+                for (int i = 0; i < allowedExtensions.Length; i++)
+                {
+                    if (fileExtension == allowedExtensions[i])
+                    {
+                        fileOK = true;
+                    }
+                }
+            }
+
+            if (fileOK)
+            {
+                FU_Equipo.PostedFile.SaveAs(path + FU_Equipo.FileName);
+
+                string line;
+                System.IO.StreamReader file = new System.IO.StreamReader(path_completo);
+                int contador_archivo = 0;
+
+                while ((line = file.ReadLine()) != null)
+                {
+                    if (contador_archivo > 0)
+                    {
+                        string[] lista_equipos = line.Split(';');
+
+                        try
+                        {
+                            EquipoRequest request = new EquipoRequest();
+                            tbl_CAT_Equipo equipo = new tbl_CAT_Equipo();
+
+                            //equipo.intModalidadID = Convert.ToInt32(lista_equipos[0].ToString());
+                            equipo.vchNombreEquipo = lista_equipos[0].ToString();
+                            equipo.vchCodigoEquipo = lista_equipos[1].ToString();
+                            equipo.vchIPEquipo = lista_equipos[2].ToString();
+                            equipo.vchAETitle = lista_equipos[3].ToString();
+                            equipo.intModalidadID = Convert.ToInt32(ddlModalidadEquipo.SelectedValue);
+                            equipo.intSitioID = Convert.ToInt32(ddlSitioModEquipo.SelectedValue);
+                            equipo.bitActivo = true;
+                            //equipo.bitActivo = Convert.ToBoolean(lista_equipos[5].ToString());
+                            equipo.datFecha = DateTime.Now;
+                            equipo.vchUserAdmin = Usuario.vchUsuario;
+                            request.mdlEquipo = equipo;
+                            request.mdlUser = Usuario;
+
+
+
+                            EquipoResponse response = new EquipoResponse();
+                            response = RisService.Set_Equipo_Import(request);
+                        }
+
+                        catch (Exception eAddUser)
+                        {
+                            Log.EscribeLog("Existe un error al insertar nuevo equipo en Import: " + eAddUser.Message, 3, Usuario.vchUsuario);
+                        }
+
+                    }
+                    contador_archivo++;
+                }
+
+            }
         }
     }
 }

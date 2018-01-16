@@ -78,13 +78,13 @@ namespace Fuji.RISLite.Entidades.DataBase
         public DbSet<tbl_CAT_HoraMuerta> tbl_CAT_HoraMuerta { get; set; }
         public DbSet<tbl_CAT_DuracionModalidad> tbl_CAT_DuracionModalidad { get; set; }
         public DbSet<tbl_REL_DiaSemana> tbl_REL_DiaSemana { get; set; }
-        public DbSet<tbl_MST_Cita> tbl_MST_Cita { get; set; }
         public DbSet<tbl_DET_CitaDinamico> tbl_DET_CitaDinamico { get; set; }
-        public DbSet<tbl_DET_Cita> tbl_DET_Cita { get; set; }
         public DbSet<tbl_REL_ModalidadesTecnico> tbl_REL_ModalidadesTecnico { get; set; }
         public DbSet<tbl_REL_EstudioTecnico> tbl_REL_EstudioTecnico { get; set; }
         public DbSet<tbl_REL_AdicionalEspecificaciones> tbl_REL_AdicionalEspecificaciones { get; set; }
         public DbSet<tbl_CAT_AdicionalEspecifico> tbl_CAT_AdicionalEspecifico { get; set; }
+        public DbSet<tbl_MST_Cita> tbl_MST_Cita { get; set; }
+        public DbSet<tbl_DET_Cita> tbl_DET_Cita { get; set; }
     
         public virtual ObjectResult<stp_updateCatEstatus_Result> stp_updateCatEstatus(Nullable<int> intCatalogoID, Nullable<bool> bitActivo, Nullable<int> intPrimaryKey)
         {
@@ -238,15 +238,6 @@ namespace Fuji.RISLite.Entidades.DataBase
                 new ObjectParameter("intSitioID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getBusquedaPaciente_Result>("stp_getBusquedaPaciente", vchCadenaParameter, intSitioIDParameter);
-        }
-    
-        public virtual ObjectResult<stp_getCitaReporte_Result> stp_getCitaReporte(Nullable<int> intCitaID)
-        {
-            var intCitaIDParameter = intCitaID.HasValue ?
-                new ObjectParameter("intCitaID", intCitaID) :
-                new ObjectParameter("intCitaID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getCitaReporte_Result>("stp_getCitaReporte", intCitaIDParameter);
         }
     
         public virtual ObjectResult<stp_getEstudiosPaciente_Result> stp_getEstudiosPaciente(Nullable<int> intPacienteID)
@@ -407,6 +398,40 @@ namespace Fuji.RISLite.Entidades.DataBase
                 new ObjectParameter("intCitaID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getDetalleCitaPaciente_Result>("stp_getDetalleCitaPaciente", intCitaIDParameter);
+        }
+    
+        public virtual ObjectResult<stp_getAdicionalesPac_Result> stp_getAdicionalesPac(Nullable<int> intSitioID, Nullable<int> mASCULINO, Nullable<int> fEMENINO, Nullable<int> mAYOR, Nullable<int> mENOR)
+        {
+            var intSitioIDParameter = intSitioID.HasValue ?
+                new ObjectParameter("intSitioID", intSitioID) :
+                new ObjectParameter("intSitioID", typeof(int));
+    
+            var mASCULINOParameter = mASCULINO.HasValue ?
+                new ObjectParameter("MASCULINO", mASCULINO) :
+                new ObjectParameter("MASCULINO", typeof(int));
+    
+            var fEMENINOParameter = fEMENINO.HasValue ?
+                new ObjectParameter("FEMENINO", fEMENINO) :
+                new ObjectParameter("FEMENINO", typeof(int));
+    
+            var mAYORParameter = mAYOR.HasValue ?
+                new ObjectParameter("MAYOR", mAYOR) :
+                new ObjectParameter("MAYOR", typeof(int));
+    
+            var mENORParameter = mENOR.HasValue ?
+                new ObjectParameter("MENOR", mENOR) :
+                new ObjectParameter("MENOR", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getAdicionalesPac_Result>("stp_getAdicionalesPac", intSitioIDParameter, mASCULINOParameter, fEMENINOParameter, mAYORParameter, mENORParameter);
+        }
+    
+        public virtual ObjectResult<stp_getCitaReporte_Result> stp_getCitaReporte(Nullable<int> intCitaID)
+        {
+            var intCitaIDParameter = intCitaID.HasValue ?
+                new ObjectParameter("intCitaID", intCitaID) :
+                new ObjectParameter("intCitaID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<stp_getCitaReporte_Result>("stp_getCitaReporte", intCitaIDParameter);
         }
     }
 }

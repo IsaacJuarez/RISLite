@@ -88,6 +88,10 @@ namespace Fuji.RISLite.Site
         public static List<clsAdicionales> lstAdicionalesClinicos = new List<clsAdicionales>();
         public static List<clsAdicionales> lstAdicionalesOper = new List<clsAdicionales>();
         public static List<clsAdicionales> lstObser = new List<clsAdicionales>();
+        public static int Masculino = 0;
+        public static int Femenino = 0;
+        public static int Mayor = 0;
+        public static int Menor = 0;
 
         DataTable DT_Modalidad_Horario = new DataTable();
 
@@ -302,7 +306,10 @@ namespace Fuji.RISLite.Site
         {
             try
             {
-                cargaAdicionalesClinicos();
+                if (Masculino > 0 || Femenino > 0 || Mayor > 0 || Menor > 0)
+                    cargaAdicionalesClinicosPac();
+                else
+                    cargaAdicionalesClinicos();
                 cargaAdicionalesOperativos();
                 cargarObservacionesPanel();
             }
@@ -484,6 +491,97 @@ namespace Fuji.RISLite.Site
                                     break;
                             }
                             
+                        }
+                    }
+                }
+
+            }
+            catch (Exception eca)
+            {
+                Log.EscribeLog("Existe un error en cargaAdicionalesClinicos: " + eca.Message, 3, Usuario.vchUsuario);
+            }
+        }
+
+        private void cargaAdicionalesClinicosPac()
+        {
+            try
+            {
+                pnlAdiClin.Controls.Clear();
+                List<clsAdicionales> lstresponse = new List<clsAdicionales>();
+                AdicionalesRequest request = new AdicionalesRequest();
+                request.mdlUser = Usuario;
+                request.intTipoAdicional = 1;//Clinico
+                request.intSitioID = Usuario.intSitioID;
+                request.intMasculino = Masculino;
+                request.intFemenino = Femenino;
+                request.intMayor = Mayor;
+                request.intMenor = Menor;
+                lstresponse = RisService.getAdicionalesPac(request);
+                if (lstresponse != null)
+                {
+                    if (lstresponse.Count > 0)
+                    {
+                        lstAdicionalesClinicos = lstresponse;
+                        foreach (clsAdicionales item in lstresponse)
+                        {
+                            switch (item.intTipoBotonID)
+                            {
+                                case 1:
+                                    break;
+                                case 2:
+                                    LinkButton lnkbtn = new LinkButton();
+                                    lnkbtn.CssClass = "btn btn-empty";
+                                    lnkbtn.ID = "radBtn" + item.intAdicionalesID;
+                                    lnkbtn.BackColor = System.Drawing.Color.Transparent;
+                                    lnkbtn.ToolTip = item.vchNombreAdicional;
+                                    lnkbtn.ClientIDMode = ClientIDMode.Static;
+                                    lnkbtn.CommandArgument = item.intAdicionalesID.ToString();
+                                    Image imgTest = new Image();
+                                    imgTest.ImageUrl = "Iconos/" + Usuario.intSitioID + "/" + item.vchURLImagen;
+                                    imgTest.Width = 25;
+                                    imgTest.Height = 25;
+                                    CheckBox chk = new CheckBox();
+                                    chk.Enabled = false;
+                                    chk.ID = "chk" + item.intAdicionalesID;
+                                    chk.ClientIDMode = ClientIDMode.Static;
+                                    lnkbtn.Controls.Add(imgTest);
+                                    lnkbtn.Controls.Add(chk);
+
+
+                                    //RadButton btn = new RadButton();
+                                    //btn.RenderMode = RenderMode.Lightweight;
+                                    //btn.ToggleType = ButtonToggleType.CheckBox;
+                                    //btn.CssClass = "btn btn-primary";
+                                    //Literal radButtonContent = new Literal();
+                                    //radButtonContent.ID = "radButtonContent";
+                                    //string img = "<img src='/imagen/' />";
+                                    //radButtonContent.Text = img.Replace("/imagen/", "Iconos/" + item.vchURLImagen);
+
+
+                                    //btn.Controls.Add(imgTest);
+                                    //RadButtonToggleState st0 = new RadButtonToggleState();
+                                    //st0.CssClass = "";
+                                    //btn.ToggleStates.Add(st0);
+                                    //RadButtonToggleState st1 = new RadButtonToggleState();
+                                    //st1.CssClass = "btn btn-empty";
+                                    //btn.ToggleStates.Add(st1);
+                                    //btn.ID = "radBtn" + item.intAdicionalesID;
+                                    //btn.ToolTip = item.vchNombreAdicional;
+                                    //btn.ClientIDMode = ClientIDMode.Static;
+                                    //btn.CommandArgument = item.intAdicionalesID.ToString();
+                                    //btn.Checked = false;
+                                    //if (item.bitObservaciones)
+                                    //{
+                                    //lnkbtn.Click += cargarObservaciones;
+                                    //}
+                                    //pnlAdiClin.Controls.Add(btn);
+                                    lnkbtn.Click += new EventHandler(linkButton_Click);
+                                    pnlAdiClin.Controls.Add(lnkbtn);
+                                    break;
+                                case 3:
+                                    break;
+                            }
+
                         }
                     }
                 }
@@ -1437,6 +1535,38 @@ namespace Fuji.RISLite.Site
                             lblIDs.Text = intPacienteID.ToString();
                             lblIDs.Visible = true;
                             btnEditPaciente.Visible = true;
+                            int edad = 0;
+                            try
+                            {
+                                edad = (DateTime.Now.Year - response.mdlPaciente.datFechaNac.Year);
+                            }
+                            catch(Exception eeedad)
+                            {
+                                edad = 0;
+                                Log.EscribeLog("Existe un error al obtener la edad del paciente: " + eeedad.Message, 3, Usuario.vchUsuario);
+                            }
+
+                            if (edad >= 60)
+                            {
+                                Mayor = 3;
+                            }
+                            else
+                            {
+                                if(edad <= 10)
+                                {
+                                    Menor = 4;
+                                }
+                            }
+                            try
+                            {
+                                Masculino = response.mdlPaciente.intGeneroID == 1 ? 1 : 0;
+                                Femenino = response.mdlPaciente.intGeneroID == 2 ? 2 : 0;
+                            }
+                            catch(Exception eGenero)
+                            {
+                                Log.EscribeLog("Existe un error al obtener el genero del paciente: " + eGenero.Message, 3, Usuario.vchUsuario);
+                            }
+                            cargaAdicionalesClinicosPac();
 
                             if (response.mdlDireccion != null)
                             {
@@ -1635,12 +1765,13 @@ namespace Fuji.RISLite.Site
         {
             try
             {
-                string id = txtBusquedaPaciente.Text;
-                string[] paciente = txtBusquedaPaciente.Text.ToString().Split('|');
-                id = paciente[0];
-                txtBusquedaPaciente.Text = "";
-                cargarDetallePaciente(Convert.ToInt32(id));
-                txtBusquedaEstudio.Enabled = true;
+                //int intid = Convert.ToInt32(sender.ToString());
+                //string id = txtBusquedaPaciente.Text;
+                //string[] paciente = txtBusquedaPaciente.Text.ToString().Split('|');
+                //id = paciente[0];
+                //txtBusquedaPaciente.Text = "";
+                //cargarDetallePaciente(Convert.ToInt32(id));
+                //txtBusquedaEstudio.Enabled = true;
             }
             catch (Exception etC)
             {
@@ -1683,9 +1814,9 @@ namespace Fuji.RISLite.Site
                 request.mdlUser = Usuario;
                 response = RisService.getEstudioDetalle_ModificacionCIta(request, lista_parametros[0], contador_tabla);
 
-              
                 cargarDetallePaciente(Convert.ToInt32(lista_parametros[1]));
                 cargarEstudioGrid_modificacionCita(response);
+                cargaAdicionalesClinicosPac();
             }
             catch (Exception eNC)
             {
@@ -2244,6 +2375,10 @@ namespace Fuji.RISLite.Site
                 cargaAdicionales();
                 txtBusquedaPaciente.Text = "";
                 txtBusquedaEstudio.Text = "";
+                Masculino = 0;
+                Femenino = 0;
+                Mayor = 0;
+                Menor = 0;
             }
             catch (Exception eSOBs)
             {
@@ -3103,6 +3238,7 @@ namespace Fuji.RISLite.Site
                 txtBusquedaPaciente.Text = "";
                 cargarDetallePaciente(Convert.ToInt32(id));
                 txtBusquedaEstudio.Enabled = true;
+
             }
             catch (Exception etC)
             {

@@ -2241,6 +2241,24 @@ namespace Fuji.RISLite.Site.Services
             return response;
         }
 
+        public List<clsAdicionales> getAdicionalesPac(AdicionalesRequest request)
+        {
+            List<clsAdicionales> response = new List<clsAdicionales>();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    response = controller.getAdicionalesPac(request.intSitioID, request.intMasculino, request.intFemenino, request.intMayor, request.intMenor, request.mdlUser.vchUsuario);
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en getAdicionalesPac: " + egU.Message, 3, "");
+            }
+            return response;
+        }
+
         public AdicionalesResponse setAdicionales(AdicionalesRequest request)
         {
             AdicionalesResponse response = new AdicionalesResponse();
@@ -2419,7 +2437,7 @@ namespace Fuji.RISLite.Site.Services
         
         }
         
-        public PrestacionResponse Set_Prestacion_Import(PrestacionRequest request)
+        public PrestacionResponse Set_Prestacion_Import(PrestacionImportRequest request)
         {
             PrestacionResponse response = new PrestacionResponse();
             try
@@ -2428,7 +2446,8 @@ namespace Fuji.RISLite.Site.Services
                 {
                     RISLiteDataAccess controller = new RISLiteDataAccess();
                     string mensaje = "";
-                    response.Success = controller.Set_Prestacion_Import(request.mdlPres, request.mdlUser.vchUsuario, ref mensaje);
+                    response.Success = controller.Set_Prestacion_Import(request.mdlPres, request.mdlDetCuest, request.mdlDetRest, request.mdlDetIndPres,
+                        request.mdlUser.vchUsuario, ref mensaje);
                     response.Mensaje = mensaje;
                 }
             }
