@@ -2,7 +2,6 @@
 using Fuji.RISLite.Entidades.Extensions;
 using Fuji.RISLite.Entities;
 using QRCoder;
-using Spire.Barcode;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
