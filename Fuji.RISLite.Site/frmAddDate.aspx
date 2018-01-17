@@ -1166,21 +1166,10 @@
                                         <div class="form-group">
                                             <asp:Label runat="server" class="col-sm-3 control-label no-padding-right" AssociatedControlID="txtFecNacDet"> Fecha de Nacimiento</asp:Label>
                                             <div class="col-sm-8">
-                                                <%--<table style="width: 100%">
-                                                    <tr>
-                                                        <td style="width: 90%">--%>
                                                 <asp:TextBox runat="server" ID="txtFecNacDet" CssClass="form-control" Width="100%" />
                                                 <asp:RegularExpressionValidator ID="RegularExpressionValidator4" runat="server" ForeColor="Red"
                                                     ControlToValidate="txtFecNacDet" ValidationGroup="vgAddPaciente" ErrorMessage="Formato DD/MM/YYYY"
                                                     ValidationExpression="^(0[1-9]|[12][0-9]|3[01])[-/.](0[1-9]|1[012])[-/.](19|20)\d\d$"></asp:RegularExpressionValidator>
-                                                <%--</td>
-                                                        <td style="width: 10%">--%>
-                                                <%--<asp:ImageButton ID="imgPopup" ImageUrl="~/Images/ic_action_calendar_month.png" Width="25px" Height="25px" ImageAlign="Bottom" runat="server" />
-                                                            <asp:CalendarExtender ID="customCalendarExtender" runat="server" TargetControlID="txtFecNacDet" PopupButtonID="imgPopup"
-                                                                CssClass="cal" Format="dd/MM/yyyy" />--%>
-                                                <%-- </td>
-                                                    </tr>
-                                                </table>--%>
                                             </div>
                                             <div class="col-sm-1 text-right">
                                                 <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ErrorMessage="* " ForeColor="Red" ControlToValidate="txtFecNacDet" ValidationGroup="vgAddPaciente"></asp:RequiredFieldValidator>
@@ -1349,6 +1338,8 @@
 
         <asp:HiddenField ID="HFIDModalidad_calendario" runat="server" />
         <asp:HiddenField ID="HF_contador_tabla_modalidad" runat="server" />
+        <asp:HiddenField ID="HF_Modificacion_cita" runat="server" />
+         <asp:HiddenField ID="HF_IDcita_Modificacion" runat="server" />
 
     </div>
     <!-- /modals -->

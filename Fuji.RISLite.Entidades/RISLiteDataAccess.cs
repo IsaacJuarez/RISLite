@@ -1,6 +1,7 @@
 ﻿using Fuji.RISLite.Entidades.DataBase;
 using Fuji.RISLite.Entidades.Extensions;
 using Fuji.RISLite.Entities;
+using QRCoder;
 using Spire.Barcode;
 using System;
 using System.Collections.Generic;
@@ -3274,12 +3275,12 @@ namespace Fuji.RISLite.DataAccess
             return estudio;
         }
 
-        public clsEstudioNuevaCita getEstudioDetalle_ModificacionCIta(string user, string intEstudioID, int idtablacita)
+        public List<clsEstudioNuevaCita> getEstudioDetalle_ModificacionCIta(string user, string intCitaID, int idtablacita)
         {
-            clsEstudioNuevaCita estudio = new clsEstudioNuevaCita();
+            List <clsEstudioNuevaCita> Lista_estudio = new List<clsEstudioNuevaCita>();
             try
             {
-                int id = Convert.ToInt32(intEstudioID);
+                int id = Convert.ToInt32(intCitaID);
 
                 using (dbRisDA = new RISLiteEntities())
                 {
@@ -3300,12 +3301,50 @@ namespace Fuji.RISLite.DataAccess
 
                     //}
 
+                    //var query = (from RCE in dbRisDA.tbl_REL_CitaEstudio
+                    //             join ME in dbRisDA.tbl_MST_Estudio on RCE.intEstudioID equals ME.intEstudioID
+                    //             join RMP in dbRisDA.tbl_REL_ModalidadPrestacion on ME.intRELModPres equals RMP.intRELModPres
+                    //             join mod in dbRisDA.tbl_CAT_Modalidad on RMP.intModalidadID equals mod.intModalidadID
+                    //             join pres in dbRisDA.tbl_CAT_Prestacion on RMP.intPrestacionID equals pres.intPrestacionID
+                    //             where RCE.intEstudioID == id
+                    //             select new
+                    //             {
+                    //                 intRELModPres = RMP.intRELModPres,
+                    //                 intModalidadID = RMP.intModalidadID,
+                    //                 intPrestacionID = RMP.intPrestacionID,
+                    //                 vchCodigo = mod.vchCodigo,
+                    //                 vchModalidad = mod.vchModalidad,
+                    //                 intDuracionMin = pres.intDuracionMin,
+                    //                 vchPrestacion = pres.vchPrestacion,
+
+
+                    //                 intEstudioID_ = ME.intEstudioID,
+                    //                 //intCitaID_ = RCE.intCitaID,
+                    //                 datFechaCita_ = ME.datFechaInicio
+                    //             }).ToList().First();
+
+                    //if (query != null)
+                    //{
+                    //    estudio.intEstudioID = (int)query.intEstudioID_;
+                    //    estudio.fechaInicio = (DateTime)query.datFechaCita_;
+                    //    estudio.intconsecutivo_Modalidad = idtablacita;
+                    //    estudio.cadena = query.vchCodigo + " - " + query.vchPrestacion;
+                    //    estudio.intRelModPres = query.intRELModPres;
+                    //    estudio.intModalidadID = (int)query.intModalidadID;
+                    //    estudio.intPrestacionID = (int)query.intPrestacionID;
+                    //    estudio.vchCodigo = query.vchCodigo;
+                    //    estudio.vchModalidad = query.vchModalidad;
+                    //    estudio.intDuracionMin = (int)query.intDuracionMin;
+                    //    estudio.vchPrestacion = query.vchPrestacion;
+                    //}
+
+
                     var query = (from RCE in dbRisDA.tbl_REL_CitaEstudio
                                  join ME in dbRisDA.tbl_MST_Estudio on RCE.intEstudioID equals ME.intEstudioID
                                  join RMP in dbRisDA.tbl_REL_ModalidadPrestacion on ME.intRELModPres equals RMP.intRELModPres
                                  join mod in dbRisDA.tbl_CAT_Modalidad on RMP.intModalidadID equals mod.intModalidadID
                                  join pres in dbRisDA.tbl_CAT_Prestacion on RMP.intPrestacionID equals pres.intPrestacionID
-                                 where RCE.intEstudioID == id
+                                 where RCE.intCitaID == id
                                  select new
                                  {
                                      intRELModPres = RMP.intRELModPres,
@@ -3320,21 +3359,26 @@ namespace Fuji.RISLite.DataAccess
                                      intEstudioID_ = ME.intEstudioID,
                                      //intCitaID_ = RCE.intCitaID,
                                      datFechaCita_ = ME.datFechaInicio
-                                 }).ToList().First();
+                                 }).ToList();
 
                     if (query != null)
                     {
-                        estudio.intEstudioID = (int)query.intEstudioID_;
-                        estudio.fechaInicio = (DateTime)query.datFechaCita_;
-                        estudio.intconsecutivo_Modalidad = idtablacita;
-                        estudio.cadena = query.vchCodigo + " - " + query.vchPrestacion;
-                        estudio.intRelModPres = query.intRELModPres;
-                        estudio.intModalidadID = (int)query.intModalidadID;
-                        estudio.intPrestacionID = (int)query.intPrestacionID;
-                        estudio.vchCodigo = query.vchCodigo;
-                        estudio.vchModalidad = query.vchModalidad;
-                        estudio.intDuracionMin = (int)query.intDuracionMin;
-                        estudio.vchPrestacion = query.vchPrestacion;
+                        foreach (var elemento_cita in query)
+                        {
+                            clsEstudioNuevaCita estudio = new clsEstudioNuevaCita();
+                            estudio.intEstudioID = (int)elemento_cita.intEstudioID_;
+                            estudio.fechaInicio = (DateTime)elemento_cita.datFechaCita_;
+                            estudio.intconsecutivo_Modalidad = idtablacita;
+                            estudio.cadena = elemento_cita.vchCodigo + " - " + elemento_cita.vchPrestacion;
+                            estudio.intRelModPres = elemento_cita.intRELModPres;
+                            estudio.intModalidadID = (int)elemento_cita.intModalidadID;
+                            estudio.intPrestacionID = (int)elemento_cita.intPrestacionID;
+                            estudio.vchCodigo = elemento_cita.vchCodigo;
+                            estudio.vchModalidad = elemento_cita.vchModalidad;
+                            estudio.intDuracionMin = (int)elemento_cita.intDuracionMin;
+                            estudio.vchPrestacion = elemento_cita.vchPrestacion;
+                            Lista_estudio.Add(estudio);
+                        }
                     }
                 }
             }
@@ -3342,7 +3386,147 @@ namespace Fuji.RISLite.DataAccess
             {
                 Log.EscribeLog("Existe un error en getEstudioDetalle_ModificacionCIta: " + egBP.Message, 3, user);
             }
-            return estudio;
+            return Lista_estudio;
+        }
+
+        public bool ModificacionCita(clsPaciente paciente, List<clsAdicionales> lstAdicionales, List<clsEstudioNuevaCita> lstEstudios, string user, ref string mensaje, ref tbl_MST_Cita cita, int _cita)
+        {
+            bool valido = false;
+            try
+            {
+                //det_Cita
+                try
+                {
+                    if (lstAdicionales.Count > 0)
+                    {
+                        foreach (clsAdicionales item in lstAdicionales)
+                        {
+                            tbl_DET_Cita detCita = new tbl_DET_Cita();
+                            using (dbRisDA = new RISLiteEntities())
+                            {
+                                if (!dbRisDA.tbl_DET_Cita.Any(x => x.intAdicionalesID == item.intAdicionalesID && x.intCitaID == _cita))
+                                {
+
+                                    detCita.bitActivo = true;
+                                    detCita.datFecha = DateTime.Now;
+                                    detCita.intCitaID = _cita;
+                                    detCita.intAdicionalesID = item.intAdicionalesID;
+                                    if (item.vchObservaciones != "")
+                                        detCita.vchObservaciones = item.vchObservaciones;
+                                    detCita.vchUserAdmin = user;
+                                    detCita.vchValor = item.vchValor;
+                                    dbRisDA.tbl_DET_Cita.Add(detCita);
+                                    dbRisDA.SaveChanges();
+                                }
+                                else
+                                {
+
+                                    detCita = dbRisDA.tbl_DET_Cita.First(x => x.intAdicionalesID == item.intAdicionalesID && x.intCitaID == _cita);
+                                    detCita.vchValor = item.vchValor;
+                                    detCita.datFecha = DateTime.Now;
+                                    detCita.vchUserAdmin = user;
+                                    if (item.vchObservaciones != "")
+                                        detCita.vchObservaciones = item.vchObservaciones;
+                                    dbRisDA.SaveChanges();
+                                }
+                                valido = true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        valido = true;
+                    }
+                }
+                catch (Exception e)
+                {
+                    valido = false;
+                    Log.EscribeLog("Existe un error en tbl_REL_PacienteCita: " + e.Message, 3, user);
+                }
+
+                //Estudios
+                try
+                {
+                    if (lstEstudios.Count > 0)
+                    {
+                        foreach (clsEstudioNuevaCita item in lstEstudios)
+                        {
+                            tbl_MST_Estudio estudio = new tbl_MST_Estudio();
+                            using (dbRisDA = new RISLiteEntities())
+                            {
+
+                                if (!dbRisDA.tbl_MST_Estudio.Any(x => x.intEstudioID == item.intEstudioID))
+                                {
+                                    estudio.bitActivo = true;
+                                    estudio.datFecha = DateTime.Now;
+                                    estudio.datFechaFin = item.fechaFin;
+                                    estudio.datFechaInicio = item.fechaInicio;
+                                    estudio.intEstatusEstudio = 1;
+                                    estudio.intRELModPres = item.intRelModPres;
+                                    estudio.vchDescripcion = paciente.vchNombre + " " + paciente.vchApellidos;
+                                    estudio.vchTitulo = item.vchTitulo;
+                                    estudio.vchUserAdmin = user;
+                                    dbRisDA.tbl_MST_Estudio.Add(estudio);
+                                    dbRisDA.SaveChanges();
+
+                                    if (estudio.intEstudioID > 0)
+                                    {
+                                        using (dbRisDA = new RISLiteEntities())
+                                        {
+                                            if (!dbRisDA.tbl_REL_CitaEstudio.Any(x => x.intCitaID == _cita && x.intEstudioID == estudio.intEstudioID))
+                                            {
+                                                tbl_REL_CitaEstudio relCitaEst = new tbl_REL_CitaEstudio();
+                                                relCitaEst.bitActivo = true;
+                                                relCitaEst.datFecha = DateTime.Now;
+                                                relCitaEst.intCitaID = _cita;
+                                                relCitaEst.intEstudioID = estudio.intEstudioID;
+                                                relCitaEst.vchUserAdmin = user;
+                                                dbRisDA.tbl_REL_CitaEstudio.Add(relCitaEst);
+                                                dbRisDA.SaveChanges();
+                                            }
+                                        }
+                                    }
+                                }
+
+                                else
+                                {
+
+                                    if (!dbRisDA.tbl_MST_Estudio.Any(x => x.intEstudioID == item.intEstudioID && x.datFechaInicio == item.fechaInicio))
+                                    {
+                                        using (dbRisDA = new RISLiteEntities())
+                                        {
+                                            estudio = dbRisDA.tbl_MST_Estudio.First(x => x.intEstudioID == item.intEstudioID);
+                                            //estudio.bitActivo = true;
+                                            estudio.datFecha = DateTime.Now;
+                                            estudio.datFechaFin = item.fechaInicio.AddHours(1);
+                                            estudio.datFechaInicio = item.fechaInicio;
+                                            //estudio.intEstatusEstudio = 1;
+                                            //estudio.intRELModPres = item.intRelModPres;
+                                            //estudio.vchDescripcion = paciente.vchNombre + " " + paciente.vchApellidos;
+                                            //estudio.vchTitulo = item.vchTitulo;
+                                            estudio.vchUserAdmin = user;
+                                            dbRisDA.SaveChanges();
+                                        }
+                                    }
+                                }
+                            }
+
+                            valido = true;
+                        }
+                    }
+                }
+                catch (Exception eEstudios)
+                {
+                    valido = false;
+                    Log.EscribeLog("Existe un error al insertar los estudios: " + eEstudios.Message, 3, user);
+                }
+            }
+            catch (Exception esCN)
+            {
+                valido = false;
+                Log.EscribeLog("Existe un error en setCitaNueva: " + esCN.Message, 3, user);
+            }
+            return valido;
         }
 
         public clsEstudioNuevaCita getEstudioDetalle_citaNueva(int intRELModPres, string user, int idtablacita)
@@ -5872,22 +6056,39 @@ namespace Fuji.RISLite.DataAccess
             byte[] QRImage = null;
             try
             {
-                string url = ConfigurationManager.AppSettings["URL"] + "\frmArribo.aspx?var=" + Security.Decrypt(intCitaID.ToString());
-                BarcodeSettings.ApplyKey("your key");//you need a key from e-iceblue, otherwise the watermark 'E-iceblue' will be shown in barcode
-                BarcodeSettings settings = new BarcodeSettings();
-                settings.Type = BarCodeType.QRCode;
-                settings.Unit = GraphicsUnit.Pixel;
-                settings.ShowText = false;
-                settings.ResolutionType = ResolutionType.UseDpi;
-                settings.Data = url;
-                settings.ForeColor = Color.DarkGreen;
-                settings.BackColor = Color.White;
-                settings.X = 4;
-                settings.QRCodeECL = QRCodeECL.L;
-                BarCodeGenerator generator = new BarCodeGenerator(settings);
-                Image QRbarcode = generator.GenerateImage();
-                QRbarcode.Save("c:\\button.jpeg", System.Drawing.Imaging.ImageFormat.Jpeg);
-                QRImage = ImageToByteArray(QRbarcode);
+                string url = ConfigurationManager.AppSettings["URL"] + "\frmArribo.aspx?var=";
+                string urlCompleta = url + Security.Encrypt(intCitaID.ToString());
+                ///////---------------------------------------------------------
+                QRCodeGenerator.ECCLevel eccLevel = (QRCodeGenerator.ECCLevel)1;
+                Image img;
+                using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
+                {
+                    using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(url, eccLevel))
+                    {
+                        using (QRCode qrCode = new QRCode(qrCodeData))
+                        {
+                            img = qrCode.GetGraphic(20, Color.DarkGreen, Color.White, GetIconBitmap(), (int)0);
+                        }
+                    }
+                }
+                //img.Save("c:\\button2.jpeg", System.Drawing.Imaging.ImageFormat.Jpeg);
+                QRImage = ImageToByteArray(img);
+                ///////---------------------------------------------------------
+                //BarcodeSettings.ApplyKey("WUUB05ZBIS3-CVLN7-USWPA-YFU04");//you need a key from e-iceblue, otherwise the watermark 'E-iceblue' will be shown in barcode
+                //BarcodeSettings settings = new BarcodeSettings();
+                //settings.Type = BarCodeType.QRCode;
+                //settings.Unit = GraphicsUnit.Pixel;
+                //settings.ShowText = false;
+                //settings.ResolutionType = ResolutionType.UseDpi;
+                //settings.Data = url;
+                //settings.ForeColor = Color.DarkGreen;
+                //settings.BackColor = Color.White;
+                //settings.X = 4;
+                //settings.QRCodeECL = QRCodeECL.L;
+                //BarCodeGenerator generator = new BarCodeGenerator(settings);
+                //Image QRbarcode = generator.GenerateImage();
+                //QRbarcode.Save("c:\\button.jpeg", System.Drawing.Imaging.ImageFormat.Jpeg);
+                //QRImage = ImageToByteArray(QRbarcode);
             }
             catch(Exception eCQR)
             {
@@ -5896,11 +6097,27 @@ namespace Fuji.RISLite.DataAccess
             return QRImage;
         }
 
+        private Bitmap GetIconBitmap()
+        {
+            Bitmap img = null;
+            //if (iconPath.Text.Length > 0)
+            //{
+            //    try
+            //    {
+            //        img = new Bitmap(iconPath.Text);
+            //    }
+            //    catch (Exception)
+            //    {
+            //    }
+            //}
+            return img;
+        }
+
         public byte[] ImageToByteArray(System.Drawing.Image imageIn)
         {
             using (var ms = new MemoryStream())
             {
-                imageIn.Save(ms, System.Drawing.Imaging.ImageFormat.Gif);
+                imageIn.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                 return ms.ToArray();
             }
         }

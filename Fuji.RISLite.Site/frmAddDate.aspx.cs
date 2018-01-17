@@ -181,7 +181,6 @@ namespace Fuji.RISLite.Site
                                         {
                                             ModificacionCita(Request.QueryString["var"].ToString());
                                         }
-
                                         else
                                         {
                                             if (Request.QueryString["var"] != null)
@@ -1798,6 +1797,7 @@ namespace Fuji.RISLite.Site
         {
             try
             {
+                HF_Modificacion_cita.Value = "1";
                 int contador_tabla = 1;
 
                 if (Lcontador.Text != "")
@@ -1809,12 +1809,14 @@ namespace Fuji.RISLite.Site
                 string[] lista_parametros = parametros.Split('|');
 
 
-                AsignacionModalidadNuevaCita_Response response = new AsignacionModalidadNuevaCita_Response();
+                AsignacionModalidadModificacionCita_Response response = new AsignacionModalidadModificacionCita_Response();
                 CitaNuevaRequest_Modif_Cita request = new CitaNuevaRequest_Modif_Cita();
                 request.mdlUser = Usuario;
-                response = RisService.getEstudioDetalle_ModificacionCIta(request, lista_parametros[0], contador_tabla);
+                response = RisService.getEstudioDetalle_ModificacionCIta(request, lista_parametros[1], contador_tabla);
+                HF_IDcita_Modificacion.Value = lista_parametros[1];
 
-                cargarDetallePaciente(Convert.ToInt32(lista_parametros[1]));
+
+                cargarDetallePaciente(Convert.ToInt32(lista_parametros[0]));
                 cargarEstudioGrid_modificacionCita(response);
                 cargaAdicionalesClinicosPac();
             }
@@ -1847,7 +1849,7 @@ namespace Fuji.RISLite.Site
             }
         }
 
-        private void cargarEstudioGrid_modificacionCita(AsignacionModalidadNuevaCita_Response response)
+        private void cargarEstudioGrid_modificacionCita(AsignacionModalidadModificacionCita_Response response)
         {           
             try
             {                
@@ -1861,7 +1863,12 @@ namespace Fuji.RISLite.Site
                     HFIDModalidad_calendario.Value = "";
 
                     do_stEstudios.Clear();
-                    do_stEstudios.Add(response.mdlEstudio);
+
+                    foreach(var x in response.mdlEstudio)
+                    {
+                        do_stEstudios.Add(x);
+                    }
+                   
                     grvEstudios.DataSource = null;
                     grvEstudios.DataBind();
                     grvEstudios.DataSource = do_stEstudios;
@@ -1927,41 +1934,57 @@ namespace Fuji.RISLite.Site
                     {
                         if (horarios)
                         {
-                            clsPaciente mdlPaciete = new clsPaciente();
-                            mdlPaciete.intPacienteID = Convert.ToInt32(lblIDs.Text.ToString());
-                            List<clsEstudioNuevaCita> lstEst = new List<clsEstudioNuevaCita>();
-                            lstEst = do_stEstudios;
-                            List<clsAdicionales> lstAdi = new List<clsAdicionales>();
-                            lstAdi = lstObser;
-                            if (mdlPaciete != null && lstEst != null)
+                            if (HF_Modificacion_cita.Value == "1")
                             {
-                                if (mdlPaciete.intPacienteID > 0 && lstEst.Count > 0)
+
+                                clsPaciente mdlPaciete = new clsPaciente();
+                                mdlPaciete.intPacienteID = Convert.ToInt32(lblIDs.Text.ToString());
+                                List<clsEstudioNuevaCita> lstEst = new List<clsEstudioNuevaCita>();
+                                lstEst = do_stEstudios;
+                                List<clsAdicionales> lstAdi = new List<clsAdicionales>();
+                                lstAdi = lstObser;
+                                if (mdlPaciete != null && lstEst != null)
                                 {
-                                     List<clsAdicionales> lstVarAdi = getAdicionales();
-                                    CitaNuevaResponse response = new CitaNuevaResponse();
-                                    CitaNuevaRequest request = new CitaNuevaRequest();
-                                    request.mdlUser = Usuario;
-                                    request.lstAdicionales = lstVarAdi;
-                                    request.lstEstudios = lstEst;
-                                    request.mdlPaciente = mdlPaciete;
-                                    if (request != null)
+                                    if (mdlPaciete.intPacienteID > 0 && lstEst.Count > 0)
                                     {
-                                        response = RisService.setCitaNueva(request);
-                                        if(response != null)
+                                        List<clsAdicionales> lstVarAdi = getAdicionales();
+                                        CitaNuevaResponse response = new CitaNuevaResponse();
+                                        CitaNuevaRequest request = new CitaNuevaRequest();
+                                        request.mdlUser = Usuario;
+                                        request.lstAdicionales = lstVarAdi;
+
+                                        int total_estudios = request.lstEstudios.Count();
+
+                                        clsEstudioNuevaCita nueva_cita = new clsEstudioNuevaCita();
+
+                                        nueva_cita = do_stEstudios[total_estudios];
+
+                                        request.lstEstudios = lstEst;
+
+                                        request.mdlPaciente = mdlPaciete;
+                                        if (request != null)
                                         {
-                                            if (response.Success)
+                                            response = RisService.ModificacionCita(request, Convert.ToInt32(HF_IDcita_Modificacion.Value));
+                                            if (response != null)
                                             {
-                                                ShowMessage("Se guardo correctamente la cita.", MessageType.Correcto, "alert_container");
-                                                limpiarControlesIniciales();
-                                                //Imprimir.
-                                                imprimirCita((int)response.cita.intCitaID);
-                                                //Enviar por correo.
-                                                PrepararCorreo((int)response.cita.intCitaID);
-                                                //Mostrar Indicaciones y restricciones.
+                                                if (response.Success)
+                                                {
+                                                    ShowMessage("Se guardo correctamente la cita.", MessageType.Correcto, "alert_container");
+                                                    limpiarControlesIniciales();
+                                                    //Imprimir.
+                                                    imprimirCita(Convert.ToInt32(HF_IDcita_Modificacion.Value));
+                                                    //Enviar por correo.
+                                                    PrepararCorreo(Convert.ToInt32(HF_IDcita_Modificacion.Value));
+                                                    //Mostrar Indicaciones y restricciones.
+                                                }
+                                                else
+                                                {
+                                                    ShowMessage("Favor de verificar la información: " + response.Mensaje, MessageType.Error, "alert_container");
+                                                }
                                             }
                                             else
                                             {
-                                                ShowMessage("Favor de verificar la información: " + response.Mensaje, MessageType.Error, "alert_container");
+                                                ShowMessage("Favor de verificar la información.", MessageType.Advertencia, "alert_container");
                                             }
                                         }
                                         else
@@ -1971,17 +1994,67 @@ namespace Fuji.RISLite.Site
                                     }
                                     else
                                     {
-                                        ShowMessage("Favor de verificar la información.", MessageType.Advertencia, "alert_container");
+                                        ShowMessage("Favor de verificar la información del Paciente", MessageType.Advertencia, "alert_container");
                                     }
                                 }
-                                else
-                                {
-                                    ShowMessage("Favor de verificar la información del Paciente", MessageType.Advertencia, "alert_container");
-                                }
+
                             }
+
                             else
                             {
-                                ShowMessage("Favor de verificar la información del Paciente", MessageType.Advertencia, "alert_container");
+
+                                clsPaciente mdlPaciete = new clsPaciente();
+                                mdlPaciete.intPacienteID = Convert.ToInt32(lblIDs.Text.ToString());
+                                List<clsEstudioNuevaCita> lstEst = new List<clsEstudioNuevaCita>();
+                                lstEst = do_stEstudios;
+                                List<clsAdicionales> lstAdi = new List<clsAdicionales>();
+                                lstAdi = lstObser;
+                                if (mdlPaciete != null && lstEst != null)
+                                {
+                                    if (mdlPaciete.intPacienteID > 0 && lstEst.Count > 0)
+                                    {
+                                        List<clsAdicionales> lstVarAdi = getAdicionales();
+                                        CitaNuevaResponse response = new CitaNuevaResponse();
+                                        CitaNuevaRequest request = new CitaNuevaRequest();
+                                        request.mdlUser = Usuario;
+                                        request.lstAdicionales = lstVarAdi;
+                                        request.lstEstudios = lstEst;
+                                        request.mdlPaciente = mdlPaciete;
+                                        if (request != null)
+                                        {
+                                            response = RisService.setCitaNueva(request);
+                                            if (response != null)
+                                            {
+                                                if (response.Success)
+                                                {
+                                                    ShowMessage("Se guardo correctamente la cita.", MessageType.Correcto, "alert_container");
+                                                    limpiarControlesIniciales();
+                                                    //Imprimir.
+                                                    imprimirCita((int)response.cita.intCitaID);
+                                                    //Enviar por correo.
+                                                    PrepararCorreo((int)response.cita.intCitaID);
+                                                    //Mostrar Indicaciones y restricciones.
+                                                }
+                                                else
+                                                {
+                                                    ShowMessage("Favor de verificar la información: " + response.Mensaje, MessageType.Error, "alert_container");
+                                                }
+                                            }
+                                            else
+                                            {
+                                                ShowMessage("Favor de verificar la información.", MessageType.Advertencia, "alert_container");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            ShowMessage("Favor de verificar la información.", MessageType.Advertencia, "alert_container");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        ShowMessage("Favor de verificar la información del Paciente", MessageType.Advertencia, "alert_container");
+                                    }
+                                }
                             }
                         }
                         else
@@ -1995,7 +2068,7 @@ namespace Fuji.RISLite.Site
                     }
                 }
                 else
-                {   
+                {
                     ShowMessage("Favor de verificar el paciente.", MessageType.Advertencia, "alert_container");
                 }
             }

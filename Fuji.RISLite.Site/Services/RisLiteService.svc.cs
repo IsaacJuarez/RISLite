@@ -1921,9 +1921,9 @@ namespace Fuji.RISLite.Site.Services
             return response;
         }
 
-        public AsignacionModalidadNuevaCita_Response getEstudioDetalle_ModificacionCIta(CitaNuevaRequest_Modif_Cita request, string id_estudio, int id_tabla_modalidad)
+        public AsignacionModalidadModificacionCita_Response getEstudioDetalle_ModificacionCIta(CitaNuevaRequest_Modif_Cita request, string id_estudio, int id_tabla_modalidad)
         {
-            AsignacionModalidadNuevaCita_Response response = new AsignacionModalidadNuevaCita_Response();
+            AsignacionModalidadModificacionCita_Response response = new AsignacionModalidadModificacionCita_Response();
             try
             {
                 if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
@@ -2785,6 +2785,27 @@ namespace Fuji.RISLite.Site.Services
         }
         #endregion
 
+        public CitaNuevaResponse ModificacionCita(CitaNuevaRequest request, int _cita)
+        {
+            CitaNuevaResponse response = new CitaNuevaResponse();
+            try
+            {
+                if (Security.ValidateToken(request.mdlUser.Token, request.mdlUser.intUsuarioID.ToString(), request.mdlUser.vchUsuario))
+                {
+                    RISLiteDataAccess controller = new RISLiteDataAccess();
+                    string mensaje = "";
+                    tbl_MST_Cita cita = new tbl_MST_Cita();
+                    response.Success = controller.ModificacionCita(request.mdlPaciente, request.lstAdicionales, request.lstEstudios, request.mdlUser.vchUsuario, ref mensaje, ref cita, _cita);
+                    response.cita = cita;
+                    response.Mensaje = mensaje;
+                }
+            }
+            catch (Exception egU)
+            {
+                Log.EscribeLog("Existe un error en setCitaNueva: " + egU.Message, 3, "");
+            }
+            return response;
+        }
 
         #region arribo
         public ArriboResponse getDetalleCitaPaciente(ArriboRequest request)

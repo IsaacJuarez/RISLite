@@ -597,10 +597,10 @@ namespace Fuji.RISLite.Site
                         GridViewRow CurrentRow = ctl.NamingContainer as GridViewRow;
                         string _intEstudioID = grvCitas.DataKeys[CurrentRow.RowIndex].Values["intEstudioID"].ToString();
                         //string vchNombre = grvUsuario.DataKeys[CurrentRow.RowIndex].Values["vchNombre"].ToString();
-
+                        string _idPaciente = grvCitas.DataKeys[CurrentRow.RowIndex].Values["intPacienteID"].ToString();
 
                         string par_citas = e.CommandArgument.ToString();
-                        string busqueda = Security.Encrypt(_intEstudioID + "|" + par_citas.ToString());
+                        string busqueda = Security.Encrypt(_idPaciente + "|" + par_citas.ToString());
                         Response.Redirect(URL + "/frmAddDate.aspx?var=" + busqueda, true);
                         break;
                 }

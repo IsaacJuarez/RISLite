@@ -5340,5 +5340,17 @@ namespace Fuji.RISLite.Site
 
             }
         }
+
+        protected void btnCerrar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ScriptManager.RegisterStartupScript(Page, Page.GetType(), "mdlActivos", "$('#mdlActivos').modal('hide');", true);
+            }
+            catch(Exception ebc)
+            {
+                Log.EscribeLog("Escribe un error en btnCerrar: " + ebc.Message, 3, Usuario.vchUserAdmin);
+            }
+        }
     }
 }

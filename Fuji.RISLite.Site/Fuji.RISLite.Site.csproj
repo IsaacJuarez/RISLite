@@ -1707,28 +1707,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\rptCitaReporte.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
       <DependentUpon>rptCitaReporte.rpt</DependentUpon>
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Data\rptEnviados.cs">
-      <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>rptEnviados.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Data\rptReporteEtapa.cs">
       <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>rptReporteEtapa.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Data\rptTestimoniosPorEnviar.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>rptTestimoniosPorEnviar.rpt</DependentUpon>
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
@@ -1890,6 +1872,7 @@
     <Compile Include="Services\DataContract\AgendaResponse.cs" />
     <Compile Include="Services\DataContract\ArriboRequest.cs" />
     <Compile Include="Services\DataContract\ArriboResponse.cs" />
+    <Compile Include="Services\DataContract\AsignacionModalidadModificacionCita_Response.cs" />
     <Compile Include="Services\DataContract\AsignacionModalidadNuevaCita_Request.cs" />
     <Compile Include="Services\DataContract\AsignacionModalidadNuevaCita_Response.cs" />
     <Compile Include="Services\DataContract\CatalogoRequest.cs" />
@@ -1979,18 +1962,6 @@
     <EmbeddedResource Include="Data\rptCitaReporte.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>rptCitaReporte.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Data\rptEnviados.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>rptEnviados.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Data\rptReporteEtapa.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>rptReporteEtapa.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Data\rptTestimoniosPorEnviar.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>rptTestimoniosPorEnviar.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
   </ItemGroup>
