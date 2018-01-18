@@ -5249,7 +5249,7 @@ namespace Fuji.RISLite.Site
                                 if (response.Success)
                                 {
                                     cargarPrestacion();
-                                    ShowMessage("Importacion correcta de prestaciones.", MessageType.Correcto, "alert_container");
+                                    //ShowMessage("Importacion correcta de prestaciones.", MessageType.Correcto, "alert_container");
                                 }
                                 else
                                 {
@@ -5266,7 +5266,8 @@ namespace Fuji.RISLite.Site
                     }
                     contador_archivo++;
                 }
-
+                int conta = contador_archivo - 1;
+                ShowMessage("Importacion correcta de prestaciones. Total de " + conta, MessageType.Correcto, "alert_container");
             }
         }
 
@@ -5337,7 +5338,8 @@ namespace Fuji.RISLite.Site
                     }
                     contador_archivo++;
                 }
-
+                int conta = contador_archivo - 1;
+                ShowMessage("Importacion correcta de equipos. Total de " + conta, MessageType.Correcto, "alert_container");
             }
         }
 

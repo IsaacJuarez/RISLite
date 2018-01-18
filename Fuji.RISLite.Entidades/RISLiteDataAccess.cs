@@ -200,8 +200,6 @@ namespace Fuji.RISLite.DataAccess
             return lstReturn;
         }
 
-
-
         #region catalogos
 
         public List<tbl_CAT_Catalogo> getListCatalogos(string user)
@@ -6062,7 +6060,7 @@ namespace Fuji.RISLite.DataAccess
                 Image img;
                 using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
                 {
-                    using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(url, eccLevel))
+                    using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(urlCompleta, eccLevel))
                     {
                         using (QRCode qrCode = new QRCode(qrCodeData))
                         {

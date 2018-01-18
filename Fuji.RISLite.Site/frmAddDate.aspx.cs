@@ -1797,6 +1797,7 @@ namespace Fuji.RISLite.Site
         {
             try
             {
+                btnAddUser.Visible = false;
                 HF_Modificacion_cita.Value = "1";
                 int contador_tabla = 1;
 

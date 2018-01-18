@@ -102,9 +102,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="assets\css\bootstrap-noCon.min.css" />
     <Content Include="assets\css\bootstrap-tagsinput.css" />
     <Content Include="assets\css\Site.css" />
     <Content Include="assets\css\style.css" />
+    <Content Include="assets\js\ace-noConflict.js" />
     <Content Include="assets\js\bootstrap-tagsinput.js" />
     <Content Include="Data\CorreoCita.txt" />
     <Content Include="frmAddDate.aspx" />

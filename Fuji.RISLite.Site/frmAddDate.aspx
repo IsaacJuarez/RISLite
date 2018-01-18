@@ -5,25 +5,37 @@
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <!-- bootstrap & fontawesome -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="assets/font-awesome/4.5.0/css/font-awesome.min.css" />
+
+	<!-- text fonts -->
+	<link rel="stylesheet" href="assets/css/fonts.googleapis.com.css" />
+
+	<!-- ace styles -->
+	<link rel="stylesheet" href="assets/css/ace.min.css" class="ace-main-stylesheet" id="main_ace_style" />
+
+    <link rel="stylesheet" href="assets/css/Site.css" />
+
+	<!--[if lte IE 9]>
+		<link rel="stylesheet" href="assets/css/ace-part2.min.css" class="ace-main-stylesheet" />
+	<![endif]-->
+	<link rel="stylesheet" href="assets/css/ace-skins.min.css" />
+	<link rel="stylesheet" href="assets/css/ace-rtl.min.css" />
+
+	<!--[if lte IE 9]>
+		<link rel="stylesheet" href="assets/css/ace-ie.min.css" />
+	<![endif]-->
+
+	<!-- inline styles related to this page -->
+
+    <script src="assets/jquery/dist/jquery.min.js"></script>
+	<!-- ace settings handler -->
+	<script src="assets/js/ace-extra.min.js"></script>
+    <script src="assets/js/bootbox.js"></script>
 
     <!-- page specific plugin styles -->
     <link rel="stylesheet" href="assets/css/jquery-ui.custom.min.css" />
     <link rel="stylesheet" href="assets/css/jquery.gritter.min.css" />
-
-    <!-- text fonts -->
-    <link rel="stylesheet" href="assets/css/fonts.googleapis.com.css" />
-
-    <!-- ace styles -->
-    <link rel="stylesheet" href="assets/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
-
-    <!--[if lte IE 9]>
-		<link rel="stylesheet" href="assets/css/ace-part2.min.css" class="ace-main-stylesheet" />
-	<![endif]-->
-    <link rel="stylesheet" href="assets/css/ace-skins.min.css" />
-    <link rel="stylesheet" href="assets/css/ace-rtl.min.css" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <telerik:RadAjaxManager ID="RadAjaxManager1" runat="server">
@@ -1413,11 +1425,8 @@
             opacity: 1;
         }
     </style>
-
     <script src="assets/js/bootstrap.min.js"></script>
     <!-- page specific plugin scripts -->
-    <script src="assets/js/jquery-ui.custom.min.js"></script>
-    <script src="assets/js/jquery.ui.touch-punch.min.js"></script>
     <script src="assets/js/moment.min.js"></script>
     <script src="assets/js/bootbox.js"></script>
     <!-- inline scripts related to this page -->

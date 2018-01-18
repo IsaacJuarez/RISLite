@@ -193,7 +193,10 @@ namespace Fuji.RISLite.Site
                 if (response != null)
                 {
                     if (response.Count > 0)
+                    {
+                        response = response.OrderByDescending(x => x.datFechaInicio).ToList();
                         grvCitas.DataSource = response;
+                    }
                 }
                 grvCitas.DataBind();
             }
